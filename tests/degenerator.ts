@@ -43,7 +43,7 @@ describe("degenerator", () => {
       ATA_PROGRAM_ID
     );
 
-    const transactionSignature = await program.methods
+    const tx = await program.methods
       .createAssociatedTokenAccount()
       .accounts({
         tokenAccount: receiverATA,
@@ -53,7 +53,7 @@ describe("degenerator", () => {
       })
       .signers([wallet.payer])
       .rpc({ skipPreflight: true });
-    console.log("Your transaction signature", transactionSignature);
+    console.log("Your transaction signature", tx);
   });
 
   it("Mint Token to payer", async () => {
