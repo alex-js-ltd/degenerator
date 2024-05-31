@@ -66,7 +66,7 @@ describe("degenerator", () => {
       ATA_PROGRAM_ID
     );
 
-    const transactionSignature = await program.methods
+    const tx = await program.methods
       .mintToken(new anchor.BN(200000000))
       .accounts({
         mint: mintKeypair.publicKey,
@@ -76,6 +76,8 @@ describe("degenerator", () => {
       })
       .signers([wallet.payer])
       .rpc({ skipPreflight: true });
+
+    console.log("Your transaction signature", tx);
   });
 
   it("Update existing metadata field", async () => {

@@ -30,11 +30,11 @@ pub mod degenerator {
     }
 
     pub fn create_associated_token_account(ctx: Context<CreateAssociatedTokenAccount>) -> Result<()> {
-        create_account(ctx)
+       process_create_associated_token_account(ctx)
     }
 
     pub fn mint_token(ctx: Context<MintToken>, amount: u64) -> Result<()> {
-       mint(ctx, amount)
+       process_mint_token(ctx, amount)
     }
 
  

@@ -6,7 +6,7 @@ use anchor_spl::token_interface::{
 
 
 
-pub fn mint(ctx: Context<MintToken>, amount: u64) -> Result<()> {
+pub fn process_mint_token(ctx: Context<MintToken>, amount: u64) -> Result<()> {
     let cpi_accounts = MintTo {
         mint: ctx.accounts.mint.to_account_info().clone(),
         to: ctx.accounts.receiver.to_account_info().clone(),
