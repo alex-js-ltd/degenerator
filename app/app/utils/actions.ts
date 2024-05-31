@@ -6,11 +6,7 @@ import { put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
 import invariant from 'tiny-invariant'
 import { program, connection } from '@/app/utils/setup'
-import {
-	TransactionMessage,
-	PublicKey,
-	VersionedTransaction,
-} from '@solana/web3.js'
+import { TransactionMessage, PublicKey, VersionedTransaction } from '@solana/web3.js'
 
 import * as anchor from '@coral-xyz/anchor'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
@@ -24,8 +20,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		return { ...submission.reply(), serializedTransaction: undefined }
 	}
 
-	const { image, name, symbol, description, decimals, supply, payer } =
-		submission.value
+	const { image, name, symbol, description, decimals, supply, payer } = submission.value
 
 	const blob = await put(image.name, image, { access: 'public' })
 
@@ -93,7 +88,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		})
 		.instruction()
 
-	invariant(initialize, 'Failed to create associated token account')
+	invariant(createAssociatedTokenAccount, 'Failed to create associated token account')
 
 	// Mint Token to Payer
 	const mintToken = await program.methods
@@ -106,11 +101,9 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		})
 		.instruction()
 
-	invariant(initialize, 'Failed to mint token')
+	invariant(mintToken, 'Failed to mint token')
 
-	let blockhash = await connection
-		.getLatestBlockhash()
-		.then(res => res.blockhash)
+	let blockhash = await connection.getLatestBlockhash().then(res => res.blockhash)
 
 	const instructions = [initialize, createAssociatedTokenAccount, mintToken]
 
