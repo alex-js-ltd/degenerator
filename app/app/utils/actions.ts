@@ -45,7 +45,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 	const metadata = {
 		name,
 		symbol,
-		uri: `https://spl-token-minter-theta.vercel.app/api/metadata/${upload.id}`,
+		uri: `https://degenerator-tawny.vercel.app/api/metadata/${upload.id}`,
 	}
 
 	const mintKeypair = new anchor.web3.Keypair()
