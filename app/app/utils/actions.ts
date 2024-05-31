@@ -7,7 +7,6 @@ import { prisma } from '@/app/utils/db'
 import invariant from 'tiny-invariant'
 import { program, connection } from '@/app/utils/setup'
 import {
-	Keypair,
 	TransactionMessage,
 	PublicKey,
 	VersionedTransaction,
@@ -32,7 +31,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 
 	invariant(blob, 'Failed to upload image')
 
-	const metadata = await prisma.tokenMetaData.create({
+	const upload = await prisma.tokenMetaData.create({
 		data: {
 			name,
 			symbol,
@@ -41,21 +40,17 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		},
 	})
 
-	invariant(metadata, 'Failed to upload metadata')
+	invariant(upload, 'Failed to upload metadata')
 
-	const uri = `https://spl-token-minter-theta.vercel.app/api/metadata/${metadata.id}`
+	const metadata = {
+		name,
+		symbol,
+		uri: `https://spl-token-minter-theta.vercel.app/api/metadata/${upload.id}`,
+	}
 
 	const mintKeypair = new anchor.web3.Keypair()
 
 	const publicKey = new PublicKey(payer)
-
-	console.log('payer key', publicKey)
-
-	const meta = {
-		name,
-		symbol,
-		uri,
-	}
 
 	const ATA_PROGRAM_ID = new anchor.web3.PublicKey(
 		'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
@@ -79,11 +74,13 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		ATA_PROGRAM_ID,
 	)
 
+	// Create Mint with MetadataPointer and TokenMetadata Extensions
 	const initialize = await program.methods
-		.initialize(meta)
+		.initialize(metadata)
 		.accounts({ mintAccount: mintKeypair.publicKey, payer: publicKey })
 		.instruction()
 
+	// Create Associated Token Account
 	const createAssociatedTokenAccount = await program.methods
 		.createAssociatedTokenAccount()
 		.accounts({
@@ -94,8 +91,9 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		})
 		.instruction()
 
+	// Mint Token to Payer
 	const mintToken = await program.methods
-		.mintToken(new anchor.BN(200000000))
+		.mintToken(new anchor.BN(supply))
 		.accounts({
 			mint: mintKeypair.publicKey,
 			signer: publicKey,

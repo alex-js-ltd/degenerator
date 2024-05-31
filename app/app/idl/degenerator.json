@@ -9,16 +9,7 @@
   "instructions": [
     {
       "name": "create_associated_token_account",
-      "discriminator": [
-        112,
-        83,
-        122,
-        159,
-        174,
-        104,
-        244,
-        19
-      ],
+      "discriminator": [112, 83, 122, 159, 174, 104, 244, 19],
       "accounts": [
         {
           "name": "signer",
@@ -48,16 +39,7 @@
     },
     {
       "name": "emit",
-      "discriminator": [
-        252,
-        45,
-        156,
-        110,
-        150,
-        14,
-        45,
-        99
-      ],
+      "discriminator": [252, 45, 156, 110, 150, 14, 45, 99],
       "accounts": [
         {
           "name": "mint_account"
@@ -71,16 +53,7 @@
     },
     {
       "name": "initialize",
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
+      "discriminator": [175, 175, 109, 31, 13, 152, 155, 237],
       "accounts": [
         {
           "name": "payer",
@@ -114,16 +87,7 @@
     },
     {
       "name": "mint_token",
-      "discriminator": [
-        172,
-        137,
-        183,
-        14,
-        207,
-        110,
-        234,
-        56
-      ],
+      "discriminator": [172, 137, 183, 14, 207, 110, 234, 56],
       "accounts": [
         {
           "name": "signer",
@@ -151,16 +115,7 @@
     },
     {
       "name": "remove_key",
-      "discriminator": [
-        210,
-        40,
-        193,
-        233,
-        8,
-        77,
-        176,
-        144
-      ],
+      "discriminator": [210, 40, 193, 233, 8, 77, 176, 144],
       "accounts": [
         {
           "name": "update_authority",
@@ -189,16 +144,7 @@
     },
     {
       "name": "update_authority",
-      "discriminator": [
-        32,
-        46,
-        64,
-        28,
-        149,
-        75,
-        243,
-        88
-      ],
+      "discriminator": [32, 46, 64, 28, 149, 75, 243, 88],
       "accounts": [
         {
           "name": "current_authority",
@@ -225,16 +171,7 @@
     },
     {
       "name": "update_field",
-      "discriminator": [
-        164,
-        49,
-        117,
-        6,
-        187,
-        205,
-        13,
-        217
-      ],
+      "discriminator": [164, 49, 117, 6, 187, 205, 13, 217],
       "accounts": [
         {
           "name": "authority",
@@ -283,9 +220,7 @@
           },
           {
             "name": "Key",
-            "fields": [
-              "string"
-            ]
+            "fields": ["string"]
           }
         ]
       }
@@ -317,9 +252,7 @@
         "fields": [
           {
             "name": "field",
-            "docs": [
-              "Field to update in the metadata"
-            ],
+            "docs": ["Field to update in the metadata"],
             "type": {
               "defined": {
                 "name": "AnchorField"
@@ -328,9 +261,7 @@
           },
           {
             "name": "value",
-            "docs": [
-              "Value to write for the field"
-            ],
+            "docs": ["Value to write for the field"],
             "type": "string"
           }
         ]
