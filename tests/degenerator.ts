@@ -8,7 +8,7 @@ describe("degenerator", () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
-  const program = anchor.workspace.Metadata as Program<Degenerator>;
+  const program = anchor.workspace.Degenerator as Program<Degenerator>;
 
   const wallet = provider.wallet as anchor.Wallet;
 
