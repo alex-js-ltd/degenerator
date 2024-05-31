@@ -80,6 +80,8 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		.accounts({ mintAccount: mintKeypair.publicKey, payer: publicKey })
 		.instruction()
 
+	invariant(initialize, 'Failed to create mint')
+
 	// Create Associated Token Account
 	const createAssociatedTokenAccount = await program.methods
 		.createAssociatedTokenAccount()
@@ -91,6 +93,8 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		})
 		.instruction()
 
+	invariant(initialize, 'Failed to create associated token account')
+
 	// Mint Token to Payer
 	const mintToken = await program.methods
 		.mintToken(new anchor.BN(supply))
@@ -101,6 +105,8 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
 		.instruction()
+
+	invariant(initialize, 'Failed to mint token')
 
 	let blockhash = await connection
 		.getLatestBlockhash()
