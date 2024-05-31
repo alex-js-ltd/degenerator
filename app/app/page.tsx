@@ -139,7 +139,7 @@ export default function Page() {
 								{...getInputProps(fields.payer, {
 									type: 'hidden',
 								})}
-								value={payer}
+								defaultValue={payer}
 							/>
 						</div>
 
