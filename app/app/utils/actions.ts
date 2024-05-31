@@ -103,9 +103,26 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 
 	invariant(mintToken, 'Failed to mint token')
 
+	// Revoke Mint Authority
+	const revokeMintAuthority = await program.methods
+		.revokeMintAuthority()
+		.accounts({
+			mintAuthority: publicKey,
+			mint: mintKeypair.publicKey,
+			tokenProgram: TOKEN_2022_PROGRAM_ID,
+		})
+		.instruction()
+
+	invariant(revokeMintAuthority, 'Failed to revoke mint authority')
+
 	let blockhash = await connection.getLatestBlockhash().then(res => res.blockhash)
 
-	const instructions = [initialize, createAssociatedTokenAccount, mintToken]
+	const instructions = [
+		initialize,
+		createAssociatedTokenAccount,
+		mintToken,
+		revokeMintAuthority,
+	]
 
 	const messageV0 = new TransactionMessage({
 		payerKey: publicKey,

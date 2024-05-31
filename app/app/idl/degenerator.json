@@ -1,5 +1,5 @@
 {
-  "address": "B3mDtybHy54Q1dYT36eb6fKcTK5QVFyTbyi76Te9vTEz",
+  "address": "9WzPSf6YeM1CsEQUw8nTZuTWSu2gtkvxrVikcQCtntVK",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -141,6 +141,25 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "revoke_mint_authority",
+      "discriminator": [140, 52, 61, 238, 209, 157, 189, 32],
+      "accounts": [
+        {
+          "name": "mint_authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": []
     },
     {
       "name": "update_authority",

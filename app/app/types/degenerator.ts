@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-	address: 'B3mDtybHy54Q1dYT36eb6fKcTK5QVFyTbyi76Te9vTEz'
+	address: '9WzPSf6YeM1CsEQUw8nTZuTWSu2gtkvxrVikcQCtntVK'
 	metadata: {
 		name: 'degenerator'
 		version: '0.1.0'
@@ -147,6 +147,25 @@ export type Degenerator = {
 					type: 'string'
 				},
 			]
+		},
+		{
+			name: 'revokeMintAuthority'
+			discriminator: [140, 52, 61, 238, 209, 157, 189, 32]
+			accounts: [
+				{
+					name: 'mintAuthority'
+					writable: true
+					signer: true
+				},
+				{
+					name: 'mint'
+					writable: true
+				},
+				{
+					name: 'tokenProgram'
+				},
+			]
+			args: []
 		},
 		{
 			name: 'updateAuthority'

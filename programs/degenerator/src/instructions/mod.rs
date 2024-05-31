@@ -15,3 +15,6 @@ pub mod create_account;
 pub use mint::*;
 pub mod mint;
 
+pub use revoke_mint::*;
+pub mod revoke_mint;
+

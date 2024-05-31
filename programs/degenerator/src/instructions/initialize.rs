@@ -78,9 +78,6 @@ pub fn process_initialize(ctx: Context<Initialize>, args: TokenMetadataArgs) -> 
     )?;
 
 
- 
-
-
     Ok(())
 }
 

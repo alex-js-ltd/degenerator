@@ -3,10 +3,11 @@ use anchor_lang::prelude::*;
 use instructions::*;
 mod instructions;
 
-declare_id!("B3mDtybHy54Q1dYT36eb6fKcTK5QVFyTbyi76Te9vTEz");
+declare_id!("9WzPSf6YeM1CsEQUw8nTZuTWSu2gtkvxrVikcQCtntVK");
 
 #[program]
 pub mod degenerator {
+  
     use super::*;
 
     pub fn initialize(ctx: Context<Initialize>, args: TokenMetadataArgs) -> Result<()> {
@@ -36,6 +37,10 @@ pub mod degenerator {
     pub fn mint_token(ctx: Context<MintToken>, amount: u64) -> Result<()> {
        process_mint_token(ctx, amount)
     }
+
+    pub fn revoke_mint_authority(ctx: Context<RevokeMint>) -> Result<()> {
+        process_revoke_mint_authority(ctx)
+     }
 
  
 }

@@ -168,4 +168,17 @@ describe("degenerator", () => {
     const metadata = unpack(buffer);
     console.log("Metadata", metadata);
   });
+
+  it("Revoke mint authority", async () => {
+    const tx = await program.methods
+      .revokeMintAuthority()
+      .accounts({
+        mintAuthority: wallet.payer.publicKey,
+        mint: mintKeypair.publicKey,
+        tokenProgram: TOKEN_2022_PROGRAM_ID,
+      })
+      .rpc();
+
+    console.log("Your transaction signature", tx);
+  });
 });
