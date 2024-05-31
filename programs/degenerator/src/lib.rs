@@ -3,7 +3,7 @@ use anchor_lang::prelude::*;
 use instructions::*;
 mod instructions;
 
-declare_id!("BDz95W1MNQV5w1nNH8parxd5Q14oUgXFCRjXYns19Asw");
+declare_id!("B3mDtybHy54Q1dYT36eb6fKcTK5QVFyTbyi76Te9vTEz");
 
 #[program]
 pub mod degenerator {
