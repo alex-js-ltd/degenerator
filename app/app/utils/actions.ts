@@ -1,7 +1,7 @@
 'use server'
 
 import { parseWithZod } from '@conform-to/zod'
-import { MetaData } from './schemas'
+import { TokenSchema } from './schemas'
 import { put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
 import invariant from 'tiny-invariant'
@@ -13,7 +13,7 @@ import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 
 export async function createSplToken(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
-		schema: MetaData,
+		schema: TokenSchema,
 	})
 
 	if (submission.status !== 'success') {
