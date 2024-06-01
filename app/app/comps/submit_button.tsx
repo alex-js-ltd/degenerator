@@ -17,7 +17,6 @@ export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {
 	const { pending } = useFormStatus()
 	const disabled = !publicKey || pending || isLoading ? true : false
 
-	console.log('disabled', disabled)
 	return (
 		<Button type="submit" disabled={disabled} {...rest}>
 			{pending || isLoading ? (

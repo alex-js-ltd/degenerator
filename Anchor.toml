@@ -10,11 +10,14 @@ degenerator = "7oUZYs5kMhHAvtGSU2U5QpqMHpRcNJBSA1Deyswhr2j9"
 [programs.localnet]
 degenerator = "7oUZYs5kMhHAvtGSU2U5QpqMHpRcNJBSA1Deyswhr2j9"
 
+[programs.mainnet]
+degenerator = "7oUZYs5kMhHAvtGSU2U5QpqMHpRcNJBSA1Deyswhr2j9"
+
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Devnet"
+cluster = "https://intensive-autumn-snowflake.solana-mainnet.quiknode.pro"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
