@@ -3,15 +3,16 @@ use anchor_lang::prelude::*;
 use instructions::*;
 mod instructions;
 
-declare_id!("FFqTLU5eu66PWDJsXx1EdTvFrQ77R7X6VDVJMc1KSqiv");
+
+declare_id!("7oUZYs5kMhHAvtGSU2U5QpqMHpRcNJBSA1Deyswhr2j9");
 
 #[program]
 pub mod degenerator {
   
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>, args: TokenMetadataArgs,  _token_decimals: u8) -> Result<()> {
-        process_initialize(ctx, args, _token_decimals)
+    pub fn initialize(ctx: Context<Initialize>, args: TokenMetadataArgs, token_decimals: u8) -> Result<()> {
+        process_initialize(ctx, args, token_decimals)
     }
 
     pub fn update_field(ctx: Context<UpdateField>, args: UpdateFieldArgs) -> Result<()> {
@@ -38,8 +39,12 @@ pub mod degenerator {
        process_mint_token(ctx, amount)
     }
 
-    pub fn revoke_mint_authority(ctx: Context<RevokeMint>) -> Result<()> {
-        process_revoke_mint_authority(ctx)
+    pub fn close_mint(ctx: Context<CloseMint>) -> Result<()> {
+        process_close_mint(ctx)
+     }
+
+     pub fn revoke_freeze_authority(ctx: Context<RevokeFreeze>) -> Result<()> {
+        process_revoke_freeze_authority(ctx)
      }
 
  

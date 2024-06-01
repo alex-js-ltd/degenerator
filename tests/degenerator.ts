@@ -2,7 +2,7 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Degenerator } from "../target/types/degenerator";
 import { unpack } from "@solana/spl-token-metadata";
-import { TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
+import { TOKEN_2022_PROGRAM_ID, AuthorityType } from "@solana/spl-token";
 
 describe("degenerator", () => {
   const provider = anchor.AnchorProvider.env();
@@ -169,13 +169,24 @@ describe("degenerator", () => {
     console.log("Metadata", metadata);
   });
 
-  it("Revoke mint authority", async () => {
+  it("Revoke freeze authority", async () => {
     const tx = await program.methods
-      .revokeMintAuthority()
+      .revokeFreezeAuthority()
       .accounts({
-        mintAuthority: wallet.payer.publicKey,
-        mint: mintKeypair.publicKey,
-        tokenProgram: TOKEN_2022_PROGRAM_ID,
+        currentAuthority: wallet.publicKey,
+        mintAccount: mintKeypair.publicKey,
+      })
+      .rpc();
+
+    console.log("Your transaction signature", tx);
+  });
+
+  it("Close Mint", async () => {
+    const tx = await program.methods
+      .closeMint()
+      .accounts({
+        currentAuthority: wallet.publicKey,
+        mintAccount: mintKeypair.publicKey,
       })
       .rpc();
 

@@ -23,8 +23,10 @@ pub struct Initialize<'info> {
         payer = payer,
         mint::decimals = _token_decimals,
         mint::authority = payer,
+        mint::freeze_authority = payer,
         extensions::metadata_pointer::authority = payer,
         extensions::metadata_pointer::metadata_address = mint_account,
+    
     )]
     pub mint_account: InterfaceAccount<'info, Mint>,
     pub token_program: Program<'info, Token2022>,

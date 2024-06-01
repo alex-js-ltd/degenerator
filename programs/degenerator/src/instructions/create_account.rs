@@ -23,6 +23,7 @@ pub struct CreateAssociatedTokenAccount<'info> {
         associated_token::mint = mint,
         payer = signer,
         associated_token::authority = signer,
+    
     )]
     pub token_account: InterfaceAccount<'info, TokenAccount>,
     pub system_program: Program<'info, System>,

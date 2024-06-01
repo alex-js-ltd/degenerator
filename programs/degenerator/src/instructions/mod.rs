@@ -15,6 +15,11 @@ pub mod create_account;
 pub use mint::*;
 pub mod mint;
 
-pub use revoke_mint::*;
-pub mod revoke_mint;
+
+pub use close_mint::*;
+pub mod close_mint;
+
+pub use revoke_freeze::*;
+pub mod revoke_freeze;
+
 
