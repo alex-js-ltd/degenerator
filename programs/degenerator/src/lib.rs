@@ -3,15 +3,15 @@ use anchor_lang::prelude::*;
 use instructions::*;
 mod instructions;
 
-declare_id!("9WzPSf6YeM1CsEQUw8nTZuTWSu2gtkvxrVikcQCtntVK");
+declare_id!("FFqTLU5eu66PWDJsXx1EdTvFrQ77R7X6VDVJMc1KSqiv");
 
 #[program]
 pub mod degenerator {
   
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>, args: TokenMetadataArgs) -> Result<()> {
-        process_initialize(ctx, args)
+    pub fn initialize(ctx: Context<Initialize>, args: TokenMetadataArgs,  _token_decimals: u8) -> Result<()> {
+        process_initialize(ctx, args, _token_decimals)
     }
 
     pub fn update_field(ctx: Context<UpdateField>, args: UpdateFieldArgs) -> Result<()> {

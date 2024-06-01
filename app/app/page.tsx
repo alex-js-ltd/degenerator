@@ -39,7 +39,9 @@ export default function Page() {
 		lastResult,
 	})
 
-	const [previewImage, setPreviewImage] = useState<string | undefined>(undefined)
+	const [previewImage, setPreviewImage] = useState<string | undefined>(
+		undefined,
+	)
 
 	const fileRef = useRef<HTMLInputElement>(null)
 

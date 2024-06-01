@@ -6,7 +6,11 @@ import { put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
 import invariant from 'tiny-invariant'
 import { program, connection } from '@/app/utils/setup'
-import { TransactionMessage, PublicKey, VersionedTransaction } from '@solana/web3.js'
+import {
+	TransactionMessage,
+	PublicKey,
+	VersionedTransaction,
+} from '@solana/web3.js'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import * as anchor from '@coral-xyz/anchor'
 
@@ -19,7 +23,8 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		return { ...submission.reply(), serializedTransaction: undefined }
 	}
 
-	const { image, name, symbol, description, decimals, supply, payer } = submission.value
+	const { image, name, symbol, description, decimals, supply, payer } =
+		submission.value
 
 	const blob = await put(image.name, image, { access: 'public' })
 
@@ -46,7 +51,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 
 	console.log('mintKeypair', mintKeypair.publicKey.toBase58())
 
-	const publicKey = new PublicKey(payer)
+	const payerKey = new PublicKey(payer)
 
 	const ATA_PROGRAM_ID = new anchor.web3.PublicKey(
 		'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
@@ -54,7 +59,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 
 	const [receiverATA] = anchor.web3.PublicKey.findProgramAddressSync(
 		[
-			publicKey.toBytes(),
+			payerKey.toBytes(),
 			TOKEN_2022_PROGRAM_ID.toBytes(),
 			mintKeypair.publicKey.toBytes(),
 		],
@@ -63,7 +68,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 
 	const [payerATA] = anchor.web3.PublicKey.findProgramAddressSync(
 		[
-			publicKey.toBytes(),
+			payerKey.toBytes(),
 			TOKEN_2022_PROGRAM_ID.toBytes(),
 			mintKeypair.publicKey.toBytes(),
 		],
@@ -73,7 +78,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 	// Create Mint with MetadataPointer and TokenMetadata Extensions
 	const initialize = await program.methods
 		.initialize(metadata)
-		.accounts({ mintAccount: mintKeypair.publicKey, payer: publicKey })
+		.accounts({ mintAccount: mintKeypair.publicKey, payer: payerKey })
 		.instruction()
 
 	invariant(initialize, 'Failed to create mint')
@@ -84,19 +89,22 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		.accounts({
 			tokenAccount: receiverATA,
 			mint: mintKeypair.publicKey,
-			signer: publicKey,
+			signer: payerKey,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
 		.instruction()
 
-	invariant(createAssociatedTokenAccount, 'Failed to create associated token account')
+	invariant(
+		createAssociatedTokenAccount,
+		'Failed to create associated token account',
+	)
 
 	// Mint Token to Payer
 	const mintToken = await program.methods
 		.mintToken(new anchor.BN(supply))
 		.accounts({
 			mint: mintKeypair.publicKey,
-			signer: publicKey,
+			signer: payerKey,
 			receiver: payerATA,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
@@ -108,7 +116,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 	const revokeMintAuthority = await program.methods
 		.revokeMintAuthority()
 		.accounts({
-			mintAuthority: publicKey,
+			mintAuthority: payerKey,
 			mint: mintKeypair.publicKey,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
@@ -116,7 +124,9 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 
 	invariant(revokeMintAuthority, 'Failed to revoke mint authority')
 
-	let blockhash = await connection.getLatestBlockhash().then(res => res.blockhash)
+	let blockhash = await connection
+		.getLatestBlockhash()
+		.then(res => res.blockhash)
 
 	const instructions = [
 		initialize,
@@ -126,7 +136,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 	]
 
 	const messageV0 = new TransactionMessage({
-		payerKey: publicKey,
+		payerKey,
 		recentBlockhash: blockhash,
 		instructions,
 	}).compileToV0Message()
