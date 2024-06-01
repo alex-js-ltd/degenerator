@@ -7,9 +7,8 @@ import { prisma } from '@/app/utils/db'
 import invariant from 'tiny-invariant'
 import { program, connection } from '@/app/utils/setup'
 import { TransactionMessage, PublicKey, VersionedTransaction } from '@solana/web3.js'
-
-import * as anchor from '@coral-xyz/anchor'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import * as anchor from '@coral-xyz/anchor'
 
 export async function createSplToken(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -44,6 +43,8 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 	}
 
 	const mintKeypair = new anchor.web3.Keypair()
+
+	console.log('mintKeypair', mintKeypair.publicKey.toBase58())
 
 	const publicKey = new PublicKey(payer)
 
