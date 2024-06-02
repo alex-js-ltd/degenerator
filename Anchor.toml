@@ -7,9 +7,6 @@ skip-lint = false
 [programs.devnet]
 degenerator = "7oUZYs5kMhHAvtGSU2U5QpqMHpRcNJBSA1Deyswhr2j9"
 
-[programs.localnet]
-degenerator = "7oUZYs5kMhHAvtGSU2U5QpqMHpRcNJBSA1Deyswhr2j9"
-
 [programs.mainnet]
 degenerator = "7oUZYs5kMhHAvtGSU2U5QpqMHpRcNJBSA1Deyswhr2j9"
 
@@ -17,7 +14,7 @@ degenerator = "7oUZYs5kMhHAvtGSU2U5QpqMHpRcNJBSA1Deyswhr2j9"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "https://intensive-autumn-snowflake.solana-mainnet.quiknode.pro"
+cluster = "mainnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

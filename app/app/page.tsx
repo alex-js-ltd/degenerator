@@ -56,17 +56,15 @@ export default function Page() {
 
 	const { serializedTransaction } = lastResult
 
-	const transaction = useSerializedTx({ serializedTransaction })
+	const tx = useSerializedTx({ serializedTransaction })
 
 	const { run, isLoading } = useAsync()
 
 	const sendAndConfirmTx = useSendAndConfirmTx()
 
 	useEffect(() => {
-		if (!transaction) return
-
-		run(sendAndConfirmTx(transaction))
-	}, [run, sendAndConfirmTx, transaction])
+		if (tx) run(sendAndConfirmTx(tx))
+	}, [run, sendAndConfirmTx, tx])
 
 	return (
 		<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">

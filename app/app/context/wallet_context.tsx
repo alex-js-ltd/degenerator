@@ -17,10 +17,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
 	const network = networkConfiguration as WalletAdapterNetwork
 
-	const selectedEndpoint: string = useMemo(
-		() => clusterApiUrl(CLUSTER),
-		[network],
-	)
+	const selectedEndpoint: string = useMemo(() => CLUSTER, [network])
 
 	return (
 		<ConnectionProvider endpoint={selectedEndpoint}>
@@ -28,7 +25,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 				wallets={[]}
 				config={{
 					autoConnect: true,
-					env: CLUSTER,
+					env: 'mainnet-beta',
 					metadata: {
 						name: 'UnifiedWallet',
 						description: 'UnifiedWallet',

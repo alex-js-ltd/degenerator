@@ -49,8 +49,6 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 
 	const mintKeypair = new anchor.web3.Keypair()
 
-	console.log('mintKeypair', mintKeypair.publicKey.toBase58())
-
 	const payerKey = new PublicKey(payer)
 
 	const ATA_PROGRAM_ID = new anchor.web3.PublicKey(
@@ -142,8 +140,8 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		initialize,
 		createAssociatedTokenAccount,
 		mintToken,
-		closeMint,
 		revokeFreezeAuthority,
+		closeMint,
 	]
 
 	const messageV0 = new TransactionMessage({
