@@ -110,17 +110,6 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 
 	invariant(mintToken, 'Failed to mint token')
 
-	// Close Mint
-	const closeMint = await program.methods
-		.closeMint()
-		.accounts({
-			currentAuthority: payerKey,
-			mintAccount: mintKeypair.publicKey,
-		})
-		.instruction()
-
-	invariant(closeMint, 'Failed to revoke mint authority')
-
 	// Revoke Freeze Authority
 	const revokeFreezeAuthority = await program.methods
 		.revokeFreezeAuthority()
@@ -131,6 +120,17 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		.instruction()
 
 	invariant(revokeFreezeAuthority, 'Failed to revoke freeze authority')
+
+	// Close Mint
+	const closeMint = await program.methods
+		.closeMint()
+		.accounts({
+			currentAuthority: payerKey,
+			mintAccount: mintKeypair.publicKey,
+		})
+		.instruction()
+
+	invariant(closeMint, 'Failed to revoke mint authority')
 
 	let blockhash = await connection
 		.getLatestBlockhash()
