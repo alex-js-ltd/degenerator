@@ -163,13 +163,15 @@ export default function Page() {
 				</form>
 			</div>
 
-			<div className="z-10 m-auto flex w-full flex-col  overflow-hidden sm:max-w-xl">
-				<AnchorTag
-					className="ml-auto"
-					href={`https://explorer.solana.com/tx/${txSig}?cluster=mainnet-beta`}
-				>
-					view transaction
-				</AnchorTag>
+			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl">
+				{txSig ? (
+					<AnchorTag
+						className="ml-auto"
+						href={`https://explorer.solana.com/tx/${txSig}?cluster=mainnet-beta`}
+					>
+						view transaction
+					</AnchorTag>
+				) : null}
 				{isError ? getErrorMessage(error) : null}
 			</div>
 		</>
