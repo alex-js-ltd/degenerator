@@ -108,6 +108,8 @@ export default function Page() {
 									type: 'number',
 								}),
 								placeholder: 'Decimals',
+								min: 0,
+								max: 9,
 							}}
 							errors={fields.decimals.errors}
 						/>
@@ -118,6 +120,7 @@ export default function Page() {
 									type: 'number',
 								}),
 								placeholder: 'Supply',
+								min: 1,
 							}}
 							errors={fields.supply.errors}
 						/>
