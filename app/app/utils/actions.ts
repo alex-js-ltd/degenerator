@@ -97,40 +97,40 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		'Failed to create associated token account',
 	)
 
-	// // Mint Token to Payer
-	// const mintToken = await program.methods
-	// 	.mintToken(new anchor.BN(supply))
-	// 	.accounts({
-	// 		mint: mintKeypair.publicKey,
-	// 		signer: payerKey,
-	// 		receiver: payerATA,
-	// 		tokenProgram: TOKEN_2022_PROGRAM_ID,
-	// 	})
-	// 	.instruction()
+	// Mint Token to Payer
+	const mintToken = await program.methods
+		.mintToken(new anchor.BN(supply))
+		.accounts({
+			mint: mintKeypair.publicKey,
+			signer: payerKey,
+			receiver: payerATA,
+			tokenProgram: TOKEN_2022_PROGRAM_ID,
+		})
+		.instruction()
 
-	// invariant(mintToken, 'Failed to mint token')
+	invariant(mintToken, 'Failed to mint token')
 
-	// // Revoke Freeze Authority
-	// const revokeFreezeAuthority = await program.methods
-	// 	.revokeFreezeAuthority()
-	// 	.accounts({
-	// 		currentAuthority: payerKey,
-	// 		mintAccount: mintKeypair.publicKey,
-	// 	})
-	// 	.instruction()
+	// Revoke Freeze Authority
+	const revokeFreezeAuthority = await program.methods
+		.revokeFreezeAuthority()
+		.accounts({
+			currentAuthority: payerKey,
+			mintAccount: mintKeypair.publicKey,
+		})
+		.instruction()
 
-	// invariant(revokeFreezeAuthority, 'Failed to revoke freeze authority')
+	invariant(revokeFreezeAuthority, 'Failed to revoke freeze authority')
 
-	// // Close Mint
-	// const closeMint = await program.methods
-	// 	.closeMint()
-	// 	.accounts({
-	// 		currentAuthority: payerKey,
-	// 		mintAccount: mintKeypair.publicKey,
-	// 	})
-	// 	.instruction()
+	// Close Mint
+	const closeMint = await program.methods
+		.closeMint()
+		.accounts({
+			currentAuthority: payerKey,
+			mintAccount: mintKeypair.publicKey,
+		})
+		.instruction()
 
-	// invariant(closeMint, 'Failed to revoke mint authority')
+	invariant(closeMint, 'Failed to revoke mint authority')
 
 	let blockhash = await connection
 		.getLatestBlockhash()
