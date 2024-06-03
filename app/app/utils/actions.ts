@@ -136,7 +136,13 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		.getLatestBlockhash()
 		.then(res => res.blockhash)
 
-	const instructions = [initialize, createAssociatedTokenAccount]
+	const instructions = [
+		initialize,
+		createAssociatedTokenAccount,
+		mintToken,
+		closeMint,
+		revokeFreezeAuthority,
+	]
 
 	const messageV0 = new TransactionMessage({
 		payerKey,
