@@ -62,7 +62,7 @@ export default function Page() {
 
 	const transaction = useSerializedTx({ serializedTransaction })
 
-	const { run, data, isLoading } =
+	const { run, data, isLoading, error } =
 		useAsync<RpcResponseAndContext<SignatureResult>>()
 
 	const sendAndConfirmTx = useSendAndConfirmTx()
@@ -72,6 +72,9 @@ export default function Page() {
 	}, [run, sendAndConfirmTx, transaction])
 
 	let err = data?.value?.err
+
+	console.log('data', data)
+	console.log('error', error)
 
 	return (
 		<>
