@@ -17,10 +17,6 @@ import { useAsync } from '@/app/hooks/use_async'
 import { useSendAndConfirmTx } from '@/app/hooks/use_send_and_confirm_tx'
 import { useSerializedTx } from '@/app/hooks/use_serialized_tx'
 import { usePayer } from '@/app/hooks/use_payer'
-import {
-	type RpcResponseAndContext,
-	type SignatureResult,
-} from '@solana/web3.js'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -62,19 +58,13 @@ export default function Page() {
 
 	const transaction = useSerializedTx({ serializedTransaction })
 
-	const { run, data, isLoading, error } =
-		useAsync<RpcResponseAndContext<SignatureResult>>()
+	const { run, isLoading } = useAsync()
 
 	const sendAndConfirmTx = useSendAndConfirmTx()
 
 	useEffect(() => {
 		if (transaction) run(sendAndConfirmTx(transaction))
 	}, [run, sendAndConfirmTx, transaction])
-
-	let err = data?.value?.err
-
-	console.log('data', data)
-	console.log('error', error)
 
 	return (
 		<>
@@ -170,9 +160,7 @@ export default function Page() {
 			</div>
 
 			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl">
-				<p className="ml-auto text-teal-300 text-sm">
-					{typeof err === 'string' ? err : null}
-				</p>
+				<p className="ml-auto text-teal-300 text-sm"></p>
 			</div>
 		</>
 	)
