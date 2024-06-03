@@ -8,11 +8,9 @@ export function useSendAndConfirmTx() {
 	const { sendTransaction } = useWallet()
 
 	return useCallback(
-		async (tx: VersionedTransaction | Transaction, signers?: Signer[]) => {
+		async (tx: VersionedTransaction | Transaction) => {
 			try {
-				const txSig = await sendTransaction(tx, connection, {
-					signers: signers ? [...signers] : undefined,
-				})
+				const txSig = await sendTransaction(tx, connection)
 
 				const { blockhash, lastValidBlockHeight } =
 					await connection.getLatestBlockhash()
