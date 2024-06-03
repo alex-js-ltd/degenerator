@@ -15,13 +15,12 @@ export function useSendAndConfirmTx() {
 				const { blockhash, lastValidBlockHeight } =
 					await connection.getLatestBlockhash()
 
-				const _res = await connection.confirmTransaction({
+				await connection.confirmTransaction({
 					blockhash,
 					lastValidBlockHeight,
 					signature: txSig,
 				})
 
-				console.log('txsig', txSig)
 				return txSig
 			} catch (error) {
 				console.log(error)
