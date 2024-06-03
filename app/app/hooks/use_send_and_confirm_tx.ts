@@ -24,6 +24,7 @@ export function useSendAndConfirmTx() {
 				return txSig
 			} catch (error) {
 				console.log(error)
+				return error
 			}
 		},
 		[connection, sendTransaction],
