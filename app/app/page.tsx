@@ -17,8 +17,10 @@ import { useAsync } from '@/app/hooks/use_async'
 import { useSendAndConfirmTx } from '@/app/hooks/use_send_and_confirm_tx'
 import { useSerializedTx } from '@/app/hooks/use_serialized_tx'
 import { usePayer } from '@/app/hooks/use_payer'
-import { getErrorMessage } from '@/app/utils/misc'
-import { AnchorTag } from '@/app/comps/anchor_tag'
+import {
+	type RpcResponseAndContext,
+	type SignatureResult,
+} from '@solana/web3.js'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -60,15 +62,16 @@ export default function Page() {
 
 	const transaction = useSerializedTx({ serializedTransaction })
 
-	const { run, data: txSig, isLoading, isError, error } = useAsync()
+	const { run, data, isLoading } =
+		useAsync<RpcResponseAndContext<SignatureResult>>()
 
 	const sendAndConfirmTx = useSendAndConfirmTx()
 
 	useEffect(() => {
-		if (!transaction) return
-
-		run(sendAndConfirmTx(transaction))
+		if (transaction) run(sendAndConfirmTx(transaction))
 	}, [run, sendAndConfirmTx, transaction])
+
+	let err = data?.value?.err
 
 	return (
 		<>
@@ -164,15 +167,9 @@ export default function Page() {
 			</div>
 
 			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl">
-				{txSig ? (
-					<AnchorTag
-						className="ml-auto"
-						href={`https://explorer.solana.com/tx/${txSig}?cluster=mainnet-beta`}
-					>
-						view transaction
-					</AnchorTag>
-				) : null}
-				{isError ? getErrorMessage(error) : null}
+				<p className="ml-auto text-teal-300 text-sm">
+					{typeof err === 'string' ? err : null}
+				</p>
 			</div>
 		</>
 	)
