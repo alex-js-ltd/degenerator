@@ -119,7 +119,7 @@ export default function Page() {
 								}),
 								placeholder: 'Supply',
 							}}
-							errors={fields.description.errors}
+							errors={fields.supply.errors}
 						/>
 
 						<Field
