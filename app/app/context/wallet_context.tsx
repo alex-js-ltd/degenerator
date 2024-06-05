@@ -8,16 +8,16 @@ import {
 
 import { getEnv } from '@/app/utils/env'
 
-const { CLUSTER } = getEnv()
+const { ENDPOINT, CLUSTER } = getEnv()
 
 export function WalletProvider({ children }: { children: ReactNode }) {
 	return (
-		<ConnectionProvider endpoint={CLUSTER}>
+		<ConnectionProvider endpoint={ENDPOINT}>
 			<UnifiedWalletProvider
 				wallets={[]}
 				config={{
 					autoConnect: true,
-					env: 'mainnet-beta',
+					env: CLUSTER,
 					metadata: {
 						name: 'Degenerator',
 						description: 'Generate SPL Tokens on Solana',

@@ -5,9 +5,9 @@ import type { Degenerator } from '@/app/types/degenerator'
 import IDL from '@/app/idl/degenerator.json'
 import { getEnv } from './env'
 
-const { CLUSTER } = getEnv()
+const { ENDPOINT } = getEnv()
 
-export const connection = new Connection(CLUSTER, 'confirmed')
+export const connection = new Connection(ENDPOINT, 'confirmed')
 
 // Initialize the program interface with the IDL, program ID, and connection.
 // This setup allows us to interact with the on-chain program using the defined interface.
