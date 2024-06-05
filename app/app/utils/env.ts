@@ -26,7 +26,9 @@ export function init() {
 		throw new Error('Invalid envirmonment variables')
 	}
 
-	console.log('correct environemnt variables')
+	console.log(`✅ correct environemnt variables:`)
+	console.log(`CLUSTER: ${parsed.data.NEXT_PUBLIC_CLUSTER}`)
+	console.log(`ENDPOINT: ${parsed.data.NEXT_PUBLIC_ENDPOINT}`)
 }
 
 /**
