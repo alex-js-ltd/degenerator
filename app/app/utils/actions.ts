@@ -64,15 +64,6 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		ATA_PROGRAM_ID,
 	)
 
-	const [payerATA] = anchor.web3.PublicKey.findProgramAddressSync(
-		[
-			payerKey.toBytes(),
-			TOKEN_2022_PROGRAM_ID.toBytes(),
-			mintKeypair.publicKey.toBytes(),
-		],
-		ATA_PROGRAM_ID,
-	)
-
 	// Create Mint with MetadataPointer and TokenMetadata Extensions
 	const initialize = await program.methods
 		.initialize(metadata, decimals)
@@ -103,7 +94,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		.accounts({
 			mint: mintKeypair.publicKey,
 			signer: payerKey,
-			receiver: payerATA,
+			receiver: receiverATA,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
 		.instruction()
