@@ -20,6 +20,8 @@ export function useSendAndConfirmTx() {
 				signature: txSig,
 			})
 
+			console.log('transaction signature:', txSig)
+
 			return res
 		},
 		[connection, sendTransaction],
