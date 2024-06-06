@@ -14,23 +14,27 @@ export function Field({
 	const errorId = errors?.length ? `${id}-error` : undefined
 
 	return (
-		<div className={cn('w-full h-[69px] relative', inputProps.className)}>
+		<div
+			className={cn(
+				'w-full h-[69px] relative flex items-end border-b border-opacity-[0.125] p-3 transition duration-500 ease-in-out border-white',
+				inputProps.className,
+			)}
+		>
 			{errors?.map(el => (
 				<div
 					key={el}
-					className="text-teal-300 text-xs absolute -top-3 left-3 flex"
+					className="text-teal-300 text-xs absolute top-3 left-3 flex"
 				>
 					{el}
 				</div>
 			))}
-			<div className="relative flex w-full gap-2 border-b border-opacity-[0.125] p-3 transition duration-500 ease-in-out border-white">
-				<Input
-					id={id}
-					aria-invalid={errorId ? true : undefined}
-					aria-describedby={errorId}
-					{...inputProps}
-				/>
-			</div>
+
+			<Input
+				id={id}
+				aria-invalid={errorId ? true : undefined}
+				aria-describedby={errorId}
+				{...inputProps}
+			/>
 		</div>
 	)
 }

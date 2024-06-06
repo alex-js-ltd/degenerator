@@ -76,7 +76,7 @@ export default function Page() {
 				/>
 
 				<form
-					className="relative z-10 h-full w-full min-w-0 bg-gray-900 py-5"
+					className="relative z-10 h-full w-full min-w-0 bg-gray-900"
 					{...getFormProps(form)}
 					action={action}
 				>
@@ -144,7 +144,7 @@ export default function Page() {
 							/>
 						</div>
 
-						<div className="flex w-full gap-2 px-3 md:px-4">
+						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
 							<div className="flex flex-1 gap-1 sm:gap-2">
 								<ImageChooser
 									name={fields.image.name}
