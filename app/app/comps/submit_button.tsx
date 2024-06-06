@@ -18,7 +18,7 @@ export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {
 	const disabled = !publicKey || pending || isLoading ? true : false
 
 	return (
-		<Button type="submit" disabled={disabled} {...rest}>
+		<Button type="submit" disabled={disabled} {...rest} variant="submit">
 			{pending || isLoading ? (
 				<Spinner />
 			) : (
