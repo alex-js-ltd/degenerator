@@ -3,7 +3,7 @@ import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/app/utils/misc'
 
-const buttonVariants = cva('', {
+const buttonVariants = cva(undefined, {
 	variants: {
 		variant: {
 			connect:
