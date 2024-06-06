@@ -58,13 +58,16 @@ export default function Page() {
 
 	const transaction = useSerializedTx({ serializedTransaction })
 
-	const { run, isLoading } = useAsync()
+	const { run, isLoading, isError, error } = useAsync()
 
 	const sendAndConfirmTx = useSendAndConfirmTx()
 
 	useEffect(() => {
 		if (transaction) run(sendAndConfirmTx(transaction))
 	}, [run, sendAndConfirmTx, transaction])
+
+	console.log('isError', isError)
+	console.log('error', error)
 
 	return (
 		<>
@@ -157,10 +160,6 @@ export default function Page() {
 						</div>
 					</div>
 				</form>
-			</div>
-
-			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl">
-				<p className="ml-auto text-teal-300 text-sm"></p>
 			</div>
 		</>
 	)

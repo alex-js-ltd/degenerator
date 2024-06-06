@@ -1,4 +1,5 @@
 import { ConnectWallet } from '@/app/comps/connect_wallet'
+import { Button } from './button'
 
 export function Header() {
 	return (
@@ -7,7 +8,10 @@ export function Header() {
 				<div className="flex w-full items-center gap-8">
 					<div className="flex items-center gap-2"></div>
 					<div className="ml-auto flex items-center gap-2 sm:gap-4">
-						<ConnectWallet currentUserClassName="gradient" />
+						<ConnectWallet
+							overrideContent={<Button variant="connect">Connect</Button>}
+							currentUserClassName="gradient"
+						/>
 					</div>
 				</div>
 			</header>

@@ -3,18 +3,18 @@ import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/app/utils/misc'
 
-const buttonVariants = cva(
-	'shrink-0 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 items-center justify-center bg-transparent hover:bg-gray-800 focus-visible:bg-gray-800 focus-visible:ring-0 h-8 flex select-none',
-	{
-		variants: {
-			variant: {
-				submit: 'text-zinc-400 hover:text-white w-8 rounded-md',
-				image:
-					'relative rounded-md py-2 w-fit gap-2 px-2 text-white/70 hover:text-white sm:w-24 sm:px-3',
-			},
+const buttonVariants = cva('', {
+	variants: {
+		variant: {
+			connect:
+				'shrink-0 items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background font-medium hover:bg-accent hover:text-accent-foreground h-8 px-3 text-xs gap-[6px] rounded-full shadow-none sm:flex',
+			submit:
+				'shrink-0 whitespace-nowrap text-sm text-zinc-400 hover:text-white font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 flex items-center justify-center bg-transparent hover:bg-gray-800 focus-visible:bg-gray-800 focus-visible:ring-0 h-8 w-8 rounded-md',
+			image:
+				'shrink-0 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 items-center justify-center bg-transparent hover:bg-gray-800 focus-visible:bg-gray-800 focus-visible:ring-0 h-8 py-2 flex select-none gap-2 px-2 text-white/70 focus-within:bg-gray-700 hover:text-white sm:px-3 cursor-pointer relative',
 		},
 	},
-)
+})
 
 export interface ButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
