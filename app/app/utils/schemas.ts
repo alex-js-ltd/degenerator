@@ -6,7 +6,10 @@ export const TokenSchema = z.object({
 	payer: z.string(),
 	name: z.string(),
 	symbol: z.string(),
-	decimals: z.number(),
+	decimals: z
+		.number()
+		.max(9, { message: 'Decimal is too high' })
+		.min(0, { message: 'Decimal is too low' }),
 	supply: z.number(),
 	description: z.string(),
 	image: z.instanceof(File).refine(file => {
