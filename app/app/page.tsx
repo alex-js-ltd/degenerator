@@ -17,6 +17,7 @@ import { useAsync } from '@/app/hooks/use_async'
 import { useSendAndConfirmTx } from '@/app/hooks/use_send_and_confirm_tx'
 import { useSerializedTx } from '@/app/hooks/use_serialized_tx'
 import { usePayer } from '@/app/hooks/use_payer'
+import { Toggle, ToggleOn, ToggleOff, ToggleButton } from '@/app/comps/toggle'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -153,6 +154,12 @@ export default function Page() {
 								setPreviewImage={setPreviewImage}
 								fileRef={fileRef}
 							/>
+
+							<Toggle>
+								<ToggleOn>The button is on</ToggleOn>
+								<ToggleOff>The button is off</ToggleOff>
+								<ToggleButton />
+							</Toggle>
 						</div>
 
 						<SubmitButton isLoading={isLoading} />
