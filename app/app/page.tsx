@@ -154,13 +154,13 @@ export default function Page() {
 								setPreviewImage={setPreviewImage}
 								fileRef={fileRef}
 							/>
-
-							<Toggle>
-								<ToggleOn>The button is on</ToggleOn>
-								<ToggleOff>The button is off</ToggleOff>
-								<ToggleButton />
-							</Toggle>
 						</div>
+
+						<Toggle>
+							<ToggleOn>The button is on</ToggleOn>
+							<ToggleOff>The button is off</ToggleOff>
+							<ToggleButton />
+						</Toggle>
 
 						<SubmitButton isLoading={isLoading} />
 					</div>
