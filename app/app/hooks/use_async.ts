@@ -23,7 +23,7 @@ type AsyncState<DataType> =
 	| {
 			status: 'rejected'
 			data: null
-			error: Error
+			error: unknown
 			promise: null
 	  }
 
@@ -31,7 +31,7 @@ type AsyncAction<DataType> =
 	| { type: 'reset' }
 	| { type: 'pending'; promise: Promise<DataType> }
 	| { type: 'resolved'; data: DataType; promise: Promise<DataType> }
-	| { type: 'rejected'; error: Error; promise: Promise<DataType> }
+	| { type: 'rejected'; error: unknown; promise: Promise<DataType> }
 
 const asyncReducer = <DataType>(
 	state: AsyncState<DataType>,
@@ -83,19 +83,21 @@ const useAsync = <DataType>() => {
 
 	const safeSetState = useSafeDispatch(dispatch)
 
-	const run = useCallback((promise: Promise<DataType>): Promise<DataType> => {
-		dispatch({ type: 'pending', promise })
-		return promise.then(
-			data => {
+	const run = useCallback(
+		async (promise: Promise<DataType>): Promise<DataType | unknown> => {
+			dispatch({ type: 'pending', promise })
+
+			try {
+				const data = await promise
 				safeSetState({ type: 'resolved', data, promise })
 				return data
-			},
-			error => {
+			} catch (error) {
 				safeSetState({ type: 'rejected', error, promise })
-				return Promise.reject(error) // Propagate the error correctly
-			},
-		)
-	}, [])
+				return error
+			}
+		},
+		[],
+	)
 
 	return {
 		isIdle: status === 'idle',
