@@ -22,7 +22,7 @@ export function Toggle({ label, inputProps, buttonProps }: ToggleProps) {
 				className="sr-only"
 				type="checkbox"
 				checked={on}
-				onChange={noop}
+				onChange={() => setOn(!on)}
 				{...inputProps}
 			/>
 			<div className="flex items-center gap-1.5 focus-within:bg-gray-700">
