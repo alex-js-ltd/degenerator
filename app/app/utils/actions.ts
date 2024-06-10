@@ -23,8 +23,17 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		return { ...submission.reply(), serializedTransaction: undefined }
 	}
 
-	const { image, name, symbol, description, decimals, supply, payer } =
-		submission.value
+	const {
+		image,
+		name,
+		symbol,
+		description,
+		decimals,
+		supply,
+		payer,
+		revokeMint,
+		revokeFreeze,
+	} = submission.value
 
 	const blob = await put(image.name, image, { access: 'public' })
 
@@ -113,7 +122,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 	invariant(revokeFreezeAuthority, 'Failed to revoke freeze authority')
 
 	// Close Mint
-	const closeMint = await program.methods
+	const revokeMintAuthority = await program.methods
 		.closeMint()
 		.accounts({
 			currentAuthority: payerKey,
@@ -121,19 +130,21 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		})
 		.instruction()
 
-	invariant(closeMint, 'Failed to revoke mint authority')
+	invariant(revokeMintAuthority, 'Failed to revoke mint authority')
 
 	let blockhash = await connection
 		.getLatestBlockhash()
 		.then(res => res.blockhash)
 
-	const instructions = [
-		initialize,
-		createAssociatedTokenAccount,
-		mintToken,
-		closeMint,
-		revokeFreezeAuthority,
-	]
+	const instructions = [initialize, createAssociatedTokenAccount, mintToken]
+
+	if (revokeFreeze) {
+		instructions.push(revokeFreezeAuthority)
+	}
+
+	if (revokeMint) {
+		instructions.push(revokeMintAuthority)
+	}
 
 	const messageV0 = new TransactionMessage({
 		payerKey,

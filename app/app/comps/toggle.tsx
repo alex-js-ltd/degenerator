@@ -1,45 +1,37 @@
-import { useState, createContext, useContext, type ReactNode } from 'react'
-import { Switch } from './switch'
+import { useState } from 'react'
+import { Icon } from './_icon'
+import { Input, type InputProps } from './input'
+import { Button, type ButtonProps } from './button'
 
-const ToggleContext = createContext<
-	{ on: boolean; toggle: () => void } | undefined
->(undefined)
-ToggleContext.displayName = 'ToggleContext'
+type ToggleProps = {
+	label: { on: string; off: string }
+	inputProps: InputProps
+	buttonProps?: ButtonProps
+}
 
-function Toggle({ children }: { children: ReactNode }) {
+const noop = () => {}
+
+export function Toggle({ label, inputProps, buttonProps }: ToggleProps) {
 	const [on, setOn] = useState(false)
+
 	const toggle = () => setOn(!on)
 
-	console.log('on', on)
-
 	return (
-		<ToggleContext.Provider value={{ on, toggle }}>
-			{children}
-		</ToggleContext.Provider>
+		<Button variant="toggle" type="button" onClick={toggle} {...buttonProps}>
+			<Input
+				className="sr-only"
+				type="checkbox"
+				checked={on}
+				onChange={noop}
+				{...inputProps}
+			/>
+			<div className="flex items-center gap-1.5 focus-within:bg-gray-700">
+				<Icon
+					name={on ? 'revoke' : 'control'}
+					className="w-4 h-4 shrink-0 translate-x-[-1px] sm:translate-x-0"
+				/>
+				<div className="hidden sm:block">{on ? label.on : label.off}</div>
+			</div>
+		</Button>
 	)
 }
-
-function useToggle() {
-	const context = useContext(ToggleContext)
-	if (context === undefined) {
-		throw new Error('useToggle must be used within a <Toggle />')
-	}
-	return context
-}
-
-function ToggleOn({ children }: { children: ReactNode }) {
-	const { on } = useToggle()
-	return on ? children : null
-}
-
-function ToggleOff({ children }: { children: ReactNode }) {
-	const { on } = useToggle()
-	return on ? null : children
-}
-
-function ToggleButton({ ...props }) {
-	const { on, toggle } = useToggle()
-	return <Switch on={on} onClick={toggle} {...props} />
-}
-
-export { Toggle, ToggleOn, ToggleOff, ToggleButton }

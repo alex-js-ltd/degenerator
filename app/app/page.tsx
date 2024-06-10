@@ -9,7 +9,7 @@ import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { Input } from '@/app/comps/input'
-import { Icon } from './comps/_icon'
+import { Toggle } from '@/app/comps/toggle'
 import { useRef, useCallback, useEffect } from 'react'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { createSplToken } from '@/app/utils/actions'
@@ -18,7 +18,6 @@ import { useAsync } from '@/app/hooks/use_async'
 import { useSendAndConfirmTx } from '@/app/hooks/use_send_and_confirm_tx'
 import { useSerializedTx } from '@/app/hooks/use_serialized_tx'
 import { usePayer } from '@/app/hooks/use_payer'
-import { Toggle, ToggleOn, ToggleOff, ToggleButton } from '@/app/comps/toggle'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -156,13 +155,21 @@ export default function Page() {
 									setPreviewImage={setPreviewImage}
 									fileRef={fileRef}
 								/>
-							</div>
+								<Toggle
+									inputProps={{ name: 'revokeMint' }}
+									buttonProps={{ className: 'w-34' }}
+									label={{ on: 'Revoke Mint', off: 'Control Mint' }}
+								/>
 
-							<Toggle>
-								<ToggleOn>The button is on</ToggleOn>
-								<ToggleOff>The button is off</ToggleOff>
-								<ToggleButton />
-							</Toggle>
+								<Toggle
+									inputProps={{ name: 'revokeFreeze' }}
+									buttonProps={{ className: 'w-34' }}
+									label={{
+										on: 'Revoke Freeze',
+										off: 'Control Freeze',
+									}}
+								/>
+							</div>
 
 							<SubmitButton isLoading={isLoading} />
 						</div>
