@@ -20,7 +20,7 @@ export interface IconProps
 export function Icon({ className, variant, name, ...props }: IconProps) {
 	return (
 		<svg {...props} className={cn(iconVariants({ variant, className }))}>
-			<use href={`/icons.svg#${name}`} />
+			<use xlinkHref={`/icons.svg#${name}`} />
 		</svg>
 	)
 }
