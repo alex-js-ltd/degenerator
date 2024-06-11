@@ -155,25 +155,21 @@ export default function Page() {
 								/>
 								<Toggle
 									inputProps={{
-										...getInputProps(fields.revokeMint, {
-											type: 'checkbox',
-										}),
+										name: 'revokeMint',
 									}}
 									label={{
-										on: 'Revoke Mint',
-										off: 'Control Mint',
+										on: 'Revoke Mint Authority',
+										off: 'Control Mint Authority',
 									}}
 								/>
 
 								<Toggle
 									inputProps={{
-										...getInputProps(fields.revokeFreeze, {
-											type: 'checkbox',
-										}),
+										name: 'revokeFreeze',
 									}}
 									label={{
-										on: 'Revoke Freeze',
-										off: 'Control Freeze',
+										on: 'Revoke Freeze Authority',
+										off: 'Control Freeze Authority',
 									}}
 								/>
 							</div>
