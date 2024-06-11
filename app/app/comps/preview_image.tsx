@@ -16,7 +16,7 @@ export function PreviewImage({
 	errors,
 }: PreviewImageProps) {
 	return (
-		<div className="w-full h-[69px]">
+		<div className="h-[69px] w-full">
 			<div
 				className={
 					'flex w-full gap-2 border-b border-white border-opacity-[0.125] p-3'
@@ -26,7 +26,7 @@ export function PreviewImage({
 					{src ? (
 						<>
 							<button
-								className="inline-flex shrink-0 items-center justify-center whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 shadow-sm absolute -right-1.5 -top-1.5 z-10 h-4 w-4 rounded-full border border-gray-900 bg-gray-100 text-gray-900 opacity-0 transition-opacity hover:bg-gray-200 group-hover:opacity-100"
+								className="focus-visible:ring-ring absolute -right-1.5 -top-1.5 z-10 inline-flex h-4 w-4 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-gray-900 bg-gray-100 text-sm font-medium text-gray-900 opacity-0 shadow-sm transition-opacity hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 group-hover:opacity-100"
 								onClick={clearPreviewImage}
 							>
 								<span className="sr-only">Remove image</span>
@@ -45,7 +45,7 @@ export function PreviewImage({
 				{errors?.map(el => (
 					<span
 						key={el}
-						className="text-teal-300 text-xs whitespace-nowrap inline-block"
+						className="inline-block whitespace-nowrap text-xs text-teal-300"
 					>
 						{el}
 					</span>

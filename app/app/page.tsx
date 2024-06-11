@@ -156,7 +156,9 @@ export default function Page() {
 							/>
 							<Toggle
 								inputProps={{
-									name: 'revokeMint',
+									...getInputProps(fields.revokeMint, {
+										type: 'checkbox',
+									}),
 								}}
 								label={{
 									on: 'Revoke Mint Authority',
@@ -166,7 +168,9 @@ export default function Page() {
 
 							<Toggle
 								inputProps={{
-									name: 'revokeFreeze',
+									...getInputProps(fields.revokeFreeze, {
+										type: 'checkbox',
+									}),
 								}}
 								label={{
 									on: 'Revoke Freeze Authority',
