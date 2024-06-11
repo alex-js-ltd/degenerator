@@ -17,7 +17,7 @@ export function Toggle({ label, inputProps, buttonProps }: ToggleProps) {
 	const toggle = () => setOn(!on)
 
 	return (
-		<Button onClick={toggle} variant="toggle" {...buttonProps}>
+		<Button type="button" onClick={toggle} variant="toggle" {...buttonProps}>
 			<Input
 				className="sr-only"
 				type="checkbox"
