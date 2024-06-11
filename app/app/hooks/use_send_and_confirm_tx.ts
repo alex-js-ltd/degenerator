@@ -19,7 +19,7 @@ export function useSendAndConfirmTx() {
 				lastValidBlockHeight,
 				signature: txSig,
 			})
-
+			console.log('confirm trans:', res)
 			console.log('transaction signature:', txSig)
 
 			return res
