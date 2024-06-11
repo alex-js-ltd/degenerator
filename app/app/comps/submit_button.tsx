@@ -5,7 +5,7 @@ import { Icon } from '@/app/comps/_icon'
 import { Spinner } from '@/app/comps/spinner'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 import { useFormStatus } from 'react-dom'
-import { Tooltip } from '@/app/comps/tool_tip'
+import { Tooltip } from '@/app/comps/tooltip'
 
 type SubmitButtonProps = ButtonProps & {
 	isLoading?: boolean

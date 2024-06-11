@@ -17,7 +17,7 @@ export function Toggle({ label, inputProps, buttonProps }: ToggleProps) {
 	const toggle = () => setOn(!on)
 
 	return (
-		<Button variant="toggle" type="button" onClick={toggle} {...buttonProps}>
+		<Button onClick={toggle} variant="toggle" {...buttonProps}>
 			<Input
 				className="sr-only"
 				type="checkbox"
@@ -26,12 +26,25 @@ export function Toggle({ label, inputProps, buttonProps }: ToggleProps) {
 				{...inputProps}
 			/>
 			<div className="flex items-center gap-1.5 focus-within:bg-gray-700">
-				<Icon
-					name={on ? 'revoke' : 'control'}
-					className="w-4 h-4 shrink-0 translate-x-[-1px] sm:translate-x-0"
-				/>
+				{on ? <Revoke /> : <Control />}
 				<div className="hidden sm:block">{on ? label.on : label.off}</div>
 			</div>
 		</Button>
+	)
+}
+
+function Control() {
+	return (
+		<div>
+			<Icon name="control" className="w-4 h-4 shrink-0" />
+		</div>
+	)
+}
+
+function Revoke() {
+	return (
+		<div className="translate-x-[2px] translate-y-[0px]">
+			<Icon name="revoke" className="w-4 h-4 shrink-0" />
+		</div>
 	)
 }

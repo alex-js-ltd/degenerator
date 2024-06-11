@@ -161,8 +161,8 @@ export default function Page() {
 									}),
 								}}
 								label={{
-									on: 'Revoke Mint Authority',
-									off: 'Control Mint Authority',
+									on: 'Revoke Mint',
+									off: 'Control Mint',
 								}}
 							/>
 
@@ -173,8 +173,8 @@ export default function Page() {
 									}),
 								}}
 								label={{
-									on: 'Revoke Freeze Authority',
-									off: 'Control Freeze Authority',
+									on: 'Revoke Freeze',
+									off: 'Control Freeze',
 								}}
 							/>
 						</div>

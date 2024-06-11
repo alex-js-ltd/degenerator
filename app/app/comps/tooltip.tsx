@@ -20,7 +20,6 @@ export function Tooltip({
 						sideOffset={15}
 						side="bottom"
 						align="end"
-					
 					>
 						{content}
 					</TooltipPrimitive.Content>
