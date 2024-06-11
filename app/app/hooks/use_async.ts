@@ -28,7 +28,7 @@ type AsyncState<DataType> =
 	  }
 
 type AsyncAction<DataType> =
-	| { type: 'reset' }
+	| { type: 'idle' }
 	| { type: 'pending'; promise: Promise<DataType> }
 	| { type: 'resolved'; data: DataType; promise: Promise<DataType> }
 	| { type: 'rejected'; error: unknown; promise: Promise<DataType> }
@@ -64,6 +64,7 @@ const asyncReducer = <DataType>(
 				promise: null,
 			}
 		}
+
 		default: {
 			throw new Error(`Unhandled action type: ${action.type}`)
 		}
