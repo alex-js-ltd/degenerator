@@ -18,6 +18,7 @@ import { useAsync } from '@/app/hooks/use_async'
 import { useSendAndConfirmTx } from '@/app/hooks/use_send_and_confirm_tx'
 import { useSerializedTx } from '@/app/hooks/use_serialized_tx'
 import { usePayer } from '@/app/hooks/use_payer'
+import { ErrorMessage } from '@/app/comps/error_message'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -71,118 +72,121 @@ export default function Page() {
 	console.log('error', error)
 
 	return (
-		<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
-			<PreviewImage
-				src={previewImage}
-				clearPreviewImage={clearPreviewImage}
-				errors={fields.image.errors}
-			/>
+		<>
+			<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
+				<PreviewImage
+					src={previewImage}
+					clearPreviewImage={clearPreviewImage}
+					errors={fields.image.errors}
+				/>
 
-			<form
-				className="relative z-10 h-full w-full min-w-0 bg-gray-900"
-				{...getFormProps(form)}
-				action={action}
-			>
-				<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
-					<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
-						<Field
-							inputProps={{
-								...getInputProps(fields.name, {
-									type: 'text',
-								}),
-								placeholder: 'Name',
-							}}
-							errors={fields.name.errors}
-						/>
-
-						<Field
-							inputProps={{
-								...getInputProps(fields.symbol, {
-									type: 'text',
-								}),
-								placeholder: 'Symbol',
-							}}
-							errors={fields.symbol.errors}
-						/>
-
-						<Field
-							inputProps={{
-								...getInputProps(fields.decimals, {
-									type: 'number',
-								}),
-								placeholder: 'Decimals',
-								min: 0,
-								max: 9,
-							}}
-							errors={fields.decimals.errors}
-						/>
-
-						<Field
-							inputProps={{
-								...getInputProps(fields.supply, {
-									type: 'number',
-								}),
-								placeholder: 'Supply',
-								min: 1,
-							}}
-							errors={fields.supply.errors}
-						/>
-
-						<Field
-							inputProps={{
-								...getInputProps(fields.description, {
-									type: 'text',
-								}),
-								placeholder: 'Description',
-								className: 'sm:col-span-4 w-full',
-							}}
-							errors={fields.description.errors}
-						/>
-
-						<Input
-							{...getInputProps(fields.payer, {
-								type: 'hidden',
-							})}
-							defaultValue={payer}
-						/>
-					</div>
-
-					<div className="flex items-end w-full gap-2 p-3 h-[69px]">
-						<div className="flex flex-1 gap-1 sm:gap-2">
-							<ImageChooser
-								name={fields.image.name}
-								setPreviewImage={setPreviewImage}
-								fileRef={fileRef}
-							/>
-							<Toggle
+				<form
+					className="relative z-10 h-full w-full min-w-0 bg-gray-900"
+					{...getFormProps(form)}
+					action={action}
+				>
+					<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
+						<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
+							<Field
 								inputProps={{
-									...getInputProps(fields.revokeMint, {
-										type: 'checkbox',
+									...getInputProps(fields.name, {
+										type: 'text',
 									}),
+									placeholder: 'Name',
 								}}
-								label={{
-									on: 'Revoke Mint',
-									off: 'Control Mint',
-								}}
+								errors={fields.name.errors}
 							/>
 
-							<Toggle
+							<Field
 								inputProps={{
-									...getInputProps(fields.revokeFreeze, {
-										type: 'checkbox',
+									...getInputProps(fields.symbol, {
+										type: 'text',
 									}),
+									placeholder: 'Symbol',
 								}}
-								label={{
-									on: 'Revoke Freeze',
-									off: 'Control Freeze',
+								errors={fields.symbol.errors}
+							/>
+
+							<Field
+								inputProps={{
+									...getInputProps(fields.decimals, {
+										type: 'number',
+									}),
+									placeholder: 'Decimals',
+									min: 0,
+									max: 9,
 								}}
+								errors={fields.decimals.errors}
+							/>
+
+							<Field
+								inputProps={{
+									...getInputProps(fields.supply, {
+										type: 'number',
+									}),
+									placeholder: 'Supply',
+									min: 1,
+								}}
+								errors={fields.supply.errors}
+							/>
+
+							<Field
+								inputProps={{
+									...getInputProps(fields.description, {
+										type: 'text',
+									}),
+									placeholder: 'Description',
+									className: 'sm:col-span-4 w-full',
+								}}
+								errors={fields.description.errors}
+							/>
+
+							<Input
+								{...getInputProps(fields.payer, {
+									type: 'hidden',
+								})}
+								defaultValue={payer}
 							/>
 						</div>
 
-						<SubmitButton isLoading={isLoading} />
+						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
+							<div className="flex flex-1 gap-1 sm:gap-2">
+								<ImageChooser
+									name={fields.image.name}
+									setPreviewImage={setPreviewImage}
+									fileRef={fileRef}
+								/>
+								<Toggle
+									inputProps={{
+										...getInputProps(fields.revokeMint, {
+											type: 'checkbox',
+										}),
+									}}
+									label={{
+										on: 'Revoke Mint',
+										off: 'Control Mint',
+									}}
+								/>
+
+								<Toggle
+									inputProps={{
+										...getInputProps(fields.revokeFreeze, {
+											type: 'checkbox',
+										}),
+									}}
+									label={{
+										on: 'Revoke Freeze',
+										off: 'Control Freeze',
+									}}
+								/>
+							</div>
+
+							<SubmitButton isLoading={isLoading} />
+						</div>
 					</div>
-				</div>
-			</form>
-		</div>
+				</form>
+			</div>
+			{isError ? <ErrorMessage error={error} /> : null}
+		</>
 	)
 }
