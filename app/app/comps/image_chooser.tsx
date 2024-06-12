@@ -39,7 +39,7 @@ export function ImageChooser({
 	return (
 		<Button type="button" variant="image" onClick={onClick}>
 			<input
-				className="sr-only"
+				className="sr-only pointer-events-none"
 				type="file"
 				onChange={event => {
 					const file = event.target.files?.[0]
