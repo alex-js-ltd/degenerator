@@ -53,7 +53,9 @@ function getSuccessProps({
 	isSuccess: boolean
 	txSig: string
 }): ToastProps {
-	const href = `https://solscan.io/tx/${txSig}?cluster=${CLUSTER}`
+	const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
+
+	const href = `https://solscan.io/tx/${txSig}?cluster=${cluster}`
 
 	const Message = () => (
 		<a href={href} target="_blank">
