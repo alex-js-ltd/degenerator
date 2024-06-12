@@ -37,7 +37,7 @@ export function ImageChooser({
 	}, [fileRef])
 
 	return (
-		<Button variant="image" onClick={onClick}>
+		<Button type="button" variant="image" onClick={onClick}>
 			<input
 				className="sr-only"
 				type="file"
