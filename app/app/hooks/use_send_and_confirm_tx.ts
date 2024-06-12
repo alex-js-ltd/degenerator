@@ -22,9 +22,7 @@ export function useSendAndConfirmTx() {
 			})
 			console.log('confirm', confirm)
 			console.log('transaction signature:', txSig)
-
-			invariant(!!confirm.value.err, '❌ - Transaction not confirmed.')
-
+			invariant(!!confirm.value.err, '😭🔫 Transaction not confirmed.')
 			return confirm
 		},
 		[connection, sendTransaction],
