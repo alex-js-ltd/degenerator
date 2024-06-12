@@ -1,5 +1,6 @@
 import type { Reducer, Dispatch } from 'react'
 import { useReducer, useCallback, useLayoutEffect, useRef } from 'react'
+import { delay } from '@/app/utils/misc'
 
 type AsyncState<DataType> =
 	| {
@@ -32,6 +33,7 @@ type AsyncAction<DataType> =
 	| { type: 'pending'; promise: Promise<DataType> }
 	| { type: 'resolved'; data: DataType; promise: Promise<DataType> }
 	| { type: 'rejected'; error: unknown; promise: Promise<DataType> }
+	| { type: 'reset' }
 
 const asyncReducer = <DataType>(
 	state: AsyncState<DataType>,
@@ -62,6 +64,13 @@ const asyncReducer = <DataType>(
 				data: null,
 				error: action.error,
 				promise: null,
+			}
+		}
+
+		case 'reset': {
+			if (state.status === 'pending') return state
+			return {
+				status: 'idle',
 			}
 		}
 
@@ -101,6 +110,11 @@ const useAsync = <DataType>() => {
 		[],
 	)
 
+	const reset = useCallback(async () => {
+		await delay(15000)
+		dispatch({ type: 'reset' })
+	}, [])
+
 	return {
 		isIdle: status === 'idle',
 		isLoading: status === 'pending',
@@ -111,6 +125,7 @@ const useAsync = <DataType>() => {
 		status,
 		data,
 		run,
+		reset,
 	}
 }
 

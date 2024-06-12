@@ -19,7 +19,7 @@ import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
-import { ErrorMessage } from '@/app/comps/error_message'
+import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -63,10 +63,18 @@ export default function Page() {
 
 	const signAndSendTransaction = useSignAndSendTransaction()
 
-	const { run, isLoading, isError, error } = useAsync()
+	const {
+		run,
+		data: txSig,
+		isLoading,
+		isSuccess,
+		isError,
+		error,
+		reset,
+	} = useAsync<string>()
 
 	useEffect(() => {
-		if (transaction) run(signAndSendTransaction(transaction))
+		if (transaction) run(signAndSendTransaction(transaction)).then(reset)
 	}, [run, signAndSendTransaction, transaction])
 
 	return (
@@ -164,7 +172,8 @@ export default function Page() {
 					</div>
 				</form>
 			</div>
-			{isError ? <ErrorMessage error={error} /> : null}
+			{isError ? <Toast {...getErrorProps({ isError, error })} /> : null}
+			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 		</>
 	)
 }
