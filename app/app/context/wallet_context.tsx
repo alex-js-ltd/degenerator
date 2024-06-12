@@ -10,6 +10,8 @@ import { getEnv } from '@/app/utils/env'
 
 const { ENDPOINT, CLUSTER } = getEnv()
 
+const noop = () => {}
+
 export function WalletProvider({ children }: { children: ReactNode }) {
 	return (
 		<ConnectionProvider endpoint={ENDPOINT}>
@@ -23,6 +25,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 						description: 'Generate SPL Tokens on Solana',
 						url: 'https://www.degenerator.dev',
 						iconUrls: [],
+					},
+
+					notificationCallback: {
+						onConnect: noop,
+						onConnecting: noop,
+						onDisconnect: noop,
+						onNotInstalled: noop,
 					},
 
 					theme: 'light',

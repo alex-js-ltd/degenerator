@@ -162,7 +162,7 @@ export default function Page() {
 					</div>
 				</form>
 			</div>
-			{isError ? <Toast {...getErrorProps({ isError, error })} /> : null}
+			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 		</Fragment>
 	)
