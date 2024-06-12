@@ -93,6 +93,7 @@ const useAsync = <DataType>() => {
 				safeSetState({ type: 'resolved', data, promise })
 				return data
 			} catch (error) {
+				console.log('error', error)
 				safeSetState({ type: 'rejected', error, promise })
 				return error
 			}
