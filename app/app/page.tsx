@@ -5,13 +5,13 @@ import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
 import { TokenSchema } from '@/app/utils/schemas'
-import { useState } from 'react'
+import { useImageUpload } from '@/app/hooks/use_image_upload'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { Input } from '@/app/comps/input'
 import { MintToggle, FreezeToggle } from '@/app/comps/toggle'
-import { useRef, useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { createSplToken } from '@/app/utils/actions'
 import { useFormState } from 'react-dom'
@@ -42,18 +42,8 @@ export default function Page() {
 		lastResult,
 	})
 
-	const [previewImage, setPreviewImage] = useState<string | undefined>(
-		undefined,
-	)
-
-	const fileRef = useRef<HTMLInputElement>(null)
-
-	const clearPreviewImage = useCallback(() => {
-		if (fileRef.current) {
-			fileRef.current.value = ''
-			setPreviewImage(undefined)
-		}
-	}, [])
+	const { previewImage, setPreviewImage, clearPreviewImage, fileRef } =
+		useImageUpload()
 
 	const payer = usePayer()
 
