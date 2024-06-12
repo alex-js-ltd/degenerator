@@ -1,6 +1,7 @@
 import type { VersionedTransaction } from '@solana/web3.js'
 import { useConnection, useWallet } from '@jup-ag/wallet-adapter'
 import { useCallback } from 'react'
+import invariant from 'tiny-invariant'
 
 export function useSendAndConfirmTx() {
 	const { connection } = useConnection()
@@ -22,9 +23,8 @@ export function useSendAndConfirmTx() {
 			console.log('confirm', confirm)
 			console.log('transaction signature:', txSig)
 
-			if (confirm.value.err) {
-				throw new Error('❌ - Transaction not confirmed.')
-			}
+			invariant(!!confirm.value.err, '❌ - Transaction not confirmed.')
+
 			return confirm
 		},
 		[connection, sendTransaction],
