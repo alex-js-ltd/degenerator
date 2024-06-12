@@ -3,9 +3,8 @@ import { useConnection, useWallet } from '@jup-ag/wallet-adapter'
 import { useCallback } from 'react'
 import invariant from 'tiny-invariant'
 
-export function useSendAndConfirmTx() {
+export function useSignAndSendTransaction() {
 	const { connection } = useConnection()
-
 	const { sendTransaction } = useWallet()
 
 	return useCallback(
@@ -14,20 +13,20 @@ export function useSendAndConfirmTx() {
 
 			const latestBlockHash = await connection.getLatestBlockhash()
 
-			invariant(latestBlockHash, '😭🔫 Failed to get latest blockhash.')
+			invariant(latestBlockHash, 'Failed to get latest blockhash... 💩')
 
 			const confirm = await connection.confirmTransaction({
 				blockhash: latestBlockHash.blockhash,
 				lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
 				signature: txSig,
 			})
-			console.log('confirm', confirm)
-			console.log('transaction signature:', txSig)
 
 			const transactionError = confirm.value.err
-			invariant(transactionError === null, '😭🔫 Transaction not confirmed.')
+			invariant(transactionError === null, 'Transaction not confirmed... 😭🔫')
 
-			return confirm
+			console.log(`Transaction ${txSig} confirmed 🚀`)
+
+			return txSig
 		},
 		[connection, sendTransaction],
 	)

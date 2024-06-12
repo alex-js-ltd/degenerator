@@ -16,8 +16,8 @@ import { SubmitButton } from '@/app/comps/submit_button'
 import { createSplToken } from '@/app/utils/actions'
 import { useFormState } from 'react-dom'
 import { useAsync } from '@/app/hooks/use_async'
-import { useSendAndConfirmTx } from '@/app/hooks/use_send_and_confirm_tx'
-import { useSerializedTx } from '@/app/hooks/use_serialized_tx'
+import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
+import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { ErrorMessage } from '@/app/comps/error_message'
 
@@ -59,15 +59,15 @@ export default function Page() {
 
 	const { serializedTransaction } = lastResult
 
-	const transaction = useSerializedTx({ serializedTransaction })
+	const transaction = useSerializedTransaction({ serializedTransaction })
+
+	const signAndSendTransaction = useSignAndSendTransaction()
 
 	const { run, isLoading, isError, error } = useAsync()
 
-	const sendAndConfirmTx = useSendAndConfirmTx()
-
 	useEffect(() => {
-		if (transaction) run(sendAndConfirmTx(transaction))
-	}, [run, sendAndConfirmTx, transaction])
+		if (transaction) run(signAndSendTransaction(transaction))
+	}, [run, signAndSendTransaction, transaction])
 
 	return (
 		<>

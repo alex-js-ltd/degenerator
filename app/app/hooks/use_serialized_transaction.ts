@@ -1,7 +1,7 @@
 import { VersionedTransaction } from '@solana/web3.js'
 import { useMemo } from 'react'
 
-export function useSerializedTx({
+export function useSerializedTransaction({
 	serializedTransaction,
 }: {
 	serializedTransaction: Uint8Array | undefined
