@@ -19,14 +19,16 @@ export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {
 	const disabled = !publicKey || pending || isLoading ? true : false
 
 	return (
-		<Tooltip content="Submit">
-			<Button type="submit" disabled={disabled} {...rest} variant="submit">
-				{pending || isLoading ? (
-					<Spinner />
-				) : (
-					<Icon name="arrow-up" className="w-6 h-6" />
-				)}
-			</Button>
+		<Tooltip content="Submit" open={publicKey ? undefined : false}>
+			<span className={publicKey ? 'cursor-pointer' : 'cursor-not-allowed'}>
+				<Button type="submit" disabled={disabled} {...rest} variant="submit">
+					{pending || isLoading ? (
+						<Spinner />
+					) : (
+						<Icon name="arrow-up" className="w-6 h-6" />
+					)}
+				</Button>
+			</span>
 		</Tooltip>
 	)
 }

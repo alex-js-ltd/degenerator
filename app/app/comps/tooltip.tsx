@@ -1,18 +1,13 @@
 'use client'
 
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
-import { type ReactNode } from 'react'
 
-export function Tooltip({
-	children,
-	content,
-}: {
-	children: ReactNode
-	content: string
-}) {
+type TooltipProps = TooltipPrimitive.TooltipProps & { content: string }
+
+export function Tooltip({ open, children, content }: TooltipProps) {
 	return (
 		<TooltipPrimitive.Provider>
-			<TooltipPrimitive.Root>
+			<TooltipPrimitive.Root delayDuration={100} open={open}>
 				<TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
 				<TooltipPrimitive.Portal>
 					<TooltipPrimitive.Content
