@@ -59,7 +59,7 @@ function getSuccessProps({
 
 	const Message = () => (
 		<a href={href} target="_blank">
-			Transaction confirmed 🚀
+			Transaction confirmed &nbsp;🚀
 		</a>
 	)
 
