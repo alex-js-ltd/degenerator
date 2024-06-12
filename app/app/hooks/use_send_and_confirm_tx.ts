@@ -14,15 +14,18 @@ export function useSendAndConfirmTx() {
 			const { blockhash, lastValidBlockHeight } =
 				await connection.getLatestBlockhash()
 
-			const res = await connection.confirmTransaction({
+			const confirm = await connection.confirmTransaction({
 				blockhash,
 				lastValidBlockHeight,
 				signature: txSig,
 			})
-			console.log('confirm trans:', res)
+			console.log('confirm', confirm)
 			console.log('transaction signature:', txSig)
 
-			return res
+			if (confirm.value.err) {
+				throw new Error('❌ - Transaction not confirmed.')
+			}
+			return confirm
 		},
 		[connection, sendTransaction],
 	)
