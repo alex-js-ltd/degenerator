@@ -25,7 +25,7 @@ export function ErrorMessage({ error }: ErrorMessageProps) {
 				className="bg-error-bg border-2 border-gray-300 rounded-[8px] text-error-text h-[37px] flex items-center px-3"
 				open={open}
 				onOpenChange={setOpen}
-				duration={50000}
+				duration={10000}
 			>
 				<Icon name="error" className="w-[20px] h-[20px]" />
 				<ToastPrimitive.Description className="flex items-center h-full ml-3 text-xs">
