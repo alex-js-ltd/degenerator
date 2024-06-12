@@ -1,50 +1,72 @@
-import { useState } from 'react'
-import { Icon } from './_icon'
+import { useState, createContext, useContext, type ReactNode } from 'react'
 import { Input, type InputProps } from './input'
-import { Button, type ButtonProps } from './button'
+import { Button } from '@/app/comps/button'
 
-type ToggleProps = {
-	label: { on: string; off: string }
-	inputProps: InputProps
-	buttonProps?: ButtonProps
-}
+const ToggleContext = createContext<
+	{ on: boolean; toggle: () => void } | undefined
+>(undefined)
+ToggleContext.displayName = 'ToggleContext'
 
-const noop = () => {}
-
-export function Toggle({ label, inputProps, buttonProps }: ToggleProps) {
+function Toggle({ children }: { children: ReactNode }) {
 	const [on, setOn] = useState(false)
-
 	const toggle = () => setOn(!on)
 
 	return (
-		<Button type="button" onClick={toggle} variant="toggle" {...buttonProps}>
-			<Input
-				className="sr-only"
-				type="checkbox"
-				checked={on}
-				onChange={noop}
-				{...inputProps}
-			/>
-			<div className="flex items-center gap-1.5 focus-within:bg-gray-700">
-				{on ? <Revoke /> : <Control />}
-				<div className="hidden sm:block">{on ? label.on : label.off}</div>
-			</div>
+		<ToggleContext.Provider value={{ on, toggle }}>
+			{children}
+		</ToggleContext.Provider>
+	)
+}
+
+function useToggle() {
+	const context = useContext(ToggleContext)
+	if (context === undefined) {
+		throw new Error('useToggle must be used within a <Toggle />')
+	}
+	return context
+}
+
+function On({ children }: { children: ReactNode }) {
+	const { on, toggle } = useToggle()
+
+	if (!on) return null
+
+	return (
+		<Button type="button" onClick={toggle} variant="toggle">
+			{children}
 		</Button>
 	)
 }
 
-function Control() {
+function Off({ children }: { children: ReactNode }) {
+	const { on, toggle } = useToggle()
+
+	if (on) return null
+
 	return (
-		<div>
-			<Icon name="control" className="w-4 h-4 shrink-0" />
-		</div>
+		<Button type="button" onClick={toggle} variant="toggle">
+			{children}
+		</Button>
 	)
 }
 
-function Revoke() {
+const noop = () => {}
+
+function Checkbox({ inputProps }: { inputProps: InputProps }) {
+	const { on } = useToggle()
 	return (
-		<div className="translate-x-[2px] translate-y-[0px]">
-			<Icon name="revoke" className="w-4 h-4 shrink-0" />
-		</div>
+		<Input
+			className="sr-only"
+			type="checkbox"
+			checked={on}
+			onChange={noop}
+			{...inputProps}
+		/>
 	)
 }
+
+Toggle.On = On
+Toggle.Off = Off
+Toggle.Input = Checkbox
+
+export { Toggle }
