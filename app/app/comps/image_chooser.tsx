@@ -1,6 +1,11 @@
 'use client'
 
-import type { Dispatch, SetStateAction, RefObject } from 'react'
+import {
+	useCallback,
+	type Dispatch,
+	type SetStateAction,
+	type RefObject,
+} from 'react'
 import { Button } from './button'
 import { Icon } from '@/app/comps/_icon'
 import { type FieldName } from '@conform-to/react'
@@ -25,10 +30,16 @@ export function ImageChooser({
 	fileRef,
 	setPreviewImage,
 }: ImageChooserProps) {
+	const onClick = useCallback(() => {
+		if (fileRef.current) {
+			fileRef.current.click()
+		}
+	}, [fileRef])
+
 	return (
-		<Button variant="image">
+		<Button variant="image" onClick={onClick}>
 			<input
-				className="absolute z-0 opacity-0 w-full h-full"
+				className="sr-only"
 				type="file"
 				onChange={event => {
 					const file = event.target.files?.[0]
