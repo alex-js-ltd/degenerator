@@ -1,5 +1,6 @@
 import { useState, createContext, useContext, type ReactNode } from 'react'
 import { Input, type InputProps } from './input'
+import { Icon } from './_icon'
 import { Button } from '@/app/comps/button'
 
 const ToggleContext = createContext<
@@ -69,4 +70,46 @@ Toggle.On = On
 Toggle.Off = Off
 Toggle.Input = Checkbox
 
-export { Toggle }
+function MintToggle() {
+	return (
+		<Toggle>
+			<Toggle.On>
+				<Icon
+					name="revoke"
+					className="w-4 h-4 shrink-0 translate-x-[2px] translate-y-[0px]"
+				/>
+				<div className="hidden sm:block">Mint Authority</div>
+			</Toggle.On>
+
+			<Toggle.Off>
+				<Icon name="control" className="w-4 h-4 shrink-0" />
+				<div className="hidden sm:block">Mint Authority</div>
+			</Toggle.Off>
+
+			<Toggle.Input inputProps={{ name: 'revokeMint' }} />
+		</Toggle>
+	)
+}
+
+function FreezeToggle() {
+	return (
+		<Toggle>
+			<Toggle.On>
+				<Icon
+					name="revoke"
+					className="w-4 h-4 shrink-0 translate-x-[2px] translate-y-[0px]"
+				/>
+				<div className="hidden sm:block">Freeze Authority</div>
+			</Toggle.On>
+
+			<Toggle.Off>
+				<Icon name="control" className="w-4 h-4 shrink-0" />
+				<div className="hidden sm:block">Freeze Authority</div>
+			</Toggle.Off>
+
+			<Toggle.Input inputProps={{ name: 'revokeFreeze' }} />
+		</Toggle>
+	)
+}
+
+export { Toggle, MintToggle, FreezeToggle }

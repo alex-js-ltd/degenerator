@@ -1,5 +1,6 @@
 'use client'
 
+import { Fragment } from 'react'
 import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
@@ -9,8 +10,7 @@ import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { Input } from '@/app/comps/input'
-import { Icon } from '@/app/comps/_icon'
-import { Toggle } from '@/app/comps/toggle'
+import { MintToggle, FreezeToggle } from '@/app/comps/toggle'
 import { useRef, useCallback, useEffect } from 'react'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { createSplToken } from '@/app/utils/actions'
@@ -78,7 +78,7 @@ export default function Page() {
 	}, [run, signAndSendTransaction, transaction])
 
 	return (
-		<>
+		<Fragment>
 			<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 				<PreviewImage
 					src={previewImage}
@@ -174,48 +174,6 @@ export default function Page() {
 			</div>
 			{isError ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
-		</>
-	)
-}
-
-function MintToggle() {
-	return (
-		<Toggle>
-			<Toggle.On>
-				<Icon
-					name="revoke"
-					className="w-4 h-4 shrink-0 translate-x-[2px] translate-y-[0px]"
-				/>
-				<div className="hidden sm:block">Mint Authority</div>
-			</Toggle.On>
-
-			<Toggle.Off>
-				<Icon name="control" className="w-4 h-4 shrink-0" />
-				<div className="hidden sm:block">Mint Authority</div>
-			</Toggle.Off>
-
-			<Toggle.Input inputProps={{ name: 'revokeMint' }} />
-		</Toggle>
-	)
-}
-
-function FreezeToggle() {
-	return (
-		<Toggle>
-			<Toggle.On>
-				<Icon
-					name="revoke"
-					className="w-4 h-4 shrink-0 translate-x-[2px] translate-y-[0px]"
-				/>
-				<div className="hidden sm:block">Freeze Authority</div>
-			</Toggle.On>
-
-			<Toggle.Off>
-				<Icon name="control" className="w-4 h-4 shrink-0" />
-				<div className="hidden sm:block">Freeze Authority</div>
-			</Toggle.Off>
-
-			<Toggle.Input inputProps={{ name: 'revokeFreeze' }} />
-		</Toggle>
+		</Fragment>
 	)
 }
