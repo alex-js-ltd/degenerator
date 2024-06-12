@@ -14,7 +14,7 @@ export function useSendAndConfirmTx() {
 
 			const latestBlockHash = await connection.getLatestBlockhash()
 
-			invariant(latestBlockHash, '😭🔫 Transaction not confirmed.')
+			invariant(latestBlockHash, '😭🔫 Failed to get latest blockhash.')
 
 			const confirm = await connection.confirmTransaction({
 				blockhash: latestBlockHash.blockhash,
@@ -23,7 +23,9 @@ export function useSendAndConfirmTx() {
 			})
 			console.log('confirm', confirm)
 			console.log('transaction signature:', txSig)
-			invariant(confirm.value.err !== null, '😭🔫 Transaction not confirmed.')
+
+			const transactionError = confirm.value.err
+			invariant(transactionError === null, '😭🔫 Transaction not confirmed.')
 
 			return confirm
 		},
