@@ -177,12 +177,12 @@ function MintToggle() {
 					name="revoke"
 					className="w-4 h-4 shrink-0 translate-x-[2px] translate-y-[0px]"
 				/>
-				<div className="hidden sm:block">Revoke Mint Authority</div>
+				<div className="hidden sm:block">Mint Authority</div>
 			</Toggle.On>
 
 			<Toggle.Off>
 				<Icon name="control" className="w-4 h-4 shrink-0" />
-				<div className="hidden sm:block">Control Mint Authority</div>
+				<div className="hidden sm:block">Mint Authority</div>
 			</Toggle.Off>
 
 			<Toggle.Input inputProps={{ name: 'revokeMint' }} />
@@ -198,12 +198,12 @@ function FreezeToggle() {
 					name="revoke"
 					className="w-4 h-4 shrink-0 translate-x-[2px] translate-y-[0px]"
 				/>
-				<div className="hidden sm:block">Revoke Freeze Authority</div>
+				<div className="hidden sm:block">Freeze Authority</div>
 			</Toggle.On>
 
 			<Toggle.Off>
 				<Icon name="control" className="w-4 h-4 shrink-0" />
-				<div className="hidden sm:block">Control Freeze Authority</div>
+				<div className="hidden sm:block">Freeze Authority</div>
 			</Toggle.Off>
 
 			<Toggle.Input inputProps={{ name: 'revokeFreeze' }} />

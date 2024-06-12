@@ -39,14 +39,6 @@
             <path clip-rule="evenodd" d="M14 6V4.5a2 2 0 1 0-4 0V6h2v6.5A2.5 2.5 0 0 1 9.5 15h-7A2.5 2.5 0 0 1 0 12.5V6h8.5V4.5a3.5 3.5 0 1 1 7 0V6H14Zm-3.5 1.5h-9v5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-5Z" fill="currentColor" fill-rule="evenodd"></path>
         </symbol>
 
-        <!-- Revoke Translated -->
-<symbol id="revoke_translated" fill="none" viewBox="0 0 18 16" xmlns="http://www.w3.org/2000/svg">
-    <g transform="translate(2, 0)">
-        <path clip-rule="evenodd" d="M14 6V4.5a2 2 0 1 0-4 0V6h2v6.5A2.5 2.5 0 0 1 9.5 15h-7A2.5 2.5 0 0 1 0 12.5V6h8.5V4.5a3.5 3.5 0 1 1 7 0V6H14Zm-3.5 1.5h-9v5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-5Z" fill="currentColor" fill-rule="evenodd"></path>
-    </g>
-</symbol>
-
-
         <!-- Loading -->
         <symbol id="loading" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-circle size-6 animate-spin" aria-hidden="true">
             <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
