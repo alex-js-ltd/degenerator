@@ -2,6 +2,7 @@
 
 import type { ListOfErrors } from './field'
 import { Icon } from './_icon'
+import Image from 'next/image'
 
 type PreviewImageProps = {
 	src: string | undefined
@@ -32,10 +33,11 @@ export function PreviewImage({
 								<Icon className="h-2.5 w-2.5" name="close" />
 							</button>
 							<div className="overflow-hidden rounded-lg group-hover:opacity-80">
-								<img
+								<Image
 									alt="your uploaded image"
-									className="relative aspect-[48/44] object-cover object-center"
+									className="relative aspect-[48/44] object-cover object-center rounded-lg"
 									src={src}
+									fill={true}
 								/>
 							</div>
 						</>
