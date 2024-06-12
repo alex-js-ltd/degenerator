@@ -1,7 +1,6 @@
 'use client'
 
 import type { ListOfErrors } from './field'
-import { cn } from '@/app/utils/misc'
 import { Icon } from './_icon'
 
 type PreviewImageProps = {
