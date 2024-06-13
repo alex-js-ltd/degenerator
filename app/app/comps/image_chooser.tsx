@@ -1,9 +1,9 @@
 'use client'
 
 import { type RefObject, type ChangeEvent } from 'react'
-import { Button } from './button'
-import { Icon } from '@/app/comps/_icon'
 import { type FieldName } from '@conform-to/react'
+import { Button } from '@/app/comps/button'
+import { Icon } from '@/app/comps/_icon'
 
 type ImageChooserProps = {
 	name: FieldName<
