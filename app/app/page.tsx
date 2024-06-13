@@ -42,7 +42,7 @@ export default function Page() {
 		lastResult,
 	})
 
-	const { previewImage, setPreviewImage, clearPreviewImage, fileRef } =
+	const { previewImage, clearPreviewImage, fileRef, onChange } =
 		useImageUpload()
 
 	const payer = usePayer()
@@ -149,8 +149,8 @@ export default function Page() {
 							<div className="flex flex-1 gap-1 sm:gap-2">
 								<ImageChooser
 									name={fields.image.name}
-									setPreviewImage={setPreviewImage}
 									fileRef={fileRef}
+									onChange={onChange}
 								/>
 
 								<MintToggle />

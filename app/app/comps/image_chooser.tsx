@@ -1,11 +1,6 @@
 'use client'
 
-import {
-	useCallback,
-	type Dispatch,
-	type SetStateAction,
-	type RefObject,
-} from 'react'
+import { type RefObject, type ChangeEvent } from 'react'
 import { Button } from './button'
 import { Icon } from '@/app/comps/_icon'
 import { type FieldName } from '@conform-to/react'
@@ -22,39 +17,24 @@ type ImageChooserProps = {
 		string[]
 	>
 	fileRef: RefObject<HTMLInputElement>
-	setPreviewImage: Dispatch<SetStateAction<string | undefined>>
+	onChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
-export function ImageChooser({
-	name,
-	fileRef,
-	setPreviewImage,
-}: ImageChooserProps) {
-	const onClick = useCallback(() => {
-		if (fileRef.current) {
-			fileRef.current.click()
-		}
-	}, [fileRef])
-
+export function ImageChooser({ name, fileRef, onChange }: ImageChooserProps) {
 	return (
-		<Button type="button" variant="image" onClick={onClick}>
+		<Button
+			type="button"
+			variant="image"
+			onClick={() => {
+				if (fileRef.current) {
+					fileRef.current.click()
+				}
+			}}
+		>
 			<input
 				className="sr-only pointer-events-none"
 				type="file"
-				onChange={event => {
-					const file = event.target.files?.[0]
-
-					if (file) {
-						const reader = new FileReader()
-
-						reader.onloadend = () => {
-							setPreviewImage(reader.result as string)
-						}
-						reader.readAsDataURL(file)
-					} else {
-						setPreviewImage(undefined)
-					}
-				}}
+				onChange={onChange}
 				accept="image/*"
 				name={name}
 				ref={fileRef}
