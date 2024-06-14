@@ -1,10 +1,10 @@
 'use client'
 
-import { Fragment } from 'react'
+import { Fragment, useMemo } from 'react'
 import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
-import { TokenSchema } from '@/app/utils/schemas'
+import { TokenSchema, PoolSchema } from '@/app/utils/schemas'
 import { useImageUpload } from '@/app/hooks/use_image_upload'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
@@ -13,13 +13,16 @@ import { Input } from '@/app/comps/input'
 import { MintToggle, FreezeToggle } from '@/app/comps/toggle'
 import { useEffect } from 'react'
 import { SubmitButton } from '@/app/comps/submit_button'
-import { createSplToken } from '@/app/utils/actions'
+import { createSplToken } from '@/app/actions/create_spl_token'
+import { createPool } from '@/app/actions/create_pool'
 import { useFormState } from 'react-dom'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
+import { useSignAllTransactions } from '@/app/hooks/use_sign_all_transactions'
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
+import { useSerializedTransactions } from './hooks/use_serialized_transactions'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -164,6 +167,65 @@ export default function Page() {
 			</div>
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
+
+			<CreatePool />
 		</Fragment>
+	)
+}
+
+function CreatePool() {
+	const [lastResult, action] = useFormState(createPool, {
+		serializedTransactions: undefined,
+	})
+
+	const [form, fields] = useForm({
+		// Reuse the validation logic on the client
+		onValidate({ formData }) {
+			return parseWithZod(formData, { schema: PoolSchema })
+		},
+
+		// Validate the form on blur event triggered
+		shouldValidate: 'onBlur',
+
+		shouldRevalidate: 'onInput',
+
+		lastResult,
+	})
+
+	const payer = usePayer()
+
+	const { serializedTransactions } = lastResult
+
+	const transactions = useSerializedTransactions({ serializedTransactions })
+
+	const signAllTransactions = useSignAllTransactions()
+
+	const {
+		run,
+		data: txSig,
+		isLoading,
+		isSuccess,
+		isError,
+		error,
+		reset,
+	} = useAsync()
+
+	console.log(txSig)
+
+	useEffect(() => {
+		if (transactions) run(signAllTransactions(transactions))
+	}, [run, signAllTransactions, transactions])
+
+	return (
+		<form {...getFormProps(form)} action={action}>
+			<Input
+				{...getInputProps(fields.owner, {
+					type: 'hidden',
+				})}
+				defaultValue={payer}
+			/>
+
+			<button type="submit">create pool</button>
+		</form>
 	)
 }
