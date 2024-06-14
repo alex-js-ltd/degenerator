@@ -138,7 +138,7 @@ export default function Page() {
 							/>
 
 							<Input
-								{...getInputProps(fields.payer, {
+								{...getInputProps(fields.payerKey, {
 									type: 'hidden',
 								})}
 								defaultValue={payer}

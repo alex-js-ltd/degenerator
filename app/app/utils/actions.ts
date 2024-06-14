@@ -6,11 +6,7 @@ import { put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
 import invariant from 'tiny-invariant'
 import { program, connection } from '@/app/utils/setup'
-import {
-	TransactionMessage,
-	PublicKey,
-	VersionedTransaction,
-} from '@solana/web3.js'
+import { TransactionMessage, VersionedTransaction } from '@solana/web3.js'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import * as anchor from '@coral-xyz/anchor'
 
@@ -33,7 +29,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		description,
 		decimals,
 		supply,
-		payer,
+		payerKey,
 		revokeMint,
 		revokeFreeze,
 	} = submission.value
@@ -60,8 +56,6 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 	}
 
 	const mintKeypair = new anchor.web3.Keypair()
-
-	const payerKey = new PublicKey(payer)
 
 	const ATA_PROGRAM_ID = new anchor.web3.PublicKey(
 		'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
