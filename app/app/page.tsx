@@ -20,6 +20,7 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
+import { CLMM } from '@/app/comps/clmm'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -164,6 +165,8 @@ export default function Page() {
 			</div>
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
+
+			<CLMM />
 		</Fragment>
 	)
 }
