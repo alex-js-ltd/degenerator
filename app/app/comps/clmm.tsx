@@ -26,7 +26,7 @@ export function CLMM() {
 
 	const payer = usePayer()
 
-	const { initSdk } = useClmm()
+	const { initSdk, createPool } = useClmm()
 
 	const { run, data, isLoading, isSuccess, isError, error, reset } = useAsync()
 
@@ -43,7 +43,11 @@ export function CLMM() {
 
 				const { owner } = submission.value
 
-				run(initSdk({ owner }))
+				const raydium = await initSdk({ owner })
+
+				const pool = await createPool({ raydium })
+
+				console.log(pool)
 			}}
 		>
 			<Input
