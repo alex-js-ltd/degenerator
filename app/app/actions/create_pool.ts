@@ -110,6 +110,7 @@ export async function createPool(_prevState: unknown, formData: FormData) {
 	const blockHash = (await connection.getLatestBlockhash('finalized')).blockhash
 	transaction.feePayer = owner
 	transaction.recentBlockhash = blockHash
+	transaction.partialSign(newBalancePosition)
 	const serializedTransaction = transaction.serialize({
 		requireAllSignatures: false,
 		verifySignatures: true,

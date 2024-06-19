@@ -18,11 +18,13 @@ import { createPool } from '@/app/actions/create_pool'
 import { useFormState } from 'react-dom'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
-import { useSignAllTransactions } from '@/app/hooks/use_sign_all_transactions'
+
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { useSerializedTransactions } from './hooks/use_serialized_transactions'
+
+import { useEncodedTransaction } from './hooks/use_encoded_transaction'
+import { useSignAndSendTransactionLegacy } from '@/app/hooks/use_sign_and_send_transaction_legacy'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -175,7 +177,7 @@ export default function Page() {
 
 function CreatePool() {
 	const [lastResult, action] = useFormState(createPool, {
-		serializedTransactions: undefined,
+		encoded_transaction: undefined,
 	})
 
 	const [form, fields] = useForm({
@@ -194,11 +196,11 @@ function CreatePool() {
 
 	const payer = usePayer()
 
-	const { serializedTransactions } = lastResult
+	const { encoded_transaction } = lastResult
 
-	const transactions = useSerializedTransactions({ serializedTransactions })
+	const transaction = useEncodedTransaction({ encoded_transaction })
 
-	const signAllTransactions = useSignAllTransactions()
+	const signAndSendTransactionLegacy = useSignAndSendTransactionLegacy()
 
 	const {
 		run,
@@ -208,13 +210,11 @@ function CreatePool() {
 		isError,
 		error,
 		reset,
-	} = useAsync()
-
-	console.log(txSig)
+	} = useAsync<string | undefined>()
 
 	useEffect(() => {
-		if (transactions) run(signAllTransactions(transactions))
-	}, [run, signAllTransactions, transactions])
+		if (transaction) run(signAndSendTransactionLegacy(transaction))
+	}, [run, signAndSendTransactionLegacy, transaction])
 
 	return (
 		<form {...getFormProps(form)} action={action}>
