@@ -2,7 +2,9 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Degenerator } from "../target/types/degenerator";
 import { unpack } from "@solana/spl-token-metadata";
-import { TOKEN_2022_PROGRAM_ID, AuthorityType } from "@solana/spl-token";
+import { TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
+import { expect } from "chai";
+import { createValues } from "./utils";
 
 describe("degenerator", () => {
   const provider = anchor.AnchorProvider.env();
@@ -181,9 +183,9 @@ describe("degenerator", () => {
     console.log("Your transaction signature", tx);
   });
 
-  it("Close Mint", async () => {
+  it("Revoke mint authority", async () => {
     const tx = await program.methods
-      .closeMint()
+      .revokeMintAuthority()
       .accounts({
         currentAuthority: wallet.publicKey,
         mintAccount: mintKeypair.publicKey,
@@ -191,5 +193,20 @@ describe("degenerator", () => {
       .rpc();
 
     console.log("Your transaction signature", tx);
+  });
+
+  it("Create amm", async () => {
+    const values = createValues();
+    await program.methods
+      .createAmm(values.id, values.fee)
+      .accounts({ admin: values.admin.publicKey })
+      .rpc();
+
+    const ammAccount = await program.account.amm.fetch(values.ammKey);
+    expect(ammAccount.id.toString()).to.equal(values.id.toString());
+    expect(ammAccount.admin.toString()).to.equal(
+      values.admin.publicKey.toString()
+    );
+    expect(ammAccount.fee.toString()).to.equal(values.fee.toString());
   });
 });

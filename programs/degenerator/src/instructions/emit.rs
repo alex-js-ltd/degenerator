@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke;
 use anchor_spl::token_interface::{Mint, Token2022};
-use spl_token_metadata_interface::instruction::emit;
+use spl_token_metadata_interface::instruction;
 
 #[derive(Accounts)]
 pub struct Emit<'info> {
@@ -11,9 +11,9 @@ pub struct Emit<'info> {
 
 // Invoke the emit instruction from spl_token_metadata_interface directly
 // There is not an anchor CpiContext for this instruction
-pub fn process_emit(ctx: Context<Emit>) -> Result<()> {
+pub fn emit(ctx: Context<Emit>) -> Result<()> {
     invoke(
-        &emit(
+        &instruction::emit(
             &ctx.accounts.token_program.key(), // token program id
             &ctx.accounts.mint_account.key(),  // "metadata" account
             None,

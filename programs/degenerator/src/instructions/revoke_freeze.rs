@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{
 };
 
 
-pub fn process_revoke_freeze_authority(ctx: Context<RevokeFreeze>) -> Result<()> {
+pub fn revoke_freeze(ctx: Context<RevokeFreeze>) -> Result<()> {
      let cpi_accounts = SetAuthority {
         current_authority: ctx.accounts.current_authority.to_account_info().clone(),
         account_or_mint: ctx.accounts.mint_account.to_account_info().clone(),     

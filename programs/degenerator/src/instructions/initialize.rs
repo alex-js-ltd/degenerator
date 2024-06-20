@@ -33,7 +33,7 @@ pub struct Initialize<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn process_initialize(ctx: Context<Initialize>, args: TokenMetadataArgs,  _token_decimals: u8) -> Result<()> {
+pub fn initialize(ctx: Context<Initialize>, args: TokenMetadataArgs,  _token_decimals: u8) -> Result<()> {
     let TokenMetadataArgs { name, symbol, uri } = args;
 
     // Define token metadata

@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{
 };
 
 
-pub fn process_close_mint(ctx: Context<CloseMint>) -> Result<()> {
+pub fn revoke_mint(ctx: Context<CloseMint>) -> Result<()> {
    
     let cpi_accounts = SetAuthority {
         current_authority: ctx.accounts.current_authority.to_account_info().clone(),

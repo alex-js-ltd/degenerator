@@ -120,7 +120,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 
 	// Close Mint
 	const revokeMintAuthority = await program.methods
-		.closeMint()
+		.revokeMintAuthority()
 		.accounts({
 			currentAuthority: payerKey,
 			mintAccount: mintKeypair.publicKey,

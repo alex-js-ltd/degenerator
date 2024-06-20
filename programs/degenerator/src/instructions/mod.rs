@@ -1,25 +1,23 @@
+mod initialize;
+mod update_field;
+mod remove_key;
+mod emit;
+mod update_authority;
+mod create_ata;
+mod mint_token;
+mod revoke_mint;
+mod revoke_freeze;
+mod create_amm;
+
 pub use initialize::*;
-pub mod initialize;
 pub use update_field::*;
-pub mod update_field;
 pub use remove_key::*;
-pub mod remove_key;
 pub use emit::*;
-pub mod emit;
 pub use update_authority::*;
-pub mod update_authority;
-
-pub use create_account::*;
-pub mod create_account;
-
-pub use mint::*;
-pub mod mint;
-
-
-pub use close_mint::*;
-pub mod close_mint;
-
+pub use create_ata::*;
+pub use mint_token::*;
+pub use revoke_mint::*;
 pub use revoke_freeze::*;
-pub mod revoke_freeze;
+pub use create_amm::*;
 
 

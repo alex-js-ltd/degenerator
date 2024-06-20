@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke;
 use anchor_spl::token_interface::{Mint, Token2022};
-use spl_token_metadata_interface::instruction::remove_key;
+use spl_token_metadata_interface::instruction;
 
 #[derive(Accounts)]
 pub struct RemoveKey<'info> {
@@ -19,9 +19,9 @@ pub struct RemoveKey<'info> {
 
 // Invoke the remove_key instruction from spl_token_metadata_interface directly
 // There is not an anchor CpiContext for this instruction
-pub fn process_remove_key(ctx: Context<RemoveKey>, key: String) -> Result<()> {
+pub fn remove_key(ctx: Context<RemoveKey>, key: String) -> Result<()> {
     invoke(
-        &remove_key(
+        &instruction::remove_key(
             &ctx.accounts.token_program.key(),    // token program id
             &ctx.accounts.mint_account.key(),     // "metadata" account
             &ctx.accounts.update_authority.key(), // update authority

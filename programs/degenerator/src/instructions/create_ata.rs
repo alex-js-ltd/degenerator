@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{
 };
 
 
-pub fn process_create_associated_token_account(
+pub fn create_ata(
     _ctx: Context<CreateAssociatedTokenAccount>,
 ) -> Result<()> {
     msg!("Create Associated Token Account");
