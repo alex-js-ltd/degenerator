@@ -39,17 +39,13 @@ export interface ParsedClockState {
 	space: number
 }
 
-let activeBin: BinLiquidity
-let userPositions: LbPosition[] = []
-
 const newBalancePosition = new Keypair()
-const newImbalancePosition = new Keypair()
-const newOneSidePosition = new Keypair()
 
 async function getActiveBin(dlmmPool: DLMM) {
 	// Get pool state
-	activeBin = await dlmmPool.getActiveBin()
+	let activeBin = await dlmmPool.getActiveBin()
 	console.log('🚀 ~ activeBin:', activeBin)
+	return activeBin
 }
 
 // To create a balance deposit position
@@ -57,6 +53,7 @@ async function createBalancePosition(
 	dlmmPool: DLMM,
 	user: { publicKey: PublicKey },
 ) {
+	const activeBin = await getActiveBin(dlmmPool)
 	const TOTAL_RANGE_INTERVAL = 10 // 10 bins on each side of the active bin
 	const minBinId = activeBin.binId - TOTAL_RANGE_INTERVAL
 	const maxBinId = activeBin.binId + TOTAL_RANGE_INTERVAL
@@ -64,7 +61,7 @@ async function createBalancePosition(
 	const activeBinPricePerToken = dlmmPool.fromPricePerLamport(
 		Number(activeBin.price),
 	)
-	const totalXAmount = new BN(100)
+	const totalXAmount = new BN(1)
 	const totalYAmount = totalXAmount.mul(new BN(Number(activeBinPricePerToken)))
 
 	// Create Position
@@ -122,20 +119,4 @@ export async function createPool(_prevState: unknown, formData: FormData) {
 		...submission.reply(),
 		encoded_transaction: transactionBase64,
 	}
-}
-
-function getRawTransaction(
-	encodedTransaction: string,
-): Transaction | VersionedTransaction {
-	let recoveredTransaction: Transaction | VersionedTransaction
-	try {
-		recoveredTransaction = Transaction.from(
-			Buffer.from(encodedTransaction, 'base64'),
-		)
-	} catch (error) {
-		recoveredTransaction = VersionedTransaction.deserialize(
-			Buffer.from(encodedTransaction, 'base64'),
-		)
-	}
-	return recoveredTransaction
 }
