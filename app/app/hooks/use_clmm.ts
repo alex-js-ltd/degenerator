@@ -1,31 +1,48 @@
 import {
 	Raydium,
 	TxVersion,
-	parseTokenAccountResp,
 	CLMM_PROGRAM_ID,
 	DEVNET_PROGRAM_ID,
+	TickUtils,
+	PoolUtils,
+	type ClmmKeys,
+	type ApiV3PoolInfoConcentratedItem,
 } from '@raydium-io/raydium-sdk-v2'
 
 import { BN } from '@coral-xyz/anchor'
 import Decimal from 'decimal.js'
-import { Connection, Keypair, PublicKey, clusterApiUrl } from '@solana/web3.js'
-import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
+
 import { connection } from '@/app/utils/setup'
 import { useWallet } from '@jup-ag/wallet-adapter'
 import { getEnv } from '@/app/utils/env'
 import { useCallback } from 'react'
+import invariant from 'tiny-invariant'
 
 type InitSdkProps = {
 	owner: PublicKey
 	loadToken?: Boolean
 }
+
 type CreatePoolProps = {
 	raydium: Raydium
 }
 
+type CreatePositionProps = {
+	raydium: Raydium
+	poolId?: PublicKey
+}
+
 const { CLUSTER } = getEnv()
 
-export const txVersion = TxVersion.V0 // or TxVersion.LEGACY
+const txVersion = TxVersion.V0 // or TxVersion.LEGACY
+
+const VALID_PROGRAM_ID = new Set([
+	CLMM_PROGRAM_ID.toBase58(),
+	DEVNET_PROGRAM_ID.CLMM.toBase58(),
+])
+
+const isValidClmm = (id: string) => VALID_PROGRAM_ID.has(id)
 
 export function useClmm() {
 	const { signAllTransactions } = useWallet()
@@ -58,7 +75,7 @@ export function useClmm() {
 
 			// RAY
 			const mint1 = await raydium.token.getTokenInfo(
-				'A2roS8zfGTiz9tARw7pnUPR4RmProN7JVmxWSRwbj6Bh',
+				'B5QKJua8KQYTV7fMBgmCzUPcauuhhmPzD4LQbrNGn9kY',
 			)
 
 			// USDT
@@ -90,18 +107,90 @@ export function useClmm() {
 			const { txId } = await execute()
 			console.log('clmm pool created:', { txId })
 
-			const data = await raydium.api.fetchPoolById({
-				ids: extInfo.mockPoolInfo.id,
-			})
-
-			console.log('data', data)
-			return extInfo
+			const address: ClmmKeys & { poolId?: PublicKey } = extInfo.address
+			const poolId = address?.poolId
+			invariant(poolId, 'poolId does not exist')
+			return poolId
 		} catch (error) {
 			console.error('Error creating CLMM pool:', error)
 		}
 	}, [])
 
-	const createPosition = useCallback(async () => {}, [])
+	const createPosition = useCallback(
+		async ({ raydium, poolId }: CreatePositionProps) => {
+			invariant(poolId, 'poolId does not exist')
 
-	return { initSdk, createPool }
+			const data = await raydium.api.fetchPoolById({
+				ids: poolId?.toBase58(),
+			})
+
+			const poolInfo = (data as any)[0] as ApiV3PoolInfoConcentratedItem
+			if (!isValidClmm(poolInfo.programId))
+				throw new Error('target pool is not CLMM pool')
+
+			const inputAmount = 1 // RAY amount
+			const [startPrice, endPrice] = [0.1, 100]
+
+			const { tick: lowerTick } = TickUtils.getPriceAndTick({
+				poolInfo,
+				price: new Decimal(startPrice),
+				baseIn: true,
+			})
+
+			const { tick: upperTick } = TickUtils.getPriceAndTick({
+				poolInfo,
+				price: new Decimal(endPrice),
+				baseIn: true,
+			})
+
+			const epochInfo = await raydium.fetchEpochInfo()
+
+			const res = await PoolUtils.getLiquidityAmountOutFromAmountIn({
+				poolInfo,
+				slippage: 0,
+				inputA: true,
+				tickUpper: Math.max(lowerTick, upperTick),
+				tickLower: Math.min(lowerTick, upperTick),
+				amount: new BN(
+					new Decimal(inputAmount || '0')
+						.mul(10 ** poolInfo.mintA.decimals)
+						.toFixed(0),
+				),
+				add: true,
+				amountHasFee: true,
+				epochInfo: epochInfo,
+			})
+
+			const { execute, extInfo } = await raydium.clmm.openPositionFromBase({
+				poolInfo,
+				tickUpper: Math.max(lowerTick, upperTick),
+				tickLower: Math.min(lowerTick, upperTick),
+				base: 'MintA',
+				ownerInfo: {},
+				baseAmount: new BN(
+					new Decimal(inputAmount || '0')
+						.mul(10 ** poolInfo.mintA.decimals)
+						.toFixed(0),
+				),
+				otherAmountMax: res.amountSlippageB.amount,
+				txVersion,
+				// optional: set up priority fee here
+				// computeBudgetConfig: {
+				//   units: 600000,
+				//   microLamports: 100000000,
+				// },
+			})
+
+			const { txId } = await execute()
+			console.log(
+				'clmm position opened:',
+				{ txId },
+				', nft mint:',
+				extInfo.nftMint.toBase58(),
+			)
+		},
+		[],
+	)
+
+	return { initSdk, createPool, createPosition }
 }
