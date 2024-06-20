@@ -177,7 +177,7 @@ export default function Page() {
 
 function CreatePool() {
 	const [lastResult, action] = useFormState(createPool, {
-		encoded_transaction: undefined,
+		serializedTransaction: undefined,
 	})
 
 	const [form, fields] = useForm({
@@ -196,11 +196,11 @@ function CreatePool() {
 
 	const payer = usePayer()
 
-	const { encoded_transaction } = lastResult
+	const { serializedTransaction } = lastResult
 
-	const transaction = useEncodedTransaction({ encoded_transaction })
+	const transaction = useSerializedTransaction({ serializedTransaction })
 
-	const signAndSendTransactionLegacy = useSignAndSendTransactionLegacy()
+	const signAndSendTransaction = useSignAndSendTransaction()
 
 	const {
 		run,
@@ -210,11 +210,11 @@ function CreatePool() {
 		isError,
 		error,
 		reset,
-	} = useAsync<string | undefined>()
+	} = useAsync<string>()
 
 	useEffect(() => {
-		if (transaction) run(signAndSendTransactionLegacy(transaction))
-	}, [run, signAndSendTransactionLegacy, transaction])
+		if (transaction) run(signAndSendTransaction(transaction)).then(reset)
+	}, [run, signAndSendTransaction, transaction])
 
 	return (
 		<form {...getFormProps(form)} action={action}>

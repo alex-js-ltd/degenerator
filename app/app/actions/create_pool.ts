@@ -14,6 +14,7 @@ import {
 	ParsedAccountData,
 	Transaction,
 	VersionedTransaction,
+	TransactionMessage,
 } from '@solana/web3.js'
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import DLMM, { BinLiquidity, LbPosition, StrategyType } from '@meteora-ag/dlmm'
@@ -24,20 +25,6 @@ import invariant from 'tiny-invariant'
 const { CLUSTER } = getEnv()
 
 const devnetPool = new PublicKey('3W2HKgUa96Z69zzG3LK1g8KdcRAWzAttiLiHfYnKuPw5')
-
-/** Utils */
-export interface ParsedClockState {
-	info: {
-		epoch: number
-		epochStartTimestamp: number
-		leaderScheduleEpoch: number
-		slot: number
-		unixTimestamp: number
-	}
-	type: string
-	program: string
-	space: number
-}
 
 const newBalancePosition = new Keypair()
 
@@ -61,7 +48,7 @@ async function createBalancePosition(
 	const activeBinPricePerToken = dlmmPool.fromPricePerLamport(
 		Number(activeBin.price),
 	)
-	const totalXAmount = new BN(1)
+	const totalXAmount = new BN(0.6)
 	const totalYAmount = totalXAmount.mul(new BN(Number(activeBinPricePerToken)))
 
 	// Create Position
@@ -89,7 +76,7 @@ export async function createPool(_prevState: unknown, formData: FormData) {
 	if (submission.status !== 'success') {
 		return {
 			...submission.reply(),
-			encoded_transaction: undefined,
+			serializedTransaction: undefined,
 		}
 	}
 
@@ -100,23 +87,30 @@ export async function createPool(_prevState: unknown, formData: FormData) {
 	})
 
 	await getActiveBin(dlmmPool)
-	const transaction = await createBalancePosition(dlmmPool, {
+	const leg = await createBalancePosition(dlmmPool, {
 		publicKey: owner,
 	})
 
-	const blockHash = (await connection.getLatestBlockhash('finalized')).blockhash
-	transaction.feePayer = owner
-	transaction.recentBlockhash = blockHash
-	transaction.partialSign(newBalancePosition)
-	const serializedTransaction = transaction.serialize({
-		requireAllSignatures: false,
-		verifySignatures: true,
-	})
+	let blockhash = await connection
+		.getLatestBlockhash()
+		.then(res => res.blockhash)
 
-	const transactionBase64 = serializedTransaction.toString('base64')
+	const instructions = leg.instructions
+
+	const messageV0 = new TransactionMessage({
+		payerKey: owner,
+		recentBlockhash: blockhash,
+		instructions,
+	}).compileToV0Message()
+
+	const transaction = new VersionedTransaction(messageV0)
+
+	transaction.sign([newBalancePosition])
+
+	const serializedTransaction = transaction.serialize()
 
 	return {
 		...submission.reply(),
-		encoded_transaction: transactionBase64,
+		serializedTransaction,
 	}
 }
