@@ -19,8 +19,8 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@external/target/idl/*": ["../target/idl/*"],
-      "@external/target/types/*": ["../target/types/*"]
+      "@/external/target/idl/*": ["../target/idl/*"],
+      "@/external/target/types/*": ["../target/types/*"]
     }
   },
   "include": [
