@@ -4,7 +4,7 @@ import { Fragment } from 'react'
 import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
-import { TokenSchema } from '@/app/utils/schemas'
+import { TokenSchema, PoolSchema } from '@/app/utils/schemas'
 import { useImageUpload } from '@/app/hooks/use_image_upload'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
@@ -20,6 +20,7 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
+import { useRaydium } from '@/app/hooks/use_raydium'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -164,6 +165,56 @@ export default function Page() {
 			</div>
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
+
+			<CreatePool />
 		</Fragment>
+	)
+}
+
+function CreatePool() {
+	const [form, fields] = useForm({
+		// Reuse the validation logic on the client
+		onValidate({ formData }) {
+			return parseWithZod(formData, { schema: PoolSchema })
+		},
+
+		// Validate the form on blur event triggered
+		shouldValidate: 'onBlur',
+
+		shouldRevalidate: 'onInput',
+	})
+
+	const payer = usePayer()
+
+	const { initSdk } = useRaydium()
+
+	const { run, data, isLoading, isSuccess, isError, error, reset } = useAsync()
+
+	return (
+		<form
+			{...getFormProps(form)}
+			action={async (formData: FormData) => {
+				const submission = parseWithZod(formData, {
+					schema: PoolSchema,
+				})
+
+				if (submission.status !== 'success') return
+
+				const { owner } = submission.value
+
+				const raydium = await initSdk({ owner })
+
+				console.log(raydium)
+			}}
+		>
+			<Input
+				{...getInputProps(fields.owner, {
+					type: 'hidden',
+				})}
+				defaultValue={payer}
+			/>
+
+			<button type="submit">create pool</button>
+		</form>
 	)
 }
