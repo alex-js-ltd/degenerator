@@ -1,7 +1,13 @@
+# Ignore specific files and directories
 .anchor
 .DS_Store
-target
 **/*.rs.bk
 node_modules
 test-ledger
 .yarn
+
+# Ignore all files in the target directory
+/target/debug
+/target/deploy
+/target/release
+/target/sbf-solana-solana
