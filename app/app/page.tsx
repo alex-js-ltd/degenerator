@@ -196,7 +196,7 @@ function CreatePool() {
 
 	const payer = usePayer()
 
-	const { initSdk, createMarket, createAmmPool } = useRaydium()
+	const { initSdk, createMarket, createAmmPool, addLiquidity } = useRaydium()
 
 	const { run, data, isLoading, isSuccess, isError, error, reset } = useAsync()
 
@@ -221,7 +221,14 @@ function CreatePool() {
 						baseDecimals,
 					})
 
-					await createAmmPool({ raydium, marketId, baseMint, baseDecimals })
+					const ammId = await createAmmPool({
+						raydium,
+						marketId,
+						baseMint,
+						baseDecimals,
+					})
+
+					await addLiquidity({ raydium, ammId: ammId.toBase58() })
 				}
 
 				run(foo())
