@@ -2,7 +2,9 @@ import { Program } from '@coral-xyz/anchor'
 import { Connection } from '@solana/web3.js'
 
 import { type Degenerator } from '@external/types/degenerator'
-import IDL from '@external/idl/degenerator.json'
+// import IDL from '@external/idl/degenerator.json'
+import IDL from '../../../target/idl/degenerator.json'
+
 import { getEnv } from './env'
 
 const { ENDPOINT } = getEnv()
