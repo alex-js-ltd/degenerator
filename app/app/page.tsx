@@ -171,6 +171,16 @@ export default function Page() {
 	)
 }
 
+const baseInfoMainnet = {
+	mint: 'B5QKJua8KQYTV7fMBgmCzUPcauuhhmPzD4LQbrNGn9kY',
+	decimals: 5,
+}
+
+const baseInfoDevnet = {
+	mint: '2ekjjxzsA4Di8qXTm4yDc7HbEJy2MfNBr7wJ4YYRZy5S',
+	decimals: 4,
+}
+
 function CreatePool() {
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -186,7 +196,7 @@ function CreatePool() {
 
 	const payer = usePayer()
 
-	const { initSdk } = useRaydium()
+	const { initSdk, createMarket, createAmmPool } = useRaydium()
 
 	const { run, data, isLoading, isSuccess, isError, error, reset } = useAsync()
 
@@ -200,11 +210,21 @@ function CreatePool() {
 
 				if (submission.status !== 'success') return
 
-				const { owner } = submission.value
+				const { owner, baseMint, baseDecimals } = submission.value
 
-				const raydium = await initSdk({ owner })
+				async function foo() {
+					const raydium = await initSdk({ owner })
 
-				console.log(raydium)
+					const marketId = await createMarket({
+						raydium,
+						baseMint,
+						baseDecimals,
+					})
+
+					await createAmmPool({ raydium, marketId, baseMint, baseDecimals })
+				}
+
+				run(foo())
 			}}
 		>
 			<Input
@@ -212,6 +232,20 @@ function CreatePool() {
 					type: 'hidden',
 				})}
 				defaultValue={payer}
+			/>
+
+			<Input
+				{...getInputProps(fields.baseMint, {
+					type: 'hidden',
+				})}
+				defaultValue={baseInfoMainnet.mint}
+			/>
+
+			<Input
+				{...getInputProps(fields.baseDecimals, {
+					type: 'hidden',
+				})}
+				defaultValue={baseInfoMainnet.decimals}
 			/>
 
 			<button type="submit">create pool</button>

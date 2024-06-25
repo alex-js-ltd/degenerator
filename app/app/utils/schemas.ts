@@ -35,6 +35,6 @@ export const TokenSchema = z.object({
 
 export const PoolSchema = z.object({
 	owner: PublicKey,
-	baseToken: PublicKey.optional(),
-	quoteToken: PublicKey.optional(),
+	baseMint: PublicKey,
+	baseDecimals: z.number(),
 })
