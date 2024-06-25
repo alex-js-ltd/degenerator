@@ -19,9 +19,17 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@/external/target/*": ["../target/*"]
+      "@external/target/idl/*": ["../target/idl/*"],
+      "@external/target/types/*": ["../target/types/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "../target/idl/**/*.json",
+    "../target/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }
