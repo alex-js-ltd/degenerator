@@ -7,7 +7,6 @@ test-ledger
 .yarn
 
 # Ignore all files in the target directory
-/target/debug
-/target/deploy
-/target/release
-/target/sbf-solana-solana
+target/*
+!target/idl
+!target/types
