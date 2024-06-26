@@ -13,14 +13,14 @@ import { Input } from '@/app/comps/input'
 import { MintToggle, FreezeToggle } from '@/app/comps/toggle'
 import { useEffect } from 'react'
 import { SubmitButton } from '@/app/comps/submit_button'
-import { createSplToken } from '@/app/utils/actions'
+import { createSplToken } from '@/app/actions/create_spl_token'
 import { useFormState } from 'react-dom'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { useRaydium } from '@/app/hooks/use_raydium'
+import { dlmm } from '@/app/actions/dlmm'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -182,6 +182,8 @@ const baseInfoDevnet = {
 }
 
 function CreatePool() {
+	const [lastResult, action] = useFormState(dlmm, initialState)
+
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
 		onValidate({ formData }) {
@@ -196,46 +198,29 @@ function CreatePool() {
 
 	const payer = usePayer()
 
-	const { initSdk, createMarket, createAmmPool, addLiquidity } = useRaydium()
+	const { serializedTransaction } = lastResult
 
-	const { run, data, isLoading, isSuccess, isError, error, reset } = useAsync()
+	const transaction = useSerializedTransaction({ serializedTransaction })
+
+	const signAndSendTransaction = useSignAndSendTransaction()
+
+	const {
+		run,
+		data: txSig,
+		isLoading,
+		isSuccess,
+		isError,
+		error,
+	} = useAsync<string>()
+
+	useEffect(() => {
+		if (transaction) run(signAndSendTransaction(transaction))
+	}, [run, signAndSendTransaction, transaction])
 
 	return (
-		<form
-			{...getFormProps(form)}
-			action={async (formData: FormData) => {
-				const submission = parseWithZod(formData, {
-					schema: PoolSchema,
-				})
-
-				if (submission.status !== 'success') return
-
-				const { owner, baseMint, baseDecimals } = submission.value
-
-				async function foo() {
-					const raydium = await initSdk({ owner })
-
-					const marketId = await createMarket({
-						raydium,
-						baseMint,
-						baseDecimals,
-					})
-
-					const ammId = await createAmmPool({
-						raydium,
-						marketId,
-						baseMint,
-						baseDecimals,
-					})
-
-					await addLiquidity({ raydium, ammId: ammId.toBase58() })
-				}
-
-				run(foo())
-			}}
-		>
+		<form {...getFormProps(form)} action={action}>
 			<Input
-				{...getInputProps(fields.owner, {
+				{...getInputProps(fields.user, {
 					type: 'hidden',
 				})}
 				defaultValue={payer}

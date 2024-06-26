@@ -1,7 +1,7 @@
 'use server'
 
 import { parseWithZod } from '@conform-to/zod'
-import { TokenSchema } from './schemas'
+import { TokenSchema } from '@/app/utils/schemas'
 import { put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
 import invariant from 'tiny-invariant'
