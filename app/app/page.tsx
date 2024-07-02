@@ -21,9 +21,11 @@ import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { dlmm } from '@/app/actions/dlmm'
+import { PublicKey } from '@solana/web3.js'
 
 const initialState = {
 	serializedTransaction: undefined,
+	tokenX: undefined,
 }
 
 export default function Page() {
@@ -48,7 +50,7 @@ export default function Page() {
 
 	const payer = usePayer()
 
-	const { serializedTransaction } = lastResult
+	const { serializedTransaction, tokenX } = lastResult
 
 	const transaction = useSerializedTransaction({ serializedTransaction })
 
@@ -166,22 +168,12 @@ export default function Page() {
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 
-			<CreatePool />
+			{tokenX ? <CreatePool tokenX={tokenX} /> : null}
 		</Fragment>
 	)
 }
 
-const baseInfoMainnet = {
-	mint: 'B5QKJua8KQYTV7fMBgmCzUPcauuhhmPzD4LQbrNGn9kY',
-	decimals: 5,
-}
-
-const baseInfoDevnet = {
-	mint: '2ekjjxzsA4Di8qXTm4yDc7HbEJy2MfNBr7wJ4YYRZy5S',
-	decimals: 4,
-}
-
-function CreatePool() {
+function CreatePool({ tokenX }: { tokenX: string }) {
 	const [lastResult, action] = useFormState(dlmm, initialState)
 
 	const [form, fields] = useForm({
@@ -227,17 +219,10 @@ function CreatePool() {
 			/>
 
 			<Input
-				{...getInputProps(fields.baseMint, {
-					type: 'hidden',
+				{...getInputProps(fields.tokenX, {
+					type: 'text',
 				})}
-				defaultValue={baseInfoMainnet.mint}
-			/>
-
-			<Input
-				{...getInputProps(fields.baseDecimals, {
-					type: 'hidden',
-				})}
-				defaultValue={baseInfoMainnet.decimals}
+				defaultValue={tokenX}
 			/>
 
 			<button type="submit">create pool</button>

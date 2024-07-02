@@ -1,61 +1,37 @@
 'use server'
 
+import { AnchorProvider, BN, Program, Wallet, web3 } from '@coral-xyz/anchor'
+import {
+	ASSOCIATED_TOKEN_PROGRAM_ID,
+	NATIVE_MINT,
+	TOKEN_PROGRAM_ID,
+	createMint,
+	getAssociatedTokenAddressSync,
+	getOrCreateAssociatedTokenAccount,
+	mintTo,
+} from '@solana/spl-token'
+
 import {
 	Connection,
 	Keypair,
+	LAMPORTS_PER_SOL,
 	PublicKey,
+	Transaction,
 	sendAndConfirmTransaction,
-	SYSVAR_CLOCK_PUBKEY,
-	ParsedAccountData,
 } from '@solana/web3.js'
-import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import DLMM, { BinLiquidity, LbPosition, StrategyType } from '@meteora-ag/dlmm'
-import BN from 'bn.js'
 
 import { connection } from '@/app/utils/setup'
 import { parseWithZod } from '@conform-to/zod'
 import { PoolSchema } from '@/app/utils/schemas'
 import { TransactionMessage, VersionedTransaction } from '@solana/web3.js'
 
-const devnetPool = new PublicKey('3W2HKgUa96Z69zzG3LK1g8KdcRAWzAttiLiHfYnKuPw5')
-const newBalancePosition = new Keypair()
+const DEFAULT_ACTIVE_ID = new BN(5660)
+const DEFAULT_BIN_STEP = new BN(1)
+const DEFAULT_BASE_FACTOR = new BN(10000)
+const DEFAULT_BASE_FACTOR_2 = new BN(4000)
 
-async function getActiveBin(dlmmPool: DLMM) {
-	// Get pool state
-	let activeBin = await dlmmPool.getActiveBin()
-	console.log('🚀 ~ activeBin:', activeBin)
-	return activeBin
-}
-
-// To create a balance deposit position
-async function createBalancePosition(dlmmPool: DLMM, user: PublicKey) {
-	const activeBin = await getActiveBin(dlmmPool)
-	const TOTAL_RANGE_INTERVAL = 10 // 10 bins on each side of the active bin
-	const minBinId = activeBin.binId - TOTAL_RANGE_INTERVAL
-	const maxBinId = activeBin.binId + TOTAL_RANGE_INTERVAL
-
-	const activeBinPricePerToken = dlmmPool.fromPricePerLamport(
-		Number(activeBin.price),
-	)
-	const totalXAmount = new BN(10)
-	const totalYAmount = totalXAmount.mul(new BN(Number(activeBinPricePerToken)))
-
-	// Create Position
-	const createPositionTx =
-		await dlmmPool.initializePositionAndAddLiquidityByStrategy({
-			positionPubKey: newBalancePosition.publicKey,
-			user: user,
-			totalXAmount,
-			totalYAmount,
-			strategy: {
-				maxBinId,
-				minBinId,
-				strategyType: StrategyType.SpotBalanced,
-			},
-		})
-
-	return createPositionTx.instructions.map(el => el)
-}
+const tokenY = new PublicKey('So11111111111111111111111111111111111111112')
 
 export async function dlmm(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -69,13 +45,26 @@ export async function dlmm(_prevState: unknown, formData: FormData) {
 		}
 	}
 
-	const { user } = submission.value
+	const { user, tokenX } = submission.value
 
-	const dlmmPool = await DLMM.create(connection, devnetPool, {
-		cluster: 'devnet',
-	})
+	const baseKeypair = Keypair.generate()
+	const feeBps = new BN(50)
+	const lockDurationInSlot = new BN(0)
 
-	const instructions = await createBalancePosition(dlmmPool, user)
+	const rawTx = await DLMM.createPermissionLbPair(
+		connection,
+		DEFAULT_BIN_STEP,
+		tokenX,
+		tokenY,
+		DEFAULT_ACTIVE_ID,
+		baseKeypair.publicKey,
+		user,
+		feeBps,
+		lockDurationInSlot,
+		{ cluster: 'devnet' },
+	)
+
+	const instructions = rawTx.instructions.map(el => el)
 
 	let blockhash = await connection
 		.getLatestBlockhash()
@@ -88,8 +77,6 @@ export async function dlmm(_prevState: unknown, formData: FormData) {
 	}).compileToV0Message()
 
 	const transaction = new VersionedTransaction(messageV0)
-
-	transaction.sign([newBalancePosition])
 
 	const serializedTransaction = transaction.serialize()
 
