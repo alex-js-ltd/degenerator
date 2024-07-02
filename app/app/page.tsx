@@ -206,7 +206,7 @@ function Clmm({ mint1 }: { mint1: string }) {
 	} = useAsync<string>()
 
 	useEffect(() => {
-		if (transaction) run(signAndSendTransaction(transaction)).then(reset)
+		if (transaction) run(signAndSendTransaction(transaction))
 	}, [run, signAndSendTransaction, transaction])
 
 	return (

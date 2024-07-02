@@ -5,8 +5,8 @@ import { ClmmSchema } from '@/app/utils/schemas'
 import invariant from 'tiny-invariant'
 import { connection } from '@/app/utils/setup'
 import { TransactionMessage, VersionedTransaction } from '@solana/web3.js'
-import { web3, BN } from '@coral-xyz/anchor'
-import { program } from '@/app/utils/setup'
+import { BN } from '@coral-xyz/anchor'
+
 import { type Connection, PublicKey } from '@solana/web3.js'
 import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import {
@@ -44,7 +44,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 
 	const { instructions, signers } = await createPool({
 		raydium,
-		mint1Key: mint1,
+		mint1,
 	})
 
 	let blockhash = await connection
@@ -134,10 +134,10 @@ const fetchTokenAccountData = async ({
 
 async function createPool({
 	raydium,
-	mint1Key,
+	mint1: mint1Key,
 }: {
 	raydium: Raydium
-	mint1Key: PublicKey
+	mint1: PublicKey
 }) {
 	const mint1 = await raydium.token.getTokenInfo(mint1Key)
 
@@ -154,25 +154,24 @@ async function createPool({
 	const programId =
 		CLUSTER === 'mainnet-beta' ? CLMM_PROGRAM_ID : DEVNET_PROGRAM_ID.CLMM
 
-	const { execute, transaction, builder, ...rest } =
-		await raydium.clmm.createPool({
-			programId,
-			mint1,
-			mint2,
-			ammConfig: {
-				...clmmConfigs[0],
-				id: new PublicKey(clmmConfigs[0].id),
-				fundOwner: '',
-			},
-			initialPrice: new Decimal(1),
-			startTime: new BN(0),
-			txVersion,
-			// optional: set up priority fee here
-			// computeBudgetConfig: {
-			//   units: 600000,
-			//   microLamports: 100000000,
-			// },
-		})
+	const { builder } = await raydium.clmm.createPool({
+		programId,
+		mint1,
+		mint2,
+		ammConfig: {
+			...clmmConfigs[0],
+			id: new PublicKey(clmmConfigs[0].id),
+			fundOwner: '',
+		},
+		initialPrice: new Decimal(1),
+		startTime: new BN(0),
+		txVersion,
+		// optional: set up priority fee here
+		// computeBudgetConfig: {
+		//   units: 600000,
+		//   microLamports: 100000000,
+		// },
+	})
 
 	return {
 		instructions: builder.AllTxData.instructions,
