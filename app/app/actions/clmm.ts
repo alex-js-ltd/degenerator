@@ -40,7 +40,6 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 	const { owner, mint1 } = submission.value
 
 	const raydium = await initSdk({ owner })
-	invariant(raydium, 'Failed to init raydium')
 
 	const { instructions, signers } = await createPool({
 		raydium,
@@ -87,6 +86,8 @@ async function initSdk({
 		// 	BASE_HOST: CLUSTER, // api url configs, currently api doesn't support devnet
 		// },
 	})
+
+	invariant(raydium, 'Failed to initialize raydium')
 
 	/**
 	 * By default: sdk will automatically fetch token account data when need it or any sol balace changed.
