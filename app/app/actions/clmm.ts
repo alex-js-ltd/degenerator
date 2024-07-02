@@ -108,13 +108,13 @@ async function initSdk({
 	return raydium
 }
 
-const fetchTokenAccountData = async ({
+async function fetchTokenAccountData({
 	connection,
 	owner,
 }: {
 	connection: Connection
 	owner: PublicKey
-}) => {
+}) {
 	const solAccountResp = await connection.getAccountInfo(owner)
 	const tokenAccountResp = await connection.getTokenAccountsByOwner(owner, {
 		programId: TOKEN_PROGRAM_ID,
