@@ -35,16 +35,16 @@ type TestValuesDefaults = {
 }
 export function createValues(defaults?: TestValuesDefaults): TestValues {
 	const id = defaults?.id || Keypair.generate().publicKey
-	const admin = Keypair.generate()
+
 	const ammKey = PublicKey.findProgramAddressSync(
 		[id.toBuffer()],
 		anchor.workspace.Degenerator.programId,
 	)[0]
 
-	const { mintAKeypair, mintBKeypair } = defaults
-	// Making sure tokens are in the right order
-	// const mintAKeypair = Keypair.generate()
-	// let mintBKeypair = Keypair.generate()
+	const { admin } = defaults
+	//Making sure tokens are in the right order
+	const mintAKeypair = Keypair.generate()
+	let mintBKeypair = Keypair.generate()
 	// while (
 	// 	new BN(mintBKeypair.publicKey.toBytes()).lt(
 	// 		new BN(mintAKeypair.publicKey.toBytes()),
@@ -93,26 +93,31 @@ export function createValues(defaults?: TestValuesDefaults): TestValues {
 			mintAKeypair.publicKey,
 			poolAuthority,
 			true,
+			TOKEN_2022_PROGRAM_ID,
 		),
 		poolAccountB: getAssociatedTokenAddressSync(
 			mintBKeypair.publicKey,
 			poolAuthority,
 			true,
+			TOKEN_2022_PROGRAM_ID,
 		),
 		liquidityAccount: getAssociatedTokenAddressSync(
 			mintLiquidity,
 			admin.publicKey,
 			true,
+			TOKEN_2022_PROGRAM_ID,
 		),
 		holderAccountA: getAssociatedTokenAddressSync(
 			mintAKeypair.publicKey,
 			admin.publicKey,
 			true,
+			TOKEN_2022_PROGRAM_ID,
 		),
 		holderAccountB: getAssociatedTokenAddressSync(
 			mintBKeypair.publicKey,
 			admin.publicKey,
 			true,
+			TOKEN_2022_PROGRAM_ID,
 		),
 		depositAmountA: new BN(4 * 10 ** 6),
 		depositAmountB: new BN(1 * 10 ** 6),

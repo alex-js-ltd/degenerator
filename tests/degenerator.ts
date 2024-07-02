@@ -196,10 +196,9 @@ describe('degenerator', () => {
 	})
 
 	it('Create amm', async () => {
-		const mintAKeypair = new anchor.web3.Keypair()
-		const mintBKeypair = new anchor.web3.Keypair()
-
-		const values = createValues({ mintAKeypair, mintBKeypair })
+		const values = createValues({
+			admin: wallet.payer,
+		})
 
 		await program.methods
 			.createAmm(values.id, values.fee)
@@ -215,7 +214,7 @@ describe('degenerator', () => {
 
 		await mintToken({
 			program,
-			payerKeypair: wallet.payer,
+			payerKeypair: values.admin,
 			mintKeypair: values.mintAKeypair,
 			metadata,
 			decimals: 2,
@@ -224,11 +223,25 @@ describe('degenerator', () => {
 
 		await mintToken({
 			program,
-			payerKeypair: wallet.payer,
+			payerKeypair: values.admin,
 			mintKeypair: values.mintBKeypair,
 			metadata,
 			decimals: 2,
 			supply: 10000,
 		})
+
+		await program.methods
+			.createPool()
+			.accounts({
+				amm: values.ammKey,
+				pool: values.poolKey,
+				poolAuthority: values.poolAuthority,
+				mintLiquidity: values.mintLiquidity,
+				mintA: values.mintAKeypair.publicKey,
+				mintB: values.mintBKeypair.publicKey,
+				poolAccountA: values.poolAccountA,
+				poolAccountB: values.poolAccountB,
+			})
+			.rpc({ skipPreflight: true })
 	})
 })
