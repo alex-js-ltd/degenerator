@@ -168,7 +168,7 @@ export default function Page() {
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 
-			<Clmm mint1={mint1} />
+			<Clmm mint1={'B5QKJua8KQYTV7fMBgmCzUPcauuhhmPzD4LQbrNGn9kY'} />
 		</Fragment>
 	)
 }
@@ -217,7 +217,7 @@ function Clmm({ mint1 }: { mint1?: string }) {
 					async function foo() {
 						const raydium = await initSdk({ owner })
 
-						const res = await createPool({ raydium })
+						const res = await createPool({ raydium, mint1Key: mint1 })
 
 						return res
 					}

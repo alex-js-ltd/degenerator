@@ -19,23 +19,26 @@ export function useClmm() {
 			mint1Key,
 		}: {
 			raydium: Raydium
-			mint1Key?: PublicKey
+			mint1Key: PublicKey
 		}) => {
 			// you can call sdk api to get mint info or paste mint info from api: https://api-v3.raydium.io/mint/list
 
-			// RAY
-			const mint1 = await raydium.token.getTokenInfo(
-				'4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R',
+			console.log(
+				await raydium.token.getTokenInfo(
+					'B5QKJua8KQYTV7fMBgmCzUPcauuhhmPzD4LQbrNGn9kY',
+				),
 			)
+
+			// RAY
+			const mint1 = await raydium.token.getTokenInfo(mint1Key)
 			// USDT
 			const mint2 = await raydium.token.getTokenInfo(
 				'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
 			)
-			// const mainConfigs = await raydium.api.getClmmConfigs()
+			const mainConfigs = await raydium.api.getClmmConfigs()
 
-			// const clmmConfigs = CLUSTER === 'mainnet-beta' ? mainConfigs : devConfigs // devnet configs
+			const clmmConfigs = CLUSTER === 'mainnet-beta' ? mainConfigs : devConfigs // devnet configs
 
-			let clmmConfigs = devConfigs
 			const programId =
 				CLUSTER === 'mainnet-beta' ? CLMM_PROGRAM_ID : DEVNET_PROGRAM_ID.CLMM
 
@@ -57,6 +60,7 @@ export function useClmm() {
 				//   microLamports: 100000000,
 				// },
 			})
+
 			// don't want to wait confirm, set sendAndConfirm to false or don't pass any params to execute
 			const { txId } = await execute({ sendAndConfirm: true })
 			console.log('clmm pool created:', { txId })

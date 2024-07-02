@@ -50,6 +50,7 @@ export function useRaydium() {
 				)
 			})
 
+			console.log(raydium.token.tokenList)
 			return raydium
 		},
 		[connection, signAllTransactions],
