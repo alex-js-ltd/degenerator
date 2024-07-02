@@ -4,7 +4,7 @@ import { Fragment } from 'react'
 import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
-import { TokenSchema, ClmmSchema } from '@/app/utils/schemas'
+import { TokenSchema } from '@/app/utils/schemas'
 import { useImageUpload } from '@/app/hooks/use_image_upload'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
@@ -20,10 +20,8 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { useRaydium } from '@/app/hooks/use_raydium'
-import { useClmm } from '@/app/hooks/use_clmm'
-import { clmm } from '@/app/actions/clmm'
 
+import { Clmm } from '@/app/comps/clmm'
 const initialState = {
 	serializedTransaction: undefined,
 	mint1: undefined,
@@ -171,65 +169,5 @@ export default function Page() {
 
 			<Clmm mint1={'B5QKJua8KQYTV7fMBgmCzUPcauuhhmPzD4LQbrNGn9kY'} />
 		</Fragment>
-	)
-}
-
-function Clmm({ mint1 }: { mint1: string }) {
-	const [lastResult, action] = useFormState(clmm, initialState)
-
-	const [form, fields] = useForm({
-		onValidate({ formData }) {
-			return parseWithZod(formData, { schema: ClmmSchema })
-		},
-
-		shouldValidate: 'onBlur',
-
-		shouldRevalidate: 'onInput',
-	})
-
-	const payer = usePayer()
-
-	const { serializedTransaction } = lastResult
-
-	const transaction = useSerializedTransaction({ serializedTransaction })
-
-	const signAndSendTransaction = useSignAndSendTransaction()
-
-	const {
-		run,
-		data: txSig,
-		isLoading,
-		isSuccess,
-		isError,
-		error,
-		reset,
-	} = useAsync<string>()
-
-	useEffect(() => {
-		if (transaction) run(signAndSendTransaction(transaction))
-	}, [run, signAndSendTransaction, transaction])
-
-	return (
-		<>
-			<form {...getFormProps(form)} action={action}>
-				<Input
-					{...getInputProps(fields.owner, {
-						type: 'hidden',
-					})}
-					defaultValue={payer}
-				/>
-
-				<Input
-					{...getInputProps(fields.mint1, {
-						type: 'text',
-					})}
-					defaultValue={mint1}
-				/>
-
-				<button type="submit">create pool</button>
-			</form>
-
-			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
-		</>
 	)
 }
