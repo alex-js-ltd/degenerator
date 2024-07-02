@@ -1,4 +1,4 @@
-import { useRaydium, txVersion } from '@/app/hooks/use_raydium'
+import { txVersion } from '@/app/hooks/use_raydium'
 import {
 	CLMM_PROGRAM_ID,
 	DEVNET_PROGRAM_ID,
@@ -23,14 +23,10 @@ export function useClmm() {
 		}) => {
 			// you can call sdk api to get mint info or paste mint info from api: https://api-v3.raydium.io/mint/list
 
-			console.log(
-				await raydium.token.getTokenInfo(
-					'B5QKJua8KQYTV7fMBgmCzUPcauuhhmPzD4LQbrNGn9kY',
-				),
-			)
-
-			// RAY
 			const mint1 = await raydium.token.getTokenInfo(mint1Key)
+
+			console.log(mint1)
+
 			// USDT
 			const mint2 = await raydium.token.getTokenInfo(
 				'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',

@@ -33,7 +33,7 @@ export const TokenSchema = z.object({
 		.optional(),
 })
 
-export const PoolSchema = z.object({
+export const ClmmSchema = z.object({
 	owner: PublicKey,
-	mint1: PublicKey.optional(),
+	mint1: PublicKey,
 })

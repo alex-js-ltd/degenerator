@@ -4,7 +4,7 @@ import { Fragment } from 'react'
 import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
-import { TokenSchema, PoolSchema } from '@/app/utils/schemas'
+import { TokenSchema, ClmmSchema } from '@/app/utils/schemas'
 import { useImageUpload } from '@/app/hooks/use_image_upload'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
@@ -173,10 +173,10 @@ export default function Page() {
 	)
 }
 
-function Clmm({ mint1 }: { mint1?: string }) {
+function Clmm({ mint1 }: { mint1: string }) {
 	const [form, fields] = useForm({
 		onValidate({ formData }) {
-			return parseWithZod(formData, { schema: PoolSchema })
+			return parseWithZod(formData, { schema: ClmmSchema })
 		},
 
 		shouldValidate: 'onBlur',
@@ -203,7 +203,7 @@ function Clmm({ mint1 }: { mint1?: string }) {
 				{...getFormProps(form)}
 				action={async (formData: FormData) => {
 					const submission = parseWithZod(formData, {
-						schema: PoolSchema,
+						schema: ClmmSchema,
 					})
 
 					if (submission.status !== 'success') {
