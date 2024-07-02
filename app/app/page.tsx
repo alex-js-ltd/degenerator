@@ -20,11 +20,12 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { dlmm } from '@/app/actions/dlmm'
+import { useRaydium } from '@/app/hooks/use_raydium'
+import { useClmm } from '@/app/hooks/use_clmm'
 
 const initialState = {
 	serializedTransaction: undefined,
-	tokenX: undefined,
+	mint1: undefined,
 }
 
 export default function Page() {
@@ -49,7 +50,7 @@ export default function Page() {
 
 	const payer = usePayer()
 
-	const { serializedTransaction, tokenX } = lastResult
+	const { serializedTransaction, mint1 } = lastResult
 
 	const transaction = useSerializedTransaction({ serializedTransaction })
 
@@ -167,33 +168,25 @@ export default function Page() {
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 
-			{tokenX ? <CreatePool tokenX={tokenX} /> : null}
+			<Clmm mint1={mint1} />
 		</Fragment>
 	)
 }
 
-function CreatePool({ tokenX }: { tokenX: string }) {
-	const [lastResult, action] = useFormState(dlmm, initialState)
-
+function Clmm({ mint1 }: { mint1?: string }) {
 	const [form, fields] = useForm({
-		// Reuse the validation logic on the client
 		onValidate({ formData }) {
 			return parseWithZod(formData, { schema: PoolSchema })
 		},
 
-		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
 
 		shouldRevalidate: 'onInput',
 	})
 
 	const payer = usePayer()
-
-	const { serializedTransaction } = lastResult
-
-	const transaction = useSerializedTransaction({ serializedTransaction })
-
-	const signAndSendTransaction = useSignAndSendTransaction()
+	const initSdk = useRaydium()
+	const createPool = useClmm()
 
 	const {
 		run,
@@ -204,27 +197,52 @@ function CreatePool({ tokenX }: { tokenX: string }) {
 		error,
 	} = useAsync<string>()
 
-	useEffect(() => {
-		if (transaction) run(signAndSendTransaction(transaction))
-	}, [run, signAndSendTransaction, transaction])
-
 	return (
-		<form {...getFormProps(form)} action={action}>
-			<Input
-				{...getInputProps(fields.user, {
-					type: 'hidden',
-				})}
-				defaultValue={payer}
-			/>
+		<>
+			<form
+				{...getFormProps(form)}
+				action={async (formData: FormData) => {
+					const submission = parseWithZod(formData, {
+						schema: PoolSchema,
+					})
 
-			<Input
-				{...getInputProps(fields.tokenX, {
-					type: 'text',
-				})}
-				defaultValue={tokenX}
-			/>
+					if (submission.status !== 'success') {
+						return {
+							...submission.reply(),
+						}
+					}
 
-			<button type="submit">create pool</button>
-		</form>
+					const { owner, mint1 } = submission.value
+
+					async function foo() {
+						const raydium = await initSdk({ owner })
+
+						const res = await createPool({ raydium })
+
+						return res
+					}
+
+					run(foo())
+				}}
+			>
+				<Input
+					{...getInputProps(fields.owner, {
+						type: 'hidden',
+					})}
+					defaultValue={payer}
+				/>
+
+				<Input
+					{...getInputProps(fields.mint1, {
+						type: 'text',
+					})}
+					defaultValue={mint1}
+				/>
+
+				<button type="submit">create pool</button>
+			</form>
+
+			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
+		</>
 	)
 }

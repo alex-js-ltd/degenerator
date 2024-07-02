@@ -34,6 +34,6 @@ export const TokenSchema = z.object({
 })
 
 export const PoolSchema = z.object({
-	user: PublicKey,
-	tokenX: PublicKey,
+	owner: PublicKey,
+	mint1: PublicKey.optional(),
 })
