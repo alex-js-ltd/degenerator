@@ -22,6 +22,7 @@ import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { useRaydium } from '@/app/hooks/use_raydium'
 import { useClmm } from '@/app/hooks/use_clmm'
+import { clmm } from '@/app/actions/clmm'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -174,6 +175,8 @@ export default function Page() {
 }
 
 function Clmm({ mint1 }: { mint1: string }) {
+	const [lastResult, action] = useFormState(clmm, initialState)
+
 	const [form, fields] = useForm({
 		onValidate({ formData }) {
 			return parseWithZod(formData, { schema: ClmmSchema })
@@ -185,8 +188,12 @@ function Clmm({ mint1 }: { mint1: string }) {
 	})
 
 	const payer = usePayer()
-	const initSdk = useRaydium()
-	const createPool = useClmm()
+
+	const { serializedTransaction } = lastResult
+
+	const transaction = useSerializedTransaction({ serializedTransaction })
+
+	const signAndSendTransaction = useSignAndSendTransaction()
 
 	const {
 		run,
@@ -195,36 +202,16 @@ function Clmm({ mint1 }: { mint1: string }) {
 		isSuccess,
 		isError,
 		error,
+		reset,
 	} = useAsync<string>()
+
+	useEffect(() => {
+		if (transaction) run(signAndSendTransaction(transaction)).then(reset)
+	}, [run, signAndSendTransaction, transaction])
 
 	return (
 		<>
-			<form
-				{...getFormProps(form)}
-				action={async (formData: FormData) => {
-					const submission = parseWithZod(formData, {
-						schema: ClmmSchema,
-					})
-
-					if (submission.status !== 'success') {
-						return {
-							...submission.reply(),
-						}
-					}
-
-					const { owner, mint1 } = submission.value
-
-					async function foo() {
-						const raydium = await initSdk({ owner })
-
-						const res = await createPool({ raydium, mint1Key: mint1 })
-
-						return res
-					}
-
-					run(foo())
-				}}
-			>
+			<form {...getFormProps(form)} action={action}>
 				<Input
 					{...getInputProps(fields.owner, {
 						type: 'hidden',

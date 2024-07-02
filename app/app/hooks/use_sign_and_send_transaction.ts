@@ -21,6 +21,7 @@ export function useSignAndSendTransaction() {
 				signature: txSig,
 			})
 
+			console.log(txSig)
 			invariant(confirm, 'Transaction not confirmed... 😭🔫')
 
 			invariant(confirm.value.err === null, 'Transaction not confirmed... 😭🔫')
