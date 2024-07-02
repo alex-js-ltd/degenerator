@@ -21,7 +21,6 @@ import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { dlmm } from '@/app/actions/dlmm'
-import { PublicKey } from '@solana/web3.js'
 
 const initialState = {
 	serializedTransaction: undefined,

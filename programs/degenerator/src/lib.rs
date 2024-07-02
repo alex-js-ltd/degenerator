@@ -8,7 +8,7 @@ mod instructions;
 mod state;
 
 // Set the correct key here
-declare_id!("DMVQUYEbAkkqkgxjrRE85MLezYf6mUwbP8aDLmf8xAne");
+declare_id!("4Lzn7k1Z3QBfadkXNaKD2Rp8JNHXEgttZrzg7vLK9gkn");
 
 #[program]
 pub mod degenerator {
@@ -55,6 +55,10 @@ pub mod degenerator {
      pub fn create_amm(ctx: Context<CreateAmm>, id: Pubkey, fee: u16) -> Result<()> {
         instructions::create_amm(ctx, id, fee)
      }
+
+     pub fn create_pool(ctx: Context<CreatePool>) -> Result<()> {
+        instructions::create_pool(ctx)
+    }
 
  
 }

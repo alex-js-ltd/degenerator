@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "E5qDeSM6hctbaUqmMainW8rG2pU56FAAVEYaY9Fj3xD3",
+  "address": "4Lzn7k1Z3QBfadkXNaKD2Rp8JNHXEgttZrzg7vLK9gkn",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -106,6 +106,158 @@ export type Degenerator = {
         {
           "name": "associatedTokenProgram",
           "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "createPool",
+      "discriminator": [
+        233,
+        146,
+        209,
+        142,
+        207,
+        104,
+        64,
+        188
+      ],
+      "accounts": [
+        {
+          "name": "amm",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "amm.id",
+                "account": "amm"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "amm"
+              },
+              {
+                "kind": "account",
+                "path": "mintA"
+              },
+              {
+                "kind": "account",
+                "path": "mintB"
+              }
+            ]
+          }
+        },
+        {
+          "name": "poolAuthority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "amm"
+              },
+              {
+                "kind": "account",
+                "path": "mintA"
+              },
+              {
+                "kind": "account",
+                "path": "mintB"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mintLiquidity",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "amm"
+              },
+              {
+                "kind": "account",
+                "path": "mintA"
+              },
+              {
+                "kind": "account",
+                "path": "mintB"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  105,
+                  113,
+                  117,
+                  105,
+                  100,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mintA"
+        },
+        {
+          "name": "mintB"
+        },
+        {
+          "name": "poolAccountA",
+          "writable": true
+        },
+        {
+          "name": "poolAccountB",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "docs": [
+            "The account paying for all rents"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "tokenProgram",
+          "docs": [
+            "Solana ecosystem accounts"
+          ],
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": []
@@ -411,6 +563,19 @@ export type Degenerator = {
         196,
         135
       ]
+    },
+    {
+      "name": "pool",
+      "discriminator": [
+        241,
+        154,
+        109,
+        4,
+        17,
+        177,
+        109,
+        188
+      ]
     }
   ],
   "errors": [
@@ -489,6 +654,35 @@ export type Degenerator = {
             "fields": [
               "string"
             ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "pool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amm",
+            "docs": [
+              "Primary key of the AMM"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "mintA",
+            "docs": [
+              "Mint of token A"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "mintB",
+            "docs": [
+              "Mint of token B"
+            ],
+            "type": "pubkey"
           }
         ]
       }
