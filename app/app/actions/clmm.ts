@@ -15,6 +15,7 @@ import {
 	parseTokenAccountResp,
 	CLMM_PROGRAM_ID,
 	DEVNET_PROGRAM_ID,
+	type ClmmKeys,
 } from '@raydium-io/raydium-sdk-v2'
 import Decimal from 'decimal.js'
 
@@ -24,6 +25,10 @@ const { CLUSTER } = getEnv()
 
 const txVersion = TxVersion.V0 // or TxVersion.LEGACY
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
+
+interface ExtendedClmmKeys extends ClmmKeys {
+	poolId?: PublicKey // Adding the missing property
+}
 
 export async function clmm(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -41,7 +46,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 
 	const raydium = await initSdk({ owner })
 
-	const { instructions, signers } = await createPool({
+	const { instructions, signers, poolId } = await createPool({
 		raydium,
 		mint1,
 	})
@@ -142,8 +147,6 @@ async function createPool({
 }) {
 	const mint1 = await raydium.token.getTokenInfo(mint1Key)
 
-	console.log(mint1)
-
 	// USDT
 	const mint2 = await raydium.token.getTokenInfo(
 		'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
@@ -155,7 +158,7 @@ async function createPool({
 	const programId =
 		CLUSTER === 'mainnet-beta' ? CLMM_PROGRAM_ID : DEVNET_PROGRAM_ID.CLMM
 
-	const { builder } = await raydium.clmm.createPool({
+	const { builder, extInfo } = await raydium.clmm.createPool({
 		programId,
 		mint1,
 		mint2,
@@ -174,9 +177,12 @@ async function createPool({
 		// },
 	})
 
+	const address: ExtendedClmmKeys = extInfo.address
+
 	return {
 		instructions: builder.AllTxData.instructions,
 		signers: builder.AllTxData.signers,
+		poolId: address?.poolId,
 	}
 }
 

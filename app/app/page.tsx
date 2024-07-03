@@ -167,7 +167,7 @@ export default function Page() {
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 
-			<Clmm mint1={'B5QKJua8KQYTV7fMBgmCzUPcauuhhmPzD4LQbrNGn9kY'} />
+			<Clmm mint1={'DwmG67MUbRaMgCxQX1YrGtMpb3BPp3niYbxdCpDEbND'} />
 		</Fragment>
 	)
 }
