@@ -14,7 +14,6 @@ import {
 	TxVersion,
 	parseTokenAccountResp,
 	CLMM_PROGRAM_ID,
-	DEVNET_PROGRAM_ID,
 	type ClmmKeys,
 } from '@raydium-io/raydium-sdk-v2'
 import Decimal from 'decimal.js'
@@ -25,10 +24,6 @@ const { CLUSTER } = getEnv()
 
 const txVersion = TxVersion.V0 // or TxVersion.LEGACY
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
-
-interface ExtendedClmmKeys extends ClmmKeys {
-	poolId?: PublicKey // Adding the missing property
-}
 
 export async function clmm(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -151,15 +146,10 @@ async function createPool({
 	const mint2 = await raydium.token.getTokenInfo(
 		'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
 	)
-	const mainConfigs = await raydium.api.getClmmConfigs()
-
-	const clmmConfigs = CLUSTER === 'mainnet-beta' ? mainConfigs : devConfigs // devnet configs
-
-	const programId =
-		CLUSTER === 'mainnet-beta' ? CLMM_PROGRAM_ID : DEVNET_PROGRAM_ID.CLMM
+	const clmmConfigs = await raydium.api.getClmmConfigs()
 
 	const { builder, extInfo } = await raydium.clmm.createPool({
-		programId,
+		programId: CLMM_PROGRAM_ID,
 		mint1,
 		mint2,
 		ammConfig: {
@@ -170,14 +160,9 @@ async function createPool({
 		initialPrice: new Decimal(1),
 		startTime: new BN(0),
 		txVersion,
-		// optional: set up priority fee here
-		// computeBudgetConfig: {
-		//   units: 600000,
-		//   microLamports: 100000000,
-		// },
 	})
 
-	const address: ExtendedClmmKeys = extInfo.address
+	const address: ClmmKeys & { poolId?: string } = extInfo.address
 
 	return {
 		instructions: builder.AllTxData.instructions,
@@ -185,50 +170,3 @@ async function createPool({
 		poolId: address?.poolId,
 	}
 }
-
-const devConfigs = [
-	{
-		id: 'CQYbhr6amxUER4p5SC44C63R4qw4NFc9Z4Db9vF4tZwG',
-		index: 0,
-		protocolFeeRate: 120000,
-		tradeFeeRate: 100,
-		tickSpacing: 10,
-		fundFeeRate: 40000,
-		description: 'Best for very stable pairs',
-		defaultRange: 0.005,
-		defaultRangePoint: [0.001, 0.003, 0.005, 0.008, 0.01],
-	},
-	{
-		id: 'B9H7TR8PSjJT7nuW2tuPkFC63z7drtMZ4LoCtD7PrCN1',
-		index: 1,
-		protocolFeeRate: 120000,
-		tradeFeeRate: 2500,
-		tickSpacing: 60,
-		fundFeeRate: 40000,
-		description: 'Best for most pairs',
-		defaultRange: 0.1,
-		defaultRangePoint: [0.01, 0.05, 0.1, 0.2, 0.5],
-	},
-	{
-		id: 'GjLEiquek1Nc2YjcBhufUGFRkaqW1JhaGjsdFd8mys38',
-		index: 3,
-		protocolFeeRate: 120000,
-		tradeFeeRate: 10000,
-		tickSpacing: 120,
-		fundFeeRate: 40000,
-		description: 'Best for exotic pairs',
-		defaultRange: 0.1,
-		defaultRangePoint: [0.01, 0.05, 0.1, 0.2, 0.5],
-	},
-	{
-		id: 'GVSwm4smQBYcgAJU7qjFHLQBHTc4AdB3F2HbZp6KqKof',
-		index: 2,
-		protocolFeeRate: 120000,
-		tradeFeeRate: 500,
-		tickSpacing: 10,
-		fundFeeRate: 40000,
-		description: 'Best for tighter ranges',
-		defaultRange: 0.1,
-		defaultRangePoint: [0.01, 0.05, 0.1, 0.2, 0.5],
-	},
-]
