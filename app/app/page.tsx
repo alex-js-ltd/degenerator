@@ -20,6 +20,7 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
+import { Select } from './comps/select'
 
 import { Clmm } from '@/app/comps/clmm'
 const initialState = {
