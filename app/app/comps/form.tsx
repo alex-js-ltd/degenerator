@@ -1,12 +1,7 @@
 'use client'
 
 import { Fragment } from 'react'
-import {
-	useForm,
-	getFormProps,
-	getInputProps,
-	getSelectProps,
-} from '@conform-to/react'
+import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
 import { TokenSchema } from '@/app/utils/schemas'
@@ -24,16 +19,17 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { Select, SelectItem } from '@/app/comps/select'
-
-import type { ApiV3Token } from '@raydium-io/raydium-sdk-v2'
+import { Select, type SelectFieldProps } from '@/app/comps/select'
 
 const initialState = {
 	serializedTransaction: undefined,
-	mint1: undefined,
 }
 
-export function Form({ mintList }: { mintList: ApiV3Token[] }) {
+export function Form({
+	mintOptions,
+}: {
+	mintOptions: SelectFieldProps['options']
+}) {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 
 	const [form, fields] = useForm({
@@ -55,7 +51,7 @@ export function Form({ mintList }: { mintList: ApiV3Token[] }) {
 
 	const payer = usePayer()
 
-	const { serializedTransaction, mint1 } = lastResult
+	const { serializedTransaction } = lastResult
 
 	const transaction = useSerializedTransaction({ serializedTransaction })
 
@@ -74,15 +70,6 @@ export function Form({ mintList }: { mintList: ApiV3Token[] }) {
 	useEffect(() => {
 		if (transaction) run(signAndSendTransaction(transaction)).then(reset)
 	}, [run, signAndSendTransaction, transaction])
-
-	const options = mintList.map(el => ({
-		value: el.address,
-		name: el.name,
-		children: el.name,
-		imageProps: { src: el.logoURI, alt: el.symbol },
-	}))
-
-	const selectProps = { ...getSelectProps(fields.quoteToken) }
 
 	return (
 		<Fragment>
@@ -173,7 +160,7 @@ export function Form({ mintList }: { mintList: ApiV3Token[] }) {
 								<Select
 									meta={fields.quoteToken}
 									valueProps={{ placeholder: 'Quote token' }}
-									options={options}
+									options={mintOptions}
 								/>
 							</div>
 

@@ -14,7 +14,13 @@ async function getApiV3TokenList(): Promise<ApiV3TokenRes> {
 
 export default async function Page() {
 	const data = await getApiV3TokenList()
-	const mintList = data.mintList.filter(el => Boolean(el.name))
 
-	return <Form mintList={mintList} />
+	const options = data.mintList.map(({ address, name, logoURI, symbol }) => ({
+		value: address,
+		name,
+		children: name,
+		imageProps: { src: logoURI, alt: symbol },
+	}))
+
+	return <Form mintOptions={options} />
 }
