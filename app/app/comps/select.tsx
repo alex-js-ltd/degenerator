@@ -9,20 +9,30 @@ import {
 	ChevronUpIcon,
 } from '@radix-ui/react-icons'
 
-export function Select() {
+type SelectProps = {
+	valueProps: SelectPrimitive.SelectValueProps
+	triggerProps?: SelectPrimitive.SelectTriggerProps
+}
+
+export function Select({ triggerProps, valueProps }: SelectProps) {
 	return (
 		<SelectPrimitive.Root>
 			<SelectPrimitive.Trigger
-				className="inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] bg-white text-violet11 shadow-[0_2px_10px] shadow-black/10 hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-violet9 outline-none"
-				aria-label="Food"
+				className="disabled:pointer-events-none disabled:opacity-60 flex h-[32px] w-fit items-center gap-0.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none"
+				{...triggerProps}
 			>
-				<SelectPrimitive.Value placeholder="SelectPrimitive a fruit…" />
-				<SelectPrimitive.Icon className="text-violet11">
+				<SelectPrimitive.Value {...valueProps} />
+				<SelectPrimitive.Icon className="text-violet11 ml-auto">
 					<ChevronDownIcon />
 				</SelectPrimitive.Icon>
 			</SelectPrimitive.Trigger>
 			<SelectPrimitive.Portal>
-				<SelectPrimitive.Content className="overflow-hidden bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
+				<SelectPrimitive.Content
+					position="popper"
+					side="bottom"
+					sideOffset={20}
+					className="overflow-hidden bg-gray-900 rounded-md z-10 w-[300px] "
+				>
 					<SelectPrimitive.ScrollUpButton className="flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default">
 						<ChevronUpIcon />
 					</SelectPrimitive.ScrollUpButton>
@@ -36,33 +46,6 @@ export function Select() {
 							<SelectItem value="blueberry">Blueberry</SelectItem>
 							<SelectItem value="grapes">Grapes</SelectItem>
 							<SelectItem value="pineapple">Pineapple</SelectItem>
-						</SelectPrimitive.Group>
-
-						<SelectPrimitive.Separator className="h-[1px] bg-violet6 m-[5px]" />
-
-						<SelectPrimitive.Group>
-							<SelectPrimitive.Label className="px-[25px] text-xs leading-[25px] text-mauve11">
-								Vegetables
-							</SelectPrimitive.Label>
-							<SelectItem value="aubergine">Aubergine</SelectItem>
-							<SelectItem value="broccoli">Broccoli</SelectItem>
-							<SelectItem value="carrot" disabled>
-								Carrot
-							</SelectItem>
-							<SelectItem value="courgette">Courgette</SelectItem>
-							<SelectItem value="leek">Leek</SelectItem>
-						</SelectPrimitive.Group>
-
-						<SelectPrimitive.Separator className="h-[1px] bg-violet6 m-[5px]" />
-
-						<SelectPrimitive.Group>
-							<SelectPrimitive.Label className="px-[25px] text-xs leading-[25px] text-mauve11">
-								Meat
-							</SelectPrimitive.Label>
-							<SelectItem value="beef">Beef</SelectItem>
-							<SelectItem value="chicken">Chicken</SelectItem>
-							<SelectItem value="lamb">Lamb</SelectItem>
-							<SelectItem value="pork">Pork</SelectItem>
 						</SelectPrimitive.Group>
 					</SelectPrimitive.Viewport>
 					<SelectPrimitive.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default">

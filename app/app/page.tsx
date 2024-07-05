@@ -20,9 +20,10 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { Select } from './comps/select'
+import { Select } from '@/app/comps/select'
 
 import { Clmm } from '@/app/comps/clmm'
+
 const initialState = {
 	serializedTransaction: undefined,
 	mint1: undefined,
@@ -146,6 +147,14 @@ export default function Page() {
 								})}
 								defaultValue={payer}
 							/>
+
+							{/* <div
+								className={
+									'w-full h-[69px] relative flex items-end border-b border-opacity-[0.125] p-3 transition duration-500 ease-in-out border-white'
+								}
+							>
+								<Select valueProps={{ placeholder: 'Quote token' }} />
+							</div> */}
 						</div>
 
 						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
@@ -156,8 +165,9 @@ export default function Page() {
 									onChange={onChange}
 								/>
 
-								<MintToggle />
-								<FreezeToggle />
+								{/* <MintToggle />
+								<FreezeToggle /> */}
+								<Select valueProps={{ placeholder: 'Quote token' }} />
 							</div>
 
 							<SubmitButton isLoading={isLoading} />
