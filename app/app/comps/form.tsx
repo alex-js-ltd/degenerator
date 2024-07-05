@@ -10,7 +10,6 @@ import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { Input } from '@/app/comps/input'
-import { MintToggle, FreezeToggle } from '@/app/comps/toggle'
 import { useEffect } from 'react'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { createSplToken } from '@/app/actions/create_spl_token'
@@ -20,7 +19,7 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { Select, SelectItem, Token } from '@/app/comps/select'
+import { Select, SelectItem } from '@/app/comps/select'
 
 import type { ApiV3Token } from '@raydium-io/raydium-sdk-v2'
 
@@ -164,14 +163,13 @@ export function Form({ mintList }: { mintList: ApiV3Token[] }) {
 									groupProps={{
 										children: (
 											<>
-												{mintList?.map(el => (
-													<>
-														<SelectItem
-															key={el.symbol}
-															value={el.name}
-															children={el.name}
-														/>
-													</>
+												{mintList?.map(({ symbol, name, logoURI }) => (
+													<SelectItem
+														key={symbol}
+														value={name}
+														children={name}
+														imageProps={{ src: logoURI, alt: symbol }}
+													/>
 												))}
 											</>
 										),
