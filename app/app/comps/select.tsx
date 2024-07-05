@@ -6,10 +6,10 @@ import classnames from 'classnames'
 import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons'
 
 import { type FieldMetadata, useInputControl } from '@conform-to/react'
-
+import { Checkbox } from '@/app/comps/check_box'
 import Image, { ImageProps } from 'next/image'
 
-type SelectFieldProps = {
+export type SelectFieldProps = {
 	// You can use the `FieldMetadata` type to define the `meta` prop
 	// And restrict the type of the field it accepts through its generics
 	meta: FieldMetadata<string>
@@ -81,6 +81,7 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 		forwardedRef,
 	) => {
 		const selected = selectedValue === props.value
+		const variant = selected ? 'on' : 'off'
 		return (
 			<SelectPrimitive.Item
 				className={classnames(
@@ -91,7 +92,7 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 				ref={forwardedRef}
 			>
 				<div className="flex size-4 shrink-0 items-center justify-center rounded-full border border-gray-500">
-					{selected ? <Selected /> : <NotSelected />}
+					<Checkbox variant={variant} />
 				</div>
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-2">
