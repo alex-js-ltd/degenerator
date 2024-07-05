@@ -20,16 +20,16 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { Select, Token } from '@/app/comps/select'
+import { Select, SelectItem, Token } from '@/app/comps/select'
 
-import type { ApiV3TokenRes } from '@raydium-io/raydium-sdk-v2'
+import type { ApiV3Token } from '@raydium-io/raydium-sdk-v2'
 
 const initialState = {
 	serializedTransaction: undefined,
 	mint1: undefined,
 }
 
-export function Form({ tokenList }: { tokenList: ApiV3TokenRes }) {
+export function Form({ mintList }: { mintList: ApiV3Token[] }) {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 
 	const [form, fields] = useForm({
@@ -70,10 +70,6 @@ export function Form({ tokenList }: { tokenList: ApiV3TokenRes }) {
 	useEffect(() => {
 		if (transaction) run(signAndSendTransaction(transaction)).then(reset)
 	}, [run, signAndSendTransaction, transaction])
-
-	console.log(tokenList)
-
-	const mintList = tokenList.mintList
 
 	return (
 		<Fragment>
@@ -168,9 +164,13 @@ export function Form({ tokenList }: { tokenList: ApiV3TokenRes }) {
 									groupProps={{
 										children: (
 											<>
-												{mintList.map(el => (
+												{mintList?.map(el => (
 													<>
-														<Token key={el.chainId} label={el.name} />
+														<SelectItem
+															key={el.symbol}
+															value={el.name}
+															children={el.name}
+														/>
 													</>
 												))}
 											</>

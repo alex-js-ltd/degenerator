@@ -55,7 +55,7 @@ export function Select({ triggerProps, valueProps, groupProps }: SelectProps) {
 interface SelectItemProps
 	extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> {}
 
-const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
+export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 	({ children, className, ...props }, forwardedRef) => {
 		return (
 			<SelectPrimitive.Item
