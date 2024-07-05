@@ -159,9 +159,15 @@ export function Form({
 
 								<Select
 									meta={fields.quoteToken}
-									valueProps={{ placeholder: 'Quote token' }}
+									valueProps={{ placeholder: 'Quote Token' }}
 									options={mintOptions}
 								/>
+
+								{/* <Select
+									meta={fields.feeTier}
+									valueProps={{ placeholder: 'Fee Tier' }}
+									options={mintOptions}
+								/> */}
 							</div>
 
 							<SubmitButton isLoading={isLoading} />

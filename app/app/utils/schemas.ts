@@ -33,6 +33,7 @@ export const TokenSchema = z.object({
 		.optional(),
 
 	quoteToken: PublicKey,
+	feeTier: z.string().optional(),
 })
 
 export const ClmmSchema = z.object({
