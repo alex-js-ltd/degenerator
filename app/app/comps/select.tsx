@@ -125,6 +125,7 @@ function Logo({ imageProps }: { imageProps?: ImageProps }) {
 					fill={true}
 					src={imageProps.src}
 					alt={imageProps.alt}
+					sizes="1.25rem"
 				/>
 			) : null}
 		</div>
