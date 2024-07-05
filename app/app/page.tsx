@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant'
-import { Form } from './comps/form'
+import { Form } from '@/app/comps/form'
 import type { ApiV3TokenRes } from '@raydium-io/raydium-sdk-v2'
-import type { SelectFieldProps } from './comps/select'
+import type { SelectFieldProps } from '@/app/comps/select'
 
 async function getApiV3TokenList(): Promise<ApiV3TokenRes> {
 	const res = await fetch('https://api-v3.raydium.io/mint/list')
