@@ -20,6 +20,8 @@ export type SelectFieldProps = {
 export function Select({ meta, options, valueProps }: SelectFieldProps) {
 	const control = useInputControl(meta)
 
+	const imageProps = options.find(el => el.value === control.value)?.imageProps
+
 	return (
 		<SelectPrimitive.Root
 			name={meta.name}
@@ -34,6 +36,8 @@ export function Select({ meta, options, valueProps }: SelectFieldProps) {
 			}}
 		>
 			<SelectPrimitive.Trigger className="disabled:pointer-events-none disabled:opacity-60 flex h-[32px] w-fit items-center gap-0.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none">
+				<Logo imageProps={imageProps} />
+
 				<SelectPrimitive.Value {...valueProps} />
 				<SelectPrimitive.Icon className="text-violet11 ml-auto">
 					<ChevronDownIcon />
@@ -44,7 +48,7 @@ export function Select({ meta, options, valueProps }: SelectFieldProps) {
 					position="popper"
 					side="bottom"
 					sideOffset={20}
-					className="overflow-hidden bg-gray-900 rounded-md z-10 w-[300px] h-[200px] absolute top-0 "
+					className="overflow-hidden bg-gray-900 rounded-md z-10 w-[300px] h-[200px] absolute top-0"
 				>
 					<SelectPrimitive.ScrollUpButton className="flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default">
 						<ChevronUpIcon />
@@ -101,23 +105,28 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 							{children}
 						</SelectPrimitive.ItemText>
 					</div>
-					<div className="relative flex items-center overflow-hidden h-5 w-5 rounded">
-						<Image
-							className="relative aspect-[48/44] object-cover object-center rounded-lg"
-							fill={true}
-							{...imageProps}
-						/>
-					</div>
+					<Logo imageProps={imageProps} />
 				</div>
 			</SelectPrimitive.Item>
 		)
 	},
 )
 
-const Selected = () => (
-	<div className="size-2 rounded-full bg-gray-50 transition-all opacity-100" />
-)
+function Logo({ imageProps }: { imageProps?: ImageProps }) {
+	const className = Boolean(imageProps)
+		? 'relative flex items-center overflow-hidden h-5 w-5 rounded'
+		: 'relative flex items-center overflow-hidden h-5 w-5 rounded outline outline-1 outline-offset-[-1px] outline-white/[.14]'
 
-const NotSelected = () => (
-	<div className="size-2 rounded-full bg-gray-50 transition-all opacity-0 [[data-selected=true]_&]:opacity-30" />
-)
+	return (
+		<div className={className}>
+			{imageProps ? (
+				<Image
+					className="relative aspect-[48/44] object-cover object-center rounded-lg"
+					fill={true}
+					src={imageProps.src}
+					alt={imageProps.alt}
+				/>
+			) : null}
+		</div>
+	)
+}
