@@ -27,8 +27,10 @@ const initialState = {
 
 export function Form({
 	mintOptions,
+	clmmOptions,
 }: {
 	mintOptions: SelectFieldProps['options']
+	clmmOptions: SelectFieldProps['options']
 }) {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 
@@ -162,12 +164,6 @@ export function Form({
 									valueProps={{ placeholder: 'Quote Token' }}
 									options={mintOptions}
 								/>
-
-								{/* <Select
-									meta={fields.feeTier}
-									valueProps={{ placeholder: 'Fee Tier' }}
-									options={mintOptions}
-								/> */}
 							</div>
 
 							<SubmitButton isLoading={isLoading} />

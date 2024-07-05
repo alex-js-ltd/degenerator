@@ -35,7 +35,7 @@ export function Select({ meta, options, valueProps }: SelectFieldProps) {
 				}
 			}}
 		>
-			<SelectPrimitive.Trigger className="disabled:pointer-events-none disabled:opacity-60 flex h-[32px] w-fit items-center gap-0.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none">
+			<SelectPrimitive.Trigger className="disabled:pointer-events-none disabled:opacity-60 flex h-[32px] w-full items-center gap-0.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none">
 				<Logo imageProps={imageProps} />
 
 				<SelectPrimitive.Value {...valueProps} />
@@ -76,7 +76,7 @@ export function Select({ meta, options, valueProps }: SelectFieldProps) {
 
 interface SelectItemProps
 	extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> {
-	imageProps: ImageProps
+	imageProps?: ImageProps
 	selectedValue?: string
 }
 
