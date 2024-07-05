@@ -31,6 +31,8 @@ export const TokenSchema = z.object({
 		.string()
 		.transform(value => value === 'on')
 		.optional(),
+
+	quoteToken: PublicKey,
 })
 
 export const ClmmSchema = z.object({

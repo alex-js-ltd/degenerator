@@ -1,7 +1,12 @@
 'use client'
 
 import { Fragment } from 'react'
-import { useForm, getFormProps, getInputProps } from '@conform-to/react'
+import {
+	useForm,
+	getFormProps,
+	getInputProps,
+	getSelectProps,
+} from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
 import { TokenSchema } from '@/app/utils/schemas'
@@ -69,6 +74,15 @@ export function Form({ mintList }: { mintList: ApiV3Token[] }) {
 	useEffect(() => {
 		if (transaction) run(signAndSendTransaction(transaction)).then(reset)
 	}, [run, signAndSendTransaction, transaction])
+
+	const options = mintList.map(el => ({
+		value: el.address,
+		name: el.name,
+		children: el.name,
+		imageProps: { src: el.logoURI, alt: el.symbol },
+	}))
+
+	const selectProps = { ...getSelectProps(fields.quoteToken) }
 
 	return (
 		<Fragment>
@@ -156,24 +170,10 @@ export function Form({ mintList }: { mintList: ApiV3Token[] }) {
 									onChange={onChange}
 								/>
 
-								{/* <MintToggle />
-								<FreezeToggle /> */}
 								<Select
+									meta={fields.quoteToken}
 									valueProps={{ placeholder: 'Quote token' }}
-									groupProps={{
-										children: (
-											<>
-												{mintList?.map(({ symbol, name, logoURI }) => (
-													<SelectItem
-														key={symbol}
-														value={name}
-														children={name}
-														imageProps={{ src: logoURI, alt: symbol }}
-													/>
-												))}
-											</>
-										),
-									}}
+									options={options}
 								/>
 							</div>
 

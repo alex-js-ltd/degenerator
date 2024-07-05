@@ -16,6 +16,5 @@ export default async function Page() {
 	const data = await getApiV3TokenList()
 	const mintList = data.mintList.filter(el => Boolean(el.name))
 
-	console.log(mintList)
 	return <Form mintList={mintList} />
 }

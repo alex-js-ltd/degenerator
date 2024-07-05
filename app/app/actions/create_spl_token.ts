@@ -17,6 +17,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		schema: TokenSchema,
 	})
 
+	console.log(submission)
 	if (submission.status !== 'success') {
 		return {
 			...submission.reply(),
@@ -35,6 +36,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		payerKey,
 		revokeMint,
 		revokeFreeze,
+		quoteToken,
 	} = submission.value
 
 	const blob = await put(image.name, image, { access: 'public' })
