@@ -51,11 +51,12 @@ export function Select({ meta, options, valueProps }: SelectFieldProps) {
 					</SelectPrimitive.ScrollUpButton>
 					<SelectPrimitive.Viewport className="z-50">
 						<SelectPrimitive.Group className="overflow-y-scroll flex h-full w-full flex-col overflow-hidden rounded-md bg-transparent text-gray-100 [&_[cmdk-input-wrapper]]:border-b-gray-800">
-							{options.map(props => (
+							{options.map(({ value, ...rest }) => (
 								<SelectItem
-									key={props.value}
+									key={value}
 									selectedValue={control.value}
-									{...props}
+									value={value}
+									{...rest}
 								/>
 							))}
 						</SelectPrimitive.Group>
