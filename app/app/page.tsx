@@ -1,6 +1,7 @@
 import invariant from 'tiny-invariant'
 import { Form } from './comps/form'
 import type { ApiV3TokenRes } from '@raydium-io/raydium-sdk-v2'
+import type { SelectFieldProps } from './comps/select'
 
 async function getApiV3TokenList(): Promise<ApiV3TokenRes> {
 	const res = await fetch('https://api-v3.raydium.io/mint/list')
@@ -15,12 +16,22 @@ async function getApiV3TokenList(): Promise<ApiV3TokenRes> {
 export default async function Page() {
 	const data = await getApiV3TokenList()
 
-	const options = data.mintList.map(({ address, name, logoURI, symbol }) => ({
-		value: address,
-		name,
-		children: name,
-		imageProps: { src: logoURI, alt: symbol },
-	}))
+	const initial: SelectFieldProps['options'] = []
 
-	return <Form mintOptions={options} />
+	const mintOptions = data.mintList.reduce((acc, curr) => {
+		const { address, name, logoURI, symbol } = curr
+
+		const option = {
+			value: address,
+			name,
+			children: name,
+			imageProps: { src: logoURI, alt: symbol },
+		}
+
+		if (name) acc.push(option)
+
+		return acc
+	}, initial)
+
+	return <Form mintOptions={mintOptions} />
 }
