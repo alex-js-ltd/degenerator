@@ -1,8 +1,6 @@
 'use client'
 
 import React, {
-	type ReactElement,
-	cloneElement,
 	createContext,
 	useContext,
 	type ReactNode,
@@ -24,7 +22,7 @@ export interface SelectFieldProps {
 	meta: FieldMetadata<string>
 	items: Array<SelectItemProps>
 	placeholder?: string
-	children: ReactElement[]
+	children: ReactNode
 }
 
 type SelectProviderProps = {
@@ -63,7 +61,9 @@ function SelectProvider({
 
 	const value = { imageProps, control, items, placeholder, meta }
 
-	return <SelectContext.Provider value={value} children={children} />
+	return (
+		<SelectContext.Provider value={value}>{children}</SelectContext.Provider>
+	)
 }
 
 function useSelect() {
@@ -152,6 +152,34 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 	},
 )
 
+function SelectItems() {
+	const { items } = useSelect()
+
+	return (
+		<>
+			{items.map(({ children, ...props }) => (
+				<SelectItem key={props.value} {...props}>
+					<div className="flex items-center gap-2">
+						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 max-w-[118px] truncate text-left align-middle font-normal whitespace-nowrap">
+							{children}
+						</RadixSelect.ItemText>
+					</div>
+
+					<div className="relative flex items-center overflow-hidden h-5 w-5 rounded pr-1">
+						<Image
+							className="relative aspect-[48/44] object-cover object-center rounded-lg"
+							fill={true}
+							src={props.imageProps.src}
+							alt={props.imageProps.alt}
+							sizes="1.25rem"
+						/>
+					</div>
+				</SelectItem>
+			))}
+		</>
+	)
+}
+
 function Logo() {
 	const { imageProps } = useSelect()
 
@@ -169,36 +197,4 @@ function Logo() {
 	)
 }
 
-type CompoundSelect = {
-	meta: FieldMetadata<string>
-	items: Array<SelectItemProps>
-}
-
-function QuoteToken({ meta, items }: CompoundSelect) {
-	return (
-		<SelectProvider meta={meta} items={items} placeholder="Quote Token">
-			<Select>
-				{items.map(({ children, ...props }) => (
-					<SelectItem key={props.value} {...props}>
-						<div className="flex items-center gap-2">
-							<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 max-w-[118px] truncate text-left align-middle font-normal whitespace-nowrap">
-								{children}
-							</RadixSelect.ItemText>
-						</div>
-
-						<div className="relative flex items-center overflow-hidden h-5 w-5 rounded pr-1">
-							<Image
-								className="relative aspect-[48/44] object-cover object-center rounded-lg"
-								fill={true}
-								src={props.imageProps.src}
-								alt={props.imageProps.alt}
-								sizes="1.25rem"
-							/>
-						</div>
-					</SelectItem>
-				))}
-			</Select>
-		</SelectProvider>
-	)
-}
-export { Select, SelectItem, QuoteToken }
+export { SelectProvider, Select, SelectItems }

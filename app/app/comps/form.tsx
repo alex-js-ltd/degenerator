@@ -22,8 +22,8 @@ import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import {
 	Select,
 	type SelectFieldProps,
-	SelectItem,
-	QuoteToken,
+	SelectProvider,
+	SelectItems,
 } from '@/app/comps/select'
 
 const initialState = {
@@ -164,7 +164,15 @@ export function Form({
 									onChange={onChange}
 								/>
 
-								<QuoteToken meta={fields.quoteToken} items={mintItems} />
+								<SelectProvider
+									meta={fields.quoteToken}
+									items={mintItems}
+									placeholder="Quote Token"
+								>
+									<Select>
+										<SelectItems />
+									</Select>
+								</SelectProvider>
 							</div>
 
 							<SubmitButton isLoading={isLoading} />
