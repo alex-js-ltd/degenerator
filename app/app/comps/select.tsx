@@ -24,6 +24,7 @@ export function Select({ meta, options, valueProps }: SelectFieldProps) {
 
 	return (
 		<SelectPrimitive.Root
+			required
 			name={meta.name}
 			value={control.value}
 			onValueChange={value => {
@@ -54,7 +55,7 @@ export function Select({ meta, options, valueProps }: SelectFieldProps) {
 						<ChevronUpIcon />
 					</SelectPrimitive.ScrollUpButton>
 					<SelectPrimitive.Viewport className="z-50">
-						<SelectPrimitive.Group className="overflow-y-scroll flex h-full w-full flex-col overflow-hidden rounded-md bg-transparent text-gray-100 [&_[cmdk-input-wrapper]]:border-b-gray-800">
+						<SelectPrimitive.Group className="overflow-y-scroll flex h-full w-full flex-col overflow-hidden rounded-md bg-transparent text-gray-100 [&_[cmdk-input-wrapper]]:border-b-gray-800 p-1.5 gap-1">
 							{options.map(({ value, ...rest }) => (
 								<SelectItem
 									key={value}
@@ -90,7 +91,7 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 		return (
 			<SelectPrimitive.Item
 				className={classnames(
-					'relative select-none outline-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 group flex w-full cursor-pointer items-center gap-1.5 rounded p-1 pl-2 text-sm text-gray-50 data-[selected=true]:bg-gray-800 data-[selected=true]:text-gray-50',
+					'relative select-none outline-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 group flex w-full cursor-pointer items-center gap-1.5 rounded p-1 pl-2 text-sm text-gray-50  bg-gray-900 hover:bg-gray-800',
 					className,
 				)}
 				{...props}
