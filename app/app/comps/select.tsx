@@ -6,6 +6,7 @@ import React, {
 	type ElementRef,
 	useRef,
 	cloneElement,
+	Fragment,
 } from 'react'
 import * as RadixSelect from '@radix-ui/react-Select'
 import classnames from 'classnames'
@@ -42,7 +43,7 @@ function Select({
 	const imageProps = items.find(el => el.value === control.value)?.imageProps
 
 	return (
-		<>
+		<Fragment>
 			<Input
 				name={meta.name}
 				defaultValue={meta.initialValue}
@@ -90,7 +91,7 @@ function Select({
 					</RadixSelect.Content>
 				</RadixSelect.Portal>
 			</RadixSelect.Root>
-		</>
+		</Fragment>
 	)
 }
 
