@@ -48,7 +48,7 @@ export function Select({ meta, options, valueProps }: SelectFieldProps) {
 					position="popper"
 					side="bottom"
 					sideOffset={20}
-					className="overflow-hidden bg-gray-900 rounded-md z-10 w-[124px] h-[200px] absolute top-0"
+					className="overflow-hidden bg-gray-900 rounded-md z-10 w-fit min-w-[124px] h-[200px] absolute top-0"
 				>
 					<SelectPrimitive.ScrollUpButton className="flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default">
 						<ChevronUpIcon />
@@ -96,7 +96,7 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 				{...props}
 				ref={forwardedRef}
 			>
-				<div className="flex size-4 shrink-0 items-center justify-center rounded-full border border-gray-500">
+				<div className="flex size-4 shrink-0 items-center justify-center rounded-full border border-gray-500 group">
 					<Checkbox variant={variant} />
 				</div>
 				<div className="flex w-full items-center justify-between">

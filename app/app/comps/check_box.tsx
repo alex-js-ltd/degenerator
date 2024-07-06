@@ -6,7 +6,7 @@ const checkBoxVariants = cva(undefined, {
 	variants: {
 		variant: {
 			on: 'size-2 rounded-full bg-gray-50 transition-all opacity-100',
-			off: 'size-2 rounded-full bg-gray-50 transition-all opacity-0 [[data-selected=true]_&]:opacity-30',
+			off: 'size-2 rounded-full bg-gray-50 transition-all opacity-0 group-hover:opacity-30',
 		},
 	},
 })
