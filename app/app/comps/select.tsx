@@ -38,7 +38,7 @@ function Select({ meta, items, placeholder, children }: SelectFieldProps) {
 			}}
 		>
 			<RadixSelect.Trigger className="disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-[124px] items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none">
-				{imageProps ? <Logo imageProps={imageProps} /> : null}
+				{imageProps ? <Logo {...imageProps} /> : null}
 
 				<RadixSelect.Value placeholder={placeholder} />
 				<RadixSelect.Icon className="text-violet11 ml-auto">
@@ -73,16 +73,12 @@ function Select({ meta, items, placeholder, children }: SelectFieldProps) {
 
 interface SelectItemProps
 	extends React.ComponentPropsWithoutRef<typeof RadixSelect.Item> {
-	imageProps?: ImageProps
 	selectedValue?: string
+	imageProps?: ImageProps
 }
 
 const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
-	(
-		{ children, className, imageProps, selectedValue, ...props },
-		forwardedRef,
-	) => {
-		console.log(selectedValue)
+	({ children, className, selectedValue, ...props }, forwardedRef) => {
 		const selected = selectedValue === props.value
 		const variant = selected ? 'on' : 'off'
 		return (
@@ -98,30 +94,45 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 					<Checkbox variant={variant} />
 				</div>
 				<div className="flex w-full items-center justify-between">
-					<div className="flex items-center gap-2">
-						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 max-w-[118px] truncate text-left align-middle font-normal whitespace-nowrap">
-							{children}
-						</RadixSelect.ItemText>
-					</div>
-					{imageProps ? <Logo imageProps={imageProps} /> : null}
+					{children}
 				</div>
 			</RadixSelect.Item>
 		)
 	},
 )
 
-function Logo({ imageProps }: { imageProps: ImageProps }) {
+function Logo({ src, alt }: ImageProps) {
 	return (
 		<div className="relative flex items-center overflow-hidden h-5 w-5 rounded pr-1">
 			<Image
 				className="relative aspect-[48/44] object-cover object-center rounded-lg"
 				fill={true}
-				src={imageProps.src}
-				alt={imageProps.alt}
+				src={src}
+				alt={alt}
 				sizes="1.25rem"
 			/>
 		</div>
 	)
 }
 
-export { Select, SelectItem }
+function QuoteToken({
+	meta,
+	items,
+	placeholder = 'Quote Token',
+}: Omit<SelectFieldProps, 'children'>) {
+	return (
+		<Select meta={meta} items={items} placeholder={placeholder}>
+			{items.map(({ children, imageProps, ...props }) => (
+				<SelectItem key={props.value} {...props}>
+					<div className="flex items-center gap-2">
+						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 max-w-[118px] truncate text-left align-middle font-normal whitespace-nowrap">
+							{children}
+						</RadixSelect.ItemText>
+					</div>
+					{imageProps ? <Logo {...imageProps} /> : null}
+				</SelectItem>
+			))}
+		</Select>
+	)
+}
+export { Select, SelectItem, QuoteToken }
