@@ -66,7 +66,7 @@ export default async function Page() {
 				value: id,
 				name: description,
 				children: description,
-				imageProps: { src: '', alt: '' },
+				imageProps: { src: '/stable_pairs.svg', alt: 'hello' },
 			}
 
 			acc.push(option)
