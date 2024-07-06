@@ -2,17 +2,20 @@
 
 import React, {
 	type ReactElement,
-	cloneElement,
 	type ComponentType,
+	type ElementRef,
+	useRef,
+	cloneElement,
 } from 'react'
 import * as RadixSelect from '@radix-ui/react-Select'
 import classnames from 'classnames'
-import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons'
+import { ChevronDownIcon } from '@radix-ui/react-icons'
 
 import { type FieldMetadata, useInputControl } from '@conform-to/react'
 import { Checkbox } from '@/app/comps/check_box'
 import Image, { ImageProps } from 'next/image'
 import { cn } from '@/app/utils/misc'
+import { Input } from '@/app/comps/input'
 
 export interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
@@ -34,50 +37,60 @@ function Select({
 	Logo,
 	children,
 }: SelectFieldProps) {
+	const selectRef = useRef<ElementRef<typeof RadixSelect.Trigger>>(null)
 	const control = useInputControl(meta)
-
 	const imageProps = items.find(el => el.value === control.value)?.imageProps
 
 	return (
-		<RadixSelect.Root
-			required
-			name={meta.name}
-			value={control.value}
-			onValueChange={value => {
-				control.change(value)
-			}}
-			onOpenChange={open => {
-				if (!open) {
-					control.blur()
-				}
-			}}
-		>
-			<RadixSelect.Trigger className="disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-full items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none">
-				{imageProps && Logo ? <Logo {...imageProps} /> : null}
-
-				<RadixSelect.Value {...valueProps} />
-				<RadixSelect.Icon className="text-violet11 ml-auto">
-					<ChevronDownIcon />
-				</RadixSelect.Icon>
-			</RadixSelect.Trigger>
-			<RadixSelect.Portal>
-				<RadixSelect.Content
-					position="popper"
-					side="bottom"
-					sideOffset={20}
-					className="overflow-hidden bg-gray-900 rounded-md z-10 w-fit min-w-[124px] h-auto max-h-[136px]"
-					{...contentProps}
+		<>
+			<Input
+				name={meta.name}
+				defaultValue={meta.initialValue}
+				className="sr-only"
+				tabIndex={-1}
+				onFocus={() => {
+					selectRef.current?.focus()
+				}}
+			/>
+			<RadixSelect.Root
+				value={control.value ?? ''}
+				onValueChange={control.change}
+				onOpenChange={open => {
+					if (!open) {
+						control.blur()
+					}
+				}}
+			>
+				<RadixSelect.Trigger
+					ref={selectRef}
+					className="disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-full items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none"
 				>
-					<RadixSelect.Viewport className="z-50">
-						<RadixSelect.Group className="overflow-y-scroll flex h-full w-full flex-col overflow-hidden rounded-md bg-transparent text-gray-100 [&_[cmdk-input-wrapper]]:border-b-gray-800 p-1.5 gap-1">
-							{React.Children.map(children, c =>
-								cloneElement(c, { selectedValue: control.value }),
-							)}
-						</RadixSelect.Group>
-					</RadixSelect.Viewport>
-				</RadixSelect.Content>
-			</RadixSelect.Portal>
-		</RadixSelect.Root>
+					{imageProps && Logo ? <Logo {...imageProps} /> : null}
+
+					<RadixSelect.Value {...valueProps} />
+					<RadixSelect.Icon className="text-violet11 ml-auto">
+						<ChevronDownIcon />
+					</RadixSelect.Icon>
+				</RadixSelect.Trigger>
+				<RadixSelect.Portal>
+					<RadixSelect.Content
+						position="popper"
+						side="bottom"
+						sideOffset={20}
+						className="overflow-hidden bg-gray-900 rounded-md z-10 w-fit min-w-[124px] h-auto max-h-[136px]"
+						{...contentProps}
+					>
+						<RadixSelect.Viewport className="z-50">
+							<RadixSelect.Group className="overflow-y-scroll flex h-full w-full flex-col overflow-hidden rounded-md bg-transparent text-gray-100 [&_[cmdk-input-wrapper]]:border-b-gray-800 p-1.5 gap-1">
+								{React.Children.map(children, c =>
+									cloneElement(c, { selectedValue: control.value }),
+								)}
+							</RadixSelect.Group>
+						</RadixSelect.Viewport>
+					</RadixSelect.Content>
+				</RadixSelect.Portal>
+			</RadixSelect.Root>
+		</>
 	)
 }
 
@@ -143,14 +156,18 @@ function QuoteToken({ meta, items }: CompoundSelect) {
 			valueProps={{ placeholder: 'Quote Token' }}
 			Logo={Logo}
 		>
-			{items.map(({ children, imageProps, ...props }) => (
-				<SelectItem key={props.value} {...props}>
+			{items.map(item => (
+				<SelectItem
+					value={item.value}
+					id={`${meta.id}-${item.value}`}
+					key={item.value}
+				>
 					<div className="flex items-center gap-2">
 						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 max-w-[118px] truncate text-left align-middle font-normal whitespace-nowrap">
-							{children}
+							{item.children}
 						</RadixSelect.ItemText>
 					</div>
-					{imageProps ? <Logo {...imageProps} /> : null}
+					{item.imageProps ? <Logo {...item.imageProps} /> : null}
 				</SelectItem>
 			))}
 		</Select>
@@ -159,11 +176,15 @@ function QuoteToken({ meta, items }: CompoundSelect) {
 function FeeTier({ meta, items }: CompoundSelect) {
 	return (
 		<Select meta={meta} items={items} valueProps={{ placeholder: 'Fee Tier' }}>
-			{items.map(({ children, imageProps, ...props }) => (
-				<SelectItem key={props.value} {...props}>
+			{items.map(item => (
+				<SelectItem
+					value={item.value}
+					id={`${meta.id}-${item.value}`}
+					key={item.value}
+				>
 					<div className="flex items-center gap-2">
 						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-normal whitespace-nowrap">
-							{children}
+							{item.children}
 						</RadixSelect.ItemText>
 					</div>
 				</SelectItem>

@@ -35,8 +35,10 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		revokeMint,
 		revokeFreeze,
 		quoteToken,
+		feeTier,
 	} = submission.value
 
+	console.log(submission)
 	const blob = await put(image.name, image, { access: 'public' })
 
 	invariant(blob, 'Failed to upload image')
