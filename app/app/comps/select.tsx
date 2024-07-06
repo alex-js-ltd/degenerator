@@ -21,15 +21,7 @@ export interface SelectFieldProps {
 	// And restrict the type of the field it accepts through its generics
 	meta: FieldMetadata<string>
 	items: Array<SelectItemProps>
-	placeholder?: string
 	children: ReactNode
-}
-
-type SelectProviderProps = {
-	children: ReactNode
-	meta: FieldMetadata<string>
-	items: Array<SelectItemProps>
-	placeholder: string
 }
 
 type Control = {
@@ -43,23 +35,17 @@ const SelectContext = createContext<
 			imageProps?: ImageProps
 			control: Control
 			items: SelectItemProps[]
-			placeholder: string
 			meta: FieldMetadata<string>
 	  }
 	| undefined
 >(undefined)
 
-function SelectProvider({
-	children,
-	meta,
-	items,
-	placeholder,
-}: SelectProviderProps) {
+function SelectProvider({ children, meta, items }: SelectFieldProps) {
 	const control = useInputControl(meta)
 
 	const imageProps = items.find(el => el.value === control.value)?.imageProps
 
-	const value = { imageProps, control, items, placeholder, meta }
+	const value = { imageProps, control, items, meta }
 
 	return (
 		<SelectContext.Provider value={value}>{children}</SelectContext.Provider>
@@ -73,8 +59,14 @@ function useSelect() {
 	return context
 }
 
-function Select({ children }: { children: ReactNode }) {
-	const { control, meta, placeholder } = useSelect()
+function Select({
+	children,
+	placeholder,
+}: {
+	children: ReactNode
+	placeholder: string
+}) {
+	const { control, meta } = useSelect()
 
 	return (
 		<RadixSelect.Root
@@ -183,15 +175,14 @@ function SelectItems() {
 function Logo() {
 	const { imageProps } = useSelect()
 
-	if (!imageProps) return
+	if (!imageProps) return null
 	return (
 		<div className="relative flex items-center overflow-hidden h-5 w-5 rounded pr-1">
 			<Image
 				className="relative aspect-[48/44] object-cover object-center rounded-lg"
 				fill={true}
-				src={imageProps.src}
-				alt={imageProps.alt}
 				sizes="1.25rem"
+				{...imageProps}
 			/>
 		</div>
 	)

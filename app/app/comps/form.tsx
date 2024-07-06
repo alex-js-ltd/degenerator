@@ -164,12 +164,8 @@ export function Form({
 									onChange={onChange}
 								/>
 
-								<SelectProvider
-									meta={fields.quoteToken}
-									items={mintItems}
-									placeholder="Quote Token"
-								>
-									<Select>
+								<SelectProvider meta={fields.quoteToken} items={mintItems}>
+									<Select placeholder="Quote Token">
 										<SelectItems />
 									</Select>
 								</SelectProvider>
