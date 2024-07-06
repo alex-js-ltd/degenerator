@@ -18,9 +18,16 @@ export interface SelectFieldProps {
 	children: ReactElement[]
 	valueProps?: RadixSelect.SelectValueProps
 	triggerProps?: RadixSelect.SelectTriggerProps
+	contentProps?: RadixSelect.SelectContentProps
 }
 
-function Select({ meta, items, valueProps, children }: SelectFieldProps) {
+function Select({
+	meta,
+	items,
+	valueProps,
+	contentProps,
+	children,
+}: SelectFieldProps) {
 	const control = useInputControl(meta)
 
 	const imageProps = items.find(el => el.value === control.value)?.imageProps
@@ -52,11 +59,9 @@ function Select({ meta, items, valueProps, children }: SelectFieldProps) {
 					position="popper"
 					side="bottom"
 					sideOffset={20}
-					className="overflow-hidden bg-gray-900 rounded-md z-10 w-fit min-w-[124px] h-[200px] absolute top-0"
+					className="overflow-hidden bg-gray-900 rounded-md z-10 w-fit min-w-[124px] h-auto max-h-[136px]"
+					{...contentProps}
 				>
-					<RadixSelect.ScrollUpButton className="flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default">
-						<ChevronUpIcon />
-					</RadixSelect.ScrollUpButton>
 					<RadixSelect.Viewport className="z-50">
 						<RadixSelect.Group className="overflow-y-scroll flex h-full w-full flex-col overflow-hidden rounded-md bg-transparent text-gray-100 [&_[cmdk-input-wrapper]]:border-b-gray-800 p-1.5 gap-1">
 							{React.Children.map(children, c =>
@@ -64,9 +69,6 @@ function Select({ meta, items, valueProps, children }: SelectFieldProps) {
 							)}
 						</RadixSelect.Group>
 					</RadixSelect.Viewport>
-					<RadixSelect.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default">
-						<ChevronDownIcon />
-					</RadixSelect.ScrollDownButton>
 				</RadixSelect.Content>
 			</RadixSelect.Portal>
 		</RadixSelect.Root>
@@ -86,7 +88,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 		return (
 			<RadixSelect.Item
 				className={classnames(
-					'relative select-none outline-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 group flex w-full cursor-pointer items-center gap-1.5 rounded p-1 pl-2 text-sm text-gray-50  bg-gray-900 hover:bg-gray-800',
+					'relative select-none outline-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 group flex w-full cursor-pointer items-center gap-1.5 rounded p-1 pl-2 text-sm text-gray-50 bg-gray-900 hover:bg-gray-800',
 					className,
 				)}
 				{...props}
@@ -149,11 +151,7 @@ function QuoteToken({ meta, items }: CompoundSelect) {
 }
 function FeeTier({ meta, items }: CompoundSelect) {
 	return (
-		<Select
-			meta={meta}
-			items={items}
-			valueProps={{ placeholder: 'Fee Tier', children: null }}
-		>
+		<Select meta={meta} items={items} valueProps={{ placeholder: 'Fee Tier' }}>
 			{items.map(({ children, imageProps, ...props }) => (
 				<SelectItem key={props.value} {...props}>
 					<div className="flex items-center gap-2">
@@ -161,7 +159,7 @@ function FeeTier({ meta, items }: CompoundSelect) {
 							{children}
 						</RadixSelect.ItemText>
 					</div>
-					{imageProps ? (
+					{/* {imageProps ? (
 						<div className="relative flex items-center overflow-hidden h-5 w-24 rounded border border-gs-gray-alpha-400">
 							<Image
 								className="relative aspect-[48/44] object-cover object-center rounded-lg"
@@ -170,7 +168,7 @@ function FeeTier({ meta, items }: CompoundSelect) {
 								alt="hello"
 							/>
 						</div>
-					) : null}
+					) : null} */}
 				</SelectItem>
 			))}
 		</Select>
