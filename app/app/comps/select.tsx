@@ -115,12 +115,12 @@ function Logo({ src, alt }: ImageProps) {
 	)
 }
 
-interface ComoundSelect {
+interface CompoundSelect {
 	meta: FieldMetadata<string>
 	items: Array<SelectItemProps>
 }
 
-function QuoteToken({ meta, items }: ComoundSelect) {
+function QuoteToken({ meta, items }: CompoundSelect) {
 	return (
 		<Select meta={meta} items={items} placeholder="Quote Token">
 			{items.map(({ children, imageProps, ...props }) => (
