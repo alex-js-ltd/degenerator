@@ -38,7 +38,7 @@ async function getClmmConfigs() {
 export default async function Page() {
 	const data = await getApiV3TokenList()
 
-	const mintOptions = data.mintList.reduce<SelectFieldProps['options']>(
+	const mintItems = data.mintList.reduce<SelectFieldProps['items']>(
 		(acc, curr) => {
 			const { address, name, logoURI, symbol } = curr
 
@@ -58,7 +58,7 @@ export default async function Page() {
 
 	const clmmConfigs = await getClmmConfigs()
 
-	const clmmOptions = clmmConfigs.reduce<SelectFieldProps['options']>(
+	const clmmItems = clmmConfigs.reduce<SelectFieldProps['items']>(
 		(acc, curr) => {
 			const { id, description } = curr
 
@@ -75,5 +75,5 @@ export default async function Page() {
 		[],
 	)
 
-	return <Form mintOptions={mintOptions} clmmOptions={clmmOptions} />
+	return <Form mintItems={mintItems} clmmItems={clmmItems} />
 }

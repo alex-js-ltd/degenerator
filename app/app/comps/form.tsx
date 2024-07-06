@@ -26,11 +26,11 @@ const initialState = {
 }
 
 export function Form({
-	mintOptions,
-	clmmOptions,
+	mintItems,
+	clmmItems,
 }: {
-	mintOptions: SelectFieldProps['options']
-	clmmOptions: SelectFieldProps['options']
+	mintItems: SelectFieldProps['items']
+	clmmItems: SelectFieldProps['items']
 }) {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 
@@ -161,10 +161,10 @@ export function Form({
 
 								<Select
 									meta={fields.quoteToken}
-									valueProps={{ placeholder: 'Quote Token' }}
-									options={mintOptions}
+									placeholder="Quote Token"
+									items={mintItems}
 								>
-									{mintOptions?.map(({ value, ...rest }) => (
+									{mintItems?.map(({ value, ...rest }) => (
 										<SelectItem key={value} value={value} {...rest} />
 									))}
 								</Select>
