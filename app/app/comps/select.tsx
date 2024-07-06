@@ -1,6 +1,10 @@
 'use client'
 
-import React, { type ReactElement, cloneElement } from 'react'
+import React, {
+	type ReactElement,
+	cloneElement,
+	type ComponentType,
+} from 'react'
 import * as RadixSelect from '@radix-ui/react-Select'
 import classnames from 'classnames'
 import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons'
@@ -16,6 +20,7 @@ export interface SelectFieldProps {
 	meta: FieldMetadata<string>
 	items: Array<SelectItemProps>
 	children: ReactElement[]
+	Logo?: ComponentType<ImageProps>
 	valueProps?: RadixSelect.SelectValueProps
 	triggerProps?: RadixSelect.SelectTriggerProps
 	contentProps?: RadixSelect.SelectContentProps
@@ -26,6 +31,7 @@ function Select({
 	items,
 	valueProps,
 	contentProps,
+	Logo,
 	children,
 }: SelectFieldProps) {
 	const control = useInputControl(meta)
@@ -46,8 +52,8 @@ function Select({
 				}
 			}}
 		>
-			<RadixSelect.Trigger className="disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-fit items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none">
-				{imageProps ? <Logo {...imageProps} /> : null}
+			<RadixSelect.Trigger className="disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-full items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none">
+				{imageProps && Logo ? <Logo {...imageProps} /> : null}
 
 				<RadixSelect.Value {...valueProps} />
 				<RadixSelect.Icon className="text-violet11 ml-auto">
@@ -135,6 +141,7 @@ function QuoteToken({ meta, items }: CompoundSelect) {
 			meta={meta}
 			items={items}
 			valueProps={{ placeholder: 'Quote Token' }}
+			Logo={Logo}
 		>
 			{items.map(({ children, imageProps, ...props }) => (
 				<SelectItem key={props.value} {...props}>
@@ -159,16 +166,6 @@ function FeeTier({ meta, items }: CompoundSelect) {
 							{children}
 						</RadixSelect.ItemText>
 					</div>
-					{/* {imageProps ? (
-						<div className="relative flex items-center overflow-hidden h-5 w-24 rounded border border-gs-gray-alpha-400">
-							<Image
-								className="relative aspect-[48/44] object-cover object-center rounded-lg"
-								fill={true}
-								src="/stable_pairs.svg"
-								alt="hello"
-							/>
-						</div>
-					) : null} */}
 				</SelectItem>
 			))}
 		</Select>
