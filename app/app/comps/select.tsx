@@ -115,13 +115,14 @@ function Logo({ src, alt }: ImageProps) {
 	)
 }
 
-function QuoteToken({
-	meta,
-	items,
-	placeholder = 'Quote Token',
-}: Omit<SelectFieldProps, 'children'>) {
+interface CompoundSelectProps {
+	meta: FieldMetadata<string>
+	items: Array<SelectItemProps>
+}
+
+function QuoteToken({ meta, items }: CompoundSelectProps) {
 	return (
-		<Select meta={meta} items={items} placeholder={placeholder}>
+		<Select meta={meta} items={items} placeholder="Quote Token">
 			{items.map(({ children, imageProps, ...props }) => (
 				<SelectItem key={props.value} {...props}>
 					<div className="flex items-center gap-2">
