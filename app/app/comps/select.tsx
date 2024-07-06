@@ -36,10 +36,10 @@ export function Select({ meta, options, valueProps }: SelectFieldProps) {
 				}
 			}}
 		>
-			<SelectPrimitive.Trigger className="disabled:pointer-events-none disabled:opacity-60 flex h-[32px] w-[124px] items-center gap-0.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none">
+			<SelectPrimitive.Trigger className="disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-[124px] items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none">
 				{imageProps ? <Logo imageProps={imageProps} /> : null}
 
-				<SelectPrimitive.Value {...valueProps} />
+				<SelectPrimitive.Value placeholder={valueProps.placeholder} />
 				<SelectPrimitive.Icon className="text-violet11 ml-auto">
 					<ChevronDownIcon />
 				</SelectPrimitive.Icon>
@@ -115,7 +115,7 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 
 function Logo({ imageProps }: { imageProps: ImageProps }) {
 	return (
-		<div className="relative flex items-center overflow-hidden h-5 w-5 rounded">
+		<div className="relative flex items-center overflow-hidden h-5 w-5 rounded pr-1">
 			<Image
 				className="relative aspect-[48/44] object-cover object-center rounded-lg"
 				fill={true}
