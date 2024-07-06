@@ -19,7 +19,7 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { Select, type SelectFieldProps } from '@/app/comps/select'
+import { Select, type SelectFieldProps, SelectItem } from '@/app/comps/select'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -163,7 +163,11 @@ export function Form({
 									meta={fields.quoteToken}
 									valueProps={{ placeholder: 'Quote Token' }}
 									options={mintOptions}
-								/>
+								>
+									{mintOptions?.map(({ value, ...rest }) => (
+										<SelectItem key={value} value={value} {...rest} />
+									))}
+								</Select>
 							</div>
 
 							<SubmitButton isLoading={isLoading} />

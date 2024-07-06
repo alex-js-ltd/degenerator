@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { ReactElement, ReactNode, cloneElement } from 'react'
 import * as SelectPrimitive from '@radix-ui/react-Select'
 import classnames from 'classnames'
 import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons'
@@ -9,15 +9,21 @@ import { type FieldMetadata, useInputControl } from '@conform-to/react'
 import { Checkbox } from '@/app/comps/check_box'
 import Image, { ImageProps } from 'next/image'
 
-export type SelectFieldProps = {
+export interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
 	// And restrict the type of the field it accepts through its generics
 	meta: FieldMetadata<string>
 	options: SelectItemProps[]
 	valueProps: SelectPrimitive.SelectValueProps
+	children: ReactElement[]
 }
 
-export function Select({ meta, options, valueProps }: SelectFieldProps) {
+function Select({
+	meta,
+	options,
+	valueProps,
+	children: child,
+}: SelectFieldProps) {
 	const control = useInputControl(meta)
 
 	const imageProps = options.find(el => el.value === control.value)?.imageProps
@@ -56,14 +62,9 @@ export function Select({ meta, options, valueProps }: SelectFieldProps) {
 					</SelectPrimitive.ScrollUpButton>
 					<SelectPrimitive.Viewport className="z-50">
 						<SelectPrimitive.Group className="overflow-y-scroll flex h-full w-full flex-col overflow-hidden rounded-md bg-transparent text-gray-100 [&_[cmdk-input-wrapper]]:border-b-gray-800 p-1.5 gap-1">
-							{options.map(({ value, ...rest }) => (
-								<SelectItem
-									key={value}
-									selectedValue={control.value}
-									value={value}
-									{...rest}
-								/>
-							))}
+							{React.Children.map(child, c =>
+								cloneElement(c, { selectedValue: control.value }),
+							)}
 						</SelectPrimitive.Group>
 					</SelectPrimitive.Viewport>
 					<SelectPrimitive.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default">
@@ -81,11 +82,12 @@ interface SelectItemProps
 	selectedValue?: string
 }
 
-export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
+const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 	(
 		{ children, className, imageProps, selectedValue, ...props },
 		forwardedRef,
 	) => {
+		console.log(selectedValue)
 		const selected = selectedValue === props.value
 		const variant = selected ? 'on' : 'off'
 		return (
@@ -126,3 +128,5 @@ function Logo({ imageProps }: { imageProps: ImageProps }) {
 		</div>
 	)
 }
+
+export { Select, SelectItem }
