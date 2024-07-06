@@ -171,6 +171,7 @@ export function Form({
 					</div>
 				</form>
 			</div>
+
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 		</Fragment>

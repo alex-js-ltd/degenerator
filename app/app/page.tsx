@@ -3,8 +3,8 @@ import type { SelectFieldProps } from '@/app/comps/select'
 import invariant from 'tiny-invariant'
 import { Form } from '@/app/comps/form'
 import { Raydium } from '@raydium-io/raydium-sdk-v2'
-import { connection } from './utils/setup'
-import { getEnv } from './utils/env'
+import { connection } from '@/app/utils/setup'
+import { getEnv } from '@/app/utils/env'
 
 const { CLUSTER } = getEnv()
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
@@ -45,7 +45,7 @@ export default async function Page() {
 			const option = {
 				value: address,
 				name,
-				children: name,
+				children: symbol,
 				imageProps: { src: logoURI, alt: symbol },
 			}
 
@@ -57,7 +57,7 @@ export default async function Page() {
 	)
 
 	const clmmConfigs = await getClmmConfigs()
-
+	console.log(clmmConfigs)
 	const clmmOptions = clmmConfigs.reduce<SelectFieldProps['options']>(
 		(acc, curr) => {
 			const { id, description } = curr
