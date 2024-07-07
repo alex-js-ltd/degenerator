@@ -16,18 +16,30 @@ import Image, { ImageProps } from 'next/image'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
 import { Icon } from './_icon'
-import invariant from 'tiny-invariant'
 
 export interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
 	// And restrict the type of the field it accepts through its generics
 	name: FieldName<string>
-	items: Array<SelectItemProps>
+	items: SelectItemConfig[]
 	children: ReactNode
 	logo: ComponentType<ImageProps>
 	valueProps?: RadixSelect.SelectValueProps
 	triggerProps?: RadixSelect.SelectTriggerProps
 	contentProps?: RadixSelect.SelectContentProps
+}
+
+interface SelectItemProps
+	extends React.ComponentPropsWithoutRef<typeof RadixSelect.Item> {
+	fieldName: FieldName<string>
+	imageProps?: ImageProps
+}
+
+export type SelectItemConfig = Omit<SelectItemProps, 'fieldName'>
+
+interface CompoundSelect {
+	name: FieldName<string>
+	items: SelectItemConfig[]
 }
 
 function Select({
@@ -103,16 +115,8 @@ function Select({
 	)
 }
 
-interface SelectItemProps
-	extends React.ComponentPropsWithoutRef<typeof RadixSelect.Item> {
-	fieldName?: FieldName<string>
-	imageProps?: ImageProps
-}
-
 const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 	({ children, className, fieldName, ...props }, forwardedRef) => {
-		invariant(fieldName, 'Failed to provide fieldName')
-
 		const [meta] = useField(fieldName)
 		const selected = meta.value === props.value
 		const variant = selected ? 'on' : 'off'
@@ -153,11 +157,6 @@ function TokenLogo({ src, alt }: ImageProps) {
 
 function FeeTierLogo({ src }: ImageProps) {
 	if (typeof src === 'string') return <Icon className="w-full h-5" name={src} />
-}
-
-interface CompoundSelect {
-	name: FieldName<string>
-	items: Array<SelectItemProps>
 }
 
 function QuoteToken({ name, items }: CompoundSelect) {

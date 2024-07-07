@@ -24,7 +24,7 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { type SelectFieldProps, QuoteToken, FeeTier } from '@/app/comps/select'
+import { type SelectItemConfig, QuoteToken, FeeTier } from '@/app/comps/select'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -34,8 +34,8 @@ export function Form({
 	mintItems,
 	clmmItems,
 }: {
-	mintItems: SelectFieldProps['items']
-	clmmItems: SelectFieldProps['items']
+	mintItems: SelectItemConfig[]
+	clmmItems: SelectItemConfig[]
 }) {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 

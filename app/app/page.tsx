@@ -1,5 +1,5 @@
 import { type ApiV3TokenRes } from '@raydium-io/raydium-sdk-v2'
-import { type SelectFieldProps } from '@/app/comps/select'
+import { type SelectItemConfig } from '@/app/comps/select'
 import invariant from 'tiny-invariant'
 import { Form } from '@/app/comps/form'
 import { connection } from '@/app/utils/setup'
@@ -38,42 +38,36 @@ async function getClmmConfigs() {
 export default async function Page() {
 	const data = await getApiV3TokenList()
 
-	const mintItems = data.mintList.reduce<SelectFieldProps['items']>(
-		(acc, curr) => {
-			const { address, name, logoURI, symbol } = curr
+	const mintItems = data.mintList.reduce<SelectItemConfig[]>((acc, curr) => {
+		const { address, name, logoURI, symbol } = curr
 
-			const option = {
-				value: address,
-				children: symbol,
-				symbol,
-				imageProps: { src: logoURI, alt: symbol },
-			}
+		const option = {
+			value: address,
+			children: symbol,
+			symbol,
+			imageProps: { src: logoURI, alt: symbol },
+		}
 
-			if (name) acc.push(option)
+		if (name) acc.push(option)
 
-			return acc
-		},
-		[],
-	)
+		return acc
+	}, [])
 
 	const clmmConfigs = await getClmmConfigs()
 
-	const clmmItems = clmmConfigs.reduce<SelectFieldProps['items']>(
-		(acc, curr) => {
-			const { id, description } = curr
+	const clmmItems = clmmConfigs.reduce<SelectItemConfig[]>((acc, curr) => {
+		const { id, description } = curr
 
-			const option = {
-				value: id,
-				children: description,
-				imageProps: { src: id, alt: id },
-			}
+		const option = {
+			value: id,
+			children: description,
+			imageProps: { src: id, alt: id },
+		}
 
-			acc.push(option)
+		acc.push(option)
 
-			return acc
-		},
-		[],
-	)
+		return acc
+	}, [])
 
 	return <Form mintItems={mintItems} clmmItems={clmmItems} />
 }
