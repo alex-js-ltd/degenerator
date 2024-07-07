@@ -39,4 +39,6 @@ export const TokenSchema = z.object({
 export const ClmmSchema = z.object({
 	owner: PublicKey,
 	mint1: PublicKey,
+	mint2: PublicKey,
+	feeTier: z.string(),
 })

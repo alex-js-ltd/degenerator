@@ -1,7 +1,7 @@
 import { type ApiV3TokenRes } from '@raydium-io/raydium-sdk-v2'
 import { type SelectItemConfig } from '@/app/comps/select'
 import invariant from 'tiny-invariant'
-import { Form } from '@/app/comps/form'
+import { TokenForm } from '@/app/comps/token_form'
 import { connection } from '@/app/utils/setup'
 import { getEnv } from '@/app/utils/env'
 import { Raydium } from '@raydium-io/raydium-sdk-v2'
@@ -69,5 +69,5 @@ export default async function Page() {
 		return acc
 	}, [])
 
-	return <Form mintItems={mintItems} clmmItems={clmmItems} />
+	return <TokenForm mintItems={mintItems} clmmItems={clmmItems} />
 }

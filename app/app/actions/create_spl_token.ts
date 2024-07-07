@@ -21,6 +21,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		return {
 			...submission.reply(),
 			serializedTransaction: undefined,
+			mint1: undefined,
 		}
 	}
 
@@ -93,6 +94,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 	return {
 		...submission.reply(),
 		serializedTransaction,
+		mint1: mintKeypair.publicKey.toBase58(),
 	}
 }
 

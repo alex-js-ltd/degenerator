@@ -60,7 +60,7 @@ function Select({
 	const logoProps = items.find(el => el.value === meta.value)?.imageProps
 
 	return (
-		<div className="relative w-[124px]">
+		<div className="relative w-[124px] pl-2">
 			<Input
 				name={meta.name}
 				defaultValue={meta.initialValue}

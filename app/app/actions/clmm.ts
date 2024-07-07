@@ -37,13 +37,14 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		}
 	}
 
-	const { owner, mint1 } = submission.value
+	const { owner, mint1, mint2 } = submission.value
 
 	const raydium = await initSdk({ owner })
 
 	const { instructions, signers, poolId } = await createPool({
 		raydium,
 		mint1,
+		mint2,
 	})
 
 	let blockhash = await connection
@@ -82,9 +83,6 @@ async function initSdk({
 		disableFeatureCheck: true,
 		disableLoadToken: loadToken,
 		blockhashCommitment: 'finalized',
-		// urlConfigs: {
-		// 	BASE_HOST: CLUSTER, // api url configs, currently api doesn't support devnet
-		// },
 	})
 
 	invariant(raydium, 'Failed to initialize raydium')
@@ -136,16 +134,16 @@ async function fetchTokenAccountData({
 async function createPool({
 	raydium,
 	mint1: mint1Key,
+	mint2: mint2Key,
 }: {
 	raydium: Raydium
 	mint1: PublicKey
+	mint2: PublicKey
 }) {
 	const mint1 = await raydium.token.getTokenInfo(mint1Key)
 
 	// USDT
-	const mint2 = await raydium.token.getTokenInfo(
-		'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
-	)
+	const mint2 = await raydium.token.getTokenInfo(mint2Key)
 	const clmmConfigs = await raydium.api.getClmmConfigs()
 
 	const { builder, extInfo } = await raydium.clmm.createPool({
