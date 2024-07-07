@@ -141,8 +141,6 @@ async function createPool({
 	mint2: PublicKey
 }) {
 	const mint1 = await raydium.token.getTokenInfo(mint1Key)
-
-	// USDT
 	const mint2 = await raydium.token.getTokenInfo(mint2Key)
 	const clmmConfigs = await raydium.api.getClmmConfigs()
 

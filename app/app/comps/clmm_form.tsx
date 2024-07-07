@@ -19,6 +19,7 @@ import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { type SelectItemConfig, QuoteToken, FeeTier } from '@/app/comps/select'
 import { clmm } from '@/app/actions/clmm'
+import { SubmitButton } from '@/app/comps/submit_button'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -65,7 +66,7 @@ export function ClmmForm({
 	return (
 		<Fragment>
 			<FormProvider context={form.context}>
-				<form {...getFormProps(form)} action={action} className="flex">
+				<form {...getFormProps(form)} action={action} className="flex w-full">
 					<Input
 						{...getInputProps(fields.owner, { type: 'hidden' })}
 						defaultValue={payer}
@@ -80,7 +81,9 @@ export function ClmmForm({
 
 					<FeeTier name={fields.feeTier.name} items={clmmItems} />
 
-					<button type="submit">create pool</button>
+					<div className="ml-auto px-[11.5px]">
+						<SubmitButton isLoading={isLoading} />
+					</div>
 				</form>
 			</FormProvider>
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}

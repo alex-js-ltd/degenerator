@@ -35,11 +35,8 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		payerKey,
 		revokeMint,
 		revokeFreeze,
-		quoteToken,
-		feeTier,
 	} = submission.value
 
-	console.log(submission)
 	const blob = await put(image.name, image, { access: 'public' })
 
 	invariant(blob, 'Failed to upload image')
@@ -71,8 +68,8 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		metadata,
 		decimals,
 		supply,
-		revokeMint,
-		revokeFreeze,
+		revokeMint: true,
+		revokeFreeze: true,
 	})
 
 	let blockhash = await connection
@@ -108,7 +105,7 @@ type GetInstructionsParams = {
 	revokeFreeze?: boolean
 }
 
-export async function getInstructions({
+async function getInstructions({
 	payerKey,
 	mintKey,
 	metadata,

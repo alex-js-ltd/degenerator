@@ -31,9 +31,6 @@ export const TokenSchema = z.object({
 		.string()
 		.transform(value => value === 'on')
 		.optional(),
-
-	quoteToken: PublicKey,
-	feeTier: z.string(),
 })
 
 export const ClmmSchema = z.object({
