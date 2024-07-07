@@ -44,7 +44,6 @@ export default async function Page() {
 
 			const option = {
 				value: address,
-				name,
 				children: symbol,
 				imageProps: { src: logoURI, alt: symbol },
 			}
@@ -60,13 +59,13 @@ export default async function Page() {
 
 	const clmmItems = clmmConfigs.reduce<SelectFieldProps['items']>(
 		(acc, curr) => {
-			const { id, description } = curr
-
+			const { id, description, defaultRangePoint } = curr
+			console.log(curr)
 			const option = {
 				value: id,
-				name: description,
 				children: description,
 				imageProps: { src: '/stable_pairs.svg', alt: 'hello' },
+				defaultRangePoint,
 			}
 
 			acc.push(option)
