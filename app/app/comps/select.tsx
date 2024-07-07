@@ -6,7 +6,6 @@ import React, {
 	type ElementRef,
 	useRef,
 	cloneElement,
-	Fragment,
 } from 'react'
 import * as RadixSelect from '@radix-ui/react-Select'
 import classnames from 'classnames'
@@ -42,8 +41,10 @@ function Select({
 	const control = useInputControl(meta)
 	const imageProps = items.find(el => el.value === control.value)?.imageProps
 
+	const errors = meta.errors?.length ? 'border-teal-300' : undefined
+
 	return (
-		<Fragment>
+		<div className="relative flex-1">
 			<Input
 				name={meta.name}
 				defaultValue={meta.initialValue}
@@ -53,6 +54,7 @@ function Select({
 					selectRef.current?.focus()
 				}}
 			/>
+
 			<RadixSelect.Root
 				value={control.value ?? ''}
 				onValueChange={control.change}
@@ -64,7 +66,10 @@ function Select({
 			>
 				<RadixSelect.Trigger
 					ref={selectRef}
-					className="disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-full items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none"
+					className={cn(
+						'disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-full items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none border border-gray-800',
+						errors,
+					)}
 				>
 					{imageProps && Logo ? <Logo {...imageProps} /> : null}
 
@@ -91,7 +96,7 @@ function Select({
 					</RadixSelect.Content>
 				</RadixSelect.Portal>
 			</RadixSelect.Root>
-		</Fragment>
+		</div>
 	)
 }
 
