@@ -44,7 +44,8 @@ export default async function Page() {
 
 			const option = {
 				value: address,
-				children: name,
+				children: symbol,
+				symbol,
 				imageProps: { src: logoURI, alt: symbol },
 			}
 
