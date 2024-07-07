@@ -41,7 +41,7 @@ function Select({
 	const control = useInputControl(meta)
 	const imageProps = items.find(el => el.value === control.value)?.imageProps
 
-	const errors = meta.errors?.length ? 'border-teal-300' : undefined
+	const border = meta.errors?.length ? 'border-teal-300' : 'border-gray-800'
 
 	return (
 		<div className="relative flex-1">
@@ -67,8 +67,8 @@ function Select({
 				<RadixSelect.Trigger
 					ref={selectRef}
 					className={cn(
-						'disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-full items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none border border-gray-800',
-						errors,
+						'disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-full items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none border',
+						border,
 					)}
 				>
 					{imageProps && Logo ? <Logo {...imageProps} /> : null}
