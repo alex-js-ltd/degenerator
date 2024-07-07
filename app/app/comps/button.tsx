@@ -11,7 +11,7 @@ const buttonVariants = cva(undefined, {
 			submit:
 				'shrink-0 whitespace-nowrap text-sm text-zinc-400 hover:text-white font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 flex items-center justify-center bg-transparent hover:bg-gray-800 focus-visible:bg-gray-800 focus-visible:ring-0 h-8 w-8 rounded-md',
 			image:
-				'shrink-0 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 items-center justify-center bg-transparent hover:bg-gray-800 focus-visible:bg-gray-800 focus-visible:ring-0 h-8 py-2 flex select-none gap-2 px-2 text-white/70 focus-within:bg-gray-700 hover:text-white sm:px-3 cursor-pointer relative',
+				'shrink-0 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 items-center justify-center bg-transparent focus-visible:bg-gray-800 focus-visible:ring-0 h-8 py-2 flex select-none gap-2 text-white/70 focus-within:bg-gray-700 sm:px-3 cursor-pointer relative  hover:border-gray-800 bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 px-2 focus:outline-none border border-gray-800',
 			toggle:
 				'flex items-center gap-1.5 focus-within:bg-gray-70 shrink-0 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 items-center justify-center bg-transparent hover:bg-gray-800 focus-visible:bg-gray-800 focus-visible:ring-0 h-8 py-2 flex w-fit select-none gap-2 px-2 text-white/70 hover:text-white sm:w-fit sm:px-3',
 		},
