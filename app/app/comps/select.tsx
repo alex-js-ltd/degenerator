@@ -17,7 +17,7 @@ import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
 import { Icon } from './_icon'
 
-export interface SelectFieldProps {
+interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
 	// And restrict the type of the field it accepts through its generics
 	name: FieldName<string>
@@ -35,12 +35,12 @@ interface SelectItemProps
 	imageProps?: ImageProps
 }
 
-export type SelectItemConfig = Omit<SelectItemProps, 'fieldName'>
-
 interface CompoundSelect {
 	name: FieldName<string>
 	items: SelectItemConfig[]
 }
+
+export type SelectItemConfig = Omit<SelectItemProps, 'fieldName'>
 
 function Select({
 	name,
