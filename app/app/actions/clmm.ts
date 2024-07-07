@@ -37,7 +37,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		}
 	}
 
-	const { owner, mint1, mint2 } = submission.value
+	const { owner, mint1, mint2, feeTier } = submission.value
 
 	const raydium = await initSdk({ owner })
 
@@ -45,6 +45,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		raydium,
 		mint1,
 		mint2,
+		feeTier,
 	})
 
 	let blockhash = await connection
@@ -135,22 +136,28 @@ async function createPool({
 	raydium,
 	mint1: mint1Key,
 	mint2: mint2Key,
+	feeTier,
 }: {
 	raydium: Raydium
 	mint1: PublicKey
 	mint2: PublicKey
+	feeTier: string
 }) {
 	const mint1 = await raydium.token.getTokenInfo(mint1Key)
 	const mint2 = await raydium.token.getTokenInfo(mint2Key)
 	const clmmConfigs = await raydium.api.getClmmConfigs()
+
+	const clmmConfig = clmmConfigs.find(el => el.id === feeTier)
+
+	invariant(clmmConfig, 'Failed to fetch clmmConfig')
 
 	const { builder, extInfo } = await raydium.clmm.createPool({
 		programId: CLMM_PROGRAM_ID,
 		mint1,
 		mint2,
 		ammConfig: {
-			...clmmConfigs[0],
-			id: new PublicKey(clmmConfigs[0].id),
+			...clmmConfig,
+			id: new PublicKey(clmmConfig.id),
 			fundOwner: '',
 		},
 		initialPrice: new Decimal(1),

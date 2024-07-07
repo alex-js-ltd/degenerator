@@ -25,17 +25,8 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		}
 	}
 
-	const {
-		image,
-		name,
-		symbol,
-		description,
-		decimals,
-		supply,
-		payerKey,
-		revokeMint,
-		revokeFreeze,
-	} = submission.value
+	const { image, name, symbol, description, decimals, supply, payerKey } =
+		submission.value
 
 	const blob = await put(image.name, image, { access: 'public' })
 
