@@ -76,13 +76,14 @@ function Select({
 				<RadixSelect.Trigger
 					ref={selectRef}
 					className={cn(
-						'disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-full items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none border',
+						'disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-full max-w-full items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none border',
 						border,
 					)}
 				>
 					{Logo && logoProps ? <Logo {...logoProps} /> : null}
 
 					<RadixSelect.Value {...valueProps} />
+
 					<RadixSelect.Icon className="text-violet11 ml-auto">
 						<ChevronDownIcon />
 					</RadixSelect.Icon>
