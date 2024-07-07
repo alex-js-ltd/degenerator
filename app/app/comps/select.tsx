@@ -16,6 +16,7 @@ import Image, { ImageProps } from 'next/image'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
 import { Icon } from './_icon'
+import invariant from 'tiny-invariant'
 
 export interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
@@ -44,9 +45,7 @@ function Select({
 
 	const border = meta.errors?.length ? 'border-teal-300' : 'border-gray-800'
 
-	const selectedItem = items.find(el => el.value === meta.value)
-
-	const logoProps = selectedItem?.imageProps
+	const logoProps = items.find(el => el.value === meta.value)?.imageProps
 
 	return (
 		<div className="relative w-[124px]">
@@ -106,13 +105,14 @@ function Select({
 
 interface SelectItemProps
 	extends React.ComponentPropsWithoutRef<typeof RadixSelect.Item> {
-	fieldName: string
+	fieldName?: FieldName<string>
 	imageProps?: ImageProps
-	symbol?: string
 }
 
 const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 	({ children, className, fieldName, ...props }, forwardedRef) => {
+		invariant(fieldName, 'Failed to provide fieldName')
+
 		const [meta] = useField(fieldName)
 		const selected = meta.value === props.value
 		const variant = selected ? 'on' : 'off'
