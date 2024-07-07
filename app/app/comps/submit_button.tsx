@@ -9,9 +9,14 @@ import { Tooltip } from '@/app/comps/tooltip'
 
 type SubmitButtonProps = ButtonProps & {
 	isLoading?: boolean
+	content: string
 }
 
-export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {
+export function SubmitButton({
+	isLoading,
+	content,
+	...rest
+}: SubmitButtonProps) {
 	const wallet = useAnchorWallet()
 	const { publicKey } = wallet || {}
 
@@ -19,7 +24,7 @@ export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {
 	const disabled = !publicKey || pending || isLoading ? true : false
 
 	return (
-		<Tooltip content="Submit" open={publicKey ? undefined : false}>
+		<Tooltip content={content} open={publicKey ? undefined : false}>
 			<span className={publicKey ? 'cursor-pointer' : 'cursor-not-allowed'}>
 				<Button type="submit" disabled={disabled} {...rest} variant="submit">
 					{pending || isLoading ? (

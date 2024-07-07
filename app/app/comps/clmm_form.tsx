@@ -80,10 +80,6 @@ export function ClmmForm({
 					<QuoteToken name={fields.mint2.name} items={mintItems} />
 
 					<FeeTier name={fields.feeTier.name} items={clmmItems} />
-
-					<div className="ml-auto px-[11.5px]">
-						<SubmitButton isLoading={isLoading} />
-					</div>
 				</form>
 			</FormProvider>
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}

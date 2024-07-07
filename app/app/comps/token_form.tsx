@@ -168,21 +168,19 @@ export function TokenForm({
 									/>
 								</div>
 
-								<SubmitButton isLoading={isLoading} />
+								<SubmitButton content="Mint Token" isLoading={isLoading} />
 							</div>
 						</div>
 					</form>
 				</FormProvider>
 
-				{txSig ? (
-					<div className="absolute bottom-3 left-[102px] right-0 z-50">
-						<ClmmForm
-							mintItems={mintItems}
-							clmmItems={clmmItems}
-							mint1={mint1 ?? ''}
-						/>
-					</div>
-				) : null}
+				<div className="absolute bottom-3 left-[102px] z-50">
+					<ClmmForm
+						mintItems={mintItems}
+						clmmItems={clmmItems}
+						mint1={mint1 ?? ''}
+					/>
+				</div>
 			</div>
 
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
