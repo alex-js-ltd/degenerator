@@ -16,7 +16,6 @@ import { Checkbox } from '@/app/comps/check_box'
 import Image, { ImageProps } from 'next/image'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
-import { Bars } from '@/app/comps/bars'
 
 export interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
@@ -191,14 +190,10 @@ function FeeTier({ meta, items }: CompoundSelect) {
 					key={item.value}
 				>
 					<div className="flex items-center gap-2">
-						{/* <RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-normal whitespace-nowrap">
+						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-normal whitespace-nowrap">
 							{item.children}
-						</RadixSelect.ItemText> */}
+						</RadixSelect.ItemText>
 					</div>
-
-					{item.defaultRangePoint ? (
-						<Bars width={96} height={20} data={item.defaultRangePoint} />
-					) : null}
 				</SelectItem>
 			))}
 		</Select>
