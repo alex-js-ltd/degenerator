@@ -21,12 +21,7 @@ import { Checkbox } from '@/app/comps/check_box'
 import Image, { ImageProps } from 'next/image'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
-import { useMemo } from 'react'
-
-interface LogoProps {
-	name: FieldName<string>
-	items: Array<SelectItemProps>
-}
+import { Icon } from './_icon'
 
 export interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
@@ -55,7 +50,7 @@ function Select({
 
 	const border = meta.errors?.length ? 'border-teal-300' : 'border-gray-800'
 
-	const logoProps = useSelectedLogo({ name, items })
+	const logoProps = items.find(el => el.value === meta.value)?.imageProps
 
 	return (
 		<div className="relative flex-1">
@@ -116,7 +111,6 @@ interface SelectItemProps
 	extends React.ComponentPropsWithoutRef<typeof RadixSelect.Item> {
 	fieldName: string
 	imageProps?: ImageProps
-	defaultRangePoint?: number[]
 }
 
 const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
@@ -159,6 +153,10 @@ function TokenLogo({ src, alt }: ImageProps) {
 	)
 }
 
+function FeeTierLogo({ src }: ImageProps) {
+	if (typeof src === 'string') return <Icon className="w-24 h-5" name={src} />
+}
+
 interface CompoundSelect {
 	name: FieldName<string>
 	items: Array<SelectItemProps>
@@ -192,7 +190,12 @@ function QuoteToken({ name, items }: CompoundSelect) {
 }
 function FeeTier({ name, items }: CompoundSelect) {
 	return (
-		<Select name={name} items={items} valueProps={{ placeholder: 'Fee Tier' }}>
+		<Select
+			name={name}
+			items={items}
+			valueProps={{ placeholder: 'Fee Tier' }}
+			Logo={FeeTierLogo}
+		>
 			{items.map(item => (
 				<SelectItem
 					value={item.value}
@@ -208,17 +211,6 @@ function FeeTier({ name, items }: CompoundSelect) {
 				</SelectItem>
 			))}
 		</Select>
-	)
-}
-
-function useSelectedLogo({ name, items }: LogoProps) {
-	const [meta] = useField(name)
-
-	const selectedValue = meta.value
-
-	return useMemo(
-		() => items.find(el => el.value === selectedValue)?.imageProps,
-		[selectedValue, items],
 	)
 }
 
