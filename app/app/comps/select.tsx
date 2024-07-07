@@ -11,16 +11,27 @@ import * as RadixSelect from '@radix-ui/react-Select'
 import classnames from 'classnames'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 
-import { type FieldMetadata, useInputControl } from '@conform-to/react'
+import {
+	type FieldMetadata,
+	useInputControl,
+	useField,
+	type FieldName,
+} from '@conform-to/react'
 import { Checkbox } from '@/app/comps/check_box'
 import Image, { ImageProps } from 'next/image'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
+import { useMemo } from 'react'
+
+interface LogoProps {
+	name: FieldName<string>
+	items: Array<SelectItemProps>
+}
 
 export interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
 	// And restrict the type of the field it accepts through its generics
-	meta: FieldMetadata<string>
+	name: FieldName<string>
 	items: Array<SelectItemProps>
 	children: ReactElement[]
 	Logo?: ComponentType<ImageProps>
@@ -30,18 +41,21 @@ export interface SelectFieldProps {
 }
 
 function Select({
-	meta,
+	name,
 	items,
 	valueProps,
 	contentProps,
 	Logo,
 	children,
 }: SelectFieldProps) {
-	const selectRef = useRef<ElementRef<typeof RadixSelect.Trigger>>(null)
+	const [meta] = useField(name)
 	const control = useInputControl(meta)
-	const imageProps = items.find(el => el.value === control.value)?.imageProps
+
+	const selectRef = useRef<ElementRef<typeof RadixSelect.Trigger>>(null)
 
 	const border = meta.errors?.length ? 'border-teal-300' : 'border-gray-800'
+
+	const logoProps = useSelectedLogo({ name, items })
 
 	return (
 		<div className="relative flex-1">
@@ -71,7 +85,7 @@ function Select({
 						border,
 					)}
 				>
-					{imageProps && Logo ? <Logo {...imageProps} /> : null}
+					{Logo && logoProps ? <Logo {...logoProps} /> : null}
 
 					<RadixSelect.Value {...valueProps} />
 					<RadixSelect.Icon className="text-violet11 ml-auto">
@@ -88,9 +102,7 @@ function Select({
 					>
 						<RadixSelect.Viewport className="z-50">
 							<RadixSelect.Group className="overflow-y-scroll flex h-full w-full flex-col overflow-hidden rounded-md bg-transparent text-gray-100 [&_[cmdk-input-wrapper]]:border-b-gray-800 p-1.5 gap-1">
-								{React.Children.map(children, c =>
-									cloneElement(c, { selectedValue: control.value }),
-								)}
+								{children}
 							</RadixSelect.Group>
 						</RadixSelect.Viewport>
 					</RadixSelect.Content>
@@ -102,15 +114,17 @@ function Select({
 
 interface SelectItemProps
 	extends React.ComponentPropsWithoutRef<typeof RadixSelect.Item> {
-	selectedValue?: string
+	fieldName: string
 	imageProps?: ImageProps
 	defaultRangePoint?: number[]
 }
 
 const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
-	({ children, className, selectedValue, ...props }, forwardedRef) => {
-		const selected = selectedValue === props.value
+	({ children, className, fieldName, ...props }, forwardedRef) => {
+		const [meta] = useField(fieldName)
+		const selected = meta.value === props.value
 		const variant = selected ? 'on' : 'off'
+
 		return (
 			<RadixSelect.Item
 				className={classnames(
@@ -131,14 +145,9 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 	},
 )
 
-function Logo({ className, src, alt }: ImageProps) {
+function TokenLogo({ src, alt }: ImageProps) {
 	return (
-		<div
-			className={cn(
-				'relative flex items-center overflow-hidden h-5 w-5 rounded pr-1',
-				className,
-			)}
-		>
+		<div className="relative flex items-center overflow-hidden h-5 w-5 rounded pr-1">
 			<Image
 				className="relative aspect-[48/44] object-cover object-center rounded-lg"
 				fill={true}
@@ -151,43 +160,45 @@ function Logo({ className, src, alt }: ImageProps) {
 }
 
 interface CompoundSelect {
-	meta: FieldMetadata<string>
+	name: FieldName<string>
 	items: Array<SelectItemProps>
 }
 
-function QuoteToken({ meta, items }: CompoundSelect) {
+function QuoteToken({ name, items }: CompoundSelect) {
 	return (
 		<Select
-			meta={meta}
+			name={name}
 			items={items}
 			valueProps={{ placeholder: 'Quote Token' }}
-			Logo={Logo}
+			Logo={TokenLogo}
 		>
 			{items.map(item => (
 				<SelectItem
 					value={item.value}
-					id={`${meta.id}-${item.value}`}
+					id={`${name}-${item.value}`}
 					key={item.value}
+					fieldName={name}
 				>
 					<div className="flex items-center gap-2">
 						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 max-w-[118px] truncate text-left align-middle font-normal whitespace-nowrap">
 							{item.children}
 						</RadixSelect.ItemText>
 					</div>
-					{item.imageProps ? <Logo {...item.imageProps} /> : null}
+					{item.imageProps ? <TokenLogo {...item.imageProps} /> : null}
 				</SelectItem>
 			))}
 		</Select>
 	)
 }
-function FeeTier({ meta, items }: CompoundSelect) {
+function FeeTier({ name, items }: CompoundSelect) {
 	return (
-		<Select meta={meta} items={items} valueProps={{ placeholder: 'Fee Tier' }}>
+		<Select name={name} items={items} valueProps={{ placeholder: 'Fee Tier' }}>
 			{items.map(item => (
 				<SelectItem
 					value={item.value}
-					id={`${meta.id}-${item.value}`}
+					id={`${name}-${item.value}`}
 					key={item.value}
+					fieldName={name}
 				>
 					<div className="flex items-center gap-2">
 						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-normal whitespace-nowrap">
@@ -199,4 +210,16 @@ function FeeTier({ meta, items }: CompoundSelect) {
 		</Select>
 	)
 }
+
+function useSelectedLogo({ name, items }: LogoProps) {
+	const [meta] = useField(name)
+
+	const selectedValue = meta.value
+
+	return useMemo(
+		() => items.find(el => el.value === selectedValue)?.imageProps,
+		[selectedValue, items],
+	)
+}
+
 export { Select, SelectItem, QuoteToken, FeeTier }

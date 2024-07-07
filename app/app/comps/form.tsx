@@ -1,7 +1,12 @@
 'use client'
 
 import { Fragment } from 'react'
-import { useForm, getFormProps, getInputProps } from '@conform-to/react'
+import {
+	useForm,
+	getFormProps,
+	getInputProps,
+	FormProvider,
+} from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
 import { TokenSchema } from '@/app/utils/schemas'
@@ -74,7 +79,7 @@ export function Form({
 	}, [run, signAndSendTransaction, transaction])
 
 	return (
-		<Fragment>
+		<FormProvider context={form.context}>
 			<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 				<PreviewImage
 					src={previewImage}
@@ -159,8 +164,8 @@ export function Form({
 									onChange={onChange}
 								/>
 
-								<QuoteToken meta={fields.quoteToken} items={mintItems} />
-								<FeeTier meta={fields.feeTier} items={clmmItems} />
+								<QuoteToken name={fields.quoteToken.name} items={mintItems} />
+								<FeeTier name={fields.feeTier.name} items={clmmItems} />
 							</div>
 
 							<SubmitButton isLoading={isLoading} />
@@ -171,6 +176,6 @@ export function Form({
 
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
-		</Fragment>
+		</FormProvider>
 	)
 }
