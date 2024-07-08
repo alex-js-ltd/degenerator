@@ -185,7 +185,7 @@ export function TokenForm({
 				</FormProvider>
 
 				{showClmm ? (
-					<div className="absolute bottom-3 left-[102px] z-50">
+					<div className="absolute bottom-3 left-12 sm:left-[102px] z-50">
 						<ClmmForm
 							mintItems={mintItems}
 							clmmItems={clmmItems}

@@ -2,10 +2,10 @@
 
 import type { ListOfErrors } from './field'
 import { Icon } from './_icon'
-import Image from 'next/image'
+import Image, { type StaticImageData } from 'next/image'
 
 type PreviewImageProps = {
-	src: string | undefined
+	src: string | StaticImageData | undefined
 	clearPreviewImage: () => void
 	errors: ListOfErrors
 }

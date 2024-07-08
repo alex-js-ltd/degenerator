@@ -15,7 +15,7 @@ export function ClmmButton({ ...props }: ButtonProps) {
 					alignOffset={-12}
 					side="top"
 				>
-					Create liquidity pool
+					<button onClick={props.onClick}>Create liquidity pool</button>
 				</Content>
 			}
 		>
