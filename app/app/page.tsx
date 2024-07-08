@@ -5,6 +5,7 @@ import { TokenForm } from '@/app/comps/token_form'
 import { connection } from '@/app/utils/setup'
 import { getEnv } from '@/app/utils/env'
 import { Raydium } from '@raydium-io/raydium-sdk-v2'
+import { ClmmForm } from './comps/clmm_form'
 
 const { CLUSTER } = getEnv()
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
@@ -69,5 +70,9 @@ export default async function Page() {
 		return acc
 	}, [])
 
-	return <TokenForm mintItems={mintItems} clmmItems={clmmItems} />
+	return (
+		<TokenForm
+			children={<ClmmForm mintItems={mintItems} clmmItems={clmmItems} />}
+		/>
+	)
 }

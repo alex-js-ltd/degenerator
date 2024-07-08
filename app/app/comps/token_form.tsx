@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import { Fragment, useState, cloneElement, ReactElement } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -24,8 +24,6 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { type SelectItemConfig } from '@/app/comps/select'
-import { ClmmForm } from '@/app/comps/clmm_form'
 import { ClmmButton } from '@/app/comps/clmm_button'
 
 const initialState = {
@@ -33,13 +31,7 @@ const initialState = {
 	mint1: undefined,
 }
 
-export function TokenForm({
-	mintItems,
-	clmmItems,
-}: {
-	mintItems: SelectItemConfig[]
-	clmmItems: SelectItemConfig[]
-}) {
+export function TokenForm({ children: child }: { children: ReactElement }) {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 
 	const [form, fields] = useForm({
@@ -186,11 +178,9 @@ export function TokenForm({
 
 				{showClmm ? (
 					<div className="absolute bottom-3 left-12 sm:left-[102px] z-50">
-						<ClmmForm
-							mintItems={mintItems}
-							clmmItems={clmmItems}
-							mint1={mint1 ?? ''}
-						/>
+						{cloneElement(child, {
+							mint1: mint1,
+						})}
 					</div>
 				) : null}
 			</div>

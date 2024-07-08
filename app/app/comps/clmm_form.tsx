@@ -32,7 +32,7 @@ export function ClmmForm({
 }: {
 	mintItems: SelectItemConfig[]
 	clmmItems: SelectItemConfig[]
-	mint1: string
+	mint1?: string
 }) {
 	const [lastResult, action] = useFormState(clmm, initialState)
 
@@ -80,6 +80,11 @@ export function ClmmForm({
 					<QuoteToken name={fields.mint2.name} items={mintItems} />
 
 					<FeeTier name={fields.feeTier.name} items={clmmItems} />
+
+					<button
+						type="submit"
+						className="w-8 h-8 border border-teal-300 ml-3 rounded"
+					></button>
 				</form>
 			</FormProvider>
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
