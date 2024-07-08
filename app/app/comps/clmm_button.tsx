@@ -9,7 +9,7 @@ export function ClmmButton({ ...props }: ButtonProps) {
 		<Tooltip
 			content={
 				<Content
-					className="z-50 bg-gray-800 overflow-hidden bg-primary px-3 py-1.5 shadow-lg animate-in fade-in-0  gap-1 rounded-full text-xs text-gray-50 animate-scale-in-50"
+					className="data-[state=delayed-open]:animate-scale-in-50 data-[state=closed]:animate-scale-out-50 bg-gray-800 overflow-hidden bg-primary px-3 py-1.5 shadow-lg animate-in fade-in-0 gap-1 rounded-full text-xs text-gray-50"
 					sideOffset={20}
 					align="end"
 					alignOffset={-12}

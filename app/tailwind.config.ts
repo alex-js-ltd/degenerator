@@ -38,21 +38,14 @@ const config: Config = {
 			},
 
 			keyframes: {
-				slideDownAndFade: {
-					from: { opacity: '0', transform: 'translateY(-2px)' },
-					to: { opacity: '1', transform: 'translateY(0)' },
-				},
-				slideLeftAndFade: {
-					from: { opacity: '0', transform: 'translateX(2px)' },
-					to: { opacity: '1', transform: 'translateX(0)' },
-				},
-				slideUpAndFade: {
+				'slide-up-and-fade': {
 					from: { opacity: '0', transform: 'translateY(4px)' },
 					to: { opacity: '1', transform: 'translateY(0)' },
 				},
-				slideRightAndFade: {
-					from: { opacity: '0', transform: 'translateX(-2px)' },
-					to: { opacity: '1', transform: 'translateX(0)' },
+
+				'slide-down-and-fade': {
+					from: { opacity: '1', transform: 'translateY(0px)' },
+					to: { opacity: '0', transform: 'translateY(4px)' },
 				},
 
 				'scale-in-50': {
@@ -60,22 +53,30 @@ const config: Config = {
 					to: { opacity: '1', transform: 'scale(1)' },
 				},
 
+				'scale-out-50': {
+					from: { opacity: '1', transform: 'scale(1)' },
+					to: { opacity: '0', transform: 'scale(0.5)' },
+				},
+
 				'scale-in-95': {
 					from: { opacity: '0', transform: 'scale(0.95)' },
 					to: { opacity: '1', transform: 'scale(1)' },
 				},
+
+				'scale-out-95': {
+					from: { opacity: '1', transform: 'scale(1)' },
+					to: { opacity: '0', transform: 'scale(0.95)' },
+				},
 			},
 			animation: {
-				slideDownAndFade:
-					'slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-				slideLeftAndFade:
-					'slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-				slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-				slideRightAndFade:
-					'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-
+				'slide-up-and-fade':
+					'slide-up-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+				'slide-down-and-fade':
+					'slide-down-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 				'scale-in-50': 'scale-in-50 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+				'scale-out-50': 'scale-out-50 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 				'scale-in-95': 'scale-in-95 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+				'scale-out-95': 'scale-out-95 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 			},
 		},
 	},
