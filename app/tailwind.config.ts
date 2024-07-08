@@ -60,8 +60,8 @@ const config: Config = {
 					to: { opacity: '1', transform: 'scale(1)' },
 				},
 
-				'scale-in-90': {
-					from: { opacity: '0', transform: 'scale(0.90)' },
+				'scale-in-95': {
+					from: { opacity: '0', transform: 'scale(0.95)' },
 					to: { opacity: '1', transform: 'scale(1)' },
 				},
 			},
@@ -75,7 +75,7 @@ const config: Config = {
 					'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 
 				'scale-in-50': 'scale-in-50 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-				'scale-in-90': 'scale-in-90 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+				'scale-in-95': 'scale-in-95 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 			},
 		},
 	},
