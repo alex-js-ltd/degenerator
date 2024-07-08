@@ -5,16 +5,15 @@ import { Icon } from '@/app/comps/_icon'
 import { Spinner } from '@/app/comps/spinner'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 import { useFormStatus } from 'react-dom'
-import { Tooltip } from '@/app/comps/tooltip'
+import { Tooltip, Content } from '@/app/comps/tooltip'
 
 type SubmitButtonProps = ButtonProps & {
 	isLoading?: boolean
-	content: string
 }
 
 export function SubmitButton({
 	isLoading,
-	content,
+
 	...rest
 }: SubmitButtonProps) {
 	const wallet = useAnchorWallet()
@@ -24,7 +23,20 @@ export function SubmitButton({
 	const disabled = !publicKey || pending || isLoading ? true : false
 
 	return (
-		<Tooltip content={content} open={publicKey ? undefined : false}>
+		<Tooltip
+			rootProps={{ open: publicKey ? undefined : false }}
+			content={
+				<Content
+					className="z-50 bg-gray-900 shadow-lg  text-white data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade overflow-hidden rounded-md bg-primary px-[12px] h-[32px] text-sm flex items-center leading-none will-change-[transform,opacity]"
+					sideOffset={18}
+					align="end"
+					alignOffset={-12}
+					side="bottom"
+				>
+					Mint Token
+				</Content>
+			}
+		>
 			<span className={publicKey ? 'cursor-pointer' : 'cursor-not-allowed'}>
 				<Button type="submit" disabled={disabled} {...rest} variant="submit">
 					{pending || isLoading ? (

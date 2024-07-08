@@ -176,7 +176,7 @@ export function TokenForm({
 									/>
 								</div>
 
-								<SubmitButton content="Mint Token" isLoading={isLoading} />
+								<SubmitButton isLoading={isLoading} />
 							</div>
 						</div>
 					</form>
