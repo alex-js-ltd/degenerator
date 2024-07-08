@@ -97,10 +97,7 @@ export function TokenForm({ children: child }: { children: ReactElement }) {
 						{...getFormProps(form)}
 						action={action}
 					>
-						<fieldset
-							disabled={txSig ? true : false}
-							className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6"
-						>
+						<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
 							<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
 								<Field
 									inputProps={{

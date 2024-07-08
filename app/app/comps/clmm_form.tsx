@@ -20,6 +20,8 @@ import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { type SelectItemConfig, QuoteToken, FeeTier } from '@/app/comps/select'
 import { clmm } from '@/app/actions/clmm'
 import { SubmitButton } from '@/app/comps/submit_button'
+import { useRaydium } from '@/app/hooks/use_raydium'
+import { useClmm } from '@/app/hooks/use_clmm'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -63,10 +65,40 @@ export function ClmmForm({
 		if (transaction) run(signAndSendTransaction(transaction))
 	}, [run, signAndSendTransaction, transaction])
 
+	const initSdk = useRaydium()
+
+	const createPool = useClmm()
+
 	return (
 		<Fragment>
 			<FormProvider context={form.context}>
-				<form {...getFormProps(form)} action={action} className="flex w-full">
+				<form
+					{...getFormProps(form)}
+					action={async (formData: FormData) => {
+						const submission = parseWithZod(formData, {
+							schema: ClmmSchema,
+						})
+
+						if (submission.status !== 'success') {
+							return {
+								...submission.reply(),
+							}
+						}
+
+						const { owner, mint1, mint2, feeTier } = submission.value
+
+						const raydium = await initSdk({ owner })
+
+						const res = await createPool({
+							raydium,
+							mint1,
+							mint2,
+							feeTier,
+						})
+						console.log(res)
+					}}
+					className="flex w-full"
+				>
 					<Input
 						{...getInputProps(fields.owner, { type: 'hidden' })}
 						defaultValue={payer}

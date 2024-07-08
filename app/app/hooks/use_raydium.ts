@@ -2,6 +2,11 @@ import {
 	Raydium,
 	TxVersion,
 	parseTokenAccountResp,
+	CLMM_PROGRAM_ID,
+	DEVNET_PROGRAM_ID,
+	DEV_API_URLS,
+	API_URLS,
+	type ClmmKeys,
 } from '@raydium-io/raydium-sdk-v2'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
@@ -15,6 +20,8 @@ const { CLUSTER } = getEnv()
 export const txVersion = TxVersion.V0 // or TxVersion.LEGACY
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
 
+const BASE_HOST =
+	CLUSTER === 'mainnet-beta' ? API_URLS.BASE_HOST : DEV_API_URLS.BASE_HOST
 export function useRaydium() {
 	const { connection } = useConnection()
 	const { signAllTransactions } = useWallet()
@@ -29,9 +36,9 @@ export function useRaydium() {
 				disableLoadToken: loadToken,
 				blockhashCommitment: 'finalized',
 				signAllTransactions,
-				// urlConfigs: {
-				// 	BASE_HOST: CLUSTER, // api url configs, currently api doesn't support devnet
-				// },
+				urlConfigs: {
+					BASE_HOST,
+				},
 			})
 
 			/**
