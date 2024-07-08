@@ -24,7 +24,7 @@ import { buildTransaction } from '@/app/utils/build_transaction'
 import { getEnv } from '@/app/utils/env'
 import { getClmmConfigs } from '@/app/utils/clmm'
 
-const { CLUSTER, ENDPOINT } = getEnv()
+const { CLUSTER } = getEnv()
 
 const txVersion = TxVersion.V0 // or TxVersion.LEGACY
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
@@ -77,7 +77,6 @@ async function initSdk({
 	const BASE_HOST =
 		CLUSTER === 'mainnet-beta' ? API_URLS.BASE_HOST : DEV_API_URLS.BASE_HOST
 
-	console.log(BASE_HOST)
 	const raydium = await Raydium.load({
 		owner,
 		connection,
@@ -158,8 +157,6 @@ async function createPool({
 
 	const programId =
 		cluster === 'mainnet' ? CLMM_PROGRAM_ID : DEVNET_PROGRAM_ID.CLMM
-
-	console.log('programId', programId.toBase58())
 
 	const { builder, extInfo } = await raydium.clmm.createPool({
 		programId,
