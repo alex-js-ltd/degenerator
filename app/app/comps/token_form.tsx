@@ -178,7 +178,7 @@ export function TokenForm({ children: child }: { children: ReactElement }) {
 
 				<div className="absolute bottom-3 left-12 sm:left-[102px] z-50">
 					{cloneElement(child, {
-						mint1: '5qbSrptF93ivXW5UCm91LrZdWU7PPVvwDCRJcqJKUKwE',
+						mint1: 'LB684qwjjasa6bF4iwk2azy3sDRjR6KJaR2fhBQnZEc',
 					})}
 				</div>
 			</div>

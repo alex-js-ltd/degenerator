@@ -18,6 +18,7 @@ import { type SelectItemConfig, QuoteToken, FeeTier } from '@/app/comps/select'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { useRaydium } from '@/app/hooks/use_raydium'
 import { useClmm } from '@/app/hooks/use_clmm'
+import { Spinner } from '@/app/comps/spinner'
 
 export function ClmmForm({
 	mintItems,
@@ -39,7 +40,7 @@ export function ClmmForm({
 	const payer = usePayer()
 	const initSdk = useRaydium()
 	const createPool = useClmm()
-	console.log(mint1)
+
 	const {
 		run,
 		data: txSig,
@@ -50,11 +51,14 @@ export function ClmmForm({
 		reset,
 	} = useAsync<string>()
 
+	console.log(form.allErrors)
+
 	return (
 		<Fragment>
 			<FormProvider context={form.context}>
 				<form
 					{...getFormProps(form)}
+					id={form.id}
 					action={async (formData: FormData) => {
 						const submission = parseWithZod(formData, {
 							schema: ClmmSchema,
@@ -70,15 +74,20 @@ export function ClmmForm({
 
 						const { owner, mint1, mint2, feeTier } = submission.value
 
-						const raydium = await initSdk({ owner })
+						async function foo() {
+							const raydium = await initSdk({ owner })
 
-						const res = await createPool({
-							raydium,
-							mint1,
-							mint2,
-							feeTier,
-						})
-						console.log(res)
+							const res = await createPool({
+								raydium,
+								mint1,
+								mint2,
+								feeTier,
+							})
+
+							return res
+						}
+
+						run(foo())
 					}}
 					className="flex w-full"
 				>
@@ -99,8 +108,10 @@ export function ClmmForm({
 					<button
 						form={form.id}
 						type="submit"
-						className="w-8 h-8 border border-teal-300 ml-3 rounded"
-					></button>
+						className="w-8 h-8 border border-teal-300 ml-3 rounded flex items-end"
+					>
+						{isLoading ? <Spinner /> : null}
+					</button>
 				</form>
 			</FormProvider>
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
