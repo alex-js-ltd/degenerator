@@ -108,7 +108,7 @@ export function ClmmForm({
 					<button
 						form={form.id}
 						type="submit"
-						className="w-8 h-8 border border-teal-300 ml-3 rounded flex items-end"
+						className="w-8 h-8 border border-teal-300 ml-3 rounded flex items-end justify-center"
 					>
 						{isLoading ? <Spinner /> : null}
 					</button>

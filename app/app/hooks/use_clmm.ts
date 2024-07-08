@@ -11,10 +11,12 @@ import { getEnv } from '@/app/utils/env'
 import { useCallback } from 'react'
 import { getClmmConfigs } from '@/app/utils/clmm'
 import invariant from 'tiny-invariant'
+import { useConnection } from '@jup-ag/wallet-adapter'
 
 const { CLUSTER } = getEnv()
 
 export function useClmm() {
+	const { connection } = useConnection()
 	return useCallback(
 		async ({
 			raydium,
@@ -55,11 +57,17 @@ export function useClmm() {
 				txVersion,
 			})
 
+			let blockhash = await connection
+				.getLatestBlockhash()
+				.then(res => res.blockhash)
 			// don't want to wait confirm, set sendAndConfirm to false or don't pass any params to execute
-			const { txId } = await execute({ sendAndConfirm: true })
+			const { txId } = await execute({
+				sendAndConfirm: true,
+				recentBlockHash: blockhash,
+			})
 			console.log('clmm pool created:', { txId })
 			return txId
 		},
-		[],
+		[connection],
 	)
 }
