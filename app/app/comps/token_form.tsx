@@ -70,7 +70,7 @@ export function TokenForm({ children: child }: { children: ReactElement }) {
 	} = useAsync<string>()
 
 	useEffect(() => {
-		if (transaction) run(signAndSendTransaction(transaction)).then(reset)
+		if (transaction) run(signAndSendTransaction(transaction))
 	}, [run, signAndSendTransaction, transaction])
 
 	const [showClmm, setShowClmm] = useState(false)
@@ -97,7 +97,10 @@ export function TokenForm({ children: child }: { children: ReactElement }) {
 						{...getFormProps(form)}
 						action={action}
 					>
-						<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
+						<fieldset
+							disabled={txSig ? true : false}
+							className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6"
+						>
 							<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
 								<Field
 									inputProps={{
@@ -170,19 +173,17 @@ export function TokenForm({ children: child }: { children: ReactElement }) {
 									/>
 								</div>
 
-								<SubmitButton isLoading={isLoading} />
+								<SubmitButton form={form.id} isLoading={isLoading} />
 							</div>
-						</div>
+						</fieldset>
 					</form>
 				</FormProvider>
 
-				{showClmm ? (
-					<div className="absolute bottom-3 left-12 sm:left-[102px] z-50">
-						{cloneElement(child, {
-							mint1: mint1,
-						})}
-					</div>
-				) : null}
+				<fieldset className="absolute bottom-3 left-12 sm:left-[102px] z-50">
+					{cloneElement(child, {
+						mint1,
+					})}
+				</fieldset>
 			</div>
 
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}

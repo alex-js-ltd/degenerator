@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useEffect } from 'react'
+import { Fragment, useEffect, useRef } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -82,6 +82,7 @@ export function ClmmForm({
 					<FeeTier name={fields.feeTier.name} items={clmmItems} />
 
 					<button
+						form={form.id}
 						type="submit"
 						className="w-8 h-8 border border-teal-300 ml-3 rounded"
 					></button>

@@ -5,7 +5,8 @@ import { TokenForm } from '@/app/comps/token_form'
 import { connection } from '@/app/utils/setup'
 import { getEnv } from '@/app/utils/env'
 import { Raydium } from '@raydium-io/raydium-sdk-v2'
-import { ClmmForm } from './comps/clmm_form'
+import { ClmmForm } from '@/app/comps/clmm_form'
+import { getClmmConfigs } from '@/app/utils/clmm'
 
 const { CLUSTER } = getEnv()
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
@@ -18,22 +19,6 @@ async function getApiV3TokenList(): Promise<ApiV3TokenRes> {
 	const data = await res.json()
 
 	return data.data
-}
-
-async function getClmmConfigs() {
-	const raydium = await Raydium.load({
-		owner: undefined,
-		connection,
-		cluster,
-		disableFeatureCheck: true,
-		blockhashCommitment: 'finalized',
-	})
-
-	const clmmConfigs = await raydium.api.getClmmConfigs()
-
-	invariant(clmmConfigs, 'Failed to fetch clmm configs')
-
-	return clmmConfigs
 }
 
 export default async function Page() {
@@ -54,7 +39,15 @@ export default async function Page() {
 		return acc
 	}, [])
 
-	const clmmConfigs = await getClmmConfigs()
+	const raydium = await Raydium.load({
+		owner: undefined,
+		connection,
+		cluster,
+		disableFeatureCheck: true,
+		blockhashCommitment: 'finalized',
+	})
+
+	const clmmConfigs = await getClmmConfigs({ raydium })
 
 	const clmmItems = clmmConfigs.reduce<SelectItemConfig[]>((acc, curr) => {
 		const { id, description } = curr

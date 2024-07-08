@@ -13,12 +13,14 @@ import {
 	TxVersion,
 	parseTokenAccountResp,
 	CLMM_PROGRAM_ID,
+	DEVNET_PROGRAM_ID,
 	type ClmmKeys,
 } from '@raydium-io/raydium-sdk-v2'
 import Decimal from 'decimal.js'
 import { buildTransaction } from '@/app/utils/build_transaction'
 
 import { getEnv } from '@/app/utils/env'
+import { getClmmConfigs } from '@/app/utils/clmm'
 
 const { CLUSTER } = getEnv()
 
@@ -138,14 +140,19 @@ async function createPool({
 }) {
 	const mint1 = await raydium.token.getTokenInfo(mint1Key)
 	const mint2 = await raydium.token.getTokenInfo(mint2Key)
-	const clmmConfigs = await raydium.api.getClmmConfigs()
+	const clmmConfigs = await getClmmConfigs({ raydium })
 
 	const clmmConfig = clmmConfigs.find(el => el.id === feeTier)
 
-	invariant(clmmConfig, 'Failed to fetch clmmConfig')
+	invariant(clmmConfig, 'Failed to find clmmConfig')
+
+	const programId =
+		cluster === 'mainnet' ? CLMM_PROGRAM_ID : DEVNET_PROGRAM_ID.CLMM
+
+	console.log('programId', programId.toBase58())
 
 	const { builder, extInfo } = await raydium.clmm.createPool({
-		programId: CLMM_PROGRAM_ID,
+		programId,
 		mint1,
 		mint2,
 		ammConfig: {

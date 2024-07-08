@@ -10,7 +10,7 @@ export function useSignAndSendTransaction() {
 	return useCallback(
 		async (tx: VersionedTransaction) => {
 			const txSig = await sendTransaction(tx, connection)
-
+			console.log(txSig)
 			const latestBlockHash = await connection.getLatestBlockhash()
 
 			invariant(latestBlockHash, 'Failed to get latest blockhash... 💩')
@@ -21,7 +21,6 @@ export function useSignAndSendTransaction() {
 				signature: txSig,
 			})
 
-			console.log(txSig)
 			invariant(confirm, 'Transaction not confirmed... 😭🔫')
 
 			invariant(confirm.value.err === null, 'Transaction not confirmed... 😭🔫')
