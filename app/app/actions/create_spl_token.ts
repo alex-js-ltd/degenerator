@@ -6,11 +6,11 @@ import { put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
 import invariant from 'tiny-invariant'
 import { connection } from '@/app/utils/setup'
-import { TransactionMessage, VersionedTransaction } from '@solana/web3.js'
 import { web3, BN } from '@coral-xyz/anchor'
 import { program } from '@/app/utils/setup'
 import { PublicKey } from '@solana/web3.js'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import { buildTransaction } from '@/app/utils/build_transaction'
 
 export async function createSplToken(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -63,19 +63,12 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		revokeFreeze: true,
 	})
 
-	let blockhash = await connection
-		.getLatestBlockhash()
-		.then(res => res.blockhash)
-
-	const messageV0 = new TransactionMessage({
-		payerKey,
-		recentBlockhash: blockhash,
+	const transaction = await buildTransaction({
+		connection,
+		payer: payerKey,
 		instructions,
-	}).compileToV0Message()
-
-	const transaction = new VersionedTransaction(messageV0)
-
-	transaction.sign([mintKeypair])
+		signers: [mintKeypair],
+	})
 
 	const serializedTransaction = transaction.serialize()
 

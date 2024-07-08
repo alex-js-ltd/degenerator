@@ -4,7 +4,6 @@ import { parseWithZod } from '@conform-to/zod'
 import { ClmmSchema } from '@/app/utils/schemas'
 import invariant from 'tiny-invariant'
 import { connection } from '@/app/utils/setup'
-import { TransactionMessage, VersionedTransaction } from '@solana/web3.js'
 import { BN } from '@coral-xyz/anchor'
 
 import { type Connection, PublicKey } from '@solana/web3.js'
@@ -17,6 +16,7 @@ import {
 	type ClmmKeys,
 } from '@raydium-io/raydium-sdk-v2'
 import Decimal from 'decimal.js'
+import { buildTransaction } from '@/app/utils/build_transaction'
 
 import { getEnv } from '@/app/utils/env'
 
@@ -41,26 +41,19 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 
 	const raydium = await initSdk({ owner })
 
-	const { instructions, signers, poolId } = await createPool({
+	const { instructions, signers } = await createPool({
 		raydium,
 		mint1,
 		mint2,
 		feeTier,
 	})
 
-	let blockhash = await connection
-		.getLatestBlockhash()
-		.then(res => res.blockhash)
-
-	const messageV0 = new TransactionMessage({
-		payerKey: owner,
-		recentBlockhash: blockhash,
+	const transaction = await buildTransaction({
+		connection,
+		payer: owner,
 		instructions,
-	}).compileToV0Message()
-
-	const transaction = new VersionedTransaction(messageV0)
-
-	transaction.sign(signers)
+		signers: [...signers],
+	})
 
 	const serializedTransaction = transaction.serialize()
 
