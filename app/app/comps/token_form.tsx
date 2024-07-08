@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -26,7 +26,7 @@ import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { type SelectItemConfig } from '@/app/comps/select'
 import { ClmmForm } from '@/app/comps/clmm_form'
-import { ResetButton } from '@/app/comps/reset_button'
+import { ClmmButton } from '@/app/comps/clmm_button'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -81,14 +81,16 @@ export function TokenForm({
 		if (transaction) run(signAndSendTransaction(transaction)).then(reset)
 	}, [run, signAndSendTransaction, transaction])
 
+	const [showClmm, setShowClmm] = useState(false)
+
 	return (
 		<Fragment>
 			<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 				<FormProvider context={form.context}>
 					<div className="absolute right-3.5 top-2.5 z-10 p-1 opacity-50 transition-opacity hover:opacity-80 w-5 h-5">
-						<ResetButton
+						<ClmmButton
 							className="rounded-full border border-gray-200 w-5 h-5"
-							onClick={clearPreviewImage}
+							onClick={() => setShowClmm(!showClmm)}
 						/>
 					</div>
 
@@ -182,13 +184,15 @@ export function TokenForm({
 					</form>
 				</FormProvider>
 
-				<div className="absolute bottom-3 left-[102px] z-50">
-					<ClmmForm
-						mintItems={mintItems}
-						clmmItems={clmmItems}
-						mint1={mint1 ?? ''}
-					/>
-				</div>
+				{showClmm ? (
+					<div className="absolute bottom-3 left-[102px] z-50">
+						<ClmmForm
+							mintItems={mintItems}
+							clmmItems={clmmItems}
+							mint1={mint1 ?? ''}
+						/>
+					</div>
+				) : null}
 			</div>
 
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}

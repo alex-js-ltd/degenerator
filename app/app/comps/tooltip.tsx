@@ -2,7 +2,6 @@
 
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 import { type ReactElement } from 'react'
-import { cn } from '@/app/utils/misc'
 
 type TooltipProps = {
 	rootProps?: TooltipPrimitive.TooltipProps
@@ -19,21 +18,6 @@ function Tooltip({ rootProps, content, children }: TooltipProps) {
 		</TooltipPrimitive.Provider>
 	)
 }
-
-// function Content({
-// 	className,
-// 	...props
-// }: TooltipPrimitive.TooltipContentProps) {
-// 	return (
-// 		<TooltipPrimitive.Content
-// 			className={cn(
-// 				className,
-// 				'data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade',
-// 			)}
-// 			{...props}
-// 		/>
-// 	)
-// }
 
 const Content = TooltipPrimitive.Content
 

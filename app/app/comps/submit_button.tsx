@@ -23,7 +23,7 @@ export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {
 			rootProps={{ open: publicKey ? undefined : false }}
 			content={
 				<Content
-					className="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade z-50 bg-gray-900 shadow-lg  text-white overflow-hidden rounded-md bg-primary px-[12px] h-[32px] text-sm flex items-center leading-none will-change-[transform,opacity]"
+					className="data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade z-50 bg-gray-900 shadow-lg text-white overflow-hidden rounded-md bg-primary px-[12px] h-[32px] text-sm flex items-center leading-none will-change-[transform,opacity]"
 					sideOffset={18}
 					align="end"
 					alignOffset={-12}

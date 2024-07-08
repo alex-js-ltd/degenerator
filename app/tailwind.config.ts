@@ -54,6 +54,16 @@ const config: Config = {
 					from: { opacity: '0', transform: 'translateX(-2px)' },
 					to: { opacity: '1', transform: 'translateX(0)' },
 				},
+
+				'scale-in-50': {
+					from: { opacity: '0', transform: 'scale(0.5)' },
+					to: { opacity: '1', transform: 'scale(1)' },
+				},
+
+				'scale-in-90': {
+					from: { opacity: '0', transform: 'scale(0.90)' },
+					to: { opacity: '1', transform: 'scale(1)' },
+				},
 			},
 			animation: {
 				slideDownAndFade:
@@ -63,6 +73,9 @@ const config: Config = {
 				slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 				slideRightAndFade:
 					'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+
+				'scale-in-50': 'scale-in-50 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+				'scale-in-90': 'scale-in-90 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 			},
 		},
 	},
