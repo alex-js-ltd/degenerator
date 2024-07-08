@@ -37,7 +37,9 @@ export function ClmmForm({
 	})
 
 	const payer = usePayer()
-
+	const initSdk = useRaydium()
+	const createPool = useClmm()
+	console.log(mint1)
 	const {
 		run,
 		data: txSig,
@@ -48,10 +50,6 @@ export function ClmmForm({
 		reset,
 	} = useAsync<string>()
 
-	const initSdk = useRaydium()
-
-	const createPool = useClmm()
-
 	return (
 		<Fragment>
 			<FormProvider context={form.context}>
@@ -61,6 +59,8 @@ export function ClmmForm({
 						const submission = parseWithZod(formData, {
 							schema: ClmmSchema,
 						})
+
+						console.log(submission)
 
 						if (submission.status !== 'success') {
 							return {

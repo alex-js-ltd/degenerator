@@ -176,11 +176,11 @@ export function TokenForm({ children: child }: { children: ReactElement }) {
 					</form>
 				</FormProvider>
 
-				<fieldset className="absolute bottom-3 left-12 sm:left-[102px] z-50">
+				<div className="absolute bottom-3 left-12 sm:left-[102px] z-50">
 					{cloneElement(child, {
-						mint1,
+						mint1: '5qbSrptF93ivXW5UCm91LrZdWU7PPVvwDCRJcqJKUKwE',
 					})}
-				</fieldset>
+				</div>
 			</div>
 
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
