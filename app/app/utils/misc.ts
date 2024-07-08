@@ -56,3 +56,18 @@ export function invariantResponse(
 export function delay(ms: number): Promise<void> {
 	return new Promise(resolve => setTimeout(resolve, ms))
 }
+
+// export function callAll(...fns: Function[]) {
+// 	return function (...args: any) {
+// 		fns.forEach((fn: Function) => fn && fn(...args))
+// 	}
+// }
+
+interface CallBack<Params extends any[]> {
+	(...args: Params): void
+}
+
+export const callAll =
+	<Params extends any[]>(...fns: Array<CallBack<Params> | undefined>) =>
+	(...args: Params) =>
+		fns.forEach(fn => typeof fn === 'function' && fn(...args))

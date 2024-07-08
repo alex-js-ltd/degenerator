@@ -26,6 +26,7 @@ import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { type SelectItemConfig } from '@/app/comps/select'
 import { ClmmForm } from '@/app/comps/clmm_form'
+import { ResetButton } from '@/app/comps/reset_button'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -84,6 +85,13 @@ export function TokenForm({
 		<Fragment>
 			<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 				<FormProvider context={form.context}>
+					<div className="absolute right-3.5 top-2.5 z-10 p-1 opacity-50 transition-opacity hover:opacity-80 w-5 h-5">
+						<ResetButton
+							className="rounded-full border border-gray-200 w-5 h-5"
+							onClick={clearPreviewImage}
+						/>
+					</div>
+
 					<PreviewImage
 						src={previewImage}
 						clearPreviewImage={clearPreviewImage}
