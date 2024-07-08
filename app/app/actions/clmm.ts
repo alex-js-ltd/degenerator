@@ -14,6 +14,8 @@ import {
 	parseTokenAccountResp,
 	CLMM_PROGRAM_ID,
 	DEVNET_PROGRAM_ID,
+	DEV_API_URLS,
+	API_URLS,
 	type ClmmKeys,
 } from '@raydium-io/raydium-sdk-v2'
 import Decimal from 'decimal.js'
@@ -22,7 +24,7 @@ import { buildTransaction } from '@/app/utils/build_transaction'
 import { getEnv } from '@/app/utils/env'
 import { getClmmConfigs } from '@/app/utils/clmm'
 
-const { CLUSTER } = getEnv()
+const { CLUSTER, ENDPOINT } = getEnv()
 
 const txVersion = TxVersion.V0 // or TxVersion.LEGACY
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
@@ -72,6 +74,10 @@ async function initSdk({
 	owner: PublicKey
 	loadToken?: boolean
 }) {
+	const BASE_HOST =
+		CLUSTER === 'mainnet-beta' ? API_URLS.BASE_HOST : DEV_API_URLS.BASE_HOST
+
+	console.log(BASE_HOST)
 	const raydium = await Raydium.load({
 		owner,
 		connection,
@@ -79,6 +85,10 @@ async function initSdk({
 		disableFeatureCheck: true,
 		disableLoadToken: loadToken,
 		blockhashCommitment: 'finalized',
+
+		urlConfigs: {
+			BASE_HOST,
+		},
 	})
 
 	invariant(raydium, 'Failed to initialize raydium')
