@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState, cloneElement, ReactElement } from 'react'
+import { Fragment, useState, cloneElement, ReactElement, useRef } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -18,6 +18,7 @@ import { Input } from '@/app/comps/input'
 import { useEffect } from 'react'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { createSplToken } from '@/app/actions/create_spl_token'
+import { clmm } from '@/app/actions/clmm'
 import { useFormState } from 'react-dom'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
@@ -25,13 +26,20 @@ import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmButton } from '@/app/comps/clmm_button'
+import { type SelectItemConfig, QuoteToken, FeeTier } from '@/app/comps/select'
 
 const initialState = {
 	serializedTransaction: undefined,
 	mint1: undefined,
 }
 
-export function TokenForm({ children: child }: { children: ReactElement }) {
+export function TokenForm({
+	mintItems,
+	clmmItems,
+}: {
+	mintItems: SelectItemConfig[]
+	clmmItems: SelectItemConfig[]
+}) {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 
 	const [form, fields] = useForm({
@@ -73,7 +81,24 @@ export function TokenForm({ children: child }: { children: ReactElement }) {
 		if (transaction) run(signAndSendTransaction(transaction))
 	}, [run, signAndSendTransaction, transaction])
 
-	const [showClmm, setShowClmm] = useState(false)
+	const [createClmm, setCreateClmm] = useState(false)
+
+	const formRef = useRef<HTMLFormElement>(null)
+
+	useEffect(() => {
+		const formEl = formRef.current
+		if (!formEl || !mint1 || !txSig || !createClmm) return
+
+		const createPool = async () => {
+			const formData = new FormData(formEl)
+			formData.append('mint1', mint1)
+			const data = await clmm(undefined, formData)
+
+			console.log(data)
+		}
+
+		createPool()
+	}, [txSig, mint1])
 
 	return (
 		<Fragment>
@@ -82,7 +107,9 @@ export function TokenForm({ children: child }: { children: ReactElement }) {
 					<div className="absolute right-3.5 top-2.5 z-10 p-1 opacity-50 transition-opacity hover:opacity-80 w-5 h-5">
 						<ClmmButton
 							className="rounded-full border border-gray-200 w-5 h-5"
-							onClick={() => setShowClmm(!showClmm)}
+							onClick={() => {
+								setCreateClmm(prev => !prev)
+							}}
 						/>
 					</div>
 
@@ -96,6 +123,7 @@ export function TokenForm({ children: child }: { children: ReactElement }) {
 						className="relative z-10 h-full w-full min-w-0 bg-gray-900"
 						{...getFormProps(form)}
 						action={action}
+						ref={formRef}
 					>
 						<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
 							<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
@@ -168,6 +196,14 @@ export function TokenForm({ children: child }: { children: ReactElement }) {
 										fileRef={fileRef}
 										onChange={onChange}
 									/>
+
+									{createClmm ? (
+										<Fragment>
+											<QuoteToken name={fields.mint2.name} items={mintItems} />
+
+											<FeeTier name={fields.feeTier.name} items={clmmItems} />
+										</Fragment>
+									) : null}
 								</div>
 
 								<SubmitButton form={form.id} isLoading={isLoading} />
@@ -175,12 +211,6 @@ export function TokenForm({ children: child }: { children: ReactElement }) {
 						</fieldset>
 					</form>
 				</FormProvider>
-
-				<div className="absolute bottom-3 left-12 sm:left-[102px] z-50">
-					{cloneElement(child, {
-						mint1: 'LB684qwjjasa6bF4iwk2azy3sDRjR6KJaR2fhBQnZEc',
-					})}
-				</div>
 			</div>
 
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}

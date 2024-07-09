@@ -34,6 +34,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		schema: ClmmSchema,
 	})
 
+	console.log(submission)
 	if (submission.status !== 'success') {
 		return {
 			...submission.reply(),
@@ -41,9 +42,9 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		}
 	}
 
-	const { owner, mint1, mint2, feeTier } = submission.value
+	const { payerKey, mint1, mint2, feeTier } = submission.value
 
-	const raydium = await initSdk({ owner })
+	const raydium = await initSdk({ owner: payerKey })
 
 	const { instructions, signers } = await createPool({
 		raydium,
@@ -54,7 +55,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 
 	const transaction = await buildTransaction({
 		connection,
-		payer: owner,
+		payer: payerKey,
 		instructions,
 		signers: [...signers],
 	})
@@ -158,7 +159,7 @@ async function createPool({
 	const programId =
 		cluster === 'mainnet' ? CLMM_PROGRAM_ID : DEVNET_PROGRAM_ID.CLMM
 
-	const { builder, extInfo } = await raydium.clmm.createPool({
+	const { builder, extInfo, transaction } = await raydium.clmm.createPool({
 		programId,
 		mint1,
 		mint2,

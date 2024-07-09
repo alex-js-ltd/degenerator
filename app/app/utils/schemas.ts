@@ -31,10 +31,13 @@ export const TokenSchema = z.object({
 		.string()
 		.transform(value => value === 'on')
 		.optional(),
+
+	mint2: PublicKey.optional(),
+	feeTier: z.string().optional(),
 })
 
 export const ClmmSchema = z.object({
-	owner: PublicKey,
+	payerKey: PublicKey,
 	mint1: PublicKey,
 	mint2: PublicKey,
 	feeTier: z.string(),

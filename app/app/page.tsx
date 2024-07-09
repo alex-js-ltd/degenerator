@@ -5,7 +5,6 @@ import { TokenForm } from '@/app/comps/token_form'
 import { connection } from '@/app/utils/setup'
 import { getEnv } from '@/app/utils/env'
 import { Raydium } from '@raydium-io/raydium-sdk-v2'
-import { ClmmForm } from '@/app/comps/clmm_form'
 import { getClmmConfigs } from '@/app/utils/clmm'
 
 const { CLUSTER } = getEnv()
@@ -63,11 +62,7 @@ export default async function Page() {
 		return acc
 	}, [])
 
-	return (
-		<TokenForm
-			children={<ClmmForm mintItems={mintItems} clmmItems={clmmItems} />}
-		/>
-	)
+	return <TokenForm mintItems={mintItems} clmmItems={clmmItems} />
 }
 
 const popularTokens: ApiV3Token[] = [
