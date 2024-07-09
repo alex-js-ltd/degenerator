@@ -102,15 +102,15 @@ export function TokenForm({
 		<Fragment>
 			<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 				<FormProvider context={form.context}>
-					<div className="absolute right-3.5 top-2.5 z-10 p-1 opacity-50 transition-opacity hover:opacity-80 w-5 h-5">
-						<ClmmCheckbox />
-					</div>
-
 					<PreviewImage
 						src={previewImage}
 						clearPreviewImage={clearPreviewImage}
 						errors={fields.image.errors}
 					/>
+
+					<div className="absolute right-3.5 top-2.5 z-10 p-1 opacity-50 transition-opacity hover:opacity-80 w-5 h-5">
+						<ClmmCheckbox />
+					</div>
 
 					<form
 						className="relative z-10 h-full w-full min-w-0 bg-gray-900"

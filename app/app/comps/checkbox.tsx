@@ -17,24 +17,19 @@ const Checkbox = React.forwardRef<
 	const control = useInputControl(meta)
 
 	return (
-		<>
-			<RadixCheckbox.Root
-				ref={ref}
-				id={meta.id}
-				checked={control.value === 'on'}
-				onCheckedChange={checked => {
-					control.change(checked ? 'on' : '')
-				}}
-				onBlur={control.blur}
-				className={className}
-				{...props}
-			>
-				<RadixCheckbox.Indicator>
-					{/* Add your custom indicator or icon here */}
-					{children}
-				</RadixCheckbox.Indicator>
-			</RadixCheckbox.Root>
-		</>
+		<RadixCheckbox.Root
+			ref={ref}
+			id={meta.id}
+			checked={control.value === 'on'}
+			onCheckedChange={checked => {
+				control.change(checked ? 'on' : '')
+			}}
+			onBlur={control.blur}
+			className={className}
+			{...props}
+		>
+			<RadixCheckbox.Indicator>{children}</RadixCheckbox.Indicator>
+		</RadixCheckbox.Root>
 	)
 })
 
