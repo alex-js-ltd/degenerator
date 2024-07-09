@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState, useRef } from 'react'
+import { Fragment, useState, useRef, useMemo } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -25,7 +25,7 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
-import { ClmmButton } from '@/app/comps/clmm_button'
+import { ClmmCheckbox } from '@/app/comps/checkbox'
 import { type SelectItemConfig, QuoteToken, FeeTier } from '@/app/comps/select'
 
 const initialState = {
@@ -77,38 +77,33 @@ export function TokenForm({
 		reset,
 	} = useAsync<string>()
 
-	useEffect(() => {
-		if (transaction) run(signAndSendTransaction(transaction))
-	}, [run, signAndSendTransaction, transaction])
-
-	const [createClmm, setCreateClmm] = useState(false)
+	const showClmm = useMemo(() => fields.clmm.value === 'on', [fields])
 
 	const formRef = useRef<HTMLFormElement>(null)
 
 	useEffect(() => {
+		if (transaction) run(signAndSendTransaction(transaction))
+	}, [run, signAndSendTransaction, transaction])
+
+	useEffect(() => {
 		const formEl = formRef.current
-		if (!formEl || !mint1 || !txSig || !createClmm) return
+		if (!formEl || !mint1 || !txSig || !showClmm) return
 
 		const createPool = async () => {
 			const formData = new FormData(formEl)
 			formData.append('mint1', mint1)
 			const data = await clmm(undefined, formData)
-
-			console.log(data)
 		}
 
 		createPool()
-	}, [txSig, mint1, createClmm])
+	}, [txSig, mint1, showClmm])
 
 	return (
 		<Fragment>
 			<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 				<FormProvider context={form.context}>
 					<div className="absolute right-3.5 top-2.5 z-10 p-1 opacity-50 transition-opacity hover:opacity-80 w-5 h-5">
-						<ClmmButton
-							className="rounded-full border border-gray-200 w-5 h-5"
-							onClick={() => setCreateClmm(prev => !prev)}
-						/>
+						<ClmmCheckbox />
 					</div>
 
 					<PreviewImage
@@ -195,7 +190,7 @@ export function TokenForm({
 										onChange={onChange}
 									/>
 
-									{createClmm ? (
+									{showClmm ? (
 										<fieldset className="flex">
 											<QuoteToken name={fields.mint2.name} items={mintItems} />
 											<FeeTier name={fields.feeTier.name} items={clmmItems} />
@@ -206,9 +201,7 @@ export function TokenForm({
 								<SubmitButton
 									form={form.id}
 									isLoading={isLoading}
-									content={
-										createClmm ? 'Mint Token + Create Pool' : 'Mint Token'
-									}
+									content={showClmm ? 'Mint Token + Create Pool' : 'Mint Token'}
 								/>
 							</div>
 						</fieldset>

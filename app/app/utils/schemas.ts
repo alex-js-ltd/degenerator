@@ -23,11 +23,7 @@ export const TokenSchema = z.object({
 	image: z.instanceof(File).refine(file => {
 		return !file || file.size <= MAX_UPLOAD_SIZE
 	}, 'File size must be less than 4.5MB'),
-	revokeMint: z
-		.string()
-		.transform(value => value === 'on')
-		.optional(),
-	revokeFreeze: z
+	clmm: z
 		.string()
 		.transform(value => value === 'on')
 		.optional(),

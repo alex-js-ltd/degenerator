@@ -15,11 +15,14 @@ export function ClmmButton({ ...props }: ButtonProps) {
 					alignOffset={-12}
 					side="top"
 				>
-					<button onClick={props.onClick}>Create liquidity pool</button>
+					Create liquidity pool
 				</Content>
 			}
 		>
-			<Button type="reset" {...props}>
+			<Button
+				className="rounded-full border border-gray-200 w-5 h-5"
+				{...props}
+			>
 				<Icon
 					className="size-2.5 translate-y-[-2.5px] text-gray-100 transition-all"
 					name="reset"
