@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState, cloneElement, ReactElement, useRef } from 'react'
+import { Fragment, useState, useRef } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -98,7 +98,7 @@ export function TokenForm({
 		}
 
 		createPool()
-	}, [txSig, mint1])
+	}, [txSig, mint1, createClmm])
 
 	return (
 		<Fragment>
@@ -107,9 +107,7 @@ export function TokenForm({
 					<div className="absolute right-3.5 top-2.5 z-10 p-1 opacity-50 transition-opacity hover:opacity-80 w-5 h-5">
 						<ClmmButton
 							className="rounded-full border border-gray-200 w-5 h-5"
-							onClick={() => {
-								setCreateClmm(prev => !prev)
-							}}
+							onClick={() => setCreateClmm(prev => !prev)}
 						/>
 					</div>
 
@@ -198,15 +196,20 @@ export function TokenForm({
 									/>
 
 									{createClmm ? (
-										<Fragment>
+										<fieldset className="flex">
 											<QuoteToken name={fields.mint2.name} items={mintItems} />
-
 											<FeeTier name={fields.feeTier.name} items={clmmItems} />
-										</Fragment>
+										</fieldset>
 									) : null}
 								</div>
 
-								<SubmitButton form={form.id} isLoading={isLoading} />
+								<SubmitButton
+									form={form.id}
+									isLoading={isLoading}
+									content={
+										createClmm ? 'Mint Token + Create Pool' : 'Mint Token'
+									}
+								/>
 							</div>
 						</fieldset>
 					</form>

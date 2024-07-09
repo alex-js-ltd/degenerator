@@ -9,9 +9,14 @@ import { Tooltip, Content } from '@/app/comps/tooltip'
 
 type SubmitButtonProps = ButtonProps & {
 	isLoading?: boolean
+	content?: string
 }
 
-export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {
+export function SubmitButton({
+	isLoading,
+	content,
+	...rest
+}: SubmitButtonProps) {
 	const wallet = useAnchorWallet()
 	const { publicKey } = wallet || {}
 
@@ -29,7 +34,7 @@ export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {
 					alignOffset={-12}
 					side="bottom"
 				>
-					Mint Token
+					{content}
 				</Content>
 			}
 		>
