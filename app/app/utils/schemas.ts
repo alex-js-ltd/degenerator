@@ -33,8 +33,8 @@ export const TokenSchema = z
 		mint2: PublicKey.optional(),
 		feeTier: z.string().optional(),
 	})
-	.superRefine((values, context) => {
-		if (values.clmm && !values.mint1) {
+	.superRefine(({ clmm, mint1, mint2, feeTier }, context) => {
+		if (clmm && !mint1) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: 'mint1 is Required',
@@ -42,7 +42,7 @@ export const TokenSchema = z
 			})
 		}
 
-		if (values.clmm && !values.mint2) {
+		if (clmm && !mint2) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: 'mint2 is Required',
@@ -50,7 +50,7 @@ export const TokenSchema = z
 			})
 		}
 
-		if (values.clmm && !values.feeTier) {
+		if (clmm && !feeTier) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: 'feeTier is Required',
