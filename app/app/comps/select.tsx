@@ -11,7 +11,7 @@ import classnames from 'classnames'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 
 import { useInputControl, useField, type FieldName } from '@conform-to/react'
-import { Checkbox } from '@/app/comps/check_box'
+import { Option } from '@/app/comps/option'
 import Image, { ImageProps } from 'next/image'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
@@ -131,7 +131,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 				ref={forwardedRef}
 			>
 				<div className="flex size-4 shrink-0 items-center justify-center rounded-full border border-gray-500 group">
-					<Checkbox variant={variant} />
+					<Option variant={variant} />
 				</div>
 				<div className="flex w-full items-center justify-between">
 					{children}

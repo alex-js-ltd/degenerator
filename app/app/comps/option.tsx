@@ -2,7 +2,7 @@ import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/app/utils/misc'
 
-const checkBoxVariants = cva(undefined, {
+const OptionVariants = cva(undefined, {
 	variants: {
 		variant: {
 			on: 'size-2 rounded-full bg-gray-50 transition-all opacity-100',
@@ -11,15 +11,15 @@ const checkBoxVariants = cva(undefined, {
 	},
 })
 
-export interface CheckboxProps
+export interface OptionProps
 	extends React.ButtonHTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof checkBoxVariants> {}
+		VariantProps<typeof OptionVariants> {}
 
-const Checkbox = React.forwardRef<HTMLDivElement, CheckboxProps>(
+const Option = React.forwardRef<HTMLDivElement, OptionProps>(
 	({ className, variant, ...props }, ref) => {
 		return (
 			<div
-				className={cn(checkBoxVariants({ variant, className }))}
+				className={cn(OptionVariants({ variant, className }))}
 				ref={ref}
 				{...props}
 			/>
@@ -27,6 +27,6 @@ const Checkbox = React.forwardRef<HTMLDivElement, CheckboxProps>(
 	},
 )
 
-Checkbox.displayName = 'Checkbox'
+Option.displayName = 'Option'
 
-export { Checkbox, checkBoxVariants }
+export { Option, OptionVariants }
