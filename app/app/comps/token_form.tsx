@@ -98,6 +98,8 @@ export function TokenForm({
 		createPool()
 	}, [txSig, mint1, showClmm])
 
+	console.log(form.allErrors)
+
 	return (
 		<Fragment>
 			<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
