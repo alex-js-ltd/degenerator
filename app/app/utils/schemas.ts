@@ -29,19 +29,10 @@ export const TokenSchema = z
 			.transform(value => value === 'on')
 			.optional(),
 
-		mint1: PublicKey.optional(),
 		mint2: PublicKey.optional(),
 		feeTier: z.string().optional(),
 	})
-	.superRefine(({ clmm, mint1, mint2, feeTier }, context) => {
-		if (clmm && !mint1) {
-			context.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: 'mint1 is Required',
-				path: ['mint1'],
-			})
-		}
-
+	.superRefine(({ clmm, mint2, feeTier }, context) => {
 		if (clmm && !mint2) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
