@@ -174,32 +174,6 @@ export function TokenForm({ children }: { children: ReactNode }) {
 									})}
 									defaultValue={payer}
 								/>
-
-								{showClmm ? (
-									<Field
-										inputProps={{
-											...getInputProps(fields.initialPrice, {
-												type: 'text',
-											}),
-											placeholder: 'Initial Price',
-											className: 'sm:col-span-2 w-full',
-										}}
-										errors={fields.initialPrice.errors}
-									/>
-								) : null}
-
-								{showClmm ? (
-									<Field
-										inputProps={{
-											...getInputProps(fields.depositAmount, {
-												type: 'text',
-											}),
-											placeholder: 'Deposit Amount',
-											className: 'sm:col-span-2 w-full',
-										}}
-										errors={fields.depositAmount.errors}
-									/>
-								) : null}
 							</div>
 
 							<div className="flex items-end w-full gap-2 p-3 h-[69px]">
