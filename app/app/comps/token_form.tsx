@@ -1,12 +1,6 @@
 'use client'
 
-import {
-	type ReactNode,
-	type ReactElement,
-	Fragment,
-	useRef,
-	useMemo,
-} from 'react'
+import { type ReactNode, Fragment, useRef, useMemo } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -32,18 +26,13 @@ import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
-import { ClmmInputs } from '@/app/comps/clmm_inputs'
 
 const initialState = {
 	serializedTransaction: undefined,
 	mint1: undefined,
 }
 
-interface TokenFormProps {
-	children: ReactElement<typeof ClmmInputs>
-}
-
-export function TokenForm({ children: child }: TokenFormProps) {
+export function TokenForm({ children: child }: { children: ReactNode }) {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 
 	const [form, fields] = useForm({
