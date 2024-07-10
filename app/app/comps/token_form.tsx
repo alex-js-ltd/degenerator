@@ -110,6 +110,7 @@ export function TokenForm({ children: child }: { children: ReactNode }) {
 						{...getFormProps(form)}
 						action={action}
 						ref={formRef}
+						id={form.id}
 					>
 						<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
 							<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
