@@ -12,6 +12,7 @@ const { CLUSTER } = getEnv()
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
 
 async function getApiV3TokenList(): Promise<ApiV3TokenRes> {
+	'use server'
 	const res = await fetch('https://api-v3.raydium.io/mint/list')
 
 	invariant(res.ok, 'Failed to fetch data')
@@ -22,6 +23,8 @@ async function getApiV3TokenList(): Promise<ApiV3TokenRes> {
 }
 
 async function getQuoteTokenProps() {
+	'use server'
+
 	const data = await getApiV3TokenList()
 
 	const mintItems = data.mintList.reduce<SelectItemConfig[]>((acc, curr) => {
@@ -43,6 +46,7 @@ async function getQuoteTokenProps() {
 }
 
 async function getFeeTierProps() {
+	'use server'
 	const raydium = await Raydium.load({
 		owner: undefined,
 		connection,
