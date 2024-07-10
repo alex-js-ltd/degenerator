@@ -18,7 +18,6 @@ import { Input } from '@/app/comps/input'
 import { useEffect } from 'react'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { createSplToken } from '@/app/actions/create_spl_token'
-import { clmm } from '@/app/actions/clmm'
 import { useFormState } from 'react-dom'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
@@ -26,7 +25,8 @@ import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
-import { VersionedTransaction } from '@solana/web3.js'
+
+import { useCreatePool } from '@/app/hooks/use_create_pool'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -69,7 +69,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 		isError,
 		error,
 		reset,
-	} = useAsync<string>()
+	} = useAsync<string | undefined>()
 
 	const showClmm = useMemo(() => fields.clmm.value === 'on', [fields])
 
@@ -79,25 +79,16 @@ export function TokenForm({ children }: { children: ReactNode }) {
 		if (transaction) run(signAndSendTransaction(transaction))
 	}, [run, signAndSendTransaction, transaction])
 
+	const getTransaction = useCreatePool()
+
 	useEffect(() => {
 		const formEl = formRef.current
 		if (!formEl || !mint1 || !txSig || !showClmm) return
-
-		const createPool = async () => {
-			const formData = new FormData(formEl)
-			formData.append('mint1', mint1)
-			const data = await clmm(undefined, formData)
-			if (!data.serializedTransaction) return
-
-			const transaction = VersionedTransaction.deserialize(
-				data.serializedTransaction,
-			)
-
-			const res = await signAndSendTransaction(transaction)
-			console.log('res', res)
-		}
-		createPool()
-	}, [txSig, mint1, showClmm, signAndSendTransaction])
+		;(async () => {
+			const transaction = await getTransaction({ formEl, mint1 })
+			if (transaction) await run(signAndSendTransaction(transaction))
+		})()
+	}, [mint1, txSig, showClmm, getTransaction, run, signAndSendTransaction])
 
 	return (
 		<Fragment>
