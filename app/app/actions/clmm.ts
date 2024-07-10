@@ -19,7 +19,6 @@ import {
 	type ClmmKeys,
 } from '@raydium-io/raydium-sdk-v2'
 import Decimal from 'decimal.js'
-import { buildTransaction } from '@/app/utils/build_transaction'
 
 import { getEnv } from '@/app/utils/env'
 import { getClmmConfigs } from '@/app/utils/clmm'
@@ -46,18 +45,11 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 
 	const raydium = await initSdk({ owner: payerKey })
 
-	const { instructions, signers } = await createPool({
+	const { transaction } = await createPool({
 		raydium,
 		mint1,
 		mint2,
 		feeTier,
-	})
-
-	const transaction = await buildTransaction({
-		connection,
-		payer: payerKey,
-		instructions,
-		signers: [...signers],
 	})
 
 	const serializedTransaction = transaction.serialize()
@@ -176,8 +168,6 @@ async function createPool({
 	const address: ClmmKeys & { poolId?: string } = extInfo.address
 
 	return {
-		instructions: builder.AllTxData.instructions,
-		signers: builder.AllTxData.signers,
 		poolId: address?.poolId,
 		transaction,
 	}
