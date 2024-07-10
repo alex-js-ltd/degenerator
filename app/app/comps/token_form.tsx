@@ -1,6 +1,12 @@
 'use client'
 
-import { Fragment, useRef, useMemo } from 'react'
+import {
+	type ReactNode,
+	type ReactElement,
+	Fragment,
+	useRef,
+	useMemo,
+} from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -26,20 +32,18 @@ import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
-import { type SelectItemConfig, QuoteToken, FeeTier } from '@/app/comps/select'
+import { ClmmInputs } from '@/app/comps/clmm_inputs'
 
 const initialState = {
 	serializedTransaction: undefined,
 	mint1: undefined,
 }
 
-export function TokenForm({
-	mintItems,
-	clmmItems,
-}: {
-	mintItems: SelectItemConfig[]
-	clmmItems: SelectItemConfig[]
-}) {
+interface TokenFormProps {
+	children: ReactElement<typeof ClmmInputs>
+}
+
+export function TokenForm({ children: child }: TokenFormProps) {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 
 	const [form, fields] = useForm({
@@ -190,12 +194,7 @@ export function TokenForm({
 										onChange={onChange}
 									/>
 
-									{showClmm ? (
-										<fieldset className="flex">
-											<QuoteToken name={fields.mint2.name} items={mintItems} />
-											<FeeTier name={fields.feeTier.name} items={clmmItems} />
-										</fieldset>
-									) : null}
+									{showClmm ? child : null}
 								</div>
 
 								<SubmitButton
