@@ -87,7 +87,6 @@ export function TokenForm({ children }: { children: ReactNode }) {
 			formData.append('mint1', mint1)
 			const data = await clmm(undefined, formData)
 		}
-
 		createPool()
 	}, [txSig, mint1, showClmm])
 
