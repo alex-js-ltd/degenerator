@@ -1,12 +1,12 @@
 import { type ApiV3TokenRes } from '@raydium-io/raydium-sdk-v2'
 import { type SelectItemConfig } from '@/app/comps/select'
 import invariant from 'tiny-invariant'
-
 import { connection } from '@/app/utils/setup'
 import { getEnv } from '@/app/utils/env'
 import { Raydium } from '@raydium-io/raydium-sdk-v2'
 import { getClmmConfigs } from '@/app/utils/clmm'
 import { QuoteToken, FeeTier } from '@/app/comps/select'
+import { Input } from './input'
 
 const { CLUSTER } = getEnv()
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
@@ -77,9 +77,21 @@ async function getFeeTierProps() {
 
 export async function ClmmInputs() {
 	return (
-		<fieldset className="flex">
-			<QuoteToken {...await getQuoteTokenProps()} />
-			<FeeTier {...await getFeeTierProps()} />
+		<fieldset className="flex gap-2">
+			<div className="flex-1">
+				<QuoteToken {...await getQuoteTokenProps()} />
+			</div>
+
+			<div className="flex-1">
+				<FeeTier {...await getFeeTierProps()} />
+			</div>
+
+			<div className="flex-1">
+				<Input
+					placeholder="Initial Price"
+					className="disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-32 items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none border"
+				/>
+			</div>
 		</fieldset>
 	)
 }
