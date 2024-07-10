@@ -42,11 +42,12 @@ async function getQuoteTokenProps() {
 		return acc
 	}, [])
 
-	return { items: mintItems, name: 'quoteToken' }
+	return { items: mintItems, name: 'mint2' }
 }
 
 async function getFeeTierProps() {
 	'use server'
+
 	const raydium = await Raydium.load({
 		owner: undefined,
 		connection,
