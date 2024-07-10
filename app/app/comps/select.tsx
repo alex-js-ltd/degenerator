@@ -7,7 +7,7 @@ import React, {
 	useRef,
 } from 'react'
 import * as RadixSelect from '@radix-ui/react-select'
-import classnames from 'classnames'
+
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 
 import { useInputControl, useField, type FieldName } from '@conform-to/react'
@@ -123,8 +123,8 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 
 		return (
 			<RadixSelect.Item
-				className={classnames(
-					'relative select-none outline-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 group flex w-full cursor-pointer items-center gap-1.5 rounded p-1 pl-2 text-sm text-gray-50 bg-gray-900 hover:bg-gray-800',
+				className={cn(
+					'data-[state=checked]:bg-gray-800 relative select-none outline-none group flex w-full cursor-pointer items-center gap-1.5 rounded p-1 pl-2 text-sm text-gray-50 bg-gray-900 hover:bg-gray-800',
 					className,
 				)}
 				{...props}
