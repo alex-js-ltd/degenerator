@@ -21,21 +21,14 @@ async function getFeeTierProps() {
 
 	const clmmConfigs = await getClmmConfigs({ raydium })
 
-	const clmmItems = clmmConfigs.reduce<SelectItemConfig[]>((acc, curr) => {
-		const { id, description } = curr
-
-		const option = {
+	return {
+		items: clmmConfigs.map(({ id, description }) => ({
 			value: id,
 			children: description,
-			imageProps: { src: id, alt: id },
-		}
-
-		acc.push(option)
-
-		return acc
-	}, [])
-
-	return { items: clmmItems, name: 'feeTier' }
+			imageProps: { src: id, alt: description },
+		})),
+		name: 'feeTier',
+	}
 }
 
 export async function FeeDropdown() {

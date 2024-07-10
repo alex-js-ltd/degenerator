@@ -6,7 +6,7 @@ import React, {
 	type ElementRef,
 	useRef,
 } from 'react'
-import * as RadixSelect from '@radix-ui/react-Select'
+import * as RadixSelect from '@radix-ui/react-select'
 import classnames from 'classnames'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 
