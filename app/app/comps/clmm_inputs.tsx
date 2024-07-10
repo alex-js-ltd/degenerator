@@ -21,7 +21,7 @@ async function getApiV3TokenList(): Promise<ApiV3TokenRes> {
 	return data.data
 }
 
-export async function ClmmInputs() {
+async function getQuoteTokenProps() {
 	const data = await getApiV3TokenList()
 
 	const mintItems = data.mintList.reduce<SelectItemConfig[]>((acc, curr) => {
@@ -39,6 +39,10 @@ export async function ClmmInputs() {
 		return acc
 	}, [])
 
+	return { items: mintItems, name: 'quoteToken' }
+}
+
+async function getFeeTierProps() {
 	const raydium = await Raydium.load({
 		owner: undefined,
 		connection,
@@ -63,10 +67,14 @@ export async function ClmmInputs() {
 		return acc
 	}, [])
 
+	return { items: clmmItems, name: 'feeTier' }
+}
+
+export async function ClmmInputs() {
 	return (
 		<fieldset className="flex">
-			<QuoteToken name="quoteToken" items={mintItems} />
-			<FeeTier name="feeTier" items={clmmItems} />
+			<QuoteToken {...await getQuoteTokenProps()} />
+			<FeeTier {...await getFeeTierProps()} />
 		</fieldset>
 	)
 }
