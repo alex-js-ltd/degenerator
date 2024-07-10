@@ -3,8 +3,6 @@ import { Program } from '@coral-xyz/anchor'
 import { Degenerator } from '../target/types/degenerator'
 import { unpack } from '@solana/spl-token-metadata'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
-import { expect } from 'chai'
-import { createValues, mintToken } from './utils'
 
 describe('degenerator', () => {
 	const provider = anchor.AnchorProvider.env()
@@ -193,55 +191,5 @@ describe('degenerator', () => {
 			.rpc()
 
 		console.log('Your transaction signature', tx)
-	})
-
-	it('Create amm', async () => {
-		const values = createValues({
-			admin: wallet.payer,
-		})
-
-		await program.methods
-			.createAmm(values.id, values.fee)
-			.accounts({ admin: values.admin.publicKey })
-			.rpc()
-
-		const ammAccount = await program.account.amm.fetch(values.ammKey)
-		expect(ammAccount.id.toString()).to.equal(values.id.toString())
-		expect(ammAccount.admin.toString()).to.equal(
-			values.admin.publicKey.toString(),
-		)
-		expect(ammAccount.fee.toString()).to.equal(values.fee.toString())
-
-		await mintToken({
-			program,
-			payerKeypair: values.admin,
-			mintKeypair: values.mintAKeypair,
-			metadata,
-			decimals: 2,
-			supply: 10000,
-		})
-
-		await mintToken({
-			program,
-			payerKeypair: values.admin,
-			mintKeypair: values.mintBKeypair,
-			metadata,
-			decimals: 2,
-			supply: 10000,
-		})
-
-		await program.methods
-			.createPool()
-			.accounts({
-				amm: values.ammKey,
-				pool: values.poolKey,
-				poolAuthority: values.poolAuthority,
-				mintLiquidity: values.mintLiquidity,
-				mintA: values.mintAKeypair.publicKey,
-				mintB: values.mintBKeypair.publicKey,
-				poolAccountA: values.poolAccountA,
-				poolAccountB: values.poolAccountB,
-			})
-			.rpc({ skipPreflight: true })
 	})
 })

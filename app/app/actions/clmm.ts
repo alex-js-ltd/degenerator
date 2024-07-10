@@ -179,5 +179,6 @@ async function createPool({
 		instructions: builder.AllTxData.instructions,
 		signers: builder.AllTxData.signers,
 		poolId: address?.poolId,
+		transaction,
 	}
 }
