@@ -31,24 +31,44 @@ export const TokenSchema = z
 
 		mint2: PublicKey.optional(),
 		feeTier: z.string().optional(),
+		initialPrice: z.number().optional(),
+		depositAmount: z.number().optional(),
 	})
-	.superRefine(({ clmm, mint2, feeTier }, context) => {
-		if (clmm && !mint2) {
-			context.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: 'mint2 is Required',
-				path: ['mint2'],
-			})
-		}
+	.superRefine(
+		({ clmm, mint2, feeTier, initialPrice, depositAmount }, context) => {
+			if (clmm && !mint2) {
+				context.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: 'Required',
+					path: ['mint2'],
+				})
+			}
 
-		if (clmm && !feeTier) {
-			context.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: 'feeTier is Required',
-				path: ['feeTier'],
-			})
-		}
-	})
+			if (clmm && !feeTier) {
+				context.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: 'Required',
+					path: ['feeTier'],
+				})
+			}
+
+			if (clmm && !initialPrice) {
+				context.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: 'Required',
+					path: ['initialPrice'],
+				})
+			}
+
+			if (clmm && !depositAmount) {
+				context.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: 'Required',
+					path: ['depositAmount'],
+				})
+			}
+		},
+	)
 
 export const ClmmSchema = z.object({
 	payerKey: PublicKey,

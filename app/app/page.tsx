@@ -1,10 +1,12 @@
 import { TokenForm } from '@/app/comps/token_form'
-import { ClmmInputs } from '@/app/comps/clmm_inputs'
+import { QuoteDropdown } from '@/app/comps/quote_dropdown'
+import { FeeDropdown } from '@/app/comps/fee_dropdown'
 
 export default function Page() {
 	return (
 		<TokenForm>
-			<ClmmInputs />
+			<QuoteDropdown />
+			<FeeDropdown />
 		</TokenForm>
 	)
 }

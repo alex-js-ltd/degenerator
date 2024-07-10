@@ -32,7 +32,7 @@ const initialState = {
 	mint1: undefined,
 }
 
-export function TokenForm({ children: child }: { children: ReactNode }) {
+export function TokenForm({ children }: { children: ReactNode }) {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 
 	const [form, fields] = useForm({
@@ -174,6 +174,32 @@ export function TokenForm({ children: child }: { children: ReactNode }) {
 									})}
 									defaultValue={payer}
 								/>
+
+								{showClmm ? (
+									<Field
+										inputProps={{
+											...getInputProps(fields.initialPrice, {
+												type: 'text',
+											}),
+											placeholder: 'Initial Price',
+											className: 'sm:col-span-2 w-full',
+										}}
+										errors={fields.initialPrice.errors}
+									/>
+								) : null}
+
+								{showClmm ? (
+									<Field
+										inputProps={{
+											...getInputProps(fields.depositAmount, {
+												type: 'text',
+											}),
+											placeholder: 'Deposit Amount',
+											className: 'sm:col-span-2 w-full',
+										}}
+										errors={fields.depositAmount.errors}
+									/>
+								) : null}
 							</div>
 
 							<div className="flex items-end w-full gap-2 p-3 h-[69px]">
@@ -184,7 +210,10 @@ export function TokenForm({ children: child }: { children: ReactNode }) {
 										onChange={onChange}
 									/>
 
-									{showClmm ? child : null}
+									<fieldset className="flex gap-2 w-full">
+										{showClmm ? children : null}
+										{showClmm ? <Input /> : null}
+									</fieldset>
 								</div>
 
 								<SubmitButton
