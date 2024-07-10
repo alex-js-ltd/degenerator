@@ -6,7 +6,7 @@ import {
 } from '@raydium-io/raydium-sdk-v2'
 import { PublicKey } from '@solana/web3.js'
 import Decimal from 'decimal.js'
-import BN from 'bn.js'
+import { BN } from '@coral-xyz/anchor'
 import { getEnv } from '@/app/utils/env'
 import { useCallback } from 'react'
 import { getClmmConfigs } from '@/app/utils/clmm'

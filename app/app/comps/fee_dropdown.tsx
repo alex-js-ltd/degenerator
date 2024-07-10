@@ -1,4 +1,3 @@
-import { type SelectItemConfig } from '@/app/comps/select'
 import { connection } from '@/app/utils/setup'
 import { getEnv } from '@/app/utils/env'
 import { Raydium } from '@raydium-io/raydium-sdk-v2'
