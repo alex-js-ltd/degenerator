@@ -9,7 +9,7 @@ import {
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
-import { TokenSchema } from '@/app/utils/schemas'
+import { Schema } from '@/app/utils/schemas'
 import { useImageUpload } from '@/app/hooks/use_image_upload'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
@@ -38,7 +38,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
 		onValidate({ formData }) {
-			return parseWithZod(formData, { schema: TokenSchema })
+			return parseWithZod(formData, { schema: Schema })
 		},
 
 		// Validate the form on blur event triggered

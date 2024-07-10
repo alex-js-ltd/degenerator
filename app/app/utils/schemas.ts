@@ -10,28 +10,36 @@ const PublicKey = z
 		message: 'Not on the ed25519 curve',
 	})
 
-export const TokenSchema = z
-	.object({
-		payerKey: PublicKey,
-		name: z.string(),
-		symbol: z.string(),
-		decimals: z
-			.number()
-			.max(9, { message: 'Decimal is too high' })
-			.min(0, { message: 'Decimal is too low' }),
-		supply: z.number(),
-		description: z.string(),
-		image: z.instanceof(File).refine(file => {
-			return !file || file.size <= MAX_UPLOAD_SIZE
-		}, 'File size must be less than 4.5MB'),
-		clmm: z
-			.string()
-			.transform(value => value === 'on')
-			.optional(),
+export const TokenSchema = z.object({
+	payerKey: PublicKey,
+	name: z.string(),
+	symbol: z.string(),
+	decimals: z
+		.number()
+		.max(9, { message: 'Decimal is too high' })
+		.min(0, { message: 'Decimal is too low' }),
+	supply: z.number(),
+	description: z.string(),
+	image: z.instanceof(File).refine(file => {
+		return !file || file.size <= MAX_UPLOAD_SIZE
+	}, 'File size must be less than 4.5MB'),
+	clmm: z
+		.string()
+		.transform(value => value === 'on')
+		.optional(),
+})
 
-		mint2: PublicKey.optional(),
-		feeTier: z.string().optional(),
-	})
+export const ClmmSchema = z.object({
+	payerKey: PublicKey,
+	mint1: PublicKey,
+	mint2: PublicKey,
+	feeTier: z.string(),
+})
+
+export const ClmmOptions = ClmmSchema.partial()
+
+export const Schema = z
+	.intersection(TokenSchema, ClmmOptions)
 	.superRefine(({ clmm, mint2, feeTier }, context) => {
 		if (clmm && !mint2) {
 			context.addIssue({
@@ -49,10 +57,3 @@ export const TokenSchema = z
 			})
 		}
 	})
-
-export const ClmmSchema = z.object({
-	payerKey: PublicKey,
-	mint1: PublicKey,
-	mint2: PublicKey,
-	feeTier: z.string(),
-})
