@@ -57,11 +57,8 @@ export function delay(ms: number): Promise<void> {
 	return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-interface CallBack<Params extends any[]> {
-	(...args: Params): void
+export function callAll<Args extends Array<unknown>>(
+	...fns: Array<((...args: Args) => unknown) | undefined>
+) {
+	return (...args: Args) => fns.forEach(fn => fn?.(...args))
 }
-
-export const callAll =
-	<Params extends any[]>(...fns: Array<CallBack<Params> | undefined>) =>
-	(...args: Params) =>
-		fns.forEach(fn => typeof fn === 'function' && fn(...args))
