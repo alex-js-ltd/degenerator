@@ -68,13 +68,14 @@ export function callAll<Args extends Array<unknown>>(
 //   (initialValue) =>
 //     functions.reduce(async (acc, fn) => fn(await acc), initialValue);
 
-function asyncPipe<Args extends Array<unknown>>(
-	intialValue,
-	...fns: Array<((...args: Args) => unknown) | undefined>
+function asyncPipe<Args extends any[]>(
+	initialValue: any,
+	...fns: Array<((...args: Args) => Promise<any>) | undefined>
 ) {
-	return fns.reduce((acc, fn) => {
-		if (fn) return fn(acc)
+	return fns.reduce(async (acc, fn) => {
+		await acc
+		if (fn) return fn(...acc) // Spread acc to match Args for fn
 
 		return acc
-	}, intialValue)
+	}, initialValue)
 }
