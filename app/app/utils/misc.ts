@@ -68,12 +68,13 @@ export function callAll<Args extends Array<unknown>>(
 //   (initialValue) =>
 //     functions.reduce(async (acc, fn) => fn(await acc), initialValue);
 
-type PromiseFunction<T> = (...args: any[]) => Promise<T>
-type FunctionArray<T> = Array<PromiseFunction<T>>
+function asyncPipe<Args extends Array<unknown>>(
+	intialValue,
+	...fns: Array<((...args: Args) => unknown) | undefined>
+) {
+	return fns.reduce((acc, fn) => {
+		if (fn) return fn(acc)
 
-function asyncPipe(...fns, intialValue) {
-	return fns.reduce(async (acc, fn) => {
-		const res = await acc
-		return fn(res)
+		return acc
 	}, intialValue)
 }
