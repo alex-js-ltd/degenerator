@@ -1,26 +1,27 @@
 'use server'
 
-import { connection } from '@/app/utils/setup'
-import { getEnv } from '@/app/utils/env'
-import { Raydium } from '@raydium-io/raydium-sdk-v2'
-import { getClmmConfigs } from '@/app/utils/clmm'
+import { ClmmConfigInfo } from '@raydium-io/raydium-sdk-v2'
+import invariant from 'tiny-invariant'
 
-const { CLUSTER } = getEnv()
-const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
+interface ClmmConfig extends Omit<ClmmConfigInfo, 'id'> {
+	id: string // Change the type of id
+}
+
+async function getClmmConfig(): Promise<ClmmConfig[]> {
+	const res = await fetch('https://api-v3.raydium.io/main/clmm-config')
+
+	invariant(res.ok, 'Failed to fetch data')
+
+	const data = await res.json()
+
+	return data.data
+}
 
 export async function getFeeTierProps() {
-	const raydium = await Raydium.load({
-		owner: undefined,
-		connection,
-		cluster,
-		disableFeatureCheck: true,
-		blockhashCommitment: 'finalized',
-	})
-
-	const clmmConfigs = await getClmmConfigs({ raydium })
+	const clmmConfigs = await getClmmConfig()
 
 	return {
-		items: clmmConfigs.map(({ id, description }) => ({
+		items: clmmConfigs?.map(({ id, description }) => ({
 			value: id,
 			children: description,
 			imageProps: { src: id, alt: description },

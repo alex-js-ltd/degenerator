@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useRef, useMemo } from 'react'
+import { type ReactNode, Fragment, useRef, useMemo } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -28,15 +28,12 @@ import { ClmmCheckbox } from '@/app/comps/checkbox'
 import { asyncPipe } from '@/app/utils/async_pipe'
 import { VersionedTransaction } from '@solana/web3.js'
 
-import { QuoteDropdown } from '@/app/comps/quote_dropdown'
-import { FeeDropdown } from '@/app/comps/fee_dropdown'
-
 const initialState = {
 	serializedTransaction: undefined,
 	mint1: undefined,
 }
 
-export function TokenForm() {
+export function TokenForm({ children = null }: { children: ReactNode }) {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 
 	const [form, fields] = useForm({
@@ -79,7 +76,7 @@ export function TokenForm() {
 	useEffect(() => {
 		const tx = getTransaction(serializedTransaction)
 		if (tx) run(signAndSendTransaction(tx))
-	}, [run, signAndSendTransaction])
+	}, [run, signAndSendTransaction, serializedTransaction])
 
 	useEffect(() => {
 		const formEl = formRef.current
@@ -190,8 +187,7 @@ export function TokenForm() {
 
 									{showClmm ? (
 										<fieldset className="flex gap-2 w-full">
-											<QuoteDropdown />
-											<FeeDropdown />
+											{children}
 										</fieldset>
 									) : null}
 								</div>
