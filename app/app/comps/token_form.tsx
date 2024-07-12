@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, Fragment, useRef, useMemo } from 'react'
+import { Fragment, useRef, useMemo } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -18,6 +18,7 @@ import { Input } from '@/app/comps/input'
 import { useEffect } from 'react'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { createSplToken } from '@/app/actions/create_spl_token'
+import { fetchPool } from '@/app/actions/clmm'
 import { useFormState } from 'react-dom'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
@@ -25,31 +26,17 @@ import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
 import { asyncPipe } from '@/app/utils/async_pipe'
-import { createPool } from '@/app/utils/create_pool'
 import { VersionedTransaction } from '@solana/web3.js'
+
+import { QuoteDropdown } from '@/app/comps/quote_dropdown'
+import { FeeDropdown } from '@/app/comps/fee_dropdown'
 
 const initialState = {
 	serializedTransaction: undefined,
 	mint1: undefined,
 }
 
-interface AddMint1Params {
-	formEl: HTMLFormElement
-	mint1: string
-}
-
-function getTransaction(serializedTransaction?: Uint8Array) {
-	if (!serializedTransaction) return
-	return VersionedTransaction.deserialize(serializedTransaction)
-}
-
-function addMint1(value: AddMint1Params) {
-	const formData = new FormData(value.formEl)
-	formData.append('mint1', value.mint1)
-	return formData
-}
-
-export function TokenForm({ children }: { children: ReactNode }) {
+export function TokenForm() {
 	const [lastResult, action] = useFormState(createSplToken, initialState)
 
 	const [form, fields] = useForm({
@@ -94,14 +81,19 @@ export function TokenForm({ children }: { children: ReactNode }) {
 		if (tx) run(signAndSendTransaction(tx))
 	}, [run, signAndSendTransaction])
 
-	// useEffect(() => {
-	// 	const formEl = formRef.current
-	// 	if (!formEl || !mint1 || !txSig || !showClmm) return
+	useEffect(() => {
+		const formEl = formRef.current
+		if (!formEl || !mint1 || !txSig || !showClmm) return
 
-	// 	const initialValue: AddMint1Params = { mint1, formEl }
+		const initialValue: AddMint1Params = { mint1, formEl }
 
-	// 	const pipe = asyncPipe(addMint1)(initialValue)
-	// }, [mint1, txSig, showClmm, signAndSendTransaction])
+		const pipe = asyncPipe(
+			addMint1,
+			fetchPool,
+			getTransaction,
+			signAndSendTransaction,
+		)(initialValue)
+	}, [mint1, txSig, showClmm, signAndSendTransaction])
 
 	return (
 		<Fragment>
@@ -196,10 +188,12 @@ export function TokenForm({ children }: { children: ReactNode }) {
 										onChange={onChange}
 									/>
 
-									<fieldset className="flex gap-2 w-full">
-										{showClmm ? children : null}
-										{showClmm ? <Input /> : null}
-									</fieldset>
+									{showClmm ? (
+										<fieldset className="flex gap-2 w-full">
+											<QuoteDropdown />
+											<FeeDropdown />
+										</fieldset>
+									) : null}
 								</div>
 
 								<SubmitButton
@@ -217,4 +211,20 @@ export function TokenForm({ children }: { children: ReactNode }) {
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 		</Fragment>
 	)
+}
+
+interface AddMint1Params {
+	formEl: HTMLFormElement
+	mint1: string
+}
+
+function getTransaction(serializedTransaction?: Uint8Array) {
+	if (!serializedTransaction) return
+	return VersionedTransaction.deserialize(serializedTransaction)
+}
+
+function addMint1(value: AddMint1Params) {
+	const formData = new FormData(value.formEl)
+	formData.append('mint1', value.mint1)
+	return formData
 }
