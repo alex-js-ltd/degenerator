@@ -21,16 +21,32 @@ import { createSplToken } from '@/app/actions/create_spl_token'
 import { useFormState } from 'react-dom'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
-import { useSerializedTransaction } from '@/app/hooks/use_serialized_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
-
-import { useCreatePool } from '@/app/hooks/use_create_pool'
+import { asyncPipe } from '@/app/utils/async_pipe'
+import { createPool } from '@/app/utils/create_pool'
+import { VersionedTransaction } from '@solana/web3.js'
 
 const initialState = {
 	serializedTransaction: undefined,
 	mint1: undefined,
+}
+
+interface AddMint1Params {
+	formEl: HTMLFormElement
+	mint1: string
+}
+
+function getTransaction(serializedTransaction?: Uint8Array) {
+	if (!serializedTransaction) return
+	return VersionedTransaction.deserialize(serializedTransaction)
+}
+
+function addMint1(value: AddMint1Params) {
+	const formData = new FormData(value.formEl)
+	formData.append('mint1', value.mint1)
+	return formData
 }
 
 export function TokenForm({ children }: { children: ReactNode }) {
@@ -57,8 +73,6 @@ export function TokenForm({ children }: { children: ReactNode }) {
 
 	const { serializedTransaction, mint1 } = lastResult
 
-	const transaction = useSerializedTransaction({ serializedTransaction })
-
 	const signAndSendTransaction = useSignAndSendTransaction()
 
 	const {
@@ -76,19 +90,18 @@ export function TokenForm({ children }: { children: ReactNode }) {
 	const formRef = useRef<HTMLFormElement>(null)
 
 	useEffect(() => {
-		if (transaction) run(signAndSendTransaction(transaction))
-	}, [run, signAndSendTransaction, transaction])
+		const tx = getTransaction(serializedTransaction)
+		if (tx) run(signAndSendTransaction(tx))
+	}, [run, signAndSendTransaction])
 
-	const getTransaction = useCreatePool()
+	// useEffect(() => {
+	// 	const formEl = formRef.current
+	// 	if (!formEl || !mint1 || !txSig || !showClmm) return
 
-	useEffect(() => {
-		const formEl = formRef.current
-		if (!formEl || !mint1 || !txSig || !showClmm) return
-		;(async () => {
-			const transaction = await getTransaction({ formEl, mint1 })
-			if (transaction) await run(signAndSendTransaction(transaction))
-		})()
-	}, [mint1, txSig, showClmm, getTransaction, run, signAndSendTransaction])
+	// 	const initialValue: AddMint1Params = { mint1, formEl }
+
+	// 	const pipe = asyncPipe(addMint1)(initialValue)
+	// }, [mint1, txSig, showClmm, signAndSendTransaction])
 
 	return (
 		<Fragment>

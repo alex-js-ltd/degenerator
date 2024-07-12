@@ -8,7 +8,8 @@ export function useSignAndSendTransaction() {
 	const { sendTransaction } = useWallet()
 
 	return useCallback(
-		async (tx: VersionedTransaction) => {
+		async (tx: VersionedTransaction | undefined) => {
+			if (!tx) return
 			const txSig = await sendTransaction(tx, connection)
 			console.log(txSig)
 			const latestBlockHash = await connection.getLatestBlockhash()

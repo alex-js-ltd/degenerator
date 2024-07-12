@@ -172,3 +172,8 @@ async function createPool({
 		transaction,
 	}
 }
+
+export async function _createPool(formData: FormData) {
+	const data = await clmm(undefined, formData)
+	return data.serializedTransaction
+}
