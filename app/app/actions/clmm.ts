@@ -92,7 +92,7 @@ async function initSdk({
 		await fetchTokenAccountData({ connection, owner }),
 	)
 	connection.onAccountChange(owner, async () => {
-		raydium!.account.updateTokenAccount(
+		raydium.account.updateTokenAccount(
 			await fetchTokenAccountData({ connection, owner }),
 		)
 	})

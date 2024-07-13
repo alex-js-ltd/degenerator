@@ -47,6 +47,8 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 		lastResult: mintResult,
 	})
 
+	const { mint1 } = mintResult
+
 	const {
 		data: txSig,
 		isLoading,
@@ -61,16 +63,19 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 		useImageUpload()
 
 	const payer = usePayer()
-
-	const showClmm = useMemo(() => fields.clmm.value === 'on', [fields])
-
 	const buttonRef = useRef<HTMLButtonElement>(null)
 
+	const showClmm = useMemo(() => fields.clmm.value === 'on', [fields])
+	const initClmm = useMemo(() => {
+		if (txSig && showClmm && mint1) return true
+		return false
+	}, [txSig, showClmm, mint1])
+
 	useEffect(() => {
-		if (buttonRef.current && txSig && showClmm) {
+		if (initClmm && buttonRef.current) {
 			buttonRef.current.click()
 		}
-	}, [txSig, showClmm])
+	}, [initClmm])
 
 	return (
 		<Fragment>
@@ -158,7 +163,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									{...getInputProps(fields.mint1, {
 										type: 'hidden',
 									})}
-									defaultValue={mintResult.mint1}
+									defaultValue={mint1}
 								/>
 							</div>
 
@@ -177,7 +182,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									) : null}
 								</div>
 
-								{showClmm && txSig ? (
+								{initClmm ? (
 									<button
 										ref={buttonRef}
 										formAction={clmmAction}
