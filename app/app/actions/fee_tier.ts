@@ -7,7 +7,7 @@ interface ClmmConfig extends Omit<ClmmConfigInfo, 'id'> {
 	id: string // Change the type of id
 }
 
-async function getClmmConfig(): Promise<ClmmConfig[]> {
+export async function getClmmConfig(): Promise<ClmmConfig[]> {
 	const res = await fetch('https://api-v3.raydium.io/main/clmm-config')
 
 	invariant(res.ok, 'Failed to fetch data')

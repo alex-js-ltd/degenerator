@@ -33,7 +33,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		schema: ClmmSchema,
 	})
 
-	console.log(submission)
+	console.log('HELLO', submission)
 	if (submission.status !== 'success') {
 		return {
 			...submission.reply(),
@@ -77,10 +77,6 @@ async function initSdk({
 		disableFeatureCheck: true,
 		disableLoadToken: loadToken,
 		blockhashCommitment: 'finalized',
-
-		urlConfigs: {
-			BASE_HOST,
-		},
 	})
 
 	invariant(raydium, 'Failed to initialize raydium')

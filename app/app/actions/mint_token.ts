@@ -12,7 +12,7 @@ import { PublicKey } from '@solana/web3.js'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import { buildTransaction } from '@/app/utils/build_transaction'
 
-export async function createSplToken(_prevState: unknown, formData: FormData) {
+export async function mintToken(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
 		schema: TokenSchema,
 	})

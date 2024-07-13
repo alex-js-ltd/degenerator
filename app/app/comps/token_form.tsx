@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, Fragment, useRef, useMemo } from 'react'
+import { type ReactNode, Fragment, useRef, useMemo, useEffect } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -15,18 +15,15 @@ import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { Input } from '@/app/comps/input'
-import { useEffect } from 'react'
 import { SubmitButton } from '@/app/comps/submit_button'
-import { createSplToken } from '@/app/actions/create_spl_token'
-import { fetchPool } from '@/app/actions/clmm'
+import { mintToken } from '@/app/actions/mint_token'
+import { clmm } from '@/app/actions/clmm'
 import { useFormState } from 'react-dom'
-import { useAsync } from '@/app/hooks/use_async'
-import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
-import { asyncPipe } from '@/app/utils/async_pipe'
 import { VersionedTransaction } from '@solana/web3.js'
+import { useTransaction } from '@/app/hooks/use_transaction'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -34,7 +31,8 @@ const initialState = {
 }
 
 export function TokenForm({ children = null }: { children: ReactNode }) {
-	const [lastResult, action] = useFormState(createSplToken, initialState)
+	const [lastResult, action] = useFormState(mintToken, initialState)
+	const [clmmResult, clmmAction] = useFormState(clmm, initialState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -50,47 +48,31 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 		lastResult,
 	})
 
-	const { previewImage, clearPreviewImage, fileRef, onChange } =
-		useImageUpload()
-
-	const payer = usePayer()
-
-	const { serializedTransaction, mint1 } = lastResult
-
-	const signAndSendTransaction = useSignAndSendTransaction()
-
 	const {
-		run,
 		data: txSig,
 		isLoading,
 		isSuccess,
 		isError,
 		error,
 		reset,
-	} = useAsync<string | undefined>()
+	} = useTransaction(lastResult?.serializedTransaction)
+
+	useTransaction(clmmResult?.serializedTransaction)
+
+	const { previewImage, clearPreviewImage, fileRef, onChange } =
+		useImageUpload()
+
+	const payer = usePayer()
 
 	const showClmm = useMemo(() => fields.clmm.value === 'on', [fields])
 
-	const formRef = useRef<HTMLFormElement>(null)
+	const buttonRef = useRef<HTMLButtonElement>(null)
 
 	useEffect(() => {
-		const tx = getTransaction(serializedTransaction)
-		if (tx) run(signAndSendTransaction(tx))
-	}, [run, signAndSendTransaction, serializedTransaction])
-
-	useEffect(() => {
-		const formEl = formRef.current
-		if (!formEl || !mint1 || !txSig || !showClmm) return
-
-		const initialValue: AddMint1Params = { mint1, formEl }
-
-		const pipe = asyncPipe(
-			addMint1,
-			fetchPool,
-			getTransaction,
-			signAndSendTransaction,
-		)(initialValue)
-	}, [mint1, txSig, showClmm, signAndSendTransaction])
+		if (buttonRef.current && txSig && showClmm) {
+			buttonRef.current.click()
+		}
+	}, [txSig, showClmm])
 
 	return (
 		<Fragment>
@@ -110,7 +92,6 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 						className="relative z-10 h-full w-full min-w-0 bg-gray-900"
 						{...getFormProps(form)}
 						action={action}
-						ref={formRef}
 						id={form.id}
 					>
 						<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
@@ -175,6 +156,15 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									})}
 									defaultValue={payer}
 								/>
+
+								{showClmm && txSig ? (
+									<input
+										{...getInputProps(fields.mint1, {
+											type: 'hidden',
+										})}
+										defaultValue={lastResult.mint1}
+									/>
+								) : null}
 							</div>
 
 							<div className="flex items-end w-full gap-2 p-3 h-[69px]">
@@ -191,6 +181,15 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 										</fieldset>
 									) : null}
 								</div>
+
+								{showClmm && txSig ? (
+									<button
+										ref={buttonRef}
+										formAction={clmmAction}
+										className="sr-only"
+										type="submit"
+									></button>
+								) : null}
 
 								<SubmitButton
 									form={form.id}
