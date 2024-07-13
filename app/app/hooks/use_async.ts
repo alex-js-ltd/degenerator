@@ -131,9 +131,7 @@ const useAsync = <DataType>() => {
 
 export { useAsync }
 
-const useSafeDispatch = <DataType>(
-	dispatch: Dispatch<AsyncAction<DataType>>,
-) => {
+const useSafeDispatch = <Action>(dispatch: Dispatch<Action>) => {
 	const mounted = useRef(false)
 
 	useLayoutEffect(() => {
@@ -145,8 +143,8 @@ const useSafeDispatch = <DataType>(
 	}, [])
 
 	return useCallback(
-		(args: AsyncAction<DataType>) =>
-			mounted.current ? dispatch(args) : void 0,
+		(...args: Parameters<Dispatch<Action>>) =>
+			mounted.current ? dispatch(...args) : void 0,
 		[dispatch],
 	)
 }
