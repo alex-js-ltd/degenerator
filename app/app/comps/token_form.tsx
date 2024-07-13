@@ -65,11 +65,11 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 	const payer = usePayer()
 	const buttonRef = useRef<HTMLButtonElement>(null)
 
-	const showClmm = useMemo(() => fields.clmm.value === 'on', [fields])
-	const initClmm = useMemo(() => {
-		if (txSig && showClmm && mint1) return true
-		return false
-	}, [txSig, showClmm, mint1])
+	const showClmm = fields.clmm.value === 'on'
+	const initClmm = useMemo(
+		() => (txSig && showClmm && mint1 ? true : false),
+		[txSig, showClmm, mint1],
+	)
 
 	useEffect(() => {
 		if (initClmm && buttonRef.current) {
