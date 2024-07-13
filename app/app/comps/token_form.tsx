@@ -31,7 +31,7 @@ const initialState = {
 }
 
 export function TokenForm({ children = null }: { children: ReactNode }) {
-	const [lastResult, action] = useFormState(mintToken, initialState)
+	const [mintResult, mintAction] = useFormState(mintToken, initialState)
 	const [clmmResult, clmmAction] = useFormState(clmm, initialState)
 
 	const [form, fields] = useForm({
@@ -45,7 +45,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 
 		shouldRevalidate: 'onInput',
 
-		lastResult,
+		lastResult: mintResult,
 	})
 
 	const {
@@ -55,7 +55,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 		isError,
 		error,
 		reset,
-	} = useTransaction(lastResult?.serializedTransaction)
+	} = useTransaction(mintResult?.serializedTransaction)
 
 	useTransaction(clmmResult?.serializedTransaction)
 
@@ -91,7 +91,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 					<form
 						className="relative z-10 h-full w-full min-w-0 bg-gray-900"
 						{...getFormProps(form)}
-						action={action}
+						action={mintAction}
 						id={form.id}
 					>
 						<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
@@ -157,14 +157,12 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									defaultValue={payer}
 								/>
 
-								{showClmm && txSig ? (
-									<input
-										{...getInputProps(fields.mint1, {
-											type: 'hidden',
-										})}
-										defaultValue={lastResult.mint1}
-									/>
-								) : null}
+								<input
+									{...getInputProps(fields.mint1, {
+										type: 'hidden',
+									})}
+									defaultValue={mintResult.mint1}
+								/>
 							</div>
 
 							<div className="flex items-end w-full gap-2 p-3 h-[69px]">
@@ -188,7 +186,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 										formAction={clmmAction}
 										className="sr-only"
 										type="submit"
-									></button>
+									/>
 								) : null}
 
 								<SubmitButton
@@ -206,20 +204,4 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 		</Fragment>
 	)
-}
-
-interface AddMint1Params {
-	formEl: HTMLFormElement
-	mint1: string
-}
-
-function getTransaction(serializedTransaction?: Uint8Array) {
-	if (!serializedTransaction) return
-	return VersionedTransaction.deserialize(serializedTransaction)
-}
-
-function addMint1(value: AddMint1Params) {
-	const formData = new FormData(value.formEl)
-	formData.append('mint1', value.mint1)
-	return formData
 }
