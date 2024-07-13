@@ -22,7 +22,6 @@ import { useFormState } from 'react-dom'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
-import { VersionedTransaction } from '@solana/web3.js'
 import { useTransaction } from '@/app/hooks/use_transaction'
 
 const initialState = {
@@ -54,7 +53,6 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 		isSuccess,
 		isError,
 		error,
-		reset,
 	} = useTransaction(mintResult?.serializedTransaction)
 
 	useTransaction(clmmResult?.serializedTransaction)
@@ -91,7 +89,6 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 					<form
 						className="relative z-10 h-full w-full min-w-0 bg-gray-900"
 						{...getFormProps(form)}
-						action={mintAction}
 						id={form.id}
 					>
 						<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
@@ -191,6 +188,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 
 								<SubmitButton
 									form={form.id}
+									formAction={mintAction}
 									isLoading={isLoading}
 									content={showClmm ? 'Mint Token + Create Pool' : 'Mint Token'}
 								/>

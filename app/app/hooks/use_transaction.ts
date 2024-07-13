@@ -11,10 +11,10 @@ export function useTransaction(serializedTransaction: Uint8Array | undefined) {
 
 	const signAndSendTransaction = useSignAndSendTransaction()
 
-	const { run, ...rest } = useAsync<string | undefined>()
+	const { run, reset, ...rest } = useAsync<string | undefined>()
 
 	useEffect(() => {
-		if (tx) run(signAndSendTransaction(tx))
+		if (tx) run(signAndSendTransaction(tx)).then(reset)
 	}, [run, signAndSendTransaction, tx])
 
 	return { run, ...rest }
