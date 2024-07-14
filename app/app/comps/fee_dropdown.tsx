@@ -1,25 +1,13 @@
 'use server'
 
-import { ClmmConfigInfo } from '@raydium-io/raydium-sdk-v2'
-import invariant from 'tiny-invariant'
 import { FeeTier } from '@/app/comps/select'
-
-interface ClmmConfig extends Omit<ClmmConfigInfo, 'id'> {
-	id: string // Change the type of id
-}
-
-export async function getClmmConfig(): Promise<ClmmConfig[]> {
-	const res = await fetch('https://api-v3.raydium.io/main/clmm-config')
-
-	invariant(res.ok, 'Failed to fetch data')
-
-	const data = await res.json()
-
-	return data.data
-}
+import { initSdk } from '@/app/utils/raydium'
+import { getClmmConfigs } from '@/app//utils/clmm'
 
 export async function getFeeTierProps() {
-	const clmmConfigs = await getClmmConfig()
+	const raydium = await initSdk({})
+
+	const clmmConfigs = await getClmmConfigs({ raydium })
 
 	return {
 		items: clmmConfigs?.map(({ id, description }) => ({

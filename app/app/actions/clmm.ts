@@ -14,14 +14,13 @@ import {
 	parseTokenAccountResp,
 	CLMM_PROGRAM_ID,
 	DEVNET_PROGRAM_ID,
-	DEV_API_URLS,
-	API_URLS,
 	type ClmmKeys,
 } from '@raydium-io/raydium-sdk-v2'
 import Decimal from 'decimal.js'
 
 import { getEnv } from '@/app/utils/env'
 import { getClmmConfigs } from '@/app/utils/clmm'
+import { initSdk } from '@/app/utils/raydium'
 
 const { CLUSTER } = getEnv()
 
@@ -44,6 +43,15 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 
 	const raydium = await initSdk({ owner: payerKey })
 
+	raydium.account.updateTokenAccount(
+		await fetchTokenAccountData({ connection, owner: payerKey }),
+	)
+	connection.onAccountChange(payerKey, async () => {
+		raydium.account.updateTokenAccount(
+			await fetchTokenAccountData({ connection, owner: payerKey }),
+		)
+	})
+
 	const { transaction } = await createPool({
 		raydium,
 		mint1,
@@ -57,50 +65,6 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		...submission.reply(),
 		serializedTransaction,
 	}
-}
-
-async function initSdk({
-	owner,
-	loadToken,
-}: {
-	owner: PublicKey
-	loadToken?: boolean
-}) {
-	const BASE_HOST =
-		CLUSTER === 'devnet' ? DEV_API_URLS.BASE_HOST : API_URLS.BASE_HOST
-
-	const raydium = await Raydium.load({
-		owner,
-		connection,
-		cluster,
-		disableFeatureCheck: true,
-		disableLoadToken: loadToken,
-		blockhashCommitment: 'finalized',
-
-		urlConfigs: {
-			BASE_HOST,
-		},
-	})
-
-	invariant(raydium, 'Failed to initialize raydium')
-
-	/**
-	 * By default: sdk will automatically fetch token account data when need it or any sol balace changed.
-	 * if you want to handle token account by yourself, set token account data after init sdk
-	 * code below shows how to do it.
-	 * note: after call raydium.account.updateTokenAccount, raydium will not automatically fetch token account
-	 */
-
-	raydium.account.updateTokenAccount(
-		await fetchTokenAccountData({ connection, owner }),
-	)
-	connection.onAccountChange(owner, async () => {
-		raydium.account.updateTokenAccount(
-			await fetchTokenAccountData({ connection, owner }),
-		)
-	})
-
-	return raydium
 }
 
 async function fetchTokenAccountData({
