@@ -2,17 +2,13 @@
 
 import { type ApiV3TokenRes } from '@raydium-io/raydium-sdk-v2'
 import { type SelectItemConfig } from '@/app/comps/select'
-import invariant from 'tiny-invariant'
 import { QuoteToken } from '@/app/comps/select'
+import { initSdk } from '@/app/utils/raydium'
 
 async function getApiV3TokenList(): Promise<ApiV3TokenRes> {
-	const res = await fetch('https://api-v3.raydium.io/mint/list')
-
-	invariant(res.ok, 'Failed to fetch data')
-
-	const data = await res.json()
-
-	return data.data
+	const raydium = await initSdk({})
+	const data = await raydium.fetchV3TokenList()
+	return data
 }
 
 export async function getQuoteTokenProps() {
