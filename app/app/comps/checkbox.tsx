@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react'
 import { useInputControl, useField, type FieldName } from '@conform-to/react'
 import * as RadixCheckbox from '@radix-ui/react-checkbox'

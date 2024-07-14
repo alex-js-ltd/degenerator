@@ -32,7 +32,6 @@ const mintState = {
 
 const clmmState = {
 	serializedTransaction: undefined,
-	mint2: undefined,
 }
 
 export function TokenForm({ children = null }: { children: ReactNode }) {

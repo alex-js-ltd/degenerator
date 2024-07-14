@@ -35,7 +35,6 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		return {
 			...submission.reply(),
 			serializedTransaction: undefined,
-			mint2: undefined,
 		}
 	}
 
@@ -64,7 +63,6 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 	return {
 		...submission.reply(),
 		serializedTransaction,
-		mint2,
 	}
 }
 
