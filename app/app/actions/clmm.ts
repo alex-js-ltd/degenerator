@@ -33,7 +33,6 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		schema: ClmmSchema,
 	})
 
-	console.log('HELLO', submission)
 	if (submission.status !== 'success') {
 		return {
 			...submission.reply(),
@@ -68,7 +67,7 @@ async function initSdk({
 	loadToken?: boolean
 }) {
 	const BASE_HOST =
-		CLUSTER === 'mainnet-beta' ? API_URLS.BASE_HOST : DEV_API_URLS.BASE_HOST
+		CLUSTER === 'devnet' ? DEV_API_URLS.BASE_HOST : API_URLS.BASE_HOST
 
 	const raydium = await Raydium.load({
 		owner,
@@ -77,6 +76,10 @@ async function initSdk({
 		disableFeatureCheck: true,
 		disableLoadToken: loadToken,
 		blockhashCommitment: 'finalized',
+
+		urlConfigs: {
+			BASE_HOST,
+		},
 	})
 
 	invariant(raydium, 'Failed to initialize raydium')
@@ -167,9 +170,4 @@ async function createPool({
 		poolId: address?.poolId,
 		transaction,
 	}
-}
-
-export async function fetchPool(formData: FormData) {
-	const data = await clmm(undefined, formData)
-	return data.serializedTransaction
 }
