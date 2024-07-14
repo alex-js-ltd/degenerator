@@ -6,12 +6,11 @@ import invariant from 'tiny-invariant'
 import { connection } from '@/app/utils/setup'
 import { BN } from '@coral-xyz/anchor'
 
-import { type Connection, PublicKey } from '@solana/web3.js'
-import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
+
 import {
 	Raydium,
 	TxVersion,
-	parseTokenAccountResp,
 	CLMM_PROGRAM_ID,
 	DEVNET_PROGRAM_ID,
 	type ClmmKeys,
@@ -20,7 +19,7 @@ import Decimal from 'decimal.js'
 
 import { getEnv } from '@/app/utils/env'
 import { getClmmConfigs } from '@/app/utils/clmm'
-import { initSdk } from '@/app/utils/raydium'
+import { initSdk, fetchTokenAccountData } from '@/app/utils/raydium'
 
 const { CLUSTER } = getEnv()
 
@@ -65,31 +64,6 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		...submission.reply(),
 		serializedTransaction,
 	}
-}
-
-async function fetchTokenAccountData({
-	connection,
-	owner,
-}: {
-	connection: Connection
-	owner: PublicKey
-}) {
-	const solAccountResp = await connection.getAccountInfo(owner)
-	const tokenAccountResp = await connection.getTokenAccountsByOwner(owner, {
-		programId: TOKEN_PROGRAM_ID,
-	})
-	const token2022Req = await connection.getTokenAccountsByOwner(owner, {
-		programId: TOKEN_2022_PROGRAM_ID,
-	})
-	const tokenAccountData = parseTokenAccountResp({
-		owner,
-		solAccountResp,
-		tokenAccountResp: {
-			context: tokenAccountResp.context,
-			value: [...tokenAccountResp.value, ...token2022Req.value],
-		},
-	})
-	return tokenAccountData
 }
 
 async function createPool({
