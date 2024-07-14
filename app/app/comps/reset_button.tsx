@@ -1,3 +1,5 @@
+'use client'
+
 import { useResetForm } from '@/app/hooks/use_reset_form'
 import { useFormStatus } from 'react-dom'
 import { Button, type ButtonProps } from './button'
