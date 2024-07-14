@@ -97,7 +97,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 						<ResetButton isLoading={isLoading} onClick={clearPreviewImage} />
 					</div>
 
-					<div className="absolute right-3.5 top-2.5 z-10 p-1 opacity-50 transition-opacity hover:opacity-80 w-5 h-5">
+					<div className="absolute right-3.5 top-2.5 z-10 p-1 w-5 h-5">
 						<ClmmCheckbox />
 					</div>
 

@@ -58,7 +58,7 @@ function ClmmCheckbox() {
 			}
 		>
 			<Checkbox
-				className="rounded-full border border-gray-200 w-5 h-5"
+				className="rounded-full border border-gray-200 w-5 h-5 opacity-50 transition-opacity hover:opacity-80"
 				name="clmm"
 			>
 				<Icon
