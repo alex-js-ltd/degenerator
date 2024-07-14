@@ -53,7 +53,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 
 	const mintKey = mintKeypair.publicKey
 
-	const instructions = await getInstructions({
+	const instructions = await getMintInstructions({
 		payerKey,
 		mintKey,
 		metadata,
@@ -79,7 +79,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	}
 }
 
-type GetInstructionsParams = {
+type GetMintInstructionsParams = {
 	payerKey: PublicKey
 	mintKey: PublicKey
 	metadata: { name: string; symbol: string; uri: string }
@@ -89,7 +89,7 @@ type GetInstructionsParams = {
 	revokeFreeze?: boolean
 }
 
-async function getInstructions({
+async function getMintInstructions({
 	payerKey,
 	mintKey,
 	metadata,
@@ -97,7 +97,7 @@ async function getInstructions({
 	supply,
 	revokeMint,
 	revokeFreeze,
-}: GetInstructionsParams) {
+}: GetMintInstructionsParams) {
 	const ATA_PROGRAM_ID = new web3.PublicKey(
 		'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
 	)

@@ -46,7 +46,7 @@ function ClmmCheckbox() {
 					alignOffset={-12}
 					side="top"
 				>
-					Create liquidity pool
+					Create liquidity pool info
 				</Content>
 			}
 		>
