@@ -1,27 +1,41 @@
 'use client'
-
+import React, { useRef } from 'react'
 import { useResetForm } from '@/app/hooks/use_reset_form'
 import { useFormStatus } from 'react-dom'
 import { Button, type ButtonProps } from './button'
 import { Icon } from './_icon'
+import { callAll, cn } from '@/app/utils/misc'
+import { useState } from 'react'
+import { delay } from '@/app/utils/misc'
 
 export function ResetButton({
 	onClick,
 	isLoading,
 }: ButtonProps & { isLoading?: boolean }) {
-	const getButtonProps = useResetForm()
+	const reset = useResetForm()
 
 	const { pending } = useFormStatus()
 	const disabled = pending || isLoading ? true : false
+	const [on, setOn] = useState(false)
+
+	const animate = on ? 'animate-spin-once' : undefined
+
+	const toggle = async () => {
+		setOn(true)
+		await delay(400)
+		setOn(false)
+	}
+
 	return (
 		<Button
-			{...getButtonProps({
-				onClick,
-				variant: 'reset',
-				disabled: disabled,
-			})}
+			variant="reset"
+			disabled={disabled}
+			onClick={callAll(onClick, reset, toggle)}
 		>
-			<Icon name="reset" className="size-2.5 text-gray-100 transition-all" />
+			<Icon
+				name="reset"
+				className={cn('size-2.5 text-gray-100 transition-all', animate)}
+			/>
 		</Button>
 	)
 }

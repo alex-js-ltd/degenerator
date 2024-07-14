@@ -67,6 +67,11 @@ const config: Config = {
 					from: { opacity: '1', transform: 'scale(1)' },
 					to: { opacity: '0', transform: 'scale(0.95)' },
 				},
+
+				'spin-once': {
+					from: { transform: 'rotate(0deg)' },
+					to: { transform: 'rotate(360deg)' },
+				},
 			},
 			animation: {
 				'slide-up-and-fade':
@@ -77,6 +82,7 @@ const config: Config = {
 				'scale-out-50': 'scale-out-50 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 				'scale-in-95': 'scale-in-95 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 				'scale-out-95': 'scale-out-95 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+				'spin-once': 'spin-once 400ms 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 			},
 		},
 	},
