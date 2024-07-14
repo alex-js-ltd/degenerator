@@ -7,10 +7,8 @@ export function useResetForm() {
 	const control = useInputControl(meta)
 	const payer = usePayer()
 
-	const reset = () => {
+	return () => {
 		form.reset()
 		control.value = payer
 	}
-
-	return reset
 }
