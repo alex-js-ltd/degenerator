@@ -23,6 +23,7 @@ import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
 import { useTransaction } from '@/app/hooks/use_transaction'
+import { ResetButton } from './reset_button'
 
 const mintState = {
 	serializedTransaction: undefined,
@@ -31,6 +32,7 @@ const mintState = {
 
 const clmmState = {
 	serializedTransaction: undefined,
+	mint2: undefined,
 }
 
 export function TokenForm({ children = null }: { children: ReactNode }) {
@@ -195,6 +197,10 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									/>
 								) : null}
 
+								<ResetButton
+									isLoading={isLoading}
+									onClick={clearPreviewImage}
+								/>
 								<SubmitButton
 									form={form.id}
 									formAction={mintAction}

@@ -46,7 +46,14 @@ function ClmmCheckbox() {
 					alignOffset={-12}
 					side="top"
 				>
-					Create liquidity pool info
+					Create liquidity pool{' '}
+					<a
+						className="underline"
+						target="_blank"
+						href="https://raydium.io/liquidity-pools/"
+					>
+						info
+					</a>
 				</Content>
 			}
 		>
@@ -56,7 +63,7 @@ function ClmmCheckbox() {
 			>
 				<Icon
 					className="size-2.5 translate-y-[-2.5px] text-gray-100 transition-all"
-					name="reset"
+					name="clmm"
 				/>
 			</Checkbox>
 		</Tooltip>
