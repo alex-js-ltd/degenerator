@@ -1,6 +1,7 @@
 import { type Raydium } from '@raydium-io/raydium-sdk-v2'
 import { getEnv } from '@/app/utils/env'
 import invariant from 'tiny-invariant'
+import { CLMM_PROGRAM_ID, DEVNET_PROGRAM_ID } from '@raydium-io/raydium-sdk-v2'
 
 const { CLUSTER } = getEnv()
 
@@ -15,7 +16,14 @@ export async function getClmmConfigs({ raydium }: { raydium: Raydium }) {
 	return clmmConfigs
 }
 
-const devConfigs = [
+const VALID_PROGRAM_ID = new Set([
+	CLMM_PROGRAM_ID.toBase58(),
+	DEVNET_PROGRAM_ID.CLMM.toBase58(),
+])
+
+export const isValidClmm = (id: string) => VALID_PROGRAM_ID.has(id)
+
+export const devConfigs = [
 	{
 		id: 'CQYbhr6amxUER4p5SC44C63R4qw4NFc9Z4Db9vF4tZwG',
 		index: 0,
