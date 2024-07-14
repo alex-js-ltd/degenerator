@@ -24,14 +24,18 @@ import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
 import { useTransaction } from '@/app/hooks/use_transaction'
 
-const initialState = {
+const mintState = {
 	serializedTransaction: undefined,
 	mint1: undefined,
 }
 
+const clmmState = {
+	serializedTransaction: undefined,
+}
+
 export function TokenForm({ children = null }: { children: ReactNode }) {
-	const [mintResult, mintAction] = useFormState(mintToken, initialState)
-	const [clmmResult, clmmAction] = useFormState(clmm, initialState)
+	const [mintResult, mintAction] = useFormState(mintToken, mintState)
+	const [clmmResult, clmmAction] = useFormState(clmm, clmmState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
