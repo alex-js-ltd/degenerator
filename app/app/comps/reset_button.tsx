@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef } from 'react'
+import React from 'react'
 import { useResetForm } from '@/app/hooks/use_reset_form'
 import { useFormStatus } from 'react-dom'
 import { Button, type ButtonProps } from './button'
@@ -18,9 +18,10 @@ export function ResetButton({
 	const disabled = pending || isLoading ? true : false
 	const [on, setOn] = useState(false)
 
-	const animate = on ? 'animate-spin-once' : undefined
+	const animate = on ? 'animate-spin-fast' : undefined
 
 	const toggle = async () => {
+		if (on) return
 		setOn(true)
 		await delay(400)
 		setOn(false)
