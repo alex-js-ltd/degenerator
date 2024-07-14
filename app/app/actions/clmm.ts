@@ -26,7 +26,7 @@ import { getClmmConfigs } from '@/app/utils/clmm'
 const { CLUSTER } = getEnv()
 
 const txVersion = TxVersion.V0 // or TxVersion.LEGACY
-const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
+const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : 'devnet'
 
 export async function clmm(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
