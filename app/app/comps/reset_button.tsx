@@ -19,7 +19,7 @@ export function ResetButton({
 				disabled: disabled,
 			})}
 		>
-			<Icon name="reset" className="w-6 h-6" />
+			<Icon name="reset" className="size-2.5 text-gray-100 transition-all" />
 		</Button>
 	)
 }

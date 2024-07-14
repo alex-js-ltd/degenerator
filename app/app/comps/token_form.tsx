@@ -93,6 +93,10 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 						errors={fields.image.errors}
 					/>
 
+					<div className="absolute top-2.5 right-10 p-1 w-5 h-5">
+						<ResetButton isLoading={isLoading} onClick={clearPreviewImage} />
+					</div>
+
 					<div className="absolute right-3.5 top-2.5 z-10 p-1 opacity-50 transition-opacity hover:opacity-80 w-5 h-5">
 						<ClmmCheckbox />
 					</div>
@@ -197,10 +201,6 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									/>
 								) : null}
 
-								<ResetButton
-									isLoading={isLoading}
-									onClick={clearPreviewImage}
-								/>
 								<SubmitButton
 									form={form.id}
 									formAction={mintAction}
