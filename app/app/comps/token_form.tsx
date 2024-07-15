@@ -185,11 +185,9 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 										onChange={onChange}
 									/>
 
-									<Suspense fallback={<Loading />}>
-										<fieldset className="flex gap-2 w-full">
-											{children}
-										</fieldset>
-									</Suspense>
+									{showClmm ? (
+										<Suspense fallback={<Loading />}>{children}</Suspense>
+									) : null}
 								</div>
 
 								{initClmm ? (
@@ -220,5 +218,10 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 }
 
 function Loading() {
-	return <div className="w-32 h-[32px]"></div>
+	return (
+		<fieldset className="flex gap-2 w-full">
+			<div className="w-32 h-[32px] bg-slate-600 rounded" />
+			<div className="w-32 h-[32px] bg-slate-600 rounded" />
+		</fieldset>
+	)
 }
