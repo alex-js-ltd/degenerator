@@ -92,7 +92,9 @@ function Select({
 				>
 					{logoProps ? <Component {...logoProps} /> : null}
 
-					<span>{selected?.title}</span>
+					<RadixSelect.Value {...valueProps}>
+						{selected?.title ?? ''}
+					</RadixSelect.Value>
 
 					<RadixSelect.Icon className="text-violet11 ml-auto">
 						<ChevronDownIcon />
@@ -148,7 +150,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 
 function TokenLogo({ src, alt }: ImageProps) {
 	return (
-		<div className="relative flex items-center overflow-hidden h-5 w-5 rounded pr-1">
+		<div className="shrink-0 relative flex items-center overflow-hidden h-5 w-5 rounded pr-1">
 			<Image
 				className="relative aspect-[48/44] object-cover object-center rounded-lg"
 				fill={true}
