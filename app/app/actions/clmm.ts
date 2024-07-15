@@ -79,7 +79,7 @@ async function createPool({
 }) {
 	const mint1 = await raydium.token.getTokenInfo(mint1Key)
 	const mint2 = await raydium.token.getTokenInfo(mint2Key)
-	const clmmConfigs = await getClmmConfigs({ raydium })
+	const clmmConfigs = await getClmmConfigs(raydium)
 
 	const clmmConfig = clmmConfigs.find(el => el.id === feeTier)
 

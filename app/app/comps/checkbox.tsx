@@ -30,7 +30,12 @@ const Checkbox = React.forwardRef<
 			className={className}
 			{...props}
 		>
-			<RadixCheckbox.Indicator>{children}</RadixCheckbox.Indicator>
+			<RadixCheckbox.Indicator
+				className="data-[state=checked]:text-teal-300 data-[state=unchecked]:text-gray-200/50"
+				forceMount
+			>
+				{children}
+			</RadixCheckbox.Indicator>
 		</RadixCheckbox.Root>
 	)
 })
@@ -60,11 +65,11 @@ function ClmmCheckbox() {
 			}
 		>
 			<Checkbox
-				className="rounded-full border border-gray-200 w-5 h-5 opacity-50 transition-opacity hover:opacity-80"
+				className="rounded-full border border-gray-200/50 w-5 h-5 hover:border-gray-200/80"
 				name="clmm"
 			>
 				<Icon
-					className="size-2.5 translate-y-[-2.5px] text-gray-100 transition-all"
+					className="size-2.5 translate-y-[-2.5px] transition-all"
 					name="clmm"
 				/>
 			</Checkbox>

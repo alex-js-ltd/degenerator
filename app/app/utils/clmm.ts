@@ -7,7 +7,7 @@ const { CLUSTER } = getEnv()
 
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
 
-export async function getClmmConfigs({ raydium }: { raydium: Raydium }) {
+export async function getClmmConfigs(raydium: Raydium) {
 	const clmmConfigs =
 		cluster === 'mainnet' ? await raydium.api.getClmmConfigs() : devConfigs
 

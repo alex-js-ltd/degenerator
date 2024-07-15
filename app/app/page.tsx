@@ -16,7 +16,7 @@ export default async function Page() {
 	)
 }
 
-async function getQuoteTokenProps({ raydium }: { raydium: Raydium }) {
+async function getQuoteTokenProps(raydium: Raydium) {
 	const data = await raydium.fetchV3TokenList()
 
 	const mintItems = data.mintList.reduce<SelectItemConfig[]>((acc, curr) => {
@@ -37,8 +37,8 @@ async function getQuoteTokenProps({ raydium }: { raydium: Raydium }) {
 	return { items: mintItems, name: 'mint2' }
 }
 
-async function getFeeTierProps({ raydium }: { raydium: Raydium }) {
-	const clmmConfigs = await getClmmConfigs({ raydium })
+async function getFeeTierProps(raydium: Raydium) {
+	const clmmConfigs = await getClmmConfigs(raydium)
 
 	return {
 		items: clmmConfigs?.map(({ id, description }) => ({
@@ -53,8 +53,8 @@ async function getFeeTierProps({ raydium }: { raydium: Raydium }) {
 async function ClmmOptions() {
 	const raydium = await initSdk({})
 
-	const quote = getQuoteTokenProps({ raydium })
-	const fee = getFeeTierProps({ raydium })
+	const quote = getQuoteTokenProps(raydium)
+	const fee = getFeeTierProps(raydium)
 
 	const [quoteProps, feeProps] = await Promise.all([quote, fee])
 
