@@ -24,7 +24,6 @@ import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
 import { useTransaction } from '@/app/hooks/use_transaction'
 import { ResetButton } from './reset_button'
-import { Suspense } from 'react'
 
 const mintState = {
 	serializedTransaction: undefined,
@@ -189,9 +188,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 										onChange={onChange}
 									/>
 
-									{showClmm ? (
-										<Suspense fallback={<Loading />}>{children}</Suspense>
-									) : null}
+									{showClmm ? children : null}
 								</div>
 
 								{initClmm ? (
@@ -218,14 +215,5 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 		</Fragment>
-	)
-}
-
-function Loading() {
-	return (
-		<div className="flex gap-2 w-full">
-			<div className="w-32 h-[32px] bg-slate-600 rounded" />
-			<div className="w-32 h-[32px] bg-slate-600 rounded" />
-		</div>
 	)
 }

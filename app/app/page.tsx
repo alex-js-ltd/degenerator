@@ -4,14 +4,14 @@ import { type SelectItemConfig } from '@/app/comps/select'
 import { QuoteToken, FeeTier } from '@/app/comps/select'
 import { initSdk } from '@/app/utils/raydium'
 import { getClmmConfigs } from '@/app/utils/clmm'
+import { Suspense } from 'react'
 
 export default async function Page() {
-	const raydium = await initSdk({})
-
 	return (
 		<TokenForm>
-			<QuoteToken {...await getQuoteTokenProps({ raydium })} />
-			<FeeTier {...await getFeeTierProps({ raydium })} />
+			<Suspense fallback={<Loading />}>
+				<ClmmOptions />
+			</Suspense>
 		</TokenForm>
 	)
 }
@@ -48,4 +48,29 @@ async function getFeeTierProps({ raydium }: { raydium: Raydium }) {
 		})),
 		name: 'feeTier',
 	}
+}
+
+async function ClmmOptions() {
+	const raydium = await initSdk({})
+
+	const quote = getQuoteTokenProps({ raydium })
+	const fee = getFeeTierProps({ raydium })
+
+	const [quoteProps, feeProps] = await Promise.all([quote, fee])
+
+	return (
+		<fieldset className="flex gap-2 w-full">
+			<QuoteToken {...quoteProps} />
+			<FeeTier {...feeProps} />
+		</fieldset>
+	)
+}
+
+function Loading() {
+	return (
+		<div className="flex gap-2 w-full animate-pulse">
+			<div className="w-32 h-[32px] rounded bg-gray-800" />
+			<div className="w-32 h-[32px] rounded bg-gray-800" />
+		</div>
+	)
 }

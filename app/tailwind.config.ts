@@ -78,6 +78,7 @@ const config: Config = {
 				'scale-in-95': 'scale-in-95 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 				'scale-out-95': 'scale-out-95 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 				'spin-fast': 'spin 400ms linear infinite',
+				'pulse-fast': 'pulse 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 			},
 		},
 	},
