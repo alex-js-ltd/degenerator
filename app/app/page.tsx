@@ -24,8 +24,8 @@ async function getQuoteTokenProps(raydium: Raydium) {
 
 		const option = {
 			value: address,
-			children: symbol,
-			symbol,
+			children: name,
+			title: symbol,
 			imageProps: { src: logoURI, alt: symbol },
 		}
 

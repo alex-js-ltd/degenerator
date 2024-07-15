@@ -32,6 +32,7 @@ interface SelectFieldProps {
 interface SelectItemProps
 	extends React.ComponentPropsWithoutRef<typeof RadixSelect.Item> {
 	fieldName: FieldName<string>
+	title?: string
 	imageProps?: ImageProps
 }
 
@@ -57,7 +58,9 @@ function Select({
 
 	const border = meta.errors?.length ? 'border-teal-300' : 'border-gray-800'
 
-	const logoProps = items.find(el => el.value === meta.value)?.imageProps
+	const selected = items.find(el => el.value === meta.value)
+
+	const logoProps = selected?.imageProps
 
 	return (
 		<div className="relative min-w-32">
@@ -89,7 +92,7 @@ function Select({
 				>
 					{logoProps ? <Component {...logoProps} /> : null}
 
-					<RadixSelect.Value {...valueProps} />
+					<span>{selected?.title}</span>
 
 					<RadixSelect.Icon className="text-violet11 ml-auto">
 						<ChevronDownIcon />
