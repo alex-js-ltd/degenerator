@@ -15,11 +15,15 @@ export const TokenSchema = z.object({
 	name: z.string(),
 	symbol: z.string(),
 	decimals: z
-		.number({ message: 'Expected number' })
+		.number({
+			invalid_type_error: 'Expected Number',
+		})
 		.max(9, { message: 'Decimal is too high' })
 		.min(0, { message: 'Decimal is too low' }),
 	supply: z
-		.number({ message: 'Expected number' })
+		.number({
+			invalid_type_error: 'Expected Number',
+		})
 		.min(1, { message: 'Supply is too low' }),
 	description: z.string(),
 	image: z.instanceof(File).refine(file => {
