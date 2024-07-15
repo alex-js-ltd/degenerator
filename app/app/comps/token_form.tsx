@@ -134,11 +134,9 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 								<Field
 									inputProps={{
 										...getInputProps(fields.decimals, {
-											type: 'number',
+											type: 'text',
 										}),
 										placeholder: 'Decimals',
-										min: 0,
-										max: 9,
 									}}
 									errors={fields.decimals.errors}
 								/>
@@ -146,10 +144,9 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 								<Field
 									inputProps={{
 										...getInputProps(fields.supply, {
-											type: 'number',
+											type: 'text',
 										}),
 										placeholder: 'Supply',
-										min: 1,
 									}}
 									errors={fields.supply.errors}
 								/>

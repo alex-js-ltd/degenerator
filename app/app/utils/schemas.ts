@@ -15,10 +15,12 @@ export const TokenSchema = z.object({
 	name: z.string(),
 	symbol: z.string(),
 	decimals: z
-		.number()
+		.number({ message: 'Expected number' })
 		.max(9, { message: 'Decimal is too high' })
 		.min(0, { message: 'Decimal is too low' }),
-	supply: z.number(),
+	supply: z
+		.number({ message: 'Expected number' })
+		.min(1, { message: 'Supply is too low' }),
 	description: z.string(),
 	image: z.instanceof(File).refine(file => {
 		return !file || file.size <= MAX_UPLOAD_SIZE
