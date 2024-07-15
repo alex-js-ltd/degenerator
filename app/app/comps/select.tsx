@@ -181,7 +181,7 @@ function QuoteToken({ name, items }: CompoundSelect) {
 					key={item.value}
 					fieldName={name}
 				>
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2 pr-2">
 						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 max-w-[118px] truncate text-left align-middle font-normal whitespace-nowrap">
 							{item.children}
 						</RadixSelect.ItemText>
