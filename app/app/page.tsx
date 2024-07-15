@@ -69,8 +69,8 @@ async function ClmmOptions() {
 function Loading() {
 	return (
 		<div className="flex gap-2 w-full animate-pulse">
-			<div className="w-32 h-[32px] rounded bg-gray-800" />
-			<div className="w-32 h-[32px] rounded bg-gray-800" />
+			<div className="w-32 h-[32px] rounded bg-slate-700" />
+			<div className="w-32 h-[32px] rounded bg-slate-700" />
 		</div>
 	)
 }
