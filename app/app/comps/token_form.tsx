@@ -51,6 +51,10 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 		shouldRevalidate: 'onInput',
 
 		lastResult: mintResult,
+
+		defaultValue: {
+			clmm: 'on',
+		},
 	})
 
 	const { mint1 } = mintResult
@@ -219,9 +223,9 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 
 function Loading() {
 	return (
-		<fieldset className="flex gap-2 w-full">
+		<div className="flex gap-2 w-full">
 			<div className="w-32 h-[32px] bg-slate-600 rounded" />
 			<div className="w-32 h-[32px] bg-slate-600 rounded" />
-		</fieldset>
+		</div>
 	)
 }
