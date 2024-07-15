@@ -169,7 +169,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									defaultValue={payer}
 								/>
 
-								<input
+								<Input
 									{...getInputProps(fields.mint1, {
 										type: 'hidden',
 									})}
