@@ -7,6 +7,7 @@ import { QuoteToken, FeeTier } from '@/app/comps/select'
 import { initSdk } from '@/app/utils/raydium'
 import { getClmmConfigs } from '@/app/utils/clmm'
 import { Suspense } from 'react'
+import { ClmmForm } from './comps/clmm_form'
 
 export default async function Page() {
 	return (

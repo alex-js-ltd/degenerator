@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, Fragment, useRef, useMemo, useEffect } from 'react'
+import { type ReactNode, Fragment } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -17,26 +17,21 @@ import { Field } from '@/app/comps/field'
 import { Input } from '@/app/comps/input'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { mintToken } from '@/app/actions/mint_token'
-import { clmm } from '@/app/actions/clmm'
 import { useFormState } from 'react-dom'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
 import { useTransaction } from '@/app/hooks/use_transaction'
-import { ResetButton } from './reset_button'
+import { ResetButton } from '@/app/comps/reset_button'
+import { ClmmForm } from '@/app/comps/clmm_form'
 
-const mintState = {
+const initialState = {
 	serializedTransaction: undefined,
 	mint1: undefined,
 }
 
-const clmmState = {
-	serializedTransaction: undefined,
-}
-
 export function TokenForm({ children = null }: { children: ReactNode }) {
-	const [mintResult, mintAction] = useFormState(mintToken, mintState)
-	const [clmmResult, clmmAction] = useFormState(clmm, clmmState)
+	const [lastResult, action] = useFormState(mintToken, initialState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -49,14 +44,14 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 
 		shouldRevalidate: 'onInput',
 
-		lastResult: mintResult,
+		lastResult,
 
 		defaultValue: {
 			clmm: 'on',
 		},
 	})
 
-	const { mint1 } = mintResult
+	const { mint1, serializedTransaction } = lastResult
 
 	const {
 		data: txSig,
@@ -64,27 +59,14 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 		isSuccess,
 		isError,
 		error,
-	} = useTransaction(mintResult?.serializedTransaction)
-
-	useTransaction(clmmResult?.serializedTransaction)
+	} = useTransaction(serializedTransaction)
 
 	const { previewImage, clearPreviewImage, fileRef, onChange } =
 		useImageUpload()
 
 	const payer = usePayer()
-	const buttonRef = useRef<HTMLButtonElement>(null)
 
 	const showClmm = fields.clmm.value === 'on'
-	const initClmm = useMemo(
-		() => (txSig && showClmm && mint1 ? true : false),
-		[txSig, showClmm, mint1],
-	)
-
-	useEffect(() => {
-		if (initClmm && buttonRef.current) {
-			buttonRef.current.click()
-		}
-	}, [initClmm])
 
 	return (
 		<Fragment>
@@ -106,8 +88,8 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 
 					<form
 						className="relative z-10 h-full w-full min-w-0 bg-gray-900"
+						action={action}
 						{...getFormProps(form)}
-						id={form.id}
 					>
 						<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
 							<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
@@ -184,28 +166,23 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 										fileRef={fileRef}
 										onChange={onChange}
 									/>
-
-									{showClmm ? children : null}
 								</div>
-
-								{initClmm ? (
-									<button
-										ref={buttonRef}
-										formAction={clmmAction}
-										className="sr-only"
-										type="submit"
-									/>
-								) : null}
 
 								<SubmitButton
 									form={form.id}
-									formAction={mintAction}
+									formAction={action}
 									isLoading={isLoading}
 									content={showClmm ? 'Mint Token + Create Pool' : 'Mint Token'}
 								/>
 							</div>
 						</fieldset>
 					</form>
+
+					<div className="z-50 absolute bottom-[12px] left-[42px] sm:left-[100px] px-3">
+						<ClmmForm
+							{...getClmmFormProps({ txSig, mint1, showClmm, children })}
+						/>
+					</div>
 				</FormProvider>
 			</div>
 
@@ -213,4 +190,20 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 		</Fragment>
 	)
+}
+
+function getClmmFormProps({
+	txSig,
+	mint1,
+	showClmm,
+	children,
+}: {
+	txSig: string | null | undefined
+	mint1: string | undefined
+	showClmm: boolean
+	children: ReactNode
+}) {
+	if (!showClmm) return {}
+	if (txSig && showClmm && mint1) return { mint1, children }
+	return { children }
 }
