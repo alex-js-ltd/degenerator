@@ -1,12 +1,10 @@
 import { useState, useRef, useCallback, type ChangeEvent } from 'react'
-
-import type { StaticImageData } from 'next/image'
-import pepe from '@/public/pepe.png'
+import { type StaticImageData } from 'next/image'
 
 export function useImageUpload() {
 	const [previewImage, setPreviewImage] = useState<
 		string | StaticImageData | undefined
-	>(pepe)
+	>(undefined)
 
 	const fileRef = useRef<HTMLInputElement>(null)
 
