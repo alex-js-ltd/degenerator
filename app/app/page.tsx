@@ -19,6 +19,8 @@ export default async function Page() {
 }
 
 async function getQuoteTokenProps(raydium: Raydium) {
+	'use server'
+
 	const data = await raydium.fetchV3TokenList()
 
 	const mintItems = data.mintList.reduce<SelectItemConfig[]>((acc, curr) => {
@@ -40,6 +42,8 @@ async function getQuoteTokenProps(raydium: Raydium) {
 }
 
 async function getFeeTierProps(raydium: Raydium) {
+	'use server'
+
 	const clmmConfigs = await getClmmConfigs(raydium)
 
 	return {
@@ -54,14 +58,13 @@ async function getFeeTierProps(raydium: Raydium) {
 
 function ClmmOptions() {
 	const sdk = initSdk({})
-
 	const raydium = use(sdk)
+
 	const quote = getQuoteTokenProps(raydium)
 	const fee = getFeeTierProps(raydium)
 
 	const quoteProps = use(quote)
 	const feeProps = use(fee)
-	// const [quoteProps, feeProps] = await Promise.all([quote, fee])
 
 	return (
 		<fieldset className="flex gap-2 w-full">
