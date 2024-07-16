@@ -38,7 +38,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		}
 	}
 
-	const { payerKey, mint1, mint2, feeTier } = submission.value
+	const { payerKey, mint1, mint2, feeTierId } = submission.value
 
 	const raydium = await initSdk({ owner: payerKey })
 
@@ -55,7 +55,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		raydium,
 		mint1,
 		mint2,
-		feeTier,
+		feeTierId,
 	})
 
 	const serializedTransaction = transaction.serialize()
@@ -70,18 +70,18 @@ async function createPool({
 	raydium,
 	mint1: mint1Key,
 	mint2: mint2Key,
-	feeTier,
+	feeTierId,
 }: {
 	raydium: Raydium
 	mint1: PublicKey
 	mint2: PublicKey
-	feeTier: string
+	feeTierId: string
 }) {
 	const mint1 = await raydium.token.getTokenInfo(mint1Key)
 	const mint2 = await raydium.token.getTokenInfo(mint2Key)
 	const clmmConfigs = await getClmmConfigs(raydium)
 
-	const clmmConfig = clmmConfigs.find(el => el.id === feeTier)
+	const clmmConfig = clmmConfigs.find(el => el.id === feeTierId)
 
 	invariant(clmmConfig, 'Failed to find clmmConfig')
 

@@ -52,7 +52,7 @@ async function getFeeTierProps(raydium: Raydium) {
 			children: description,
 			imageProps: { src: id, alt: description },
 		})),
-		name: 'feeTier',
+		name: 'feeTierId',
 	}
 }
 

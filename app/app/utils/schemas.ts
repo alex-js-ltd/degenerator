@@ -39,14 +39,14 @@ export const ClmmSchema = z.object({
 	payerKey: PublicKey,
 	mint1: PublicKey,
 	mint2: PublicKey,
-	feeTier: z.string(),
+	feeTierId: z.string(),
 })
 
 export const ClmmOptions = ClmmSchema.partial()
 
 export const Schema = z
 	.intersection(TokenSchema, ClmmOptions)
-	.superRefine(({ clmm, mint2, feeTier }, context) => {
+	.superRefine(({ clmm, mint2, feeTierId }, context) => {
 		if (clmm && !mint2) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
@@ -55,11 +55,11 @@ export const Schema = z
 			})
 		}
 
-		if (clmm && !feeTier) {
+		if (clmm && !feeTierId) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: 'Required',
-				path: ['feeTier'],
+				path: ['feeTierId'],
 			})
 		}
 	})
