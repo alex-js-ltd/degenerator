@@ -57,7 +57,7 @@ function ClmmCheckbox() {
 					<a
 						className="underline"
 						target="_blank"
-						href="https://raydium.io/liquidity-pools/"
+						href="https://docs.raydium.io/raydium/pool-creation/creating-a-clmm-pool-and-farm"
 					>
 						info
 					</a>
