@@ -6,7 +6,7 @@ import { type SelectItemConfig } from '@/app/comps/select'
 import { QuoteToken, FeeTier } from '@/app/comps/select'
 import { initSdk } from '@/app/utils/raydium'
 import { getClmmConfigs } from '@/app/utils/clmm'
-import { Suspense, use } from 'react'
+import { Suspense } from 'react'
 
 export default async function Page() {
 	return (
@@ -56,15 +56,13 @@ async function getFeeTierProps(raydium: Raydium) {
 	}
 }
 
-function ClmmOptions() {
-	const sdk = initSdk({})
-	const raydium = use(sdk)
+async function ClmmOptions() {
+	const raydium = await initSdk({})
 
 	const quote = getQuoteTokenProps(raydium)
 	const fee = getFeeTierProps(raydium)
 
-	const quoteProps = use(quote)
-	const feeProps = use(fee)
+	const [quoteProps, feeProps] = await Promise.all([quote, fee])
 
 	return (
 		<fieldset className="flex gap-2 w-full">
