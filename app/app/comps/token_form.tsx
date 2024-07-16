@@ -23,7 +23,7 @@ import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
 import { useTransaction } from '@/app/hooks/use_transaction'
 import { ResetButton } from '@/app/comps/reset_button'
-import { ClmmForm } from '@/app/comps/clmm_form'
+import { ClmmButton } from '@/app/comps/clmm_button'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -166,8 +166,11 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 										fileRef={fileRef}
 										onChange={onChange}
 									/>
+
+									{showClmm ? children : null}
 								</div>
 
+								{txSig && mint1 && showClmm ? <ClmmButton /> : null}
 								<SubmitButton
 									form={form.id}
 									formAction={action}
@@ -177,12 +180,6 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 							</div>
 						</fieldset>
 					</form>
-
-					<div className="z-50 absolute bottom-[12px] left-[42px] sm:left-[100px] px-3">
-						<ClmmForm
-							{...getClmmFormProps({ txSig, mint1, showClmm, children })}
-						/>
-					</div>
 				</FormProvider>
 			</div>
 
@@ -190,20 +187,4 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
 		</Fragment>
 	)
-}
-
-function getClmmFormProps({
-	txSig,
-	mint1,
-	showClmm,
-	children,
-}: {
-	txSig: string | null | undefined
-	mint1: string | undefined
-	showClmm: boolean
-	children: ReactNode
-}) {
-	if (!showClmm) return {}
-	if (txSig && showClmm && mint1) return { mint1, children }
-	return { children }
 }
