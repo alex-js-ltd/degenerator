@@ -13,7 +13,7 @@ export function useSignAndSendTransaction() {
 		async (serializedTransaction: Uint8Array) => {
 			const tx = deserialize(serializedTransaction)
 			const txSig = await sendTransaction(tx, connection)
-			console.log(txSig)
+
 			const latestBlockHash = await connection.getLatestBlockhash()
 
 			invariant(latestBlockHash, 'Failed to get latest blockhash... 💩')
@@ -23,6 +23,8 @@ export function useSignAndSendTransaction() {
 				lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
 				signature: txSig,
 			})
+
+			console.log(confirm)
 
 			invariant(confirm, 'Transaction not confirmed... 😭🔫')
 
