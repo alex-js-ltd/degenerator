@@ -58,6 +58,9 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		feeTierId,
 	})
 
+	const fees = await connection.getFeeForMessage(transaction.message)
+	console.log(`Estimated SOL transfer cost: ${fees.value} lamports`)
+
 	const serializedTransaction = transaction.serialize()
 
 	return {
