@@ -167,7 +167,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 										onChange={onChange}
 									/>
 
-									{showClmm ? children : null}
+									{showClmm && children}
 								</div>
 
 								{[txSig, mint1, showClmm].every(Boolean) && <ClmmButton />}
@@ -183,8 +183,10 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 				</FormProvider>
 			</div>
 
-			{payer && error ? <Toast {...getErrorProps({ isError, error })} /> : null}
-			{txSig ? <Toast {...getSuccessProps({ isSuccess, txSig })} /> : null}
+			{[payer, isError].every(Boolean) && (
+				<Toast {...getErrorProps({ isError, error })} />
+			)}
+			{txSig && <Toast {...getSuccessProps({ isSuccess, txSig })} />}
 		</Fragment>
 	)
 }
