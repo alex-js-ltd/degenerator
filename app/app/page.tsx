@@ -1,4 +1,3 @@
-'use server'
 import * as React from 'react'
 import { TokenForm } from '@/app/comps/token_form'
 import { type Raydium } from '@raydium-io/raydium-sdk-v2'
@@ -19,8 +18,6 @@ export default async function Page() {
 }
 
 async function getQuoteTokenProps(raydium: Raydium) {
-	'use server'
-
 	const data = await raydium.fetchV3TokenList()
 
 	const mintItems = data.mintList.reduce<SelectItemConfig[]>((acc, curr) => {
@@ -42,8 +39,6 @@ async function getQuoteTokenProps(raydium: Raydium) {
 }
 
 async function getFeeTierProps(raydium: Raydium) {
-	'use server'
-
 	const clmmConfigs = await getClmmConfigs(raydium)
 
 	return {
