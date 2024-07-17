@@ -76,8 +76,8 @@ async function ClmmOptions() {
 function Loading() {
 	return (
 		<React.Fragment>
-			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-puls" />
-			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-puls" />
+			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-pulse" />
+			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-pulse" />
 		</React.Fragment>
 	)
 }
