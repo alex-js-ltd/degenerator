@@ -4,6 +4,7 @@ import { TokenForm } from '@/app/comps/token_form'
 import { type Raydium } from '@raydium-io/raydium-sdk-v2'
 import { type SelectItemConfig } from '@/app/comps/select'
 import { QuoteToken, FeeTier } from '@/app/comps/select'
+import { InitialPrice } from '@/app/comps/initial_price'
 import { initSdk } from '@/app/utils/raydium'
 import { getClmmConfigs } from '@/app/utils/clmm'
 import { Suspense } from 'react'
@@ -68,6 +69,7 @@ async function ClmmOptions() {
 		<fieldset className="flex gap-2 w-full">
 			<QuoteToken {...quoteProps} />
 			<FeeTier {...feeProps} />
+			<InitialPrice items={quoteProps.items} />
 		</fieldset>
 	)
 }
@@ -75,6 +77,7 @@ async function ClmmOptions() {
 function Loading() {
 	return (
 		<div className="flex gap-2 w-full animate-pulse">
+			<div className="w-32 h-[32px] rounded bg-slate-700" />
 			<div className="w-32 h-[32px] rounded bg-slate-700" />
 			<div className="w-32 h-[32px] rounded bg-slate-700" />
 		</div>
