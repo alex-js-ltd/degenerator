@@ -11,7 +11,7 @@ import { getErrorMessage } from '@/app/utils/misc'
 const { CLUSTER } = getEnv()
 
 const toastVariants = cva(
-	'border-2 border-gray-300 rounded-[8px] h-[37px] flex items-center px-3',
+	'border-2 border-gray-300 rounded-[8px] h-[37px] flex items-center px-3 data-[state=open]:animate-scale-in-50 data-[state=closed]:animate-scale-out-50',
 	{
 		variants: {
 			variant: {
