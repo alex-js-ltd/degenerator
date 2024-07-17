@@ -7,7 +7,7 @@ import { QuoteToken, FeeTier } from '@/app/comps/select'
 import { InitialPrice } from '@/app/comps/initial_price'
 import { initSdk } from '@/app/utils/raydium'
 import { getClmmConfigs } from '@/app/utils/clmm'
-import { Suspense } from 'react'
+import { Suspense, Fragment } from 'react'
 
 export default async function Page() {
 	return (
@@ -66,20 +66,20 @@ async function ClmmOptions() {
 	const [quoteProps, feeProps] = await Promise.all([quote, fee])
 
 	return (
-		<fieldset className="flex gap-2 w-full">
+		<Fragment>
 			<QuoteToken {...quoteProps} />
 			<FeeTier {...feeProps} />
 			<InitialPrice items={quoteProps.items} />
-		</fieldset>
+		</Fragment>
 	)
 }
 
 function Loading() {
 	return (
-		<div className="flex gap-2 w-full animate-pulse">
-			<div className="w-32 h-[32px] rounded bg-slate-700" />
-			<div className="w-32 h-[32px] rounded bg-slate-700" />
-			<div className="w-32 h-[32px] rounded bg-slate-700" />
-		</div>
+		<Fragment>
+			<div className="w-32 h-[32px] rounded bg-slate-700 animate-puls" />
+			<div className="w-32 h-[32px] rounded bg-slate-700 animate-puls" />
+			<div className="w-32 h-[32px] rounded bg-slate-700 animate-puls" />
+		</Fragment>
 	)
 }

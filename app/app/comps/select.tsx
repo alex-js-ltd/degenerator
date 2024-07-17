@@ -63,7 +63,7 @@ function Select({
 	const logoProps = selected?.imageProps
 
 	return (
-		<div className="relative min-w-32">
+		<div className="relative w-[124px] shrink-0">
 			<Input
 				name={meta.name}
 				defaultValue={meta.initialValue}
@@ -86,7 +86,7 @@ function Select({
 				<RadixSelect.Trigger
 					ref={selectRef}
 					className={cn(
-						'disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-32 items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none border',
+						'disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-full items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none border',
 						border,
 					)}
 				>
