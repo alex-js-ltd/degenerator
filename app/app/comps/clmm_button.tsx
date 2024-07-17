@@ -11,15 +11,13 @@ const initialState = {
 
 export function ClmmButton() {
 	const [lastResult, action] = useFormState(clmm, initialState)
-
 	const { serializedTransaction } = lastResult
 
 	const buttonRef = useRef<HTMLButtonElement>(null)
 
 	useEffect(() => {
-		const buttonEl = buttonRef.current
-		if (buttonEl) {
-			buttonEl.click()
+		if (buttonRef.current) {
+			buttonRef.current.click()
 		}
 	}, [])
 
