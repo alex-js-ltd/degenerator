@@ -170,7 +170,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									{showClmm ? children : null}
 								</div>
 
-								{txSig && mint1 && showClmm ? <ClmmButton /> : null}
+								{[txSig, mint1, showClmm].every(Boolean) && <ClmmButton />}
 								<SubmitButton
 									form={form.id}
 									formAction={action}
