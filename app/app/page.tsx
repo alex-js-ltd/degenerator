@@ -1,5 +1,5 @@
 'use server'
-
+import * as React from 'react'
 import { TokenForm } from '@/app/comps/token_form'
 import { type Raydium } from '@raydium-io/raydium-sdk-v2'
 import { type SelectItemConfig } from '@/app/comps/select'
@@ -7,14 +7,13 @@ import { QuoteToken, FeeTier } from '@/app/comps/select'
 import { InitialPrice } from '@/app/comps/initial_price'
 import { initSdk } from '@/app/utils/raydium'
 import { getClmmConfigs } from '@/app/utils/clmm'
-import { Suspense, Fragment } from 'react'
 
 export default async function Page() {
 	return (
 		<TokenForm>
-			<Suspense fallback={<Loading />}>
+			<React.Suspense fallback={<Loading />}>
 				<ClmmOptions />
-			</Suspense>
+			</React.Suspense>
 		</TokenForm>
 	)
 }
@@ -66,20 +65,19 @@ async function ClmmOptions() {
 	const [quoteProps, feeProps] = await Promise.all([quote, fee])
 
 	return (
-		<Fragment>
+		<React.Fragment>
 			<QuoteToken {...quoteProps} />
 			<FeeTier {...feeProps} />
 			<InitialPrice items={quoteProps.items} />
-		</Fragment>
+		</React.Fragment>
 	)
 }
 
 function Loading() {
 	return (
-		<Fragment>
-			<div className="w-32 h-[32px] rounded bg-slate-700 animate-puls" />
-			<div className="w-32 h-[32px] rounded bg-slate-700 animate-puls" />
-			<div className="w-32 h-[32px] rounded bg-slate-700 animate-puls" />
-		</Fragment>
+		<React.Fragment>
+			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-puls" />
+			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-puls" />
+		</React.Fragment>
 	)
 }
