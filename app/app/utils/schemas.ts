@@ -13,7 +13,7 @@ const PublicKey = z
 export const TokenSchema = z.object({
 	payerKey: PublicKey,
 	name: z.string(),
-	symbol: z.string(),
+	symbol: z.string().max(5, { message: 'Symbol is too long' }),
 	decimals: z
 		.number({
 			invalid_type_error: 'Expected Number',
@@ -40,6 +40,11 @@ export const ClmmSchema = z.object({
 	mint1: PublicKey,
 	mint2: PublicKey,
 	feeTierId: z.string(),
+	initial: z
+		.number({
+			invalid_type_error: 'Expected Number',
+		})
+		.min(1, { message: 'Initial price is too low' }),
 })
 
 export const ClmmOptions = ClmmSchema.partial()
