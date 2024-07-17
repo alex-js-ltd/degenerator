@@ -102,7 +102,6 @@ function Select({
 				</RadixSelect.Trigger>
 				<RadixSelect.Portal>
 					<RadixSelect.Content
-						onCloseAutoFocus={e => console.log(e)}
 						sticky="always"
 						position="popper"
 						side="bottom"
