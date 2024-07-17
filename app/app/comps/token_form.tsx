@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, Fragment } from 'react'
+import { type ReactNode, Fragment, useEffect } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -21,9 +21,10 @@ import { useFormState } from 'react-dom'
 import { usePayer } from '@/app/hooks/use_payer'
 import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
-import { useTransaction } from '@/app/hooks/use_transaction'
 import { ResetButton } from '@/app/comps/reset_button'
 import { ClmmButton } from '@/app/comps/clmm_button'
+import { useAsync } from '@/app/hooks/use_async'
+import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -51,15 +52,22 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 		},
 	})
 
-	const { mint1, serializedTransaction } = lastResult
+	const { mint1, serializedTransaction: tx } = lastResult
+
+	const sign = useSignAndSendTransaction()
 
 	const {
+		run,
 		data: txSig,
 		isLoading,
 		isSuccess,
 		isError,
 		error,
-	} = useTransaction(serializedTransaction)
+	} = useAsync<string | undefined>()
+
+	useEffect(() => {
+		if (tx) run(sign(tx))
+	}, [run, sign, tx])
 
 	const { previewImage, clearPreviewImage, fileRef, onChange } =
 		useImageUpload()
@@ -170,7 +178,9 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									{showClmm && children}
 								</div>
 
-								{[txSig, mint1, showClmm].every(Boolean) && <ClmmButton />}
+								{[txSig, mint1, showClmm].every(Boolean) && (
+									<ClmmButton run={run} />
+								)}
 								<SubmitButton
 									form={form.id}
 									formAction={action}

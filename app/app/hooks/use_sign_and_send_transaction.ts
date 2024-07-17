@@ -1,15 +1,17 @@
-import type { VersionedTransaction } from '@solana/web3.js'
+import { VersionedTransaction } from '@solana/web3.js'
 import { useConnection, useWallet } from '@jup-ag/wallet-adapter'
 import { useCallback } from 'react'
 import invariant from 'tiny-invariant'
+
+const { deserialize } = VersionedTransaction
 
 export function useSignAndSendTransaction() {
 	const { connection } = useConnection()
 	const { sendTransaction } = useWallet()
 
 	return useCallback(
-		async (tx: VersionedTransaction | undefined) => {
-			if (!tx) return
+		async (serializedTransaction: Uint8Array) => {
+			const tx = deserialize(serializedTransaction)
 			const txSig = await sendTransaction(tx, connection)
 			console.log(txSig)
 			const latestBlockHash = await connection.getLatestBlockhash()
