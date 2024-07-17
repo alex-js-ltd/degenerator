@@ -178,15 +178,16 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									{showClmm && children}
 								</div>
 
-								{[txSig, mint1, showClmm].every(Boolean) && (
-									<ClmmButton run={run} />
-								)}
 								<SubmitButton
 									form={form.id}
 									formAction={action}
 									isLoading={isLoading}
 									content={showClmm ? 'Mint Token + Create Pool' : 'Mint Token'}
 								/>
+
+								{[txSig, mint1, showClmm].every(Boolean) && (
+									<ClmmButton run={run} />
+								)}
 							</div>
 						</fieldset>
 					</form>
