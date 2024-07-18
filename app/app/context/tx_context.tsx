@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, ReactNode, use } from 'react'
+import React, { createContext, ReactNode, useEffect, use } from 'react'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
 import invariant from 'tiny-invariant'
@@ -31,14 +31,26 @@ function useTx() {
 	return context
 }
 
-function useMintTx() {
+function useMintTx(tx?: Uint8Array) {
 	const { mintTx, sign } = useTx()
-	return { ...mintTx, sign }
+
+	const { run, ...rest } = mintTx
+
+	useEffect(() => {
+		if (tx) run(sign(tx))
+	}, [run, sign, tx])
+
+	return { ...rest }
 }
 
-function usePoolTx() {
+function usePoolTx(tx?: Uint8Array) {
 	const { poolTx, sign } = useTx()
-	return { ...poolTx, sign }
+	const { run, ...rest } = poolTx
+	useEffect(() => {
+		if (tx) run(sign(tx))
+	}, [run, sign, tx])
+
+	return { ...rest }
 }
 
 export { TxProvider, useTx, useMintTx, usePoolTx }

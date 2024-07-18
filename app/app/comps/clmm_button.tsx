@@ -12,7 +12,7 @@ const initialState = {
 export function ClmmButton() {
 	const [lastResult, action] = useFormState(clmm, initialState)
 	const { serializedTransaction: tx } = lastResult
-	const { run, sign } = usePoolTx()
+
 	const buttonRef = useRef<HTMLButtonElement>(null)
 
 	useEffect(() => {
@@ -21,9 +21,7 @@ export function ClmmButton() {
 		}
 	}, [])
 
-	useEffect(() => {
-		if (tx) run(sign(tx))
-	}, [run, sign, tx])
+	usePoolTx(tx)
 
 	return (
 		<button

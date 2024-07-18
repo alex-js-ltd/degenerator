@@ -53,11 +53,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 
 	const { mint1, serializedTransaction: tx } = lastResult
 
-	const { run, data: txSig, isSuccess, isError, error, sign } = useMintTx()
-
-	useEffect(() => {
-		if (tx) run(sign(tx))
-	}, [run, sign, tx])
+	const { data: txSig, isSuccess, isError, error } = useMintTx(tx)
 
 	const { previewImage, clearPreviewImage, fileRef, onChange } =
 		useImageUpload()
