@@ -1,6 +1,9 @@
+'use client'
+
 import React, { createContext, ReactNode, use } from 'react'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
+import invariant from 'tiny-invariant'
 
 type Async<DataType> = ReturnType<typeof useAsync<DataType>>
 type Sign = ReturnType<typeof useSignAndSendTransaction>
@@ -24,9 +27,7 @@ function TxProvider({ children }: { children: ReactNode }) {
 
 function useTx() {
 	const context = use(TxContext)
-	if (context === undefined) {
-		throw new Error('useTx must be used within a TxProvider')
-	}
+	invariant(context, 'useTx must be used within a TxProvider')
 	return context
 }
 
