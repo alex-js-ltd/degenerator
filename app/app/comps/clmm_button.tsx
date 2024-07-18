@@ -3,7 +3,7 @@
 import { useRef, useEffect } from 'react'
 import { clmm } from '@/app/actions/clmm'
 import { useFormState } from 'react-dom'
-import { usePoolTx } from '@/app/context/tx_context'
+import { usePoolTx, useTx } from '@/app/context/tx_context'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -22,9 +22,11 @@ export function ClmmButton() {
 		}
 	}, [])
 
+	const { mintTx } = useTx()
+
 	usePoolTx(tx)
 
-	console.log('poolId??', poolId)
+	if (!mintTx.data) return null
 
 	return (
 		<button
