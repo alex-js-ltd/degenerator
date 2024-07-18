@@ -13,7 +13,6 @@ import {
 	TxVersion,
 	CLMM_PROGRAM_ID,
 	DEVNET_PROGRAM_ID,
-	type ClmmKeys,
 } from '@raydium-io/raydium-sdk-v2'
 import Decimal from 'decimal.js'
 
@@ -106,13 +105,6 @@ async function createPool({
 		startTime: new BN(0),
 		txVersion,
 	})
-
-	const address: ClmmKeys & { poolId?: string } = extInfo.address
-
-	console.log('extInfo', extInfo)
-	console.log('address', extInfo.address)
-	console.log('mockPool', extInfo.mockPoolInfo)
-	console.log('poolId??', extInfo.address.id)
 
 	return {
 		poolId: extInfo.address.id,
