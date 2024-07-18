@@ -11,7 +11,6 @@ type Context = {
 	mintTx: Async<string | undefined>
 	poolTx: Async<string | undefined>
 	sign: Sign
-	isLoading: boolean
 }
 const TxContext = createContext<Context | undefined>(undefined)
 TxContext.displayName = 'TxContext'
@@ -20,8 +19,8 @@ function TxProvider({ children }: { children: ReactNode }) {
 	const mintTx = useAsync<string | undefined>()
 	const poolTx = useAsync<string | undefined>()
 	const sign = useSignAndSendTransaction()
-	const isLoading = [mintTx.isLoading, poolTx.isLoading].every(Boolean)
-	const value = { mintTx, poolTx, sign, isLoading }
+
+	const value = { mintTx, poolTx, sign }
 	return <TxContext.Provider value={value}>{children}</TxContext.Provider>
 }
 
@@ -33,7 +32,6 @@ function useTx() {
 
 function useMintTx(tx?: Uint8Array) {
 	const { mintTx, sign } = useTx()
-
 	const { run, ...rest } = mintTx
 
 	useEffect(() => {
@@ -53,4 +51,9 @@ function usePoolTx(tx?: Uint8Array) {
 	return { ...rest }
 }
 
-export { TxProvider, useTx, useMintTx, usePoolTx }
+function useTxStatus() {
+	const { mintTx, poolTx } = useTx()
+	return { isLoading: [mintTx.isLoading, poolTx.isLoading].every(Boolean) }
+}
+
+export { TxProvider, useTx, useMintTx, usePoolTx, useTxStatus }

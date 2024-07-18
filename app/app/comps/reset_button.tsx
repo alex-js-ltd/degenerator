@@ -8,12 +8,12 @@ import { callAll, cn } from '@/app/utils/misc'
 import { useState } from 'react'
 import { delay } from '@/app/utils/misc'
 import { Tooltip, Content } from '@/app/comps/tooltip'
-import { useTx } from '@/app/context/tx_context'
+import { useTxStatus } from '@/app/context/tx_context'
 export function ResetButton({ onClick }: ButtonProps) {
 	const reset = useResetForm()
 
 	const { pending } = useFormStatus()
-	const { isLoading } = useTx()
+	const { isLoading } = useTxStatus()
 	const disabled = pending || isLoading ? true : false
 	const [on, setOn] = useState(false)
 

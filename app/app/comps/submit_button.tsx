@@ -6,7 +6,7 @@ import { Spinner } from '@/app/comps/spinner'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 import { useFormStatus } from 'react-dom'
 import { Tooltip, Content } from '@/app/comps/tooltip'
-import { useTx } from '@/app/context/tx_context'
+import { useTxStatus } from '@/app/context/tx_context'
 
 type SubmitButtonProps = ButtonProps & {
 	content?: string
@@ -17,7 +17,7 @@ export function SubmitButton({ content, ...rest }: SubmitButtonProps) {
 	const { publicKey } = wallet || {}
 
 	const { pending } = useFormStatus()
-	const { isLoading } = useTx()
+	const { isLoading } = useTxStatus()
 	const disabled = !publicKey || pending || isLoading ? true : false
 
 	return (
