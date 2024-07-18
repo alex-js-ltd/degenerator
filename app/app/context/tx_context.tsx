@@ -21,6 +21,7 @@ function TxProvider({ children }: { children: ReactNode }) {
 	const sign = useSignAndSendTransaction()
 
 	const value = { mintTx, poolTx, sign }
+
 	return <TxContext.Provider value={value}>{children}</TxContext.Provider>
 }
 
@@ -44,6 +45,7 @@ function useMintTx(tx?: Uint8Array) {
 function usePoolTx(tx?: Uint8Array) {
 	const { poolTx, sign } = useTx()
 	const { run, ...rest } = poolTx
+
 	useEffect(() => {
 		if (tx) run(sign(tx))
 	}, [run, sign, tx])
