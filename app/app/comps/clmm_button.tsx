@@ -3,21 +3,16 @@
 import { useRef, useEffect } from 'react'
 import { clmm } from '@/app/actions/clmm'
 import { useFormState } from 'react-dom'
-import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
+import { usePoolTx } from '@/app/context/tx_context'
 
 const initialState = {
 	serializedTransaction: undefined,
 }
 
-interface ClmmButtonProps {
-	run: (
-		promise: Promise<string | undefined>,
-	) => Promise<(string | undefined) | unknown>
-}
-export function ClmmButton({ run }: ClmmButtonProps) {
+export function ClmmButton() {
 	const [lastResult, action] = useFormState(clmm, initialState)
 	const { serializedTransaction: tx } = lastResult
-	const sign = useSignAndSendTransaction()
+	const { run, sign } = usePoolTx()
 	const buttonRef = useRef<HTMLButtonElement>(null)
 
 	useEffect(() => {

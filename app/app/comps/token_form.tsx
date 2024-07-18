@@ -23,8 +23,7 @@ import { Toast, getSuccessProps, getErrorProps } from '@/app/comps/toast'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
 import { ClmmButton } from '@/app/comps/clmm_button'
-import { useAsync } from '@/app/hooks/use_async'
-import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
+import { useMintTx } from '@/app/context/tx_context'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -54,16 +53,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 
 	const { mint1, serializedTransaction: tx } = lastResult
 
-	const sign = useSignAndSendTransaction()
-
-	const {
-		run,
-		data: txSig,
-		isLoading,
-		isSuccess,
-		isError,
-		error,
-	} = useAsync<string | undefined>()
+	const { run, data: txSig, isSuccess, isError, error, sign } = useMintTx()
 
 	useEffect(() => {
 		if (tx) run(sign(tx))
@@ -87,7 +77,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 					/>
 
 					<div className="absolute top-2.5 right-10 p-1 w-5 h-5">
-						<ResetButton isLoading={isLoading} onClick={clearPreviewImage} />
+						<ResetButton onClick={clearPreviewImage} />
 					</div>
 
 					<div className="absolute right-3.5 top-2.5 z-10 p-1 w-5 h-5">
@@ -181,13 +171,10 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 								<SubmitButton
 									form={form.id}
 									formAction={action}
-									isLoading={isLoading}
 									content={showClmm ? 'Mint Token + Create Pool' : 'Mint Token'}
 								/>
 
-								{[txSig, mint1, showClmm].every(Boolean) && (
-									<ClmmButton run={run} />
-								)}
+								{[txSig, mint1, showClmm].every(Boolean) && <ClmmButton />}
 							</div>
 						</fieldset>
 					</form>
