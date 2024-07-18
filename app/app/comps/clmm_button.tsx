@@ -7,11 +7,12 @@ import { usePoolTx } from '@/app/context/tx_context'
 
 const initialState = {
 	serializedTransaction: undefined,
+	poolId: undefined,
 }
 
 export function ClmmButton() {
 	const [lastResult, action] = useFormState(clmm, initialState)
-	const { serializedTransaction: tx } = lastResult
+	const { serializedTransaction: tx, poolId } = lastResult
 
 	const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -22,6 +23,8 @@ export function ClmmButton() {
 	}, [])
 
 	usePoolTx(tx)
+
+	console.log('poolId??', poolId)
 
 	return (
 		<button

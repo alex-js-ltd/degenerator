@@ -35,6 +35,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		return {
 			...submission.reply(),
 			serializedTransaction: undefined,
+			poolId: undefined,
 		}
 	}
 
@@ -51,21 +52,19 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		)
 	})
 
-	const { transaction } = await createPool({
+	const { transaction, poolId } = await createPool({
 		raydium,
 		mint1,
 		mint2,
 		feeTierId,
 	})
 
-	const fees = await connection.getFeeForMessage(transaction.message)
-	console.log(`Estimated SOL transfer cost: ${fees.value} lamports`)
-
 	const serializedTransaction = transaction.serialize()
 
 	return {
 		...submission.reply(),
 		serializedTransaction,
+		poolId,
 	}
 }
 
@@ -107,8 +106,13 @@ async function createPool({
 
 	const address: ClmmKeys & { poolId?: string } = extInfo.address
 
+	console.log('extInfo', extInfo)
+	console.log('address', extInfo.address)
+	console.log('mockPool', extInfo.mockPoolInfo)
+	console.log('poolId??', extInfo.address.id)
+
 	return {
-		poolId: address?.poolId,
+		poolId: extInfo.address.id,
 		transaction,
 	}
 }

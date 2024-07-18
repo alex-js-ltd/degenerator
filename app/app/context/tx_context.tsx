@@ -53,7 +53,7 @@ function usePoolTx(tx?: Uint8Array) {
 
 function useTxStatus() {
 	const { mintTx, poolTx } = useTx()
-	return { isLoading: [mintTx.isLoading, poolTx.isLoading].every(Boolean) }
+	return { isLoading: [mintTx.isLoading, poolTx.isLoading].some(Boolean) }
 }
 
 export { TxProvider, useTx, useMintTx, usePoolTx, useTxStatus }
