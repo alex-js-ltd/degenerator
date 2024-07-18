@@ -26,14 +26,13 @@ export function ClmmButton() {
 
 	usePoolTx(tx)
 
-	if (!mintTx.data) return null
-
 	return (
 		<button
 			ref={buttonRef}
 			type="submit"
 			className="sr-only"
 			formAction={action}
+			disabled={mintTx.data ? false : true}
 		/>
 	)
 }
