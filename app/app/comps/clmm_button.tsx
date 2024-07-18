@@ -3,7 +3,7 @@
 import { useRef, useEffect } from 'react'
 import { clmm } from '@/app/actions/clmm'
 import { useFormState } from 'react-dom'
-import { usePoolTx, useTx } from '@/app/context/tx_context'
+import { usePoolTx } from '@/app/context/tx_context'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -22,8 +22,6 @@ export function ClmmButton() {
 		}
 	}, [])
 
-	const { mintTx } = useTx()
-
 	usePoolTx(tx)
 
 	return (
@@ -32,7 +30,6 @@ export function ClmmButton() {
 			type="submit"
 			className="sr-only"
 			formAction={action}
-			disabled={mintTx.data ? false : true}
 		/>
 	)
 }
