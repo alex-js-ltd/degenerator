@@ -20,6 +20,8 @@ export function InitialPrice({ items }: { items: SelectItemConfig[] }) {
 
 	const error = initialPrice.errors?.length ? 'border-teal-300' : undefined
 
+	if (disabled) return null
+
 	return (
 		<Input
 			{...getInputProps(initialPrice, { type: 'text' })}
