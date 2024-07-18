@@ -9,6 +9,7 @@ export function InitialPrice({ items }: { items: SelectItemConfig[] }) {
 
 	const [symbol] = useField(fields.symbol.name)
 	const [mint2] = useField(fields.mint2.name)
+	const [initialPrice] = useField(fields.initialPrice.name)
 
 	const selected = items.find(el => el.value === mint2.value)
 	const pair =
@@ -17,14 +18,12 @@ export function InitialPrice({ items }: { items: SelectItemConfig[] }) {
 			: undefined
 	const disabled = !!(!pair || symbol.errors?.length)
 
-	if (disabled) return null
-
 	return (
 		<Input
-			{...getInputProps(fields.initial, { type: 'text' })}
+			{...getInputProps(initialPrice, { type: 'text' })}
 			disabled={disabled}
 			placeholder={disabled ? 'Initial Price' : pair}
-			className="disabled:pointer-events-none inline-flex h-[32px] w-[124px] flex-1 items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none pr-2 leading-relaxed text-white shadow-none outline-none ring-0 [scroll-padding-block:0.75rem] selection:bg-teal-300 selection:text-black placeholder:text-zinc-400 disabled:border disabled:border-white disabled:border-opacity-[0.125] p-3"
+			className="disabled:pointer-events-none inline-flex h-[32px] flex-1 items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none pr-2 leading-relaxed text-white shadow-none outline-none ring-0 [scroll-padding-block:0.75rem] selection:bg-teal-300 selection:text-black placeholder:text-zinc-400 disabled:border disabled:border-white disabled:border-opacity-[0.125] p-3"
 		/>
 	)
 }

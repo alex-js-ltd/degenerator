@@ -39,7 +39,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		}
 	}
 
-	const { payerKey, mint1, mint2, feeTierId } = submission.value
+	const { payerKey, mint1, mint2, feeTierId, initialPrice } = submission.value
 
 	const raydium = await initSdk({ owner: payerKey })
 
@@ -57,6 +57,7 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 		mint1,
 		mint2,
 		feeTierId,
+		initialPrice,
 	})
 
 	const serializedTransaction = transaction.serialize()
@@ -73,11 +74,13 @@ async function createPool({
 	mint1: mint1Key,
 	mint2: mint2Key,
 	feeTierId,
+	initialPrice,
 }: {
 	raydium: Raydium
 	mint1: PublicKey
 	mint2: PublicKey
 	feeTierId: string
+	initialPrice: number
 }) {
 	const mint1 = await raydium.token.getTokenInfo(mint1Key)
 	const mint2 = await raydium.token.getTokenInfo(mint2Key)
@@ -99,7 +102,7 @@ async function createPool({
 			id: new PublicKey(clmmConfig.id),
 			fundOwner: '',
 		},
-		initialPrice: new Decimal(1),
+		initialPrice: new Decimal(initialPrice),
 		startTime: new BN(0),
 		txVersion,
 	})

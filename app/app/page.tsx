@@ -3,6 +3,7 @@ import { TokenForm } from '@/app/comps/token_form'
 import { type Raydium } from '@raydium-io/raydium-sdk-v2'
 import { type SelectItemConfig } from '@/app/comps/select'
 import { QuoteToken, FeeTier } from '@/app/comps/select'
+import { InitialPrice } from '@/app/comps/initial_price'
 import { initSdk } from '@/app/utils/raydium'
 import { getClmmConfigs } from '@/app/utils/clmm'
 
@@ -62,6 +63,7 @@ async function ClmmOptions() {
 		<React.Fragment>
 			<QuoteToken {...quoteProps} />
 			<FeeTier {...feeProps} />
+			<InitialPrice items={quoteProps.items} />
 		</React.Fragment>
 	)
 }
@@ -69,6 +71,7 @@ async function ClmmOptions() {
 function Loading() {
 	return (
 		<React.Fragment>
+			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-pulse" />
 			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-pulse" />
 			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-pulse" />
 		</React.Fragment>

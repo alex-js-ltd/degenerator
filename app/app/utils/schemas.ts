@@ -40,13 +40,19 @@ export const ClmmSchema = z.object({
 	mint1: PublicKey,
 	mint2: PublicKey,
 	feeTierId: z.string(),
+	initialPrice: z
+		.number({
+			invalid_type_error: 'Expected Number',
+		})
+
+		.min(0, { message: 'Initial price is too low' }),
 })
 
 export const ClmmOptions = ClmmSchema.partial()
 
 export const Schema = z
 	.intersection(TokenSchema, ClmmOptions)
-	.superRefine(({ clmm, mint2, feeTierId }, context) => {
+	.superRefine(({ clmm, mint2, feeTierId, initialPrice }, context) => {
 		if (clmm && !mint2) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
@@ -60,6 +66,14 @@ export const Schema = z
 				code: z.ZodIssueCode.custom,
 				message: 'Required',
 				path: ['feeTierId'],
+			})
+		}
+
+		if (clmm && !initialPrice) {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'Required',
+				path: ['initialPrice'],
 			})
 		}
 	})
