@@ -63,7 +63,6 @@ async function ClmmOptions() {
 		<React.Fragment>
 			<QuoteToken {...quoteProps} />
 			<FeeTier {...feeProps} />
-			<InitialPrice items={quoteProps.items} />
 		</React.Fragment>
 	)
 }
