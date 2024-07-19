@@ -15,7 +15,7 @@ export function useSignAndSendTransaction() {
 
 			const blocks = connection.getLatestBlockhash()
 			const send = sendTransaction(tx, connection, {
-				skipPreflight: false,
+				skipPreflight: true,
 			})
 
 			const [latestBlockhash, signature] = await Promise.all([blocks, send])
