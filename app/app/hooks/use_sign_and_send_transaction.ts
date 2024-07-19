@@ -34,7 +34,7 @@ export function useSignAndSendTransaction() {
 
 			invariant(confirm, 'Transaction not finalized... 😭🔫')
 
-			invariant(confirm.value.err === null, 'Transaction not finalized... 😭🔫')
+			invariant(confirm.value.err, 'Transaction not finalized... 😭🔫')
 
 			console.log(`Transaction ${signature} finalized 🚀`)
 
