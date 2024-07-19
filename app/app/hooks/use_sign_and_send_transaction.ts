@@ -1,4 +1,8 @@
-import { VersionedTransaction } from '@solana/web3.js'
+import {
+	VersionedTransaction,
+	type SignatureStatus,
+	Commitment,
+} from '@solana/web3.js'
 import { useConnection, useWallet } from '@jup-ag/wallet-adapter'
 import { useCallback } from 'react'
 import invariant from 'tiny-invariant'
@@ -12,27 +16,29 @@ export function useSignAndSendTransaction() {
 	return useCallback(
 		async (serializedTransaction: Uint8Array) => {
 			const tx = deserialize(serializedTransaction)
-			const txSig = await sendTransaction(tx, connection)
 
-			const latestBlockHash = await connection.getLatestBlockhash()
-
-			invariant(latestBlockHash, 'Failed to get latest blockhash... 💩')
-
-			const confirm = await connection.confirmTransaction({
-				blockhash: latestBlockHash.blockhash,
-				lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-				signature: txSig,
+			const blocks = connection.getLatestBlockhash()
+			const send = sendTransaction(tx, connection, {
+				skipPreflight: false,
 			})
 
-			console.log(confirm)
+			const [latestBlockhash, signature] = await Promise.all([blocks, send])
 
-			invariant(confirm, 'Transaction not confirmed... 😭🔫')
+			const confirm = await connection.confirmTransaction(
+				{
+					...latestBlockhash,
+					signature,
+				},
+				'finalized',
+			)
 
-			invariant(confirm.value.err === null, 'Transaction not confirmed... 😭🔫')
+			invariant(confirm, 'Transaction not finalized... 😭🔫')
 
-			console.log(`Transaction ${txSig} confirmed 🚀`)
+			invariant(confirm.value.err === null, 'Transaction not finalized... 😭🔫')
 
-			return txSig
+			console.log(`Transaction ${signature} finalized 🚀`)
+
+			return signature
 		},
 		[connection, sendTransaction],
 	)
