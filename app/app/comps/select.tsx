@@ -225,11 +225,11 @@ function FeeTier({ name, items }: CompoundSelect) {
 function InitialPrice({
 	name,
 	items: priceItems,
-	quote,
-}: CompoundSelect & { quote: SelectItemConfig[] }) {
+	quoteItems,
+}: CompoundSelect & { quoteItems: SelectItemConfig[] }) {
 	const [, fields] = useForm({})
 	const [mint2] = useField(fields.mint2.name)
-	const selected = quote.find(el => el.value === mint2.value)
+	const selected = quoteItems.find(el => el.value === mint2.value)
 
 	const items = priceItems.map(({ children, title, ...rest }) => ({
 		...rest,

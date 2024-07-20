@@ -69,7 +69,7 @@ async function ClmmOptions() {
 					title: String(n),
 				}))}
 				name="initialPrice"
-				quote={quoteProps.items}
+				quoteItems={quoteProps.items}
 			/>
 		</React.Fragment>
 	)
