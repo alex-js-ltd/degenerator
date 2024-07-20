@@ -10,7 +10,12 @@ import * as RadixSelect from '@radix-ui/react-select'
 
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 
-import { useInputControl, useField, type FieldName } from '@conform-to/react'
+import {
+	useInputControl,
+	useField,
+	useForm,
+	type FieldName,
+} from '@conform-to/react'
 import { Option } from '@/app/comps/option'
 import Image, { ImageProps } from 'next/image'
 import { cn } from '@/app/utils/misc'
@@ -23,7 +28,7 @@ interface SelectFieldProps {
 	name: FieldName<string>
 	items: SelectItemConfig[]
 	children: ReactNode
-	logo: ComponentType<ImageProps>
+	logo?: ComponentType<ImageProps>
 	valueProps?: RadixSelect.SelectValueProps
 	triggerProps?: RadixSelect.SelectTriggerProps
 	contentProps?: RadixSelect.SelectContentProps
@@ -90,7 +95,7 @@ function Select({
 						border,
 					)}
 				>
-					{logoProps ? <Component {...logoProps} /> : null}
+					{logoProps && Component && <Component {...logoProps} />}
 
 					<RadixSelect.Value {...valueProps}>
 						{selected?.title ?? ''}
@@ -217,4 +222,46 @@ function FeeTier({ name, items }: CompoundSelect) {
 	)
 }
 
-export { Select, SelectItem, QuoteToken, FeeTier }
+function InitialPrice({
+	name,
+	items,
+	quote,
+}: CompoundSelect & { quote: SelectItemConfig[] }) {
+	const [, fields] = useForm({})
+	const [mint2] = useField(fields.mint2.name)
+	const selected = quote.find(el => el.value === mint2.value)
+
+	const update = items.map(({ children, ...rest }) => {
+		return {
+			...rest,
+			children: selected?.title
+				? (children = children + ` / ${selected.title}`)
+				: children,
+		}
+	})
+
+	return (
+		<Select
+			name={name}
+			items={items}
+			valueProps={{ placeholder: 'Initial Price' }}
+		>
+			{update.map(item => (
+				<SelectItem
+					value={item.value}
+					id={`${name}-${item.value}`}
+					key={item.value}
+					fieldName={name}
+				>
+					<div className="flex items-center gap-2">
+						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-normal whitespace-nowrap">
+							{item.children}
+						</RadixSelect.ItemText>
+					</div>
+				</SelectItem>
+			))}
+		</Select>
+	)
+}
+
+export { Select, SelectItem, QuoteToken, FeeTier, InitialPrice }
