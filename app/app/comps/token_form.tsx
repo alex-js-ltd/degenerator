@@ -170,7 +170,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									content={showClmm ? 'Mint Token + Create Pool' : 'Mint Token'}
 								/>
 
-								{[txSig, mint1, showClmm].every(Boolean) && <ClmmButton />}
+								{showClmm && <ClmmButton />}
 							</div>
 						</fieldset>
 					</form>

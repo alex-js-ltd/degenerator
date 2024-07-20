@@ -1,9 +1,10 @@
 'use client'
 
-import React, { createContext, ReactNode, useEffect, use } from 'react'
+import React, { createContext, ReactNode, useEffect, useMemo, use } from 'react'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
 import invariant from 'tiny-invariant'
+import { useGetTransaction } from '@/app/hooks/use_get_transaction'
 
 type Async<DataType> = ReturnType<typeof useAsync<DataType>>
 type Sign = ReturnType<typeof useSignAndSendTransaction>
@@ -20,7 +21,9 @@ function TxProvider({ children }: { children: ReactNode }) {
 	const poolTx = useAsync<string | undefined>()
 	const sign = useSignAndSendTransaction()
 
-	const value = { mintTx, poolTx, sign }
+	const value = useMemo(() => {
+		return { mintTx, poolTx, sign }
+	}, [mintTx, poolTx, sign])
 
 	return <TxContext.Provider value={value}>{children}</TxContext.Provider>
 }
@@ -43,12 +46,14 @@ function useMintTx(tx?: Uint8Array) {
 }
 
 function usePoolTx(tx?: Uint8Array) {
-	const { poolTx, sign } = useTx()
+	const { poolTx, mintTx, sign } = useTx()
 	const { run, ...rest } = poolTx
 
+	const { isSuccess } = useGetTransaction(mintTx?.data)
+
 	useEffect(() => {
-		if (tx) run(sign(tx))
-	}, [run, sign, tx])
+		if (tx && isSuccess) run(sign(tx))
+	}, [run, sign, tx, isSuccess])
 
 	return { ...rest }
 }
