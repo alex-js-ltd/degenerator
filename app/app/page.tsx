@@ -63,7 +63,7 @@ async function ClmmOptions() {
 			<QuoteToken {...quoteProps} />
 			<FeeTier {...feeProps} />
 			<InitialPrice
-				items={Array.from([1, 10, 100, 1000], n => ({
+				items={Array.from([1, 10, 100, 1000, 10000], n => ({
 					value: String(n),
 					children: String(n),
 					title: String(n),
@@ -78,9 +78,9 @@ async function ClmmOptions() {
 function Loading() {
 	return (
 		<React.Fragment>
-			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-pulse" />
-			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-pulse" />
-			<div className="w-[124px] h-[32px] rounded bg-slate-700 animate-pulse" />
+			<div className="w-[124px] flex-1 h-[32px] rounded bg-slate-700 animate-pulse" />
+			<div className="w-[124px] flex-1 h-[32px] rounded bg-slate-700 animate-pulse" />
+			<div className="w-[124px] flex-1 h-[32px] rounded bg-slate-700 animate-pulse" />
 		</React.Fragment>
 	)
 }
