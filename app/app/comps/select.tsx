@@ -68,7 +68,7 @@ function Select({
 	const logoProps = selected?.imageProps
 
 	return (
-		<div className="relative w-[124px] shrink-0">
+		<div className="relative flex-1">
 			<Input
 				name={meta.name}
 				defaultValue={meta.initialValue}
@@ -231,9 +231,10 @@ function InitialPrice({
 	const [mint2] = useField(fields.mint2.name)
 	const selected = quote.find(el => el.value === mint2.value)
 
-	const items = priceItems.map(({ children, ...rest }) => ({
+	const items = priceItems.map(({ children, title, ...rest }) => ({
 		...rest,
 		children: selected?.title ? `${children} / ${selected.title}` : children,
+		title: selected?.title ? `${title} / ${selected.title}` : title,
 	}))
 
 	return (
