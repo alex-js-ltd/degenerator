@@ -40,12 +40,7 @@ export const ClmmSchema = z.object({
 	mint1: PublicKey,
 	mint2: PublicKey,
 	feeTierId: z.string(),
-	initialPrice: z
-		.number({
-			invalid_type_error: 'Expected Number',
-		})
-
-		.min(0, { message: 'Initial price is too low' }),
+	initialPrice: z.preprocess(val => Number(val), z.number()),
 })
 
 export const ClmmOptions = ClmmSchema.partial()
