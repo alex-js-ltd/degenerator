@@ -224,21 +224,17 @@ function FeeTier({ name, items }: CompoundSelect) {
 
 function InitialPrice({
 	name,
-	items,
+	items: priceItems,
 	quote,
 }: CompoundSelect & { quote: SelectItemConfig[] }) {
 	const [, fields] = useForm({})
 	const [mint2] = useField(fields.mint2.name)
 	const selected = quote.find(el => el.value === mint2.value)
 
-	const update = items.map(({ children, ...rest }) => {
-		return {
-			...rest,
-			children: selected?.title
-				? (children = children + ` / ${selected.title}`)
-				: children,
-		}
-	})
+	const items = priceItems.map(({ children, ...rest }) => ({
+		...rest,
+		children: selected?.title ? `${children} / ${selected.title}` : children,
+	}))
 
 	return (
 		<Select
@@ -246,7 +242,7 @@ function InitialPrice({
 			items={items}
 			valueProps={{ placeholder: 'Initial Price' }}
 		>
-			{update.map(item => (
+			{items.map(item => (
 				<SelectItem
 					value={item.value}
 					id={`${name}-${item.value}`}
