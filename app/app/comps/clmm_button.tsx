@@ -4,7 +4,6 @@ import { useRef, useEffect } from 'react'
 import { clmm } from '@/app/actions/clmm'
 import { useFormState } from 'react-dom'
 import { usePoolTx, useTx } from '@/app/context/tx_context'
-import { useGetTransaction } from '@/app/hooks/use_get_transaction'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -17,21 +16,20 @@ export function ClmmButton() {
 
 	const buttonRef = useRef<HTMLButtonElement>(null)
 	const { mintTx } = useTx()
-	const { isSuccess } = useGetTransaction(mintTx?.data)
 
 	useEffect(() => {
-		if (buttonRef.current && isSuccess) {
+		if (buttonRef.current && mintTx.data) {
 			buttonRef.current.click()
 		}
-	}, [isSuccess])
+	}, [mintTx.data])
 
 	usePoolTx(tx)
 
-	if (!isSuccess) return null
+	if (!mintTx.data) return null
 
 	return (
 		<button
-			disabled={!isSuccess}
+			disabled={!Boolean(mintTx.data)}
 			ref={buttonRef}
 			type="submit"
 			className="sr-only"
