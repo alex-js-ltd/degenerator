@@ -21,6 +21,11 @@ export interface ToastProps extends RadixToast.ToastProps {
 	children?: ReactNode
 }
 
+interface Description {
+	type: string
+	element: ReactElement
+}
+
 function Toast({ children, ...props }: ToastProps) {
 	return (
 		<RadixToast.Provider swipeDirection="right" duration={60000}>
@@ -66,12 +71,10 @@ function useToastTxs() {
 	const { mintTx, poolTx } = useTx()
 
 	const descriptions = useMemo(() => {
-		const initial: { type: string; element: ReactElement }[] = []
-
 		return [
 			{ label: 'Mint transaction', tx: mintTx },
 			{ label: 'Pool transaction', tx: poolTx },
-		].reduce((acc, curr) => {
+		].reduce<Description[]>((acc, curr) => {
 			const { data, isError, error } = curr.tx
 
 			if (data) {
@@ -86,7 +89,7 @@ function useToastTxs() {
 			}
 
 			return acc
-		}, initial)
+		}, [])
 	}, [mintTx, poolTx])
 
 	const onOpenChange = useCallback(
