@@ -22,7 +22,7 @@ export interface ToastProps extends RadixToast.ToastProps {
 }
 
 interface Description {
-	type: string
+	label: string
 	element: ReactElement
 }
 
@@ -72,21 +72,21 @@ function useToastTxs() {
 
 	const descriptions = useMemo(() => {
 		const allTxs = [
-			{ label: 'Mint transaction', tx: mintTx },
-			{ label: 'Pool transaction', tx: poolTx },
+			{ label: 'Mint transaction', ...mintTx },
+			{ label: 'Pool transaction', ...poolTx },
 		]
 
 		return allTxs.reduce<Description[]>((acc, curr) => {
-			const { data, isError, error } = curr.tx
+			const { label, data, isError, error } = curr
 
 			if (data) {
-				acc.push({ type: curr.label, element: getIsSuccess(data, curr.label) })
+				acc.push({ label, element: getIsSuccess(data, label) })
 			}
 
 			if (isError) {
 				acc.push({
-					type: curr.label,
-					element: getIsError(error, curr.label, data),
+					label: label,
+					element: getIsError(error, label, data),
 				})
 			}
 
@@ -109,8 +109,8 @@ function useToastTxs() {
 function ToastTxs() {
 	const { descriptions, ...props } = useToastTxs()
 
-	const children = descriptions.map(({ element, type }) => (
-		<Description key={type}>{element}</Description>
+	const children = descriptions.map(({ label, element }) => (
+		<Description key={label}>{element}</Description>
 	))
 
 	return <Toast {...props}>{children}</Toast>
