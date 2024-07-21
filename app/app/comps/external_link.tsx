@@ -2,10 +2,11 @@ import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/app/utils/misc'
 
-const externalLinkVariants = cva('flex', {
+const externalLinkVariants = cva(undefined, {
 	variants: {
 		variant: {
-			toast: 'text-toast-text text-sm whitespace-nowrap',
+			toast: 'flex text-toast-text text-sm whitespace-nowrap',
+			underline: 'underline',
 		},
 	},
 })
