@@ -25,6 +25,9 @@ export function ClmmButton() {
 
 	if (!mintTx.data) return null
 
+	console.log('poolId', poolId)
+	console.log(`https://raydium.io/clmm/create-position/?pool_id=${poolId}`)
+
 	return (
 		<button
 			disabled={!Boolean(mintTx.data)}
