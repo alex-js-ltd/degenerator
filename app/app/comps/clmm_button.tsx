@@ -13,7 +13,7 @@ export function ClmmButton() {
 	const { serializedTransaction: tx, poolId } = lastResult
 
 	const buttonRef = useRef<HTMLButtonElement>(null)
-	const { mintTx } = useTx()
+	const [mintTx] = useTx()
 
 	useEffect(() => {
 		if (buttonRef.current && mintTx.data) {
