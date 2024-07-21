@@ -68,7 +68,7 @@ function getIsError(error: unknown, label: string, txSig?: string | null) {
 
 function useToastTxs() {
 	const [open, setOpen] = useState(false)
-	const { mintTx, poolTx } = useTx()
+	const [mintTx, poolTx] = useTx()
 
 	const descriptions = useMemo(() => {
 		const allTxs = [

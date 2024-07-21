@@ -13,23 +13,17 @@ import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transac
 import invariant from 'tiny-invariant'
 
 type Async<DataType> = ReturnType<typeof useAsync<DataType>>
-type Sign = ReturnType<typeof useSignAndSendTransaction>
-type Context = {
-	mintTx: Async<string | undefined>
-	poolTx: Async<string | undefined>
-	sign: Sign
-}
+type Context = Array<Async<string | undefined>>
 const TxContext = createContext<Context | undefined>(undefined)
 TxContext.displayName = 'TxContext'
 
 function TxProvider({ children }: { children: ReactNode }) {
 	const mintTx = useAsync<string | undefined>()
 	const poolTx = useAsync<string | undefined>()
-	const sign = useSignAndSendTransaction()
 
 	const value = useMemo(() => {
-		return { mintTx, poolTx, sign }
-	}, [mintTx, poolTx, sign])
+		return [mintTx, poolTx]
+	}, [mintTx, poolTx])
 
 	return <TxContext.Provider value={value}>{children}</TxContext.Provider>
 }
@@ -41,8 +35,10 @@ function useTx() {
 }
 
 function useMintTx(tx?: Uint8Array) {
-	const { mintTx, sign } = useTx()
+	const [mintTx] = useTx()
 	const { run, ...rest } = mintTx
+
+	const sign = useSignAndSendTransaction()
 
 	useEffect(() => {
 		if (tx) run(sign(tx))
@@ -52,8 +48,10 @@ function useMintTx(tx?: Uint8Array) {
 }
 
 function usePoolTx(tx?: Uint8Array) {
-	const { poolTx, sign } = useTx()
+	const [, poolTx] = useTx()
 	const { run, ...rest } = poolTx
+
+	const sign = useSignAndSendTransaction()
 
 	useEffect(() => {
 		if (tx) run(sign(tx))
@@ -63,19 +61,16 @@ function usePoolTx(tx?: Uint8Array) {
 }
 
 function useTxStatus() {
-	const { mintTx, poolTx } = useTx()
-	return { isLoading: [mintTx.isLoading, poolTx.isLoading].some(Boolean) }
+	const txs = useTx()
+	return { isLoading: txs.map(tx => tx.isLoading).some(Boolean) }
 }
 
 function useReset() {
-	const { mintTx, poolTx } = useTx()
+	const txs = useTx()
 
-	const { reset: resetMint } = mintTx
-	const { reset: resetPool } = poolTx
 	return useCallback(() => {
-		resetMint()
-		resetPool()
-	}, [resetMint, resetPool])
+		txs.forEach(tx => tx.reset())
+	}, [txs])
 }
 
 export { TxProvider, useTx, useMintTx, usePoolTx, useTxStatus, useReset }
