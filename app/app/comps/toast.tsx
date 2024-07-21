@@ -95,7 +95,7 @@ function useToastTxs() {
 	)
 
 	useEffect(() => {
-		if (descriptions.length) setOpen(true)
+		if (descriptions.length > 0) setOpen(true)
 	}, [descriptions])
 
 	return { descriptions, open, onOpenChange }
