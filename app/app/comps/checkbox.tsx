@@ -6,6 +6,7 @@ import * as RadixCheckbox from '@radix-ui/react-checkbox'
 import { type ElementRef } from 'react'
 import { Icon } from './_icon'
 import { Tooltip, Content } from '@/app/comps/tooltip'
+import { ExternalLink } from '@/app/comps/external_link'
 
 export interface CheckboxProps extends RadixCheckbox.CheckboxProps {
 	name: FieldName<string>
@@ -54,13 +55,12 @@ function ClmmCheckbox() {
 					side="top"
 				>
 					Create liquidity pool{' '}
-					<a
-						className="underline"
-						target="_blank"
+					<ExternalLink
+						variant="underline"
 						href="https://docs.raydium.io/raydium/pool-creation/creating-a-clmm-pool-and-farm"
 					>
 						info
-					</a>
+					</ExternalLink>
 				</Content>
 			}
 		>
