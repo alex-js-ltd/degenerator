@@ -69,10 +69,13 @@ function useTxStatus() {
 
 function useReset() {
 	const { mintTx, poolTx } = useTx()
+
+	const { reset: resetMint } = mintTx
+	const { reset: resetPool } = poolTx
 	return useCallback(() => {
-		mintTx.reset()
-		poolTx.reset()
-	}, [])
+		resetMint()
+		resetPool()
+	}, [resetMint, resetPool])
 }
 
 export { TxProvider, useTx, useMintTx, usePoolTx, useTxStatus, useReset }
