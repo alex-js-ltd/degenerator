@@ -25,13 +25,13 @@ function Toast({ children, ...props }: ToastProps) {
 	return (
 		<RadixToast.Provider swipeDirection="right" duration={60000}>
 			<RadixToast.Root
-				className="relative flex flex-col gap-1 items-start border border-toast-border rounded-[8px] w-fit max-w-[420px] h-auto p-4 data-[state=open]:animate-slide-in data-[state=closed]:animate-hide"
+				className="relative flex flex-col gap-1 items-start border border-toast-border rounded-[8px] w-fit h-auto p-4 data-[state=open]:animate-slide-in data-[state=closed]:animate-hide"
 				{...props}
 			>
 				{children}
 			</RadixToast.Root>
 
-			<RadixToast.Viewport className="fixed bottom-6 left-6 sm:bottom-4 sm:left-4 flex m-0 list-none z-50 w-full max-w-[420px] h-auto" />
+			<RadixToast.Viewport className="fixed bottom-6 left-6 sm:bottom-4 sm:left-4 flex m-0 list-none z-50 w-fit h-auto" />
 		</RadixToast.Provider>
 	)
 }
