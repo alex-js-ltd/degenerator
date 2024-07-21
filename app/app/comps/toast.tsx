@@ -71,10 +71,12 @@ function useToastTxs() {
 	const { mintTx, poolTx } = useTx()
 
 	const descriptions = useMemo(() => {
-		return [
+		const allTxs = [
 			{ label: 'Mint transaction', tx: mintTx },
 			{ label: 'Pool transaction', tx: poolTx },
-		].reduce<Description[]>((acc, curr) => {
+		]
+
+		return allTxs.reduce<Description[]>((acc, curr) => {
 			const { data, isError, error } = curr.tx
 
 			if (data) {
