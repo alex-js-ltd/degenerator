@@ -1,7 +1,6 @@
 import { VersionedTransaction } from '@solana/web3.js'
 import { useConnection, useWallet } from '@jup-ag/wallet-adapter'
 import { useCallback } from 'react'
-import invariant from 'tiny-invariant'
 
 const { deserialize } = VersionedTransaction
 
