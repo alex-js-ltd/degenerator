@@ -47,11 +47,6 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 
 		defaultValue: {
 			clmm: 'on',
-			name: 'pepe',
-			symbol: 'PEPE',
-			supply: 100,
-			decimals: 9,
-			description: 'the frog',
 		},
 	})
 
