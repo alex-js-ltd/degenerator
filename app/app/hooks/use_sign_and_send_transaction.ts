@@ -28,8 +28,6 @@ export function useSignAndSendTransaction() {
 				'finalized',
 			)
 
-			invariant(confirm, 'Transaction not finalized... 😭🔫')
-
 			console.log(`Transaction ${signature} finalized 🚀`)
 
 			return signature

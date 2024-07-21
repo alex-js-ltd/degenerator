@@ -25,7 +25,7 @@ function Toast({ children, ...props }: ToastProps) {
 	return (
 		<RadixToast.Provider swipeDirection="right" duration={60000}>
 			<RadixToast.Root
-				className="relative flex flex-col gap-1 items-start border border-toast-border rounded-[8px] w-fit h-auto p-4 data-[state=open]:animate-scale-in-50 data-[state=closed]:animate-scale-out-50"
+				className="relative flex flex-col gap-1 items-start border border-toast-border rounded-[8px] w-fit max-w-[420px] h-auto p-4 data-[state=open]:animate-slide-in data-[state=closed]:animate-hide"
 				{...props}
 			>
 				{children}
