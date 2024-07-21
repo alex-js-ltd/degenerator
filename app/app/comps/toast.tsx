@@ -1,89 +1,30 @@
 'use client'
 
-import * as ToastPrimitive from '@radix-ui/react-toast'
-import { Icon } from './_icon'
-import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '@/app/utils/misc'
-import { type ReactElement } from 'react'
-import { getEnv } from '@/app/utils/env'
-import { getErrorMessage } from '@/app/utils/misc'
+import * as RadixToast from '@radix-ui/react-toast'
+import { type ReactNode } from 'react'
 
-const { CLUSTER } = getEnv()
-
-const toastVariants = cva(
-	'border-2 border-gray-300 rounded-[8px] h-[37px] flex items-center px-3 data-[state=open]:animate-scale-in-50 data-[state=closed]:animate-scale-out-50',
-	{
-		variants: {
-			variant: {
-				success: 'bg-success-bg text-teal-300',
-				error: 'bg-error-bg text-error-text',
-			},
-		},
-	},
-)
-
-export interface ToastProps
-	extends ToastPrimitive.ToastProps,
-		VariantProps<typeof toastVariants> {
-	message: ReactElement
+export interface ToastProps extends RadixToast.ToastProps {
+	children: ReactNode
 }
 
-function Toast({ open, variant, message, ...props }: ToastProps) {
+function Toast({ children, ...props }: ToastProps) {
 	return (
-		<ToastPrimitive.Provider swipeDirection="right">
-			<ToastPrimitive.Root
-				className={cn(toastVariants({ variant }))}
-				open={open}
+		<RadixToast.Provider swipeDirection="right">
+			<RadixToast.Root
+				className="relative flex flex-col gap-1 items-start border border-toast-border rounded-[8px] w-fit h-auto p-4 data-[state=open]:animate-scale-in-50 data-[state=closed]:animate-scale-out-50"
 				{...props}
 			>
-				<Icon name="error" className="w-[20px] h-[20px]" />
-				<ToastPrimitive.Description className="flex items-center h-full ml-3 text-xs">
-					{message}
-				</ToastPrimitive.Description>
-			</ToastPrimitive.Root>
-			<ToastPrimitive.Viewport className="fixed bottom-6 left-6 flex m-0 list-none z-[2147483647] w-fit h-auto" />
-		</ToastPrimitive.Provider>
+				<RadixToast.Close className="absolute top-2 right-2 text-toast-text text-sm">
+					x
+				</RadixToast.Close>
+				{children}
+			</RadixToast.Root>
+
+			<RadixToast.Viewport className="fixed bottom-6 left-6 sm:bottom-4 sm:left-4 flex m-0 list-none z-50 w-full max-w-[420px] h-auto" />
+		</RadixToast.Provider>
 	)
 }
 
-function getSuccessProps({
-	isSuccess,
-	txSig,
-}: {
-	isSuccess: boolean
-	txSig: string
-}): ToastProps {
-	const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
+const Description = RadixToast.Description
 
-	const href = `https://solscan.io/tx/${txSig}?cluster=${cluster}`
-
-	const Message = () => (
-		<a href={href} target="_blank">
-			Transaction finalized &nbsp;🚀
-		</a>
-	)
-
-	return {
-		open: isSuccess,
-		message: <Message />,
-		variant: 'success',
-	}
-}
-
-function getErrorProps({
-	isError,
-	error,
-}: {
-	isError: boolean
-	error: unknown
-}): ToastProps {
-	const Message = () => <div>{getErrorMessage(error)}</div>
-
-	return {
-		open: isError,
-		message: <Message />,
-		variant: 'error',
-	}
-}
-
-export { Toast, getSuccessProps, getErrorProps }
+export { Toast, Description }
