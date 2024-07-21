@@ -6,7 +6,7 @@ import { Spinner } from '@/app/comps/spinner'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 import { useFormStatus } from 'react-dom'
 import { Tooltip, Content } from '@/app/comps/tooltip'
-import { useTxStatus } from '@/app/context/tx_context'
+import { useTxStatus, useReset } from '@/app/context/tx_context'
 
 type SubmitButtonProps = ButtonProps & {
 	content?: string
@@ -19,6 +19,8 @@ export function SubmitButton({ content, ...rest }: SubmitButtonProps) {
 	const { pending } = useFormStatus()
 	const { isLoading } = useTxStatus()
 	const disabled = !publicKey || pending || isLoading ? true : false
+
+	const reset = useReset()
 
 	return (
 		<Tooltip
@@ -36,7 +38,13 @@ export function SubmitButton({ content, ...rest }: SubmitButtonProps) {
 			}
 		>
 			<span className={publicKey ? 'cursor-pointer' : 'cursor-not-allowed'}>
-				<Button type="submit" disabled={disabled} {...rest} variant="submit">
+				<Button
+					type="submit"
+					disabled={disabled}
+					{...rest}
+					variant="submit"
+					onClick={reset}
+				>
 					{pending || isLoading ? (
 						<Spinner />
 					) : (

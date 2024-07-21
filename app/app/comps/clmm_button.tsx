@@ -1,6 +1,4 @@
-'use client'
-
-import { useRef, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { clmm } from '@/app/actions/clmm'
 import { useFormState } from 'react-dom'
 import { usePoolTx, useTx } from '@/app/context/tx_context'
@@ -34,6 +32,7 @@ export function ClmmButton() {
 			type="submit"
 			className="sr-only"
 			formAction={action}
+			onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
 		/>
 	)
 }

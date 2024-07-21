@@ -57,7 +57,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 
 	const { mint1, serializedTransaction: tx } = lastResult
 
-	useMintTx(tx)
+	const { data: txSig } = useMintTx(tx)
 
 	const { previewImage, clearPreviewImage, fileRef, onChange } =
 		useImageUpload()
@@ -85,7 +85,6 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 
 				<form
 					className="relative z-10 h-full w-full min-w-0 bg-gray-900"
-					action={action}
 					{...getFormProps(form)}
 				>
 					<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">

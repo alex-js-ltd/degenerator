@@ -6,7 +6,7 @@ import './globals.css'
 
 import { AppProviders } from './context'
 import { Header } from './comps/header'
-import { TransactionStatus } from './comps/transaction_status'
+import { ToastTxs } from '@/app/comps/toast'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -27,7 +27,7 @@ export default function RootLayout({
 					<AppProviders>
 						<Header />
 						<Background>{children}</Background>
-						<TransactionStatus />
+						<ToastTxs />
 					</AppProviders>
 				</div>
 			</body>

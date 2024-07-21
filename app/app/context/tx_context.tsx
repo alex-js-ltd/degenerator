@@ -1,6 +1,13 @@
 'use client'
 
-import React, { createContext, ReactNode, useEffect, useMemo, use } from 'react'
+import React, {
+	createContext,
+	ReactNode,
+	useEffect,
+	useMemo,
+	use,
+	useCallback,
+} from 'react'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
 import invariant from 'tiny-invariant'
@@ -60,4 +67,12 @@ function useTxStatus() {
 	return { isLoading: [mintTx.isLoading, poolTx.isLoading].some(Boolean) }
 }
 
-export { TxProvider, useTx, useMintTx, usePoolTx, useTxStatus }
+function useReset() {
+	const { mintTx, poolTx } = useTx()
+	return useCallback(() => {
+		mintTx.reset()
+		poolTx.reset()
+	}, [])
+}
+
+export { TxProvider, useTx, useMintTx, usePoolTx, useTxStatus, useReset }

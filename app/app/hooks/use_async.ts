@@ -110,8 +110,7 @@ const useAsync = <DataType>() => {
 		[],
 	)
 
-	const reset = useCallback(async () => {
-		await delay(20000)
+	const reset = useCallback(() => {
 		dispatch({ type: 'reset' })
 	}, [])
 
