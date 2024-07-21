@@ -1,6 +1,7 @@
 import { VersionedTransaction } from '@solana/web3.js'
 import { useConnection, useWallet } from '@jup-ag/wallet-adapter'
 import { useCallback } from 'react'
+import invariant from 'tiny-invariant'
 
 const { deserialize } = VersionedTransaction
 
@@ -27,6 +28,7 @@ export function useSignAndSendTransaction() {
 				'finalized',
 			)
 
+			invariant(confirm.value.err === null, 'Transaction Error')
 			console.log(`Transaction ${signature} finalized 🚀`)
 
 			return signature
