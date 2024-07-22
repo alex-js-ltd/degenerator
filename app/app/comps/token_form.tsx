@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, Fragment } from 'react'
+import { type ReactNode } from 'react'
 import {
 	useForm,
 	getFormProps,
@@ -52,7 +52,7 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 
 	const { mint1, serializedTransaction: tx } = lastResult
 
-	const { data: txSig } = useMintTx(tx)
+	useMintTx(tx)
 
 	const { previewImage, clearPreviewImage, fileRef, onChange } =
 		useImageUpload()
