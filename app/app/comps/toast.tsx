@@ -28,7 +28,7 @@ interface Description {
 
 function Toast({ children, ...props }: ToastProps) {
 	return (
-		<RadixToast.Provider swipeDirection="right" duration={60000}>
+		<RadixToast.Provider swipeDirection="right" duration={120000}>
 			<RadixToast.Root
 				className="relative sm:m-4 m-6 flex flex-col gap-1 items-start border border-toast-border rounded-[8px] w-fit h-auto p-4 data-[state=open]:animate-slide-in data-[state=closed]:animate-hide"
 				{...props}
@@ -43,6 +43,15 @@ function Toast({ children, ...props }: ToastProps) {
 
 const Description = RadixToast.Description
 
+function getIsLoading(label: string) {
+	return (
+		<div className="flex text-toast-text text-sm animate-pulse">
+			{label}:&nbsp;
+			<span className="lowercase">confirming&nbsp;⏳</span>
+		</div>
+	)
+}
+
 function getIsSuccess(txSig: string, label: string) {
 	return (
 		<ExternalLink
@@ -56,7 +65,7 @@ function getIsSuccess(txSig: string, label: string) {
 
 function getIsError(error: unknown, label: string) {
 	return (
-		<div className="flex">
+		<div className="flex text-toast-text text-sm">
 			{label}:&nbsp;
 			<span className="lowercase">{getErrorMessage(error)}</span>
 		</div>
@@ -74,7 +83,11 @@ function useToastTxs() {
 		]
 
 		return allTxs.reduce<Description[]>((acc, curr) => {
-			const { label, data, isError, error } = curr
+			const { label, data, isLoading, isError, error } = curr
+
+			if (isLoading) {
+				acc.push({ label, element: getIsLoading(label) })
+			}
 
 			if (data) {
 				acc.push({ label, element: getIsSuccess(data, label) })
