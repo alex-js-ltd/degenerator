@@ -45,9 +45,9 @@ const Description = RadixToast.Description
 
 function getIsLoading(label: string) {
 	return (
-		<div className="flex text-toast-text text-sm animate-pulse">
+		<div className="flex text-toast-text text-sm">
 			{label}:&nbsp;
-			<span className="lowercase">confirming&nbsp;⏳</span>
+			<span className="lowercase animate-pulse">confirming&nbsp;⏳</span>
 		</div>
 	)
 }
