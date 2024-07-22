@@ -5,7 +5,7 @@ import invariant from 'tiny-invariant'
 
 const { deserialize } = VersionedTransaction
 
-export function useSignAndSendTransaction() {
+export function useSignAndSendTx() {
 	const { connection } = useConnection()
 	const { sendTransaction } = useWallet()
 

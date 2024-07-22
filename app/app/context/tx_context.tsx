@@ -9,7 +9,7 @@ import React, {
 	useCallback,
 } from 'react'
 import { useAsync } from '@/app/hooks/use_async'
-import { useSignAndSendTransaction } from '@/app/hooks/use_sign_and_send_transaction'
+import { useSignAndSendTx } from '@/app/hooks/use_sign_and_send_tx'
 import invariant from 'tiny-invariant'
 
 type Async<DataType> = ReturnType<typeof useAsync<DataType>>
@@ -38,7 +38,7 @@ function useMintTx(tx?: Uint8Array) {
 	const [mintTx] = useTx()
 	const { run, ...rest } = mintTx
 
-	const sign = useSignAndSendTransaction()
+	const sign = useSignAndSendTx()
 
 	useEffect(() => {
 		if (tx) run(sign(tx))
@@ -51,7 +51,7 @@ function usePoolTx(tx?: Uint8Array) {
 	const [, poolTx] = useTx()
 	const { run, ...rest } = poolTx
 
-	const sign = useSignAndSendTransaction()
+	const sign = useSignAndSendTx()
 
 	useEffect(() => {
 		if (tx) run(sign(tx))
