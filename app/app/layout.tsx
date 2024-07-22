@@ -1,12 +1,11 @@
-import type { Metadata } from 'next'
-import type { ReactNode } from 'react'
+import { type Metadata } from 'next'
+import { type ReactNode } from 'react'
 import { Inter } from 'next/font/google'
 import Image from 'next/image'
-import './globals.css'
-
-import { AppProviders } from './context'
-import { Header } from './comps/header'
+import { AppProviders } from '@/app/context'
+import { Header } from '@/app/comps/header'
 import { ToastTxs } from '@/app/comps/toast'
+import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 

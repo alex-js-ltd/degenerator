@@ -45,7 +45,7 @@ const Description = RadixToast.Description
 
 function getIsLoading(label: string) {
 	return (
-		<div className="flex text-toast-text text-sm animate-pulse first-letter:uppercase">
+		<div className="flex text-toast-text text-sm animate-pulse">
 			{`${label}: confirming ⏳`}
 		</div>
 	)
@@ -64,7 +64,7 @@ function getIsSuccess(txSig: string, label: string) {
 
 function getIsError(error: unknown, label: string) {
 	return (
-		<div className="flex text-toast-text text-sm break-word break-all first-letter:uppercase">
+		<div className="flex text-toast-text text-sm break-word break-all">
 			{`${label}: ${getErrorMessage(error)}`}
 		</div>
 	)
