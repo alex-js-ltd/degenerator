@@ -46,8 +46,8 @@ const Description = RadixToast.Description
 function getIsLoading(label: string) {
 	return (
 		<div className="flex text-toast-text text-sm">
-			{label}:&nbsp;
-			<span className="lowercase animate-pulse">confirming&nbsp;⏳</span>
+			<span>{label}</span>
+			<pre className="lowercase animate-pulse"> confirming ⏳</pre>
 		</div>
 	)
 }
@@ -58,7 +58,7 @@ function getIsSuccess(txSig: string, label: string) {
 			href={`https://solscan.io/tx/${txSig}?cluster=${cluster}`}
 			variant="toast"
 		>
-			{label}: finalized&nbsp;🚀
+			<pre>{label}: finalized 🚀 </pre>
 		</ExternalLink>
 	)
 }
@@ -66,10 +66,10 @@ function getIsSuccess(txSig: string, label: string) {
 function getIsError(error: unknown, label: string) {
 	return (
 		<div className="flex text-toast-text text-sm">
-			{label}:&nbsp;
-			<span className="lowercase break-word break-all">
-				{getErrorMessage(error)}
-			</span>
+			<span>{label}</span>
+			<pre className="lowercase break-word break-all">
+				&nbsp;{getErrorMessage(error)}
+			</pre>
 		</div>
 	)
 }
@@ -112,7 +112,7 @@ function useToastTxs() {
 	)
 
 	useEffect(() => {
-		if (descriptions.length > 0) setOpen(true)
+		setOpen(descriptions.length > 0)
 	}, [descriptions])
 
 	return { descriptions, open, onOpenChange }
