@@ -47,7 +47,7 @@ function getIsLoading(label: string) {
 	return (
 		<div className="flex text-toast-text text-sm">
 			<span>{label}</span>
-			<pre className="lowercase animate-pulse"> confirming ⏳</pre>
+			<pre className="lowercase animate-pulse"> confirming ⏳ </pre>
 		</div>
 	)
 }
