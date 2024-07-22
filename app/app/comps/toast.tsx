@@ -54,15 +54,12 @@ function getIsSuccess(txSig: string, label: string) {
 	)
 }
 
-function getIsError(error: unknown, label: string, txSig?: string | null) {
-	const href = txSig
-		? `https://solscan.io/tx/${txSig}?cluster=${cluster}`
-		: undefined
+function getIsError(error: unknown, label: string) {
 	return (
-		<ExternalLink href={href} variant="toast">
+		<div className="flex">
 			{label}:&nbsp;
 			<span className="lowercase">{getErrorMessage(error)}</span>
-		</ExternalLink>
+		</div>
 	)
 }
 
@@ -86,7 +83,7 @@ function useToastTxs() {
 			if (isError) {
 				acc.push({
 					label: label,
-					element: getIsError(error, label, data),
+					element: getIsError(error, label),
 				})
 			}
 
