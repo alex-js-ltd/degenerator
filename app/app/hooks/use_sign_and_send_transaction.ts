@@ -27,7 +27,9 @@ export function useSignAndSendTransaction() {
 				},
 				'finalized',
 			)
+
 			invariant(confirm.value.err === null)
+
 			console.log(`Transaction ${signature} finalized 🚀`)
 
 			return signature
