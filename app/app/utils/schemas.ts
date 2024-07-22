@@ -13,7 +13,7 @@ const PublicKey = z
 export const TokenSchema = z.object({
 	payerKey: PublicKey,
 	name: z.string(),
-	symbol: z.string().max(5, { message: 'Symbol is too long' }),
+	symbol: z.string(),
 	decimals: z
 		.number({
 			invalid_type_error: 'Expected Number',
