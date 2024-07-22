@@ -30,13 +30,13 @@ function Toast({ children, ...props }: ToastProps) {
 	return (
 		<RadixToast.Provider swipeDirection="right" duration={3600000}>
 			<RadixToast.Root
-				className="relative sm:m-4 m-6 flex flex-col gap-1 items-start border border-toast-border rounded-[8px] w-fit h-auto p-4 data-[state=open]:animate-slide-in data-[state=closed]:animate-hide"
+				className="relative flex flex-col gap-1 items-start border border-toast-border rounded-[8px] w-fit h-auto p-4 data-[state=open]:animate-slide-in data-[state=closed]:animate-hide"
 				{...props}
 			>
 				{children}
 			</RadixToast.Root>
 
-			<RadixToast.Viewport className="fixed bottom-0 left-0 flex m-0 list-none z-50 w-fit h-auto" />
+			<RadixToast.Viewport className="fixed bottom-0 left-0 sm:p-4 p-6 flex m-0 list-none z-50 w-fit h-auto" />
 		</RadixToast.Provider>
 	)
 }
@@ -67,7 +67,9 @@ function getIsError(error: unknown, label: string) {
 	return (
 		<div className="flex text-toast-text text-sm">
 			{label}:&nbsp;
-			<span className="lowercase">{getErrorMessage(error)}</span>
+			<span className="lowercase break-word break-all">
+				{getErrorMessage(error)}
+			</span>
 		</div>
 	)
 }
