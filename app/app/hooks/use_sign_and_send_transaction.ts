@@ -28,7 +28,7 @@ export function useSignAndSendTransaction() {
 				'finalized',
 			)
 
-			invariant(confirm.value.err === null)
+			invariant(confirm.value.err === null, 'Transaction not confirmed')
 
 			console.log(`Transaction ${signature} finalized 🚀`)
 
