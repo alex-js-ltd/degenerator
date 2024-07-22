@@ -36,7 +36,7 @@ function Toast({ children, ...props }: ToastProps) {
 				{children}
 			</RadixToast.Root>
 
-			<RadixToast.Viewport className="fixed bottom-0 left-0 sm:p-4 p-6 flex m-0 list-none z-50 w-fit h-auto" />
+			<RadixToast.Viewport className="fixed bottom-0 left-0 sm:p-4 p-6 flex m-0 list-none z-50 w-fit h-auto max-w-[420px]" />
 		</RadixToast.Provider>
 	)
 }
