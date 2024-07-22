@@ -36,7 +36,7 @@ function Toast({ children, ...props }: ToastProps) {
 				{children}
 			</RadixToast.Root>
 
-			<RadixToast.Viewport className="fixed bottom-0 left-0 sm:p-4 p-6 flex m-0 list-none z-50 w-fit h-auto max-w-[420px]" />
+			<RadixToast.Viewport className="fixed bottom-0 left-0 sm:p-4 p-6 flex m-0 list-none z-50 w-fit h-auto sm:max-w-[576px] max-w-full" />
 		</RadixToast.Provider>
 	)
 }
@@ -45,8 +45,8 @@ const Description = RadixToast.Description
 
 function getIsLoading(label: string) {
 	return (
-		<div className="flex text-toast-text text-sm">
-			<pre className="lowercase animate-pulse">{label}: confirming ⏳ </pre>
+		<div className="flex text-toast-text text-sm animate-pulse first-letter:uppercase">
+			{`${label}: confirming ⏳`}
 		</div>
 	)
 }
@@ -57,17 +57,15 @@ function getIsSuccess(txSig: string, label: string) {
 			href={`https://solscan.io/tx/${txSig}?cluster=${cluster}`}
 			variant="toast"
 		>
-			<pre>{label}: finalized 🚀 </pre>
+			{`${label}: finalized 🚀`}
 		</ExternalLink>
 	)
 }
 
 function getIsError(error: unknown, label: string) {
 	return (
-		<div className="flex text-toast-text text-sm">
-			<pre className="lowercase break-word break-all">
-				{label}: {getErrorMessage(error)}
-			</pre>
+		<div className="flex text-toast-text text-sm break-word break-all first-letter:uppercase">
+			{`${label}: ${getErrorMessage(error)}`}
 		</div>
 	)
 }
