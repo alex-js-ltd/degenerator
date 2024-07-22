@@ -1,6 +1,5 @@
 import type { Reducer, Dispatch } from 'react'
 import { useReducer, useCallback, useLayoutEffect, useRef } from 'react'
-import { delay } from '@/app/utils/misc'
 
 type AsyncState<DataType> =
 	| {
