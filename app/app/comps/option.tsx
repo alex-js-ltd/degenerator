@@ -2,7 +2,7 @@ import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/app/utils/misc'
 
-const OptionVariants = cva(undefined, {
+const optionVariants = cva(undefined, {
 	variants: {
 		variant: {
 			on: 'size-2 rounded-full bg-gray-50 transition-all opacity-100',
@@ -13,13 +13,13 @@ const OptionVariants = cva(undefined, {
 
 export interface OptionProps
 	extends React.ButtonHTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof OptionVariants> {}
+		VariantProps<typeof optionVariants> {}
 
 const Option = React.forwardRef<HTMLDivElement, OptionProps>(
 	({ className, variant, ...props }, ref) => {
 		return (
 			<div
-				className={cn(OptionVariants({ variant, className }))}
+				className={cn(optionVariants({ variant, className }))}
 				ref={ref}
 				{...props}
 			/>
@@ -29,4 +29,4 @@ const Option = React.forwardRef<HTMLDivElement, OptionProps>(
 
 Option.displayName = 'Option'
 
-export { Option, OptionVariants }
+export { Option, optionVariants }
