@@ -23,9 +23,9 @@ export interface ToastProps extends RadixToast.ToastProps {
 
 function Toast({ children, ...props }: ToastProps) {
 	return (
-		<RadixToast.Provider swipeDirection="right" duration={3600000}>
+		<RadixToast.Provider swipeDirection="left" duration={3600000}>
 			<RadixToast.Root
-				className="relative flex flex-col gap-1 items-start border border-toast-border rounded-[8px] w-fit h-auto p-4 data-[state=open]:animate-slide-in data-[state=closed]:animate-hide"
+				className="data-[state=open]:animate-scale-in-50 data-[state=closed]:animate-scale-out-50 data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipe-out relative flex flex-col gap-1 items-start border border-toast-border rounded-[8px] w-fit h-auto p-4"
 				{...props}
 			>
 				{children}
@@ -106,7 +106,7 @@ function useToastTxs() {
 function ToastTxs() {
 	const { toastDescriptions, ...props } = useToastTxs()
 
-	const toastElements = toastDescriptions?.map(element => (
+	const toastElements = toastDescriptions.map(element => (
 		<Description key={element.props.label}>{element}</Description>
 	))
 

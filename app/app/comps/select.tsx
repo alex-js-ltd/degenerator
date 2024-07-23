@@ -130,7 +130,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 	({ children, className, fieldName, ...props }, forwardedRef) => {
 		const [meta] = useField(fieldName)
 		const selected = meta.value === props.value
-		const variant = selected ? 'on' : 'off'
+		const variant = selected ? 'checked' : 'unchecked'
 
 		return (
 			<RadixSelect.Item

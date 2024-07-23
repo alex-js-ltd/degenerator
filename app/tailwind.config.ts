@@ -67,18 +67,6 @@ const config: Config = {
 					from: { opacity: '1', transform: 'scale(1)' },
 					to: { opacity: '0', transform: 'scale(0.95)' },
 				},
-
-				'slide-in': {
-					from: {
-						transform: 'translateX(calc(100% + var(--viewport-padding)))',
-					},
-					to: { transform: 'translateX(0)' },
-				},
-
-				hide: {
-					from: { opacity: '1' },
-					to: { opacity: '0' },
-				},
 			},
 			animation: {
 				'slide-up-and-fade':
@@ -91,8 +79,6 @@ const config: Config = {
 				'scale-out-95': 'scale-out-95 400ms cubic-bezier(0.16, 1, 0.3, 1)',
 				'spin-fast': 'spin 400ms linear infinite',
 				'pulse-fast': 'pulse 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-				'slide-in': 'slide-in 150ms cubic-bezier(0.16, 1, 0.3, 1)',
-				hide: 'hide 100ms ease-in',
 			},
 		},
 	},

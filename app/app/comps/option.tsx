@@ -5,8 +5,9 @@ import { cn } from '@/app/utils/misc'
 const optionVariants = cva(undefined, {
 	variants: {
 		variant: {
-			on: 'size-2 rounded-full bg-gray-50 transition-all opacity-100',
-			off: 'size-2 rounded-full bg-gray-50 transition-all opacity-0 group-hover:opacity-30',
+			checked: 'size-2 rounded-full bg-gray-50 transition-all opacity-100',
+			unchecked:
+				'size-2 rounded-full bg-gray-50 transition-all opacity-0 group-hover:opacity-30',
 		},
 	},
 })
