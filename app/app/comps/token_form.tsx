@@ -33,36 +33,28 @@ const initialState = {
 	mint1: undefined,
 }
 
-export function TokenForm({ children = null }: { children: ReactNode }) {
+export function TokenForm({ children = null }: { children?: ReactNode }) {
 	const [lastResult, action] = useFormState(mintToken, initialState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
-		onValidate({ formData }) {
-			return parseWithZod(formData, { schema: Schema })
-		},
+		onValidate: ({ formData }) => parseWithZod(formData, { schema: Schema }),
 
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
-
 		shouldRevalidate: 'onInput',
-
 		lastResult,
-
 		defaultValue: {
 			clmm: 'on',
 		},
 	})
 
 	const { mint1, serializedTransaction: tx } = lastResult
-
 	useMintTx(tx)
 
 	const { previewImage, clearPreviewImage, fileRef, onChange } =
 		useImageUpload()
-
 	const payer = usePayer()
-
 	const showClmm = fields.clmm.value === 'on'
 
 	return (
@@ -90,49 +82,35 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 						<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
 							<Field
 								inputProps={{
-									...getInputProps(fields.name, {
-										type: 'text',
-									}),
+									...getInputProps(fields.name, { type: 'text' }),
 									placeholder: 'Name',
 								}}
 								errors={fields.name.errors}
 							/>
-
 							<Field
 								inputProps={{
-									...getInputProps(fields.symbol, {
-										type: 'text',
-									}),
+									...getInputProps(fields.symbol, { type: 'text' }),
 									placeholder: 'Symbol',
 								}}
 								errors={fields.symbol.errors}
 							/>
-
 							<Field
 								inputProps={{
-									...getInputProps(fields.decimals, {
-										type: 'text',
-									}),
+									...getInputProps(fields.decimals, { type: 'text' }),
 									placeholder: 'Decimals',
 								}}
 								errors={fields.decimals.errors}
 							/>
-
 							<Field
 								inputProps={{
-									...getInputProps(fields.supply, {
-										type: 'text',
-									}),
+									...getInputProps(fields.supply, { type: 'text' }),
 									placeholder: 'Supply',
 								}}
 								errors={fields.supply.errors}
 							/>
-
 							<Field
 								inputProps={{
-									...getInputProps(fields.description, {
-										type: 'text',
-									}),
+									...getInputProps(fields.description, { type: 'text' }),
 									placeholder: 'Description',
 									className: 'sm:col-span-4 w-full',
 								}}
@@ -140,16 +118,11 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 							/>
 
 							<Input
-								{...getInputProps(fields.payerKey, {
-									type: 'hidden',
-								})}
+								{...getInputProps(fields.payerKey, { type: 'hidden' })}
 								defaultValue={payer}
 							/>
-
 							<Input
-								{...getInputProps(fields.mint1, {
-									type: 'hidden',
-								})}
+								{...getInputProps(fields.mint1, { type: 'hidden' })}
 								defaultValue={mint1}
 							/>
 						</div>
@@ -161,7 +134,6 @@ export function TokenForm({ children = null }: { children: ReactNode }) {
 									fileRef={fileRef}
 									onChange={onChange}
 								/>
-
 								{showClmm && children}
 							</div>
 
