@@ -1,7 +1,6 @@
 'use client'
-import React from 'react'
+
 import { useResetForm } from '@/app/hooks/use_reset_form'
-import { useFormStatus } from 'react-dom'
 import { Button, type ButtonProps } from './button'
 import { Icon } from './_icon'
 import { callAll, cn } from '@/app/utils/misc'
@@ -9,12 +8,12 @@ import { useState } from 'react'
 import { delay } from '@/app/utils/misc'
 import { Tooltip, Content } from '@/app/comps/tooltip'
 import { useTxStatus, useResetTx } from '@/app/context/tx_context'
+
 export function ResetButton({ onClick }: ButtonProps) {
 	const resetForm = useResetForm()
 	const resetTx = useResetTx()
-	const { pending } = useFormStatus()
+
 	const { isLoading } = useTxStatus()
-	const disabled = pending || isLoading ? true : false
 	const [on, setOn] = useState(false)
 
 	const animate = on ? 'animate-spin-fast' : undefined
@@ -42,7 +41,7 @@ export function ResetButton({ onClick }: ButtonProps) {
 		>
 			<Button
 				variant="reset"
-				disabled={disabled}
+				disabled={isLoading}
 				onClick={callAll(onClick, resetForm, toggle, resetTx)}
 			>
 				<Icon

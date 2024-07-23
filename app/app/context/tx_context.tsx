@@ -10,6 +10,7 @@ import React, {
 } from 'react'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTx } from '@/app/hooks/use_sign_and_send_tx'
+import { useFormStatus } from 'react-dom'
 import invariant from 'tiny-invariant'
 
 type Async<DataType> = ReturnType<typeof useAsync<DataType>>
@@ -62,7 +63,8 @@ function usePoolTx(tx?: Uint8Array) {
 
 function useTxStatus() {
 	const txs = useTx()
-	return { isLoading: txs.map(tx => tx.isLoading).some(Boolean) }
+	const { pending } = useFormStatus()
+	return { isLoading: [...txs.map(tx => tx.isLoading), pending].some(Boolean) }
 }
 
 function useResetTx() {

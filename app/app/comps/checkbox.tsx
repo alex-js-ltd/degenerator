@@ -7,6 +7,7 @@ import { type ElementRef } from 'react'
 import { Icon } from './_icon'
 import { Tooltip, Content } from '@/app/comps/tooltip'
 import { ExternalLink } from '@/app/comps/external_link'
+import { useTxStatus } from '@/app/context/tx_context'
 
 export interface CheckboxProps extends RadixCheckbox.CheckboxProps {
 	name: FieldName<string>
@@ -18,6 +19,7 @@ const Checkbox = React.forwardRef<
 >(({ className, name, children, ...props }, ref) => {
 	const [meta] = useField(name)
 	const control = useInputControl(meta)
+	const { isLoading } = useTxStatus()
 
 	return (
 		<RadixCheckbox.Root
@@ -25,6 +27,7 @@ const Checkbox = React.forwardRef<
 			id={meta.id}
 			checked={control.value === 'on'}
 			onCheckedChange={checked => {
+				if (isLoading) return
 				control.change(checked ? 'on' : '')
 			}}
 			onBlur={control.blur}
