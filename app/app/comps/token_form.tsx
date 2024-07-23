@@ -1,6 +1,8 @@
 'use client'
 
 import { type ReactNode } from 'react'
+import { useFormState } from 'react-dom'
+
 import {
 	useForm,
 	getFormProps,
@@ -10,19 +12,21 @@ import {
 import { parseWithZod } from '@conform-to/zod'
 
 import { Schema } from '@/app/utils/schemas'
+import { mintToken } from '@/app/actions/mint_token'
+
 import { useImageUpload } from '@/app/hooks/use_image_upload'
+import { usePayer } from '@/app/hooks/use_payer'
+
+import { useMintTx } from '@/app/context/tx_context'
+
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { Input } from '@/app/comps/input'
 import { SubmitButton } from '@/app/comps/submit_button'
-import { mintToken } from '@/app/actions/mint_token'
-import { useFormState } from 'react-dom'
-import { usePayer } from '@/app/hooks/use_payer'
 import { ClmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
 import { ClmmButton } from '@/app/comps/clmm_button'
-import { useMintTx } from '@/app/context/tx_context'
 
 const initialState = {
 	serializedTransaction: undefined,
