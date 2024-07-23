@@ -18,8 +18,8 @@ export function getErrorMessage(error: unknown) {
 	) {
 		return error.message
 	}
-	console.error('Unable to get error message for error', error)
-	return 'Unexpected error'
+	console.error('unable to get error message for error', error)
+	return 'unexpected error'
 }
 
 /**
