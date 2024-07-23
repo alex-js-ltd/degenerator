@@ -65,7 +65,7 @@ function useTxStatus() {
 	return { isLoading: txs.map(tx => tx.isLoading).some(Boolean) }
 }
 
-function useReset() {
+function useResetTx() {
 	const txs = useTx()
 
 	return useCallback(() => {
@@ -73,4 +73,4 @@ function useReset() {
 	}, [txs])
 }
 
-export { TxProvider, useTx, useMintTx, usePoolTx, useTxStatus, useReset }
+export { TxProvider, useTx, useMintTx, usePoolTx, useTxStatus, useResetTx }
