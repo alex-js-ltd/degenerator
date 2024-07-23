@@ -155,12 +155,10 @@ async function getMintInstructions({
 		revokeFreezeAuth,
 	]
 
-	const initial: web3.TransactionInstruction[] = []
-
-	return instructions.reduce((acc, curr) => {
+	return instructions.reduce<web3.TransactionInstruction[]>((acc, curr) => {
 		if (curr) acc.push(curr)
 		return acc
-	}, initial)
+	}, [])
 }
 
 async function getRevokeMintAuth(
