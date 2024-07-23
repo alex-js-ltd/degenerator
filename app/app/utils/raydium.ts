@@ -11,6 +11,9 @@ const { CLUSTER } = getEnv()
 
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : 'devnet'
 
+const BASE_HOST =
+	CLUSTER === 'devnet' ? DEV_API_URLS.BASE_HOST : API_URLS.BASE_HOST
+
 async function initSdk({
 	owner,
 	loadToken,
@@ -18,9 +21,6 @@ async function initSdk({
 	owner?: PublicKey
 	loadToken?: boolean
 }) {
-	const BASE_HOST =
-		CLUSTER === 'devnet' ? DEV_API_URLS.BASE_HOST : API_URLS.BASE_HOST
-
 	const raydium = await Raydium.load({
 		owner,
 		connection,
