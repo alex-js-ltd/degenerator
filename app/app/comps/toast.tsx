@@ -21,11 +21,6 @@ export interface ToastProps extends RadixToast.ToastProps {
 	children?: ReactNode
 }
 
-interface Description {
-	label: string
-	element: ReactElement
-}
-
 function Toast({ children, ...props }: ToastProps) {
 	return (
 		<RadixToast.Provider swipeDirection="right" duration={3600000}>
@@ -35,7 +30,6 @@ function Toast({ children, ...props }: ToastProps) {
 			>
 				{children}
 			</RadixToast.Root>
-
 			<RadixToast.Viewport className="fixed bottom-0 left-0 sm:p-4 p-6 flex m-0 list-none z-50 w-fit h-auto sm:max-w-[576px] max-w-full" />
 		</RadixToast.Provider>
 	)
@@ -43,7 +37,7 @@ function Toast({ children, ...props }: ToastProps) {
 
 const Description = RadixToast.Description
 
-function getIsLoading(label: string) {
+function Loading({ label }: { label: string }) {
 	return (
 		<div className="flex text-toast-text text-sm animate-pulse">
 			{`${label}: confirming ⏳`}
@@ -51,7 +45,7 @@ function getIsLoading(label: string) {
 	)
 }
 
-function getIsSuccess(txSig: string, label: string) {
+function Finalized({ txSig, label }: { txSig: string; label: string }) {
 	return (
 		<ExternalLink
 			href={`https://solscan.io/tx/${txSig}?cluster=${cluster}`}
@@ -62,7 +56,7 @@ function getIsSuccess(txSig: string, label: string) {
 	)
 }
 
-function getIsError(error: unknown, label: string) {
+function Error({ error, label }: { error: unknown; label: string }) {
 	return (
 		<div className="flex text-toast-text text-sm break-word break-all">
 			{`${label}:`}&nbsp;
@@ -72,57 +66,51 @@ function getIsError(error: unknown, label: string) {
 }
 
 function useToastTxs() {
-	const [open, setOpen] = useState(false)
+	const [isOpen, setIsOpen] = useState(false)
 	const [mintTx, poolTx] = useTx()
 
-	const descriptions = useMemo(() => {
-		const allTxs = [
+	const toastDescriptions = useMemo(() => {
+		const transactions = [
 			{ label: 'Mint transaction', ...mintTx },
 			{ label: 'Pool transaction', ...poolTx },
 		]
 
-		return allTxs.reduce<Description[]>((acc, curr) => {
-			const { label, data, isLoading, isError, error } = curr
+		return transactions.reduce<ReactElement[]>((acc, tx) => {
+			const { label, data, isLoading, isError, error } = tx
 
 			if (isLoading) {
-				acc.push({ label, element: getIsLoading(label) })
+				acc.push(<Loading label={label} />)
 			}
 
 			if (data) {
-				acc.push({ label, element: getIsSuccess(data, label) })
+				acc.push(<Finalized txSig={data} label={label} />)
 			}
 
 			if (isError) {
-				acc.push({
-					label: label,
-					element: getIsError(error, label),
-				})
+				acc.push(<Error error={error} label={label} />)
 			}
 
 			return acc
 		}, [])
 	}, [mintTx, poolTx])
 
-	const onOpenChange = useCallback(
-		(open: boolean) => setOpen(open),
-		[descriptions],
-	)
+	const handleOpenChange = useCallback((open: boolean) => setIsOpen(open), [])
 
 	useEffect(() => {
-		setOpen(descriptions.length > 0)
-	}, [descriptions])
+		setIsOpen(toastDescriptions.length > 0)
+	}, [toastDescriptions])
 
-	return { descriptions, open, onOpenChange }
+	return { toastDescriptions, isOpen, handleOpenChange }
 }
 
 function ToastTxs() {
-	const { descriptions, ...props } = useToastTxs()
+	const { toastDescriptions, ...props } = useToastTxs()
 
-	const children = descriptions.map(({ label, element }) => (
-		<Description key={label}>{element}</Description>
+	const toastElements = toastDescriptions.map(element => (
+		<Description key={element.props.label}>{element}</Description>
 	))
 
-	return <Toast {...props}>{children}</Toast>
+	return <Toast {...props}>{toastElements}</Toast>
 }
 
 export { Toast, Description, ToastTxs }
