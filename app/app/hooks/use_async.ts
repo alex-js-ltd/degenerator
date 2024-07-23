@@ -1,5 +1,11 @@
-import type { Reducer, Dispatch } from 'react'
-import { useReducer, useCallback, useLayoutEffect, useRef } from 'react'
+import {
+	type Reducer,
+	type Dispatch,
+	useReducer,
+	useCallback,
+	useLayoutEffect,
+	useRef,
+} from 'react'
 
 type AsyncState<DataType> =
 	| {
