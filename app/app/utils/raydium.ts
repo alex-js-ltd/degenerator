@@ -2,21 +2,16 @@
 
 import invariant from 'tiny-invariant'
 import { connection } from '@/app/utils/setup'
-import { PublicKey, type Connection } from '@solana/web3.js'
-import {
-	Raydium,
-	DEV_API_URLS,
-	API_URLS,
-	parseTokenAccountResp,
-} from '@raydium-io/raydium-sdk-v2'
-import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
+import { Raydium, DEV_API_URLS, API_URLS } from '@raydium-io/raydium-sdk-v2'
+
 import { getEnv } from '@/app/utils/env'
 
 const { CLUSTER } = getEnv()
 
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : 'devnet'
 
-export async function initSdk({
+async function initSdk({
 	owner,
 	loadToken,
 }: {
@@ -41,37 +36,63 @@ export async function initSdk({
 
 	invariant(raydium, 'Failed to initialize raydium')
 
-	/**
-	 * By default: sdk will automatically fetch token account data when need it or any sol balace changed.
-	 * if you want to handle token account by yourself, set token account data after init sdk
-	 * code below shows how to do it.
-	 * note: after call raydium.account.updateTokenAccount, raydium will not automatically fetch token account
-	 */
-
 	return raydium
 }
 
-export async function fetchTokenAccountData({
-	connection,
-	owner,
-}: {
-	connection: Connection
-	owner: PublicKey
-}) {
-	const solAccountResp = await connection.getAccountInfo(owner)
-	const tokenAccountResp = await connection.getTokenAccountsByOwner(owner, {
-		programId: TOKEN_PROGRAM_ID,
-	})
-	const token2022Req = await connection.getTokenAccountsByOwner(owner, {
-		programId: TOKEN_2022_PROGRAM_ID,
-	})
-	const tokenAccountData = parseTokenAccountResp({
-		owner,
-		solAccountResp,
-		tokenAccountResp: {
-			context: tokenAccountResp.context,
-			value: [...tokenAccountResp.value, ...token2022Req.value],
-		},
-	})
-	return tokenAccountData
+async function getClmmConfigs(raydium: Raydium) {
+	const clmmConfigs =
+		cluster === 'mainnet' ? await raydium.api.getClmmConfigs() : devConfigs
+
+	invariant(clmmConfigs, 'Failed to fetch clmmConfigs')
+
+	return clmmConfigs
 }
+
+const devConfigs = [
+	{
+		id: 'CQYbhr6amxUER4p5SC44C63R4qw4NFc9Z4Db9vF4tZwG',
+		index: 0,
+		protocolFeeRate: 120000,
+		tradeFeeRate: 100,
+		tickSpacing: 10,
+		fundFeeRate: 40000,
+		description: 'Best for very stable pairs',
+		defaultRange: 0.005,
+		defaultRangePoint: [0.001, 0.003, 0.005, 0.008, 0.01],
+	},
+	{
+		id: 'B9H7TR8PSjJT7nuW2tuPkFC63z7drtMZ4LoCtD7PrCN1',
+		index: 1,
+		protocolFeeRate: 120000,
+		tradeFeeRate: 2500,
+		tickSpacing: 60,
+		fundFeeRate: 40000,
+		description: 'Best for most pairs',
+		defaultRange: 0.1,
+		defaultRangePoint: [0.01, 0.05, 0.1, 0.2, 0.5],
+	},
+	{
+		id: 'GjLEiquek1Nc2YjcBhufUGFRkaqW1JhaGjsdFd8mys38',
+		index: 3,
+		protocolFeeRate: 120000,
+		tradeFeeRate: 10000,
+		tickSpacing: 120,
+		fundFeeRate: 40000,
+		description: 'Best for exotic pairs',
+		defaultRange: 0.1,
+		defaultRangePoint: [0.01, 0.05, 0.1, 0.2, 0.5],
+	},
+	{
+		id: 'GVSwm4smQBYcgAJU7qjFHLQBHTc4AdB3F2HbZp6KqKof',
+		index: 2,
+		protocolFeeRate: 120000,
+		tradeFeeRate: 500,
+		tickSpacing: 10,
+		fundFeeRate: 40000,
+		description: 'Best for tighter ranges',
+		defaultRange: 0.1,
+		defaultRangePoint: [0.01, 0.05, 0.1, 0.2, 0.5],
+	},
+]
+
+export { initSdk, getClmmConfigs }

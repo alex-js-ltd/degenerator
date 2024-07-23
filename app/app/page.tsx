@@ -3,8 +3,7 @@ import { TokenForm } from '@/app/comps/token_form'
 import { type Raydium } from '@raydium-io/raydium-sdk-v2'
 import { type SelectItemConfig } from '@/app/comps/select'
 import { QuoteToken, FeeTier, InitialPrice } from '@/app/comps/select'
-import { initSdk } from '@/app/utils/raydium'
-import { getClmmConfigs } from '@/app/utils/clmm'
+import { initSdk, getClmmConfigs } from '@/app/utils/raydium'
 
 export default async function Page() {
 	return (

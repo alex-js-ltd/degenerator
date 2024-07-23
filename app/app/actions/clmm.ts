@@ -3,7 +3,6 @@
 import { parseWithZod } from '@conform-to/zod'
 import { ClmmSchema } from '@/app/utils/schemas'
 import invariant from 'tiny-invariant'
-import { connection } from '@/app/utils/setup'
 import { BN } from '@coral-xyz/anchor'
 
 import { PublicKey } from '@solana/web3.js'
@@ -17,8 +16,7 @@ import {
 import Decimal from 'decimal.js'
 
 import { getEnv } from '@/app/utils/env'
-import { getClmmConfigs } from '@/app/utils/clmm'
-import { initSdk, fetchTokenAccountData } from '@/app/utils/raydium'
+import { initSdk, getClmmConfigs } from '@/app/utils/raydium'
 
 const { CLUSTER } = getEnv()
 
@@ -41,15 +39,6 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 	const { payerKey, mint1, mint2, feeTierId, initialPrice } = submission.value
 
 	const raydium = await initSdk({ owner: payerKey })
-
-	raydium.account.updateTokenAccount(
-		await fetchTokenAccountData({ connection, owner: payerKey }),
-	)
-	connection.onAccountChange(payerKey, async () => {
-		raydium.account.updateTokenAccount(
-			await fetchTokenAccountData({ connection, owner: payerKey }),
-		)
-	})
 
 	const { transaction, poolId } = await createPool({
 		raydium,
