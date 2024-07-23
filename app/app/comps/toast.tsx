@@ -76,7 +76,7 @@ function useToastTxs() {
 		]
 
 		return transactions.reduce<ReactElement[]>((acc, tx) => {
-			const { label, data, isLoading, isError, error } = tx
+			const { isLoading, data, error, label } = tx
 
 			if (isLoading) {
 				acc.push(<Loading label={label} />)
@@ -86,7 +86,7 @@ function useToastTxs() {
 				acc.push(<Finalized txSig={data} label={label} />)
 			}
 
-			if (isError) {
+			if (error) {
 				acc.push(<Error error={error} label={label} />)
 			}
 
@@ -106,9 +106,11 @@ function useToastTxs() {
 function ToastTxs() {
 	const { toastDescriptions, ...props } = useToastTxs()
 
-	const toastElements = toastDescriptions.map(element => (
+	const toastElements = toastDescriptions?.map(element => (
 		<Description key={element.props.label}>{element}</Description>
 	))
+
+	if (toastElements.length === 0) return null
 
 	return <Toast {...props}>{toastElements}</Toast>
 }
