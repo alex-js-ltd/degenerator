@@ -65,7 +65,8 @@ function getIsSuccess(txSig: string, label: string) {
 function getIsError(error: unknown, label: string) {
 	return (
 		<div className="flex text-toast-text text-sm break-word break-all">
-			{`${label}: ${getErrorMessage(error)}`}
+			{`${label}:`}&nbsp;
+			<span className="lowercase">{getErrorMessage(error)}</span>
 		</div>
 	)
 }
