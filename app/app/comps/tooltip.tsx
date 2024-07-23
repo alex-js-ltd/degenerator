@@ -3,7 +3,7 @@
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 import { type ReactElement } from 'react'
 
-type TooltipProps = {
+interface TooltipProps {
 	rootProps?: TooltipPrimitive.TooltipProps
 	children: TooltipPrimitive.TooltipTriggerProps['children']
 	content: ReactElement<TooltipPrimitive.TooltipContentProps>
