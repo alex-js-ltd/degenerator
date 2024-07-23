@@ -20,6 +20,12 @@ export function SubmitButton({ content, ...rest }: SubmitButtonProps) {
 
 	const reset = useResetTx()
 
+	const cursor = isLoading
+		? 'cursor-default'
+		: publicKey && !isLoading
+		? 'cursor-pointer'
+		: 'cursor-not-allowed'
+
 	return (
 		<Tooltip
 			rootProps={{ open: publicKey ? undefined : false }}
@@ -35,7 +41,7 @@ export function SubmitButton({ content, ...rest }: SubmitButtonProps) {
 				</Content>
 			}
 		>
-			<span className={publicKey ? 'cursor-pointer' : 'cursor-not-allowed'}>
+			<span className={cursor}>
 				<Button
 					{...rest}
 					type="submit"
