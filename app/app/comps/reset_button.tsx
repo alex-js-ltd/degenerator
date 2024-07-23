@@ -8,10 +8,10 @@ import { callAll, cn } from '@/app/utils/misc'
 import { useState } from 'react'
 import { delay } from '@/app/utils/misc'
 import { Tooltip, Content } from '@/app/comps/tooltip'
-import { useTxStatus } from '@/app/context/tx_context'
+import { useTxStatus, useReset } from '@/app/context/tx_context'
 export function ResetButton({ onClick }: ButtonProps) {
-	const reset = useResetForm()
-
+	const resetForm = useResetForm()
+	const resetTx = useReset()
 	const { pending } = useFormStatus()
 	const { isLoading } = useTxStatus()
 	const disabled = pending || isLoading ? true : false
@@ -43,7 +43,7 @@ export function ResetButton({ onClick }: ButtonProps) {
 			<Button
 				variant="reset"
 				disabled={disabled}
-				onClick={callAll(onClick, reset, toggle)}
+				onClick={callAll(onClick, resetForm, toggle, resetTx)}
 			>
 				<Icon
 					name="reset"

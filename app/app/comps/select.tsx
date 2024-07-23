@@ -95,7 +95,7 @@ function Select({
 						border,
 					)}
 				>
-					{logoProps && Component && <Component {...logoProps} />}
+					{Component && logoProps && <Component {...logoProps} />}
 
 					<RadixSelect.Value {...valueProps}>
 						{selected?.title ?? ''}
