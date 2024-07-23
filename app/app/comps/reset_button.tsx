@@ -18,7 +18,7 @@ export function ResetButton({ onClick }: ButtonProps) {
 
 	const animate = on ? 'animate-spin-fast' : undefined
 
-	const toggle = async () => {
+	async function toggle() {
 		if (on) return
 		setOn(true)
 		await delay(400)
