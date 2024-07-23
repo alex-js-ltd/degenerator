@@ -48,6 +48,7 @@ export function SubmitButton({ content, ...rest }: SubmitButtonProps) {
 					disabled={disabled}
 					variant="submit"
 					onClick={reset}
+					aria-label={`Submit ${content}`}
 				>
 					{isLoading ? (
 						<Spinner />
