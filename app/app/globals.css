@@ -41,10 +41,6 @@ dialog {
 	border: none;
 }
 
-.gradient {
-	background: linear-gradient(45deg, #06b0f9, #f906b0);
-}
-
 input[type=file], /* FF, IE7+, chrome (except button) */
 input[type=file]::-webkit-file-upload-button {
 	/* chromes and blink button */
