@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html className={`${GeistSans.variable} ${GeistMono.variable}`} lang="en">
-			<body>
+			<body className="font-sans">
 				<div className="min-h-screen-patched flex flex-col border w-full">
 					<AppProviders>
 						<Header />

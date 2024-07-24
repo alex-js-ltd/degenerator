@@ -39,7 +39,7 @@ const Description = RadixToast.Description
 
 function Loading({ label }: { label: string }) {
 	return (
-		<div className="flex text-toast-text text-sm animate-pulse">
+		<div className="flex text-toast-text text-sm animate-pulse font-mono">
 			{`${label}: confirming ⏳`}
 		</div>
 	)
@@ -58,7 +58,7 @@ function Finalized({ txSig, label }: { txSig: string; label: string }) {
 
 function Error({ error, label }: { error: unknown; label: string }) {
 	return (
-		<div className="flex text-toast-text text-sm break-word break-all">
+		<div className="flex text-toast-text text-sm break-word break-all font-mono">
 			{`${label}:`}&nbsp;
 			<span className="lowercase">{getErrorMessage(error)}</span>
 		</div>
