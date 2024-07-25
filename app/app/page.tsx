@@ -1,15 +1,14 @@
 import * as React from 'react'
+import { type Raydium, initSdk } from '@/app/utils/raydium'
 import { TokenForm } from '@/app/comps/token_form'
-import { type Raydium } from '@raydium-io/raydium-sdk-v2'
 import { type SelectItemConfig } from '@/app/comps/select'
-import { QuoteToken, FeeTier, InitialPrice } from '@/app/comps/select'
-import { initSdk, getClmmConfigs } from '@/app/utils/raydium'
+import { QuoteToken } from '@/app/comps/select'
 
 export default async function Page() {
 	return (
 		<TokenForm>
 			<React.Suspense fallback={<Loading />}>
-				<ClmmOptions />
+				<MintList />
 			</React.Suspense>
 		</TokenForm>
 	)
@@ -33,43 +32,17 @@ async function getQuoteTokenProps(raydium: Raydium) {
 		return acc
 	}, [])
 
-	return { items: mintItems, name: 'mint2' }
+	return { items: mintItems, name: 'mintB' }
 }
 
-async function getFeeTierProps(raydium: Raydium) {
-	const clmmConfigs = await getClmmConfigs(raydium)
-
-	return {
-		items: clmmConfigs?.map(({ id, description }) => ({
-			value: id,
-			children: description,
-			imageProps: { src: id, alt: description },
-		})),
-		name: 'feeTierId',
-	}
-}
-
-async function ClmmOptions() {
+async function MintList() {
 	const raydium = await initSdk({})
 
-	const quote = getQuoteTokenProps(raydium)
-	const fee = getFeeTierProps(raydium)
-
-	const [quoteProps, feeProps] = await Promise.all([quote, fee])
+	const quoteProps = await getQuoteTokenProps(raydium)
 
 	return (
 		<React.Fragment>
 			<QuoteToken {...quoteProps} />
-			<FeeTier {...feeProps} />
-			<InitialPrice
-				items={Array.from([1, 10, 100, 1000, 10000], n => ({
-					value: String(n),
-					children: String(n),
-					title: String(n),
-				}))}
-				name="initialPrice"
-				quoteItems={quoteProps.items}
-			/>
 		</React.Fragment>
 	)
 }
@@ -77,8 +50,6 @@ async function ClmmOptions() {
 function Loading() {
 	return (
 		<React.Fragment>
-			<div className="flex-1 h-[32px] rounded bg-slate-800 animate-pulse" />
-			<div className="flex-1 h-[32px] rounded bg-slate-800 animate-pulse" />
 			<div className="flex-1 h-[32px] rounded bg-slate-800 animate-pulse" />
 		</React.Fragment>
 	)

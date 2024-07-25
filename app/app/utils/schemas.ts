@@ -29,46 +29,28 @@ export const TokenSchema = z.object({
 	image: z.instanceof(File).refine(file => {
 		return !file || file.size <= MAX_UPLOAD_SIZE
 	}, 'File size must be less than 4.5MB'),
-	clmm: z
+	cpmm: z
 		.string()
 		.transform(value => value === 'on')
 		.optional(),
 })
 
-export const ClmmSchema = z.object({
+export const CpmmSchema = z.object({
 	payerKey: PublicKey,
-	mint1: PublicKey,
-	mint2: PublicKey,
-	feeTierId: z.string(),
-	initialPrice: z.preprocess(val => Number(val), z.number()),
+	mintA: PublicKey,
+	mintB: PublicKey,
 })
 
-export const ClmmOptions = ClmmSchema.partial()
+export const CpmmOptions = CpmmSchema.partial()
 
 export const Schema = z
-	.intersection(TokenSchema, ClmmOptions)
-	.superRefine(({ clmm, mint2, feeTierId, initialPrice }, context) => {
-		if (clmm && !mint2) {
+	.intersection(TokenSchema, CpmmOptions)
+	.superRefine(({ cpmm, mintB }, context) => {
+		if (cpmm && !mintB) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: 'Required',
-				path: ['mint2'],
-			})
-		}
-
-		if (clmm && !feeTierId) {
-			context.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: 'Required',
-				path: ['feeTierId'],
-			})
-		}
-
-		if (clmm && !initialPrice) {
-			context.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: 'Required',
-				path: ['initialPrice'],
+				path: ['mintB'],
 			})
 		}
 	})

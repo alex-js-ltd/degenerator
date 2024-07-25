@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import { clmm } from '@/app/actions/clmm'
+import { cpmm } from '@/app/actions/cpmm'
 import { useFormState } from 'react-dom'
 import { usePoolTx, useTx } from '@/app/context/tx_context'
 
@@ -8,9 +8,9 @@ const initialState = {
 	poolId: undefined,
 }
 
-export function ClmmButton() {
-	const [lastResult, action] = useFormState(clmm, initialState)
-	const { serializedTransaction: tx, poolId } = lastResult
+export function Cpmm() {
+	const [lastResult, action] = useFormState(cpmm, initialState)
+	const { serializedTransaction: tx } = lastResult
 
 	const buttonRef = useRef<HTMLButtonElement>(null)
 	const [mintTx] = useTx()
@@ -24,9 +24,6 @@ export function ClmmButton() {
 	usePoolTx(tx)
 
 	if (!mintTx.data) return null
-
-	console.log('poolId', poolId)
-	console.log(`https://raydium.io/clmm/create-position/?pool_id=${poolId}`)
 
 	return (
 		<button

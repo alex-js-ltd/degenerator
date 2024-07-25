@@ -24,13 +24,13 @@ import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { Input } from '@/app/comps/input'
 import { SubmitButton } from '@/app/comps/submit_button'
-import { ClmmCheckbox } from '@/app/comps/checkbox'
+import { CpmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
-import { ClmmButton } from '@/app/comps/clmm_button'
+import { Cpmm } from '@/app/comps/cpmm'
 
 const initialState = {
 	serializedTransaction: undefined,
-	mint1: undefined,
+	mintA: undefined,
 }
 
 export function TokenForm({ children = null }: { children?: ReactNode }) {
@@ -45,17 +45,17 @@ export function TokenForm({ children = null }: { children?: ReactNode }) {
 		shouldRevalidate: 'onInput',
 		lastResult,
 		defaultValue: {
-			clmm: 'on',
+			cpmm: 'on',
 		},
 	})
 
-	const { mint1, serializedTransaction: tx } = lastResult
+	const { mintA, serializedTransaction: tx } = lastResult
 	useMintTx(tx)
 
 	const { previewImage, clearPreviewImage, fileRef, onChange } =
 		useImageUpload()
 	const payer = usePayer()
-	const showClmm = fields.clmm.value === 'on'
+	const showCpmm = fields.cpmm.value === 'on'
 
 	return (
 		<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
@@ -71,7 +71,7 @@ export function TokenForm({ children = null }: { children?: ReactNode }) {
 				</div>
 
 				<div className="absolute right-3.5 top-2.5 z-10 p-1 w-5 h-5">
-					<ClmmCheckbox />
+					<CpmmCheckbox />
 				</div>
 
 				<form
@@ -122,8 +122,8 @@ export function TokenForm({ children = null }: { children?: ReactNode }) {
 								defaultValue={payer}
 							/>
 							<Input
-								{...getInputProps(fields.mint1, { type: 'hidden' })}
-								defaultValue={mint1}
+								{...getInputProps(fields.mintA, { type: 'hidden' })}
+								defaultValue={mintA}
 							/>
 						</div>
 
@@ -134,16 +134,16 @@ export function TokenForm({ children = null }: { children?: ReactNode }) {
 									fileRef={fileRef}
 									onChange={onChange}
 								/>
-								{showClmm && children}
+								{showCpmm && children}
 							</div>
 
 							<SubmitButton
 								form={form.id}
 								formAction={action}
-								content={showClmm ? 'Mint Token + Create Pool' : 'Mint Token'}
+								content={showCpmm ? 'Mint Token + Create Pool' : 'Mint Token'}
 							/>
 
-							{showClmm && <ClmmButton />}
+							{showCpmm && <Cpmm />}
 						</div>
 					</fieldset>
 				</form>
