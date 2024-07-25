@@ -21,7 +21,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@raydium-io/raydium-sdk-v2": "^0.1.44-alpha",
+    "@raydium-io/raydium-sdk-v2": "0.1.45-alpha",
     "@solana/spl-token": "^0.4.6",
     "@solana/web3.js": "^1.91.8",
     "@vercel/blob": "^0.23.2",
