@@ -5,13 +5,7 @@ import { type SelectItemConfig } from '@/app/comps/select'
 import { QuoteToken } from '@/app/comps/select'
 
 export default async function Page() {
-	return (
-		<TokenForm>
-			<React.Suspense fallback={<Loading />}>
-				<MintList />
-			</React.Suspense>
-		</TokenForm>
-	)
+	return <TokenForm />
 }
 
 async function getQuoteTokenProps(raydium: Raydium) {

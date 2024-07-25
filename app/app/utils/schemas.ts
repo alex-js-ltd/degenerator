@@ -35,22 +35,8 @@ export const TokenSchema = z.object({
 		.optional(),
 })
 
-export const CpmmSchema = z.object({
+export const PoolSchema = z.object({
 	payerKey: PublicKey,
 	mintA: PublicKey,
 	mintB: PublicKey,
 })
-
-export const CpmmOptions = CpmmSchema.partial()
-
-export const Schema = z
-	.intersection(TokenSchema, CpmmOptions)
-	.superRefine(({ cpmm, mintB }, context) => {
-		if (cpmm && !mintB) {
-			context.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: 'Required',
-				path: ['mintB'],
-			})
-		}
-	})

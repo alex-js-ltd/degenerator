@@ -11,7 +11,7 @@ import {
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
-import { Schema } from '@/app/utils/schemas'
+import { TokenSchema } from '@/app/utils/schemas'
 import { mintToken } from '@/app/actions/mint_token'
 
 import { useImageUpload } from '@/app/hooks/use_image_upload'
@@ -26,19 +26,22 @@ import { Input } from '@/app/comps/input'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { CpmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
-import { Cpmm } from '@/app/comps/cpmm'
+import { PoolForm } from '@/app/comps/pool_form'
+import { Button } from './button'
+import { Popover, Content } from './popover'
 
 const initialState = {
 	serializedTransaction: undefined,
 	mintA: undefined,
 }
 
-export function TokenForm({ children = null }: { children?: ReactNode }) {
+export function TokenForm() {
 	const [lastResult, action] = useFormState(mintToken, initialState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
-		onValidate: ({ formData }) => parseWithZod(formData, { schema: Schema }),
+		onValidate: ({ formData }) =>
+			parseWithZod(formData, { schema: TokenSchema }),
 
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
@@ -121,10 +124,6 @@ export function TokenForm({ children = null }: { children?: ReactNode }) {
 								{...getInputProps(fields.payerKey, { type: 'hidden' })}
 								defaultValue={payer}
 							/>
-							<Input
-								{...getInputProps(fields.mintA, { type: 'hidden' })}
-								defaultValue={mintA}
-							/>
 						</div>
 
 						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
@@ -134,20 +133,34 @@ export function TokenForm({ children = null }: { children?: ReactNode }) {
 									fileRef={fileRef}
 									onChange={onChange}
 								/>
-								{showCpmm && children}
 							</div>
 
 							<SubmitButton
 								form={form.id}
 								formAction={action}
-								content={showCpmm ? 'Mint Token + Create Pool' : 'Mint Token'}
+								content="Mint Token"
 							/>
-
-							{showCpmm && <Cpmm />}
 						</div>
 					</fieldset>
 				</form>
 			</FormProvider>
+
+			<div className="z-50 absolute bottom-3 left-28 flex w-fit">
+				<Popover
+					content={
+						<Content
+							side="bottom"
+							align="start"
+							sideOffset={20}
+							className="w-[300px] h-[100px] z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0"
+						>
+							<PoolForm />
+						</Content>
+					}
+				>
+					<Button variant="image">Pool</Button>
+				</Popover>
+			</div>
 		</div>
 	)
 }

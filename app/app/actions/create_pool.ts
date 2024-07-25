@@ -1,7 +1,7 @@
 'use server'
 
 import { parseWithZod } from '@conform-to/zod'
-import { CpmmSchema } from '@/app/utils/schemas'
+import { PoolSchema } from '@/app/utils/schemas'
 import { type PublicKey } from '@solana/web3.js'
 import {
 	type Raydium,
@@ -15,9 +15,9 @@ import {
 } from '@/app/utils/raydium'
 import BN from 'bn.js'
 
-export async function cpmm(_prevState: unknown, formData: FormData) {
+export async function createPool(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
-		schema: CpmmSchema,
+		schema: PoolSchema,
 	})
 
 	if (submission.status !== 'success') {
@@ -31,7 +31,7 @@ export async function cpmm(_prevState: unknown, formData: FormData) {
 
 	const raydium = await initSdk({ owner: payerKey })
 
-	const { transaction, poolId } = await createPool({
+	const { transaction, poolId } = await getPoolTx({
 		raydium,
 		mintA,
 		mintB,
@@ -54,7 +54,7 @@ const poolFeeAccount = {
 	devnet: DEV_CREATE_CPMM_POOL_FEE_ACC,
 }
 
-async function createPool({
+async function getPoolTx({
 	raydium,
 	mintA: a,
 	mintB: b,
@@ -67,6 +67,9 @@ async function createPool({
 }) {
 	const mintA = await raydium.token.getTokenInfo(a)
 	const mintB = await raydium.token.getTokenInfo(b)
+
+	console.log(mintA)
+	console.log(mintB)
 
 	const { execute, extInfo, transaction } = await raydium.cpmm.createPool({
 		programId: programId[cluster],
