@@ -10,8 +10,8 @@ import {
 	Raydium,
 	initSdk,
 	getClmmConfigs,
-	CREATE_CPMM_POOL_PROGRAM,
-	DEV_CREATE_CPMM_POOL_PROGRAM,
+	CLMM_PROGRAM_ID,
+	DEVNET_PROGRAM_ID,
 	cluster,
 	txVersion,
 } from '@/app/utils/raydium'
@@ -51,9 +51,12 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 }
 
 const programId = {
-	mainnet: CREATE_CPMM_POOL_PROGRAM,
-	devnet: DEV_CREATE_CPMM_POOL_PROGRAM,
+	mainnet: CLMM_PROGRAM_ID,
+	devnet: DEVNET_PROGRAM_ID.CLMM,
 }
+
+console.log(programId.mainnet.toBase58())
+console.log(programId.devnet.toBase58())
 
 async function createPool({
 	raydium,
