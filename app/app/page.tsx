@@ -15,9 +15,13 @@ export default async function Page() {
 }
 
 async function getQuoteTokenProps(raydium: Raydium) {
-	const data = await raydium.fetchV3TokenList()
+	const data = await raydium.api.getTokenInfo([
+		'So11111111111111111111111111111111111111112',
+		'4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R',
+		'2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo',
+	])
 
-	const mintItems = data.mintList.reduce<SelectItemConfig[]>((acc, curr) => {
+	const mintItems = data.reduce<SelectItemConfig[]>((acc, curr) => {
 		const { address, name, logoURI, symbol } = curr
 
 		const option = {

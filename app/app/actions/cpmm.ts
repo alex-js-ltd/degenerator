@@ -12,6 +12,7 @@ import {
 	DEV_CREATE_CPMM_POOL_PROGRAM,
 	CREATE_CPMM_POOL_FEE_ACC,
 	DEV_CREATE_CPMM_POOL_FEE_ACC,
+	DEVNET_PROGRAM_ID,
 } from '@/app/utils/raydium'
 import BN from 'bn.js'
 
@@ -29,13 +30,18 @@ export async function cpmm(_prevState: unknown, formData: FormData) {
 
 	const { payerKey, mintA, mintB } = submission.value
 
-	const raydium = await initSdk({ owner: payerKey, loadToken: true })
+	const raydium = await initSdk({ owner: payerKey })
 
-	const tx = await createPool({ raydium, mintA, mintB })
+	const { transaction, poolId } = await createPool({
+		raydium,
+		mintA,
+		mintB,
+		payerKey,
+	})
 
 	return {
 		...submission.reply(),
-		serializedTransaction: tx.serialize(),
+		serializedTransaction: transaction.serialize(),
 	}
 }
 
@@ -53,10 +59,12 @@ async function createPool({
 	raydium,
 	mintA: a,
 	mintB: b,
+	payerKey,
 }: {
 	raydium: Raydium
 	mintA: PublicKey
 	mintB: PublicKey
+	payerKey: PublicKey
 }) {
 	const mintA = await raydium.token.getTokenInfo(a)
 	const mintB = await raydium.token.getTokenInfo(b)
@@ -72,6 +80,7 @@ async function createPool({
 		associatedOnly: false,
 		ownerInfo: {
 			useSOLBalance: true,
+			feePayer: payerKey,
 		},
 		txVersion,
 		// optional: set up priority fee here
@@ -81,5 +90,6 @@ async function createPool({
 		// },
 	})
 
-	return transaction
+	extInfo.address.poolFeeAccount
+	return { transaction, poolId: extInfo.address.poolId.toBase58() }
 }
