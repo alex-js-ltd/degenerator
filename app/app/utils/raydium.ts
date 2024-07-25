@@ -8,14 +8,16 @@ import { connection } from '@/app/utils/setup'
 import { PublicKey } from '@solana/web3.js'
 import { getEnv } from '@/app/utils/env'
 
-const txVersion = TxVersion.V0 // or TxVersion.LEGACY
+const txVersion = TxVersion.V0
 
 const { CLUSTER } = getEnv()
 
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : 'devnet'
 
-const BASE_HOST =
-	CLUSTER === 'devnet' ? DEV_API_URLS.BASE_HOST : API_URLS.BASE_HOST
+const BASE_HOST = {
+	mainnet: API_URLS.BASE_HOST,
+	devnet: DEV_API_URLS.BASE_HOST,
+}
 
 async function initSdk(params: { owner?: PublicKey; loadToken?: boolean }) {
 	const raydium = await Raydium.load({
@@ -27,7 +29,7 @@ async function initSdk(params: { owner?: PublicKey; loadToken?: boolean }) {
 		blockhashCommitment: 'finalized',
 
 		urlConfigs: {
-			BASE_HOST,
+			BASE_HOST: BASE_HOST[cluster],
 		},
 	})
 

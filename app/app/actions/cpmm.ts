@@ -12,7 +12,6 @@ import {
 	DEV_CREATE_CPMM_POOL_PROGRAM,
 	CREATE_CPMM_POOL_FEE_ACC,
 	DEV_CREATE_CPMM_POOL_FEE_ACC,
-	DEVNET_PROGRAM_ID,
 } from '@/app/utils/raydium'
 import BN from 'bn.js'
 
@@ -90,6 +89,5 @@ async function createPool({
 		// },
 	})
 
-	extInfo.address.poolFeeAccount
 	return { transaction, poolId: extInfo.address.poolId.toBase58() }
 }
