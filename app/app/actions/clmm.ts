@@ -4,24 +4,17 @@ import { parseWithZod } from '@conform-to/zod'
 import { ClmmSchema } from '@/app/utils/schemas'
 import invariant from 'tiny-invariant'
 import { BN } from '@coral-xyz/anchor'
-
 import { PublicKey } from '@solana/web3.js'
-
+import Decimal from 'decimal.js'
 import {
 	Raydium,
-	TxVersion,
-	CLMM_PROGRAM_ID,
-	DEVNET_PROGRAM_ID,
-} from '@raydium-io/raydium-sdk-v2'
-import Decimal from 'decimal.js'
-
-import { getEnv } from '@/app/utils/env'
-import { initSdk, getClmmConfigs } from '@/app/utils/raydium'
-
-const { CLUSTER } = getEnv()
-
-const txVersion = TxVersion.V0 // or TxVersion.LEGACY
-const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : 'devnet'
+	initSdk,
+	getClmmConfigs,
+	CREATE_CPMM_POOL_PROGRAM,
+	DEV_CREATE_CPMM_POOL_PROGRAM,
+	cluster,
+	txVersion,
+} from '@/app/utils/raydium'
 
 export async function clmm(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -57,6 +50,11 @@ export async function clmm(_prevState: unknown, formData: FormData) {
 	}
 }
 
+const programId = {
+	mainnet: CREATE_CPMM_POOL_PROGRAM,
+	devnet: DEV_CREATE_CPMM_POOL_PROGRAM,
+}
+
 async function createPool({
 	raydium,
 	mint1: mint1Key,
@@ -78,11 +76,8 @@ async function createPool({
 
 	invariant(clmmConfig, 'Failed to find clmmConfig')
 
-	const programId =
-		cluster === 'mainnet' ? CLMM_PROGRAM_ID : DEVNET_PROGRAM_ID.CLMM
-
 	const { builder, extInfo, transaction } = await raydium.clmm.createPool({
-		programId,
+		programId: programId[cluster],
 		mint1,
 		mint2,
 		ammConfig: {
