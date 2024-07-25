@@ -6,11 +6,12 @@ import { type PublicKey } from '@solana/web3.js'
 import {
 	type Raydium,
 	initSdk,
-	CREATE_CPMM_POOL_PROGRAM,
-	CREATE_CPMM_POOL_FEE_ACC,
-	DEVNET_PROGRAM_ID,
 	txVersion,
 	cluster,
+	CREATE_CPMM_POOL_PROGRAM,
+	DEV_CREATE_CPMM_POOL_PROGRAM,
+	CREATE_CPMM_POOL_FEE_ACC,
+	DEV_CREATE_CPMM_POOL_FEE_ACC,
 } from '@/app/utils/raydium'
 import BN from 'bn.js'
 
@@ -38,6 +39,16 @@ export async function cpmm(_prevState: unknown, formData: FormData) {
 	}
 }
 
+const programId = {
+	mainnet: CREATE_CPMM_POOL_PROGRAM,
+	devnet: DEV_CREATE_CPMM_POOL_PROGRAM,
+}
+
+const poolFeeAccount = {
+	mainnet: CREATE_CPMM_POOL_FEE_ACC,
+	devnet: DEV_CREATE_CPMM_POOL_FEE_ACC,
+}
+
 async function createPool({
 	raydium,
 	mintA: a,
@@ -51,8 +62,8 @@ async function createPool({
 	const mintB = await raydium.token.getTokenInfo(b)
 
 	const { execute, extInfo, transaction } = await raydium.cpmm.createPool({
-		programId: CREATE_CPMM_POOL_PROGRAM, // devnet: DEVNET_PROGRAM_ID.CREATE_CPMM_POOL_PROGRAM
-		poolFeeAccount: CREATE_CPMM_POOL_FEE_ACC, // devnet: CREATE_CPMM_POOL_FEE_ACC.CREATE_CPMM_POOL_PROGRAM
+		programId: programId[cluster],
+		poolFeeAccount: poolFeeAccount[cluster],
 		mintA,
 		mintB,
 		mintAAmount: new BN(100),
