@@ -51,15 +51,7 @@ export const PoolOptions = PoolSchema.partial()
 
 export const Schema = z
 	.intersection(TokenSchema, PoolOptions)
-	.superRefine(({ cpmm, mintA, mintB, mintAAmount, mintBAmount }, context) => {
-		if (cpmm && !mintA) {
-			context.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: 'Required',
-				path: ['mintA'],
-			})
-		}
-
+	.superRefine(({ cpmm, mintB, mintAAmount, mintBAmount }, context) => {
 		if (cpmm && !mintB) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,

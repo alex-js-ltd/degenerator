@@ -25,6 +25,7 @@ import { Input } from '@/app/comps/input'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { CpmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
+import { PoolAction } from '@/app/comps/pool_action'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -55,6 +56,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 	const payer = usePayer()
 	const showCpmm = fields.cpmm.value === 'on'
 
+	console.log(form.allErrors)
 	return (
 		<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 			<FormProvider context={form.context}>
@@ -139,8 +141,10 @@ export function TokenForm({ children }: { children: ReactNode }) {
 							<SubmitButton
 								form={form.id}
 								formAction={action}
-								content="Mint Token"
+								content="Submit"
 							/>
+
+							{showCpmm && <PoolAction />}
 						</div>
 					</fieldset>
 				</form>

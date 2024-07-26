@@ -4,17 +4,26 @@ import { Popover, Content } from '@/app/comps/popover'
 import { Button } from '@/app/comps/button'
 import { Input } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
-
-import { useForm, useField } from '@conform-to/react'
-
+import {
+	type FieldName,
+	useForm,
+	useField,
+	getInputProps,
+	useInputControl,
+} from '@conform-to/react'
 import { type SelectItemConfig } from './select'
 
 interface PoolContentProps {
-	mintAPlaceholder: string
-	mintBPlaceholder: string
+	mintA: { placeholder: string; name: FieldName<string> }
+	mintB: { placeholder: string; name: FieldName<string> }
 }
 
-function PoolContent({ mintAPlaceholder, mintBPlaceholder }: PoolContentProps) {
+function PoolContent({ mintA, mintB }: PoolContentProps) {
+	const [mintAMeta] = useField(mintA.name)
+	const [mintBMeta] = useField(mintB.name)
+
+	const controlMintA = useInputControl(mintAMeta)
+	const controlMintB = useInputControl(mintBMeta)
 	return (
 		<Content
 			side="bottom"
@@ -24,8 +33,22 @@ function PoolContent({ mintAPlaceholder, mintBPlaceholder }: PoolContentProps) {
 			className="w-full h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0"
 		>
 			<fieldset className="flex flex-col gap-2 p-2">
-				<Input name="mintA" placeholder={mintAPlaceholder} variant="pool" />
-				<Input name="mintB" placeholder={mintBPlaceholder} variant="pool" />
+				<Input
+					variant="pool"
+					placeholder={mintA.placeholder}
+					value={controlMintA.value || ''}
+					onChange={e => controlMintA.change(e.target.value)}
+					onFocus={controlMintA.focus}
+					onBlur={controlMintA.blur}
+				/>
+				<Input
+					variant="pool"
+					placeholder={mintB.placeholder}
+					value={controlMintB.value || ''}
+					onChange={e => controlMintB.change(e.target.value)}
+					onFocus={controlMintB.focus}
+					onBlur={controlMintB.blur}
+				/>
 			</fieldset>
 		</Content>
 	)
@@ -49,8 +72,14 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 		<Popover
 			content={
 				<PoolContent
-					mintAPlaceholder={mintAPlaceholder}
-					mintBPlaceholder={mintBPlaceholder}
+					mintA={{
+						name: fields.mintAAmount.name,
+						placeholder: mintAPlaceholder,
+					}}
+					mintB={{
+						name: fields.mintBAmount.name,
+						placeholder: mintBPlaceholder,
+					}}
 				/>
 			}
 		>
