@@ -14,7 +14,6 @@ import { parseWithZod } from '@conform-to/zod'
 import { Schema } from '@/app/utils/schemas'
 import { mintToken } from '@/app/actions/mint_token'
 
-import { useImageUpload } from '@/app/hooks/use_image_upload'
 import { usePayer } from '@/app/hooks/use_payer'
 
 import { useMintTx } from '@/app/context/tx_context'
@@ -51,23 +50,16 @@ export function TokenForm({ children }: { children: ReactNode }) {
 	const { mintA, serializedTransaction: tx } = lastResult
 	useMintTx(tx)
 
-	const { previewImage, clearPreviewImage, fileRef, onChange } =
-		useImageUpload()
 	const payer = usePayer()
 	const showCpmm = fields.cpmm.value === 'on'
 
-	console.log(form.allErrors)
 	return (
 		<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 			<FormProvider context={form.context}>
-				<PreviewImage
-					src={previewImage}
-					clearPreviewImage={clearPreviewImage}
-					errors={fields.image.errors}
-				/>
+				<PreviewImage />
 
 				<div className="absolute top-2.5 right-10 p-1 w-5 h-5">
-					<ResetButton onClick={clearPreviewImage} />
+					<ResetButton />
 				</div>
 
 				<div className="absolute right-3.5 top-2.5 z-10 p-1 w-5 h-5">
@@ -130,11 +122,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 
 						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
 							<div className="flex flex-1 gap-1 sm:gap-2">
-								<ImageChooser
-									name={fields.image.name}
-									fileRef={fileRef}
-									onChange={onChange}
-								/>
+								<ImageChooser />
 								{showCpmm && children}
 							</div>
 

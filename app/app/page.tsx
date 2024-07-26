@@ -48,7 +48,7 @@ async function MintList() {
 	return (
 		<React.Fragment>
 			<MintB {...mintBprops} />
-			<Pool items={mintBprops.items} />
+			<Pool {...mintBprops} />
 		</React.Fragment>
 	)
 }
