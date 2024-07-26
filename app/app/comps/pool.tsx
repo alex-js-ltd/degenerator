@@ -5,12 +5,7 @@ import { Button } from '@/app/comps/button'
 import { Input } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
 
-import {
-	type FieldName,
-	useForm,
-	useInputControl,
-	useField,
-} from '@conform-to/react'
+import { useForm, useField } from '@conform-to/react'
 
 import { type SelectItemConfig } from './select'
 
@@ -29,8 +24,8 @@ function PoolContent({ mintAPlaceholder, mintBPlaceholder }: PoolContentProps) {
 			className="w-full h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0"
 		>
 			<fieldset className="flex flex-col gap-2 p-2">
-				<Input placeholder={mintAPlaceholder} variant="pool" />
-				<Input placeholder={mintBPlaceholder} variant="pool" />
+				<Input name="mintA" placeholder={mintAPlaceholder} variant="pool" />
+				<Input name="mintB" placeholder={mintBPlaceholder} variant="pool" />
 			</fieldset>
 		</Content>
 	)
