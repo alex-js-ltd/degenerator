@@ -4,8 +4,25 @@ import { type SelectItemConfig } from '@/app/comps/select'
 import { useField, useInputControl } from '@conform-to/react'
 import { Popover, Content } from '@/app/comps/popover'
 import { Button } from '@/app/comps/button'
-import { Input } from '@/app/comps/input'
+import { Input, InputProps } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
+
+type Control = ReturnType<typeof useInputControl<string>>
+
+function getInputProps(
+	control: Control,
+	{ placeholder, errors }: InputProps & { errors?: string[] },
+): InputProps {
+	return {
+		value: control.value || '',
+		onChange: e => control.change(e.target.value),
+		onFocus: control.focus,
+		onBlur: control.blur,
+		variant: 'pool',
+		placeholder,
+		className: errors?.length ? 'border-teal-300' : undefined,
+	}
+}
 
 export function Pool({ items }: { items: SelectItemConfig[] }) {
 	const [symbol] = useField('symbol')
@@ -38,20 +55,16 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 				>
 					<fieldset className="flex flex-col gap-2 p-2">
 						<Input
-							variant="pool"
-							placeholder={mintAPlaceholder}
-							value={a.value || ''}
-							onChange={e => a.change(e.target.value)}
-							onFocus={a.focus}
-							onBlur={a.blur}
+							{...getInputProps(a, {
+								placeholder: mintAPlaceholder,
+								errors: mintAAmount?.errors,
+							})}
 						/>
 						<Input
-							variant="pool"
-							placeholder={mintBPlaceholder}
-							value={b.value || ''}
-							onChange={e => b.change(e.target.value)}
-							onFocus={b.focus}
-							onBlur={b.blur}
+							{...getInputProps(b, {
+								placeholder: mintBPlaceholder,
+								errors: mintBAmount?.errors,
+							})}
 						/>
 					</fieldset>
 				</Content>
