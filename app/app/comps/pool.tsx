@@ -9,17 +9,17 @@ import { Icon } from '@/app/comps/_icon'
 
 type Control = ReturnType<typeof useInputControl<string>>
 
-function getInputProps(
-	control: Control,
-	{ placeholder, errors }: InputProps & { errors?: string[] },
-): InputProps {
+function getControlProps(control: Control): InputProps {
 	return {
 		value: control.value || '',
 		onChange: e => control.change(e.target.value),
 		onFocus: control.focus,
 		onBlur: control.blur,
-		variant: 'pool',
-		placeholder,
+	}
+}
+
+function getErrorProps(errors?: string[]) {
+	return {
 		className: errors?.length ? 'border-teal-300' : undefined,
 	}
 }
@@ -55,16 +55,14 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 				>
 					<fieldset className="flex flex-col gap-2 p-2">
 						<Input
-							{...getInputProps(a, {
-								placeholder: mintAPlaceholder,
-								errors: mintAAmount?.errors,
-							})}
+							placeholder={mintAPlaceholder}
+							{...getControlProps(a)}
+							{...getErrorProps(mintAAmount.errors)}
 						/>
 						<Input
-							{...getInputProps(b, {
-								placeholder: mintBPlaceholder,
-								errors: mintBAmount?.errors,
-							})}
+							placeholder={mintBPlaceholder}
+							{...getControlProps(b)}
+							{...getErrorProps(mintBAmount.errors)}
 						/>
 					</fieldset>
 				</Content>
