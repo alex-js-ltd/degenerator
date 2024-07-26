@@ -55,11 +55,13 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 				>
 					<fieldset className="flex flex-col gap-2 p-2">
 						<Input
+							variant="pool"
 							placeholder={mintAPlaceholder}
 							{...getControlProps(a)}
 							{...getErrorProps(mintAAmount.errors)}
 						/>
 						<Input
+							variant="pool"
 							placeholder={mintBPlaceholder}
 							{...getControlProps(b)}
 							{...getErrorProps(mintBAmount.errors)}
