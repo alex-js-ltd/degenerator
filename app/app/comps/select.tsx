@@ -10,17 +10,11 @@ import * as RadixSelect from '@radix-ui/react-select'
 
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 
-import {
-	useInputControl,
-	useField,
-	useForm,
-	type FieldName,
-} from '@conform-to/react'
+import { useInputControl, useField, type FieldName } from '@conform-to/react'
 import { Option } from '@/app/comps/option'
 import Image, { ImageProps } from 'next/image'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
-import { Icon } from './_icon'
 
 interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop

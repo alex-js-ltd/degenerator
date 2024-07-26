@@ -4,6 +4,7 @@ import { type Raydium } from '@raydium-io/raydium-sdk-v2'
 import { type SelectItemConfig } from '@/app/comps/select'
 import { MintB } from '@/app/comps/select'
 import { initSdk } from '@/app/utils/raydium'
+import { Pool } from '@/app/comps/pool'
 
 export default async function Page() {
 	return (
@@ -44,9 +45,19 @@ async function MintList() {
 
 	const mintBprops = await getMintBProps(raydium)
 
-	return <MintB {...mintBprops} />
+	return (
+		<React.Fragment>
+			<MintB {...mintBprops} />
+			<Pool items={mintBprops.items} />
+		</React.Fragment>
+	)
 }
 
 function Loading() {
-	return <div className="w-28 h-[32px] rounded bg-slate-800 animate-pulse" />
+	return (
+		<React.Fragment>
+			<div className="w-28 h-[32px] rounded bg-slate-800 animate-pulse" />
+			<div className="w-28 h-[32px] rounded bg-slate-800 animate-pulse" />
+		</React.Fragment>
+	)
 }

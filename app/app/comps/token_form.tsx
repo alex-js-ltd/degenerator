@@ -11,14 +11,13 @@ import {
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
-import { TokenSchema } from '@/app/utils/schemas'
+import { Schema } from '@/app/utils/schemas'
 import { mintToken } from '@/app/actions/mint_token'
 
 import { useImageUpload } from '@/app/hooks/use_image_upload'
 import { usePayer } from '@/app/hooks/use_payer'
 
 import { useMintTx } from '@/app/context/tx_context'
-
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
@@ -26,10 +25,6 @@ import { Input } from '@/app/comps/input'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { CpmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
-import { PoolForm } from '@/app/comps/pool_form'
-import { Button } from './button'
-import { Icon } from './_icon'
-import { Popover, Content } from './popover'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -41,8 +36,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
-		onValidate: ({ formData }) =>
-			parseWithZod(formData, { schema: TokenSchema }),
+		onValidate: ({ formData }) => parseWithZod(formData, { schema: Schema }),
 
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
@@ -125,6 +119,11 @@ export function TokenForm({ children }: { children: ReactNode }) {
 								{...getInputProps(fields.payerKey, { type: 'hidden' })}
 								defaultValue={payer}
 							/>
+
+							<Input
+								{...getInputProps(fields.mintA, { type: 'hidden' })}
+								defaultValue={mintA}
+							/>
 						</div>
 
 						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
@@ -134,25 +133,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 									fileRef={fileRef}
 									onChange={onChange}
 								/>
-								{children}
-								<Popover
-									content={
-										<Content
-											side="bottom"
-											align="start"
-											alignOffset={0}
-											sideOffset={20}
-											className="w-full h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0"
-										>
-											<PoolForm />
-										</Content>
-									}
-								>
-									<Button variant="pool">
-										🏊‍♂️&nbsp;&nbsp;Pool
-										<Icon className="size-[15px] ml-auto" name="arrow" />
-									</Button>
-								</Popover>
+								{showCpmm && children}
 							</div>
 
 							<SubmitButton
