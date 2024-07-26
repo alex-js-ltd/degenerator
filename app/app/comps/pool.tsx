@@ -2,25 +2,33 @@
 
 import { Popover, Content } from '@/app/comps/popover'
 import { Button } from '@/app/comps/button'
-import { Input } from '@/app/comps/input'
+import { Input, InputProps } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
-import {
-	type FieldName,
-	useForm,
-	useField,
-	getInputProps,
-	useInputControl,
-} from '@conform-to/react'
+import { type FieldName, useField, useInputControl } from '@conform-to/react'
 import { type SelectItemConfig } from './select'
 
 interface PoolContentProps {
-	mintA: { placeholder: string; name: FieldName<string> }
-	mintB: { placeholder: string; name: FieldName<string> }
+	mintA: InputProps
+	mintB: InputProps
+}
+
+interface Fields {
+	symbol: FieldName<string>
+	mintB: FieldName<string>
+	mintAAmount: FieldName<string>
+	mintBAmount: FieldName<string>
+}
+
+const fields: Fields = {
+	symbol: 'symbol',
+	mintB: 'mintB',
+	mintAAmount: 'mintAAmount',
+	mintBAmount: 'mintBAmount',
 }
 
 function PoolContent({ mintA, mintB }: PoolContentProps) {
-	const [mintAMeta] = useField(mintA.name)
-	const [mintBMeta] = useField(mintB.name)
+	const [mintAMeta] = useField(fields.mintAAmount)
+	const [mintBMeta] = useField(fields.mintBAmount)
 
 	const controlMintA = useInputControl(mintAMeta)
 	const controlMintB = useInputControl(mintBMeta)
@@ -55,9 +63,8 @@ function PoolContent({ mintA, mintB }: PoolContentProps) {
 }
 
 export function Pool({ items }: { items: SelectItemConfig[] }) {
-	const [, fields] = useForm({})
-	const [symbol] = useField(fields.symbol.name)
-	const [mintB] = useField(fields.mintB.name)
+	const [symbol] = useField(fields.symbol)
+	const [mintB] = useField(fields.mintB)
 
 	const selected = items.find(el => el.value === mintB.value)
 
@@ -73,11 +80,9 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 			content={
 				<PoolContent
 					mintA={{
-						name: fields.mintAAmount.name,
 						placeholder: mintAPlaceholder,
 					}}
 					mintB={{
-						name: fields.mintBAmount.name,
 						placeholder: mintBPlaceholder,
 					}}
 				/>
