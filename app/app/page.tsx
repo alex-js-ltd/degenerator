@@ -1,18 +1,24 @@
 import * as React from 'react'
-import { type Raydium, initSdk } from '@/app/utils/raydium'
 import { TokenForm } from '@/app/comps/token_form'
+import { type Raydium } from '@raydium-io/raydium-sdk-v2'
 import { type SelectItemConfig } from '@/app/comps/select'
-import { QuoteToken } from '@/app/comps/select'
+import { MintB } from '@/app/comps/select'
+import { initSdk } from '@/app/utils/raydium'
 
 export default async function Page() {
-	return <TokenForm />
+	return (
+		<TokenForm>
+			<React.Suspense fallback={<Loading />}>
+				<MintList />
+			</React.Suspense>
+		</TokenForm>
+	)
 }
 
-async function getQuoteTokenProps(raydium: Raydium) {
+async function getMintBProps(raydium: Raydium) {
 	const data = await raydium.api.getTokenInfo([
 		'So11111111111111111111111111111111111111112',
 		'4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R',
-		'2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo',
 	])
 
 	const mintItems = data.reduce<SelectItemConfig[]>((acc, curr) => {
@@ -36,19 +42,11 @@ async function getQuoteTokenProps(raydium: Raydium) {
 async function MintList() {
 	const raydium = await initSdk({})
 
-	const quoteProps = await getQuoteTokenProps(raydium)
+	const mintBprops = await getMintBProps(raydium)
 
-	return (
-		<React.Fragment>
-			<QuoteToken {...quoteProps} />
-		</React.Fragment>
-	)
+	return <MintB {...mintBprops} />
 }
 
 function Loading() {
-	return (
-		<React.Fragment>
-			<div className="flex-1 h-[32px] rounded bg-slate-800 animate-pulse" />
-		</React.Fragment>
-	)
+	return <div className="w-28 h-[32px] rounded bg-slate-800 animate-pulse" />
 }

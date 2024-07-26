@@ -28,6 +28,7 @@ import { CpmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
 import { PoolForm } from '@/app/comps/pool_form'
 import { Button } from './button'
+import { Icon } from './_icon'
 import { Popover, Content } from './popover'
 
 const initialState = {
@@ -35,7 +36,7 @@ const initialState = {
 	mintA: undefined,
 }
 
-export function TokenForm() {
+export function TokenForm({ children }: { children: ReactNode }) {
 	const [lastResult, action] = useFormState(mintToken, initialState)
 
 	const [form, fields] = useForm({
@@ -133,6 +134,25 @@ export function TokenForm() {
 									fileRef={fileRef}
 									onChange={onChange}
 								/>
+								{children}
+								<Popover
+									content={
+										<Content
+											side="bottom"
+											align="start"
+											alignOffset={0}
+											sideOffset={20}
+											className="w-full h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0"
+										>
+											<PoolForm />
+										</Content>
+									}
+								>
+									<Button variant="pool">
+										🏊‍♂️&nbsp;&nbsp;Pool
+										<Icon className="size-[15px] ml-auto" name="arrow" />
+									</Button>
+								</Popover>
 							</div>
 
 							<SubmitButton
@@ -144,23 +164,6 @@ export function TokenForm() {
 					</fieldset>
 				</form>
 			</FormProvider>
-
-			<div className="z-50 absolute bottom-3 left-28 flex w-fit">
-				<Popover
-					content={
-						<Content
-							side="bottom"
-							align="start"
-							sideOffset={20}
-							className="w-[300px] h-[100px] z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0"
-						>
-							<PoolForm />
-						</Content>
-					}
-				>
-					<Button variant="image">Pool</Button>
-				</Popover>
-			</div>
 		</div>
 	)
 }

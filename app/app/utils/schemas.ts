@@ -39,4 +39,48 @@ export const PoolSchema = z.object({
 	payerKey: PublicKey,
 	mintA: PublicKey,
 	mintB: PublicKey,
+	mintAAmount: z.number({
+		invalid_type_error: 'Expected Number',
+	}),
+	mintBAmount: z.number({
+		invalid_type_error: 'Expected Number',
+	}),
 })
+
+export const PoolOptions = PoolSchema.partial()
+
+export const Schema = z
+	.intersection(TokenSchema, PoolOptions)
+	.superRefine(({ cpmm, mintA, mintB, mintAAmount, mintBAmount }, context) => {
+		if (cpmm && !mintA) {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'Required',
+				path: ['mintA'],
+			})
+		}
+
+		if (cpmm && !mintB) {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'Required',
+				path: ['mintB'],
+			})
+		}
+
+		if (cpmm && !mintAAmount) {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'Required',
+				path: ['mintAAmount'],
+			})
+		}
+
+		if (cpmm && !mintBAmount) {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'Required',
+				path: ['mintBAmount'],
+			})
+		}
+	})
