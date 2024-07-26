@@ -10,7 +10,7 @@ function Popover({ children, content }: PopoverProps) {
 	return (
 		<RadixPopver.Root>
 			<RadixPopver.Trigger asChild>{children}</RadixPopver.Trigger>
-			<RadixPopver.Portal forceMount>{content}</RadixPopver.Portal>
+			{content}
 		</RadixPopver.Root>
 	)
 }
