@@ -12,7 +12,7 @@ import { ChevronDownIcon } from '@radix-ui/react-icons'
 
 import { useInputControl, useField, type FieldName } from '@conform-to/react'
 import { Option } from '@/app/comps/option'
-import Image, { ImageProps } from 'next/image'
+import { type TokenLogoProps, TokenLogo } from '@/app/comps/token_logo'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
 
@@ -22,7 +22,7 @@ interface SelectFieldProps {
 	name: FieldName<string>
 	items: SelectItemConfig[]
 	children: ReactNode
-	logo?: ComponentType<ImageProps>
+	logo?: ComponentType<TokenLogoProps>
 	valueProps?: RadixSelect.SelectValueProps
 	triggerProps?: RadixSelect.SelectTriggerProps
 	contentProps?: RadixSelect.SelectContentProps
@@ -32,7 +32,7 @@ interface SelectItemProps
 	extends React.ComponentPropsWithoutRef<typeof RadixSelect.Item> {
 	fieldName: FieldName<string>
 	title?: string
-	imageProps?: ImageProps
+	imageProps?: TokenLogoProps
 }
 
 interface CompoundSelect {
@@ -145,20 +145,6 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 		)
 	},
 )
-
-function TokenLogo({ src, alt }: ImageProps) {
-	return (
-		<div className="shrink-0 relative flex items-center overflow-hidden h-5 w-5 rounded pr-1">
-			<Image
-				className="relative aspect-[48/44] object-cover object-center rounded-lg"
-				fill={true}
-				src={src}
-				alt={alt}
-				sizes="1.25rem"
-			/>
-		</div>
-	)
-}
 
 function MintB({ name, items }: CompoundSelect) {
 	return (
