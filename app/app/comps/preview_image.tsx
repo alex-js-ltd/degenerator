@@ -3,11 +3,11 @@
 import { Icon } from './_icon'
 import Image from 'next/image'
 import { useField } from '@conform-to/react'
-import { useLogo } from '@/app/context/logo_context'
+import { useImage } from '@/app/context/image_context'
 
 export function PreviewImage() {
 	const [{ errors }] = useField('image')
-	const { image: src, clearImage } = useLogo()
+	const { image: src, clearImage } = useImage()
 
 	return (
 		<div className="h-[69px] w-full">

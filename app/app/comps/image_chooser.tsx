@@ -2,10 +2,10 @@
 
 import { Button } from '@/app/comps/button'
 import { Icon } from '@/app/comps/_icon'
-import { useLogo } from '@/app/context/logo_context'
+import { useImage } from '@/app/context/image_context'
 
 export function ImageChooser() {
-	const { fileRef, getInputProps } = useLogo()
+	const { fileRef, getInputProps } = useImage()
 	return (
 		<Button
 			type="button"

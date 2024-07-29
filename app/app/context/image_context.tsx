@@ -20,10 +20,10 @@ type Context = {
 	getInputProps: (name: string) => InputProps
 }
 
-const LogoContext = createContext<Context | undefined>(undefined)
-LogoContext.displayName = 'LogoContext'
+const ImageContext = createContext<Context | undefined>(undefined)
+ImageContext.displayName = 'ImageContext'
 
-function LogoProvider({ children }: { children: ReactNode }) {
+function ImageProvider({ children }: { children: ReactNode }) {
 	const [image, setImage] = useState<string | undefined>(undefined)
 
 	const fileRef = useRef<HTMLInputElement>(null)
@@ -64,13 +64,13 @@ function LogoProvider({ children }: { children: ReactNode }) {
 		[image, clearImage, getInputProps],
 	)
 
-	return <LogoContext.Provider value={value}>{children}</LogoContext.Provider>
+	return <ImageContext.Provider value={value}>{children}</ImageContext.Provider>
 }
 
-function useLogo() {
-	const context = use(LogoContext)
-	invariant(context, 'useLogo must be used within a LogoProvider')
+function useImage() {
+	const context = use(ImageContext)
+	invariant(context, 'useImage must be used within a ImageProvider')
 	return context
 }
 
-export { LogoProvider, useLogo }
+export { ImageProvider, useImage }

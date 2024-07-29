@@ -8,10 +8,10 @@ import { useState } from 'react'
 import { delay } from '@/app/utils/misc'
 import { Tooltip, Content } from '@/app/comps/tooltip'
 import { useTxStatus, useResetTx } from '@/app/context/tx_context'
-import { useLogo } from '@/app/context/logo_context'
+import { useImage } from '@/app/context/image_context'
 
 export function ResetButton() {
-	const { clearImage } = useLogo()
+	const { clearImage } = useImage()
 	const resetForm = useResetForm()
 	const resetTx = useResetTx()
 
