@@ -57,14 +57,13 @@ export function TokenForm({ children }: { children: ReactNode }) {
 	const { mintA, serializedTransaction: mintTx } = lastMint
 	const { serializedTransaction: poolTx } = lastPool
 
-	const { data: txSig } = useMintTx(mintTx)
+	const { data: mintTxSig } = useMintTx(mintTx)
+	const { data: poolTxSig } = usePoolTx(poolTx)
 
-	usePoolTx(poolTx)
+	const { getButtonProps } = useServerAction(poolAction, mintTxSig)
 
 	const payer = usePayer()
 	const showCpmm = fields.cpmm.value === 'on'
-
-	const { getButtonProps } = useServerAction(poolAction, txSig)
 
 	return (
 		<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
