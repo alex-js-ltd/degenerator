@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode } from 'react'
+import { type ReactNode, Fragment } from 'react'
 import { useFormState } from 'react-dom'
 
 import {
@@ -161,8 +161,12 @@ export function TokenForm({ children }: { children: ReactNode }) {
 								content="Submit"
 							/>
 
-							{showCpmm && <button {...getPoolProps()} />}
-							{showCpmm && <button {...getDepositProps()} />}
+							{showCpmm && (
+								<Fragment>
+									<button {...getPoolProps()} />
+									<button {...getDepositProps()} />
+								</Fragment>
+							)}
 						</div>
 					</fieldset>
 				</form>
