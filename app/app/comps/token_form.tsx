@@ -16,7 +16,7 @@ import { mintToken } from '@/app/actions/mint_token'
 
 import { usePayer } from '@/app/hooks/use_payer'
 
-import { useMintTx } from '@/app/context/tx_context'
+import { useMintTx, usePoolTx } from '@/app/context/tx_context'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
@@ -24,7 +24,6 @@ import { Input } from '@/app/comps/input'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { CpmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
-import { PoolAction } from '@/app/comps/pool_action'
 import { useServerAction } from '@/app/hooks/use_server_action'
 import { createPool } from '@/app/actions/create_pool'
 
@@ -39,7 +38,8 @@ const initialPoolState = {
 }
 
 export function TokenForm({ children }: { children: ReactNode }) {
-	const [lastResult, action] = useFormState(mintToken, initialMintState)
+	const [lastMint, mintAction] = useFormState(mintToken, initialMintState)
+	const [lastPool, poolAction] = useFormState(createPool, initialPoolState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -48,23 +48,23 @@ export function TokenForm({ children }: { children: ReactNode }) {
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
 		shouldRevalidate: 'onInput',
-		lastResult,
+		lastResult: lastMint,
 		defaultValue: {
 			cpmm: 'on',
 		},
 	})
 
-	const { mintA, serializedTransaction: tx } = lastResult
-	useMintTx(tx)
+	const { mintA, serializedTransaction: mintTx } = lastMint
+	const { serializedTransaction: poolTx } = lastPool
+
+	const { data: txSig } = useMintTx(mintTx)
+
+	usePoolTx(poolTx)
 
 	const payer = usePayer()
 	const showCpmm = fields.cpmm.value === 'on'
 
-	const { getButtonProps } = useServerAction(
-		createPool,
-		initialPoolState,
-		false,
-	)
+	const { getButtonProps } = useServerAction(poolAction, txSig)
 
 	return (
 		<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
@@ -141,7 +141,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 
 							<SubmitButton
 								form={form.id}
-								formAction={action}
+								formAction={mintAction}
 								content="Submit"
 							/>
 
