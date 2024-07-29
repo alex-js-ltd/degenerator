@@ -5,7 +5,7 @@ import { cn } from '@/app/utils/misc'
 const externalLinkVariants = cva(undefined, {
 	variants: {
 		variant: {
-			toast: 'flex text-toast-text text-sm font-mono',
+			toast: 'flex text-toast-text text-sm',
 			underline: 'underline',
 		},
 	},
