@@ -12,9 +12,6 @@ import { PublicKey } from '@solana/web3.js'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import { buildTransaction } from '@/app/utils/transaction'
 import { airdropOnLowBalance } from '@/app/utils/transaction'
-import { getEnv } from '@/app/utils/env'
-
-const { CLUSTER } = getEnv()
 
 export async function mintToken(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -32,9 +29,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	const { image, name, symbol, description, decimals, supply, payerKey, cpmm } =
 		submission.value
 
-	if (CLUSTER === 'devnet') {
-		await airdropOnLowBalance(connection, payerKey)
-	}
+	await airdropOnLowBalance(connection, payerKey)
 
 	const blob = await put(image.name, image, { access: 'public' })
 

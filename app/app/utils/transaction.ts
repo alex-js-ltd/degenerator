@@ -3,11 +3,14 @@ import {
 	type Signer,
 	type PublicKey,
 	type TransactionInstruction,
-	type Keypair,
 	TransactionMessage,
 	VersionedTransaction,
 	LAMPORTS_PER_SOL,
 } from '@solana/web3.js'
+
+import { getEnv } from '@/app/utils/env'
+
+const { CLUSTER } = getEnv()
 
 /**
  * Helper function to build a signed transaction
@@ -48,6 +51,7 @@ export async function airdropOnLowBalance(
 	address: PublicKey,
 	forceAirdrop: boolean = false,
 ) {
+	if (CLUSTER === 'mainnet-beta') return
 	// get the current balance
 	let balance = await connection.getBalance(address)
 
