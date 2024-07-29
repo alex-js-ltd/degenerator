@@ -5,17 +5,21 @@ import { Popover, Content } from '@/app/comps/popover'
 import { Button } from '@/app/comps/button'
 import { Input, InputProps } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
-import { TokenLogo, type ImageProps } from '@/app/comps/token_logo'
+import { TokenLogo } from '@/app/comps/token_logo'
 import { useSelected } from '@/app/hooks/use_selected'
 import { usePoolAmount } from '@/app/hooks/use_pool_amount'
 import { useImage } from '@/app/context/image_context'
+import { ReactElement } from 'react'
 
 export function Pool({ items }: { items: SelectItemConfig[] }) {
 	const mintAInputProps = usePoolAmount('mintAAmount', 'Mint A Amount')
 	const mintBInputProps = usePoolAmount('mintBAmount', 'Mint B Amount')
 
+	const { image: mintALogoProps } = useImage()
 	const { imageProps: mintBLogoProps } = useSelected('mintB', items)
-	const { image: mintALogo } = useImage()
+
+	const mintALogo = mintALogoProps ? <TokenLogo {...mintALogoProps} /> : <>🤔</>
+	const mintBLogo = mintBLogoProps ? <TokenLogo {...mintBLogoProps} /> : <>🤔</>
 
 	return (
 		<Popover
@@ -28,11 +32,8 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 					className="w-full h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0"
 				>
 					<fieldset className="grid grid-cols-1 gap-2 p-2 w-fit">
-						<Field inputProps={{ ...mintAInputProps }} logoProps={mintALogo} />
-						<Field
-							inputProps={{ ...mintBInputProps }}
-							logoProps={mintBLogoProps}
-						/>
+						<Field inputProps={{ ...mintAInputProps }} logo={mintALogo} />
+						<Field inputProps={{ ...mintBInputProps }} logo={mintBLogo} />
 					</fieldset>
 				</Content>
 			}
@@ -46,19 +47,15 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 }
 
 function Field({
-	logoProps,
+	logo,
 	inputProps,
 }: {
-	logoProps?: ImageProps
+	logo?: ReactElement
 	inputProps: InputProps
 }) {
 	return (
 		<div className="relative flex items-center h-auto">
-			{logoProps ? (
-				<TokenLogo className="absolute left-2" {...logoProps} />
-			) : (
-				<div className="absolute left-2 shrink-0 flex items-center overflow-hidden h-5 w-5 rounded-full pr-1 border border-gray-600" />
-			)}
+			<span className="absolute left-2">{logo}</span>
 			<Input {...inputProps} />
 		</div>
 	)
