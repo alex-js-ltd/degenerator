@@ -12,7 +12,7 @@ import { ChevronDownIcon } from '@radix-ui/react-icons'
 
 import { useInputControl, useField, type FieldName } from '@conform-to/react'
 import { Option } from '@/app/comps/option'
-import { type TokenLogoProps, TokenLogo } from '@/app/comps/token_logo'
+import { type ImageProps, TokenLogo } from '@/app/comps/token_logo'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
 import { useSelected } from '@/app/hooks/use_selected'
@@ -23,7 +23,7 @@ interface SelectFieldProps {
 	name: FieldName<string>
 	items: SelectItemConfig[]
 	children: ReactNode
-	logo?: ComponentType<TokenLogoProps>
+	logo?: ComponentType<ImageProps>
 	valueProps?: RadixSelect.SelectValueProps
 	triggerProps?: RadixSelect.SelectTriggerProps
 	contentProps?: RadixSelect.SelectContentProps
@@ -33,7 +33,7 @@ interface SelectItemProps
 	extends React.ComponentPropsWithoutRef<typeof RadixSelect.Item> {
 	fieldName: FieldName<string>
 	title?: string
-	imageProps?: TokenLogoProps
+	imageProps?: ImageProps
 }
 
 interface CompoundSelect {

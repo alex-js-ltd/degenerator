@@ -7,7 +7,7 @@ import { useImage } from '@/app/context/image_context'
 
 export function PreviewImage() {
 	const [{ errors }] = useField('image')
-	const { image: src, clearImage } = useImage()
+	const { image, clearImage } = useImage()
 
 	return (
 		<div className="h-[69px] w-full">
@@ -17,7 +17,7 @@ export function PreviewImage() {
 				}
 			>
 				<div className="group relative h-[44px] w-[48px] shrink-0 rounded-lg border border-white/10 transition-all duration-500 ease-in-out">
-					{src ? (
+					{image ? (
 						<>
 							<button
 								className="focus-visible:ring-ring absolute -right-1.5 -top-1.5 z-10 inline-flex h-4 w-4 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-gray-900 bg-gray-100 text-sm font-medium text-gray-900 opacity-0 shadow-sm transition-opacity hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 group-hover:opacity-100"
@@ -28,10 +28,9 @@ export function PreviewImage() {
 							</button>
 							<div className="overflow-hidden rounded-lg group-hover:opacity-80">
 								<Image
-									alt="your uploaded image"
 									className="relative aspect-[48/44] object-cover object-center rounded-lg"
-									src={src}
 									fill={true}
+									{...image}
 								/>
 							</div>
 						</>

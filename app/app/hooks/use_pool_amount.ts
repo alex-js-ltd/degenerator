@@ -21,16 +21,14 @@ function getErrorProps(errors?: string[]) {
 export function usePoolAmount(
 	name: FieldName<string>,
 	placeholder: string,
-): { inputProps: InputProps } {
+): InputProps {
 	const [meta] = useField<string>(name)
 	const control = useInputControl(meta)
 
 	return {
-		inputProps: {
-			...getControlProps(control),
-			...getErrorProps(meta.errors),
-			placeholder,
-			variant: 'pool',
-		},
+		...getControlProps(control),
+		...getErrorProps(meta.errors),
+		placeholder,
+		variant: 'pool',
 	}
 }

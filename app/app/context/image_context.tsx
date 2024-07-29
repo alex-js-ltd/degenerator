@@ -12,10 +12,11 @@ import React, {
 } from 'react'
 import { type InputProps } from '@/app/comps/input'
 import invariant from 'tiny-invariant'
+import { type ImageProps } from 'next/image'
 
 type Context = {
 	fileRef: RefObject<HTMLInputElement>
-	image: string | undefined
+	image?: ImageProps
 	clearImage: () => void
 	getInputProps: (name: string) => InputProps
 }
@@ -24,7 +25,7 @@ const ImageContext = createContext<Context | undefined>(undefined)
 ImageContext.displayName = 'ImageContext'
 
 function ImageProvider({ children }: { children: ReactNode }) {
-	const [image, setImage] = useState<string | undefined>(undefined)
+	const [image, setImage] = useState<ImageProps | undefined>(undefined)
 
 	const fileRef = useRef<HTMLInputElement>(null)
 
@@ -49,7 +50,10 @@ function ImageProvider({ children }: { children: ReactNode }) {
 					const reader = new FileReader()
 
 					reader.onloadend = () => {
-						setImage(reader.result as string)
+						setImage({
+							src: reader.result as string,
+							alt: 'your uploaded image',
+						})
 					}
 					reader.readAsDataURL(file)
 				} else {
