@@ -10,6 +10,7 @@ import { TokenLogo } from '@/app/comps/token_logo'
 import { useSelected } from '@/app/hooks/use_selected'
 import { usePoolAmount } from '@/app/hooks/use_pool_amount'
 import { useImage } from '@/app/context/image_context'
+import { cn } from '@/app/utils/misc'
 
 export function Pool({ items }: { items: SelectItemConfig[] }) {
 	const mintAInputProps = usePoolAmount('mintAAmount', 'Mint A Amount')
@@ -19,7 +20,7 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 	const { imageProps: mintBLogoProps } = useSelected('mintB', items)
 
 	const mintALogo = mintALogoProps ? <TokenLogo {...mintALogoProps} /> : <>🤔</>
-	const mintBLogo = mintBLogoProps ? <TokenLogo {...mintBLogoProps} /> : <>🤔</>
+	const mintBLogo = mintBLogoProps ? <TokenLogo {...mintBLogoProps} /> : <>🌿</>
 
 	return (
 		<Popover
@@ -38,7 +39,10 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 				</Content>
 			}
 		>
-			<Button variant="pool">
+			<Button
+				variant="pool"
+				className={cn(mintAInputProps.className, mintBInputProps.className)}
+			>
 				🏊‍♂️&nbsp;&nbsp;Pool
 				<Icon className="size-[15px] ml-auto" name="arrow" />
 			</Button>

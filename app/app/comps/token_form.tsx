@@ -69,7 +69,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 
 	const { data: mintTxSig } = useMintTx(mintTx)
 	const { data: poolTxSig } = usePoolTx(poolTx)
-	useDepositTx(depositTx)
+	const { data: depositTxSig } = useDepositTx(depositTx)
 
 	const getPoolProps = useServerAction(poolAction, mintTxSig)
 	const getDepositProps = useServerAction(depositAction, poolTxSig)
