@@ -24,6 +24,7 @@ export async function createPool(_prevState: unknown, formData: FormData) {
 		return {
 			...submission.reply(),
 			serializedTransaction: undefined,
+			poolId: undefined,
 		}
 	}
 
@@ -43,6 +44,7 @@ export async function createPool(_prevState: unknown, formData: FormData) {
 	return {
 		...submission.reply(),
 		serializedTransaction: transaction.serialize(),
+		poolId,
 	}
 }
 
@@ -73,9 +75,6 @@ async function getPoolTx({
 }) {
 	const mintA = await raydium.token.getTokenInfo(a)
 	const mintB = await raydium.token.getTokenInfo(b)
-
-	console.log(mintA)
-	console.log(mintB)
 
 	const { execute, extInfo, transaction } = await raydium.cpmm.createPool({
 		programId: programId[cluster],

@@ -33,6 +33,7 @@ export const TokenSchema = z.object({
 		.string()
 		.transform(value => value === 'on')
 		.optional(),
+	poolId: z.string().optional(),
 })
 
 export const PoolSchema = z.object({
@@ -47,7 +48,12 @@ export const PoolSchema = z.object({
 	}),
 })
 
-export const PoolOptions = PoolSchema.partial()
+export const DepositSchema = z.object({
+	payerKey: PublicKey,
+	poolId: z.string(),
+})
+
+const PoolOptions = PoolSchema.partial()
 
 export const Schema = z
 	.intersection(TokenSchema, PoolOptions)

@@ -1,5 +1,4 @@
 import { useRef, useEffect, useCallback, useMemo } from 'react'
-
 import { type ButtonProps } from '@/app/comps/button'
 
 type Action = (payload: FormData) => void
@@ -10,16 +9,6 @@ export function useServerAction(
 ) {
 	const buttonRef = useRef<HTMLButtonElement>(null)
 
-	const getButtonProps = useCallback<() => ButtonProps>(() => {
-		return {
-			ref: buttonRef,
-			type: 'submit',
-			className: 'sr-only',
-			formAction,
-			onClick: e => e.stopPropagation(),
-		}
-	}, [formAction])
-
 	const trigger = useMemo(() => Boolean(txSig), [txSig])
 
 	useEffect(() => {
@@ -28,5 +17,13 @@ export function useServerAction(
 		}
 	}, [trigger])
 
-	return { getButtonProps }
+	return useCallback<() => ButtonProps>(() => {
+		return {
+			ref: buttonRef,
+			type: 'submit',
+			className: 'sr-only',
+			formAction,
+			onClick: e => e.stopPropagation(),
+		}
+	}, [formAction])
 }

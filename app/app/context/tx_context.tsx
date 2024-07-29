@@ -21,10 +21,11 @@ TxContext.displayName = 'TxContext'
 function TxProvider({ children }: { children: ReactNode }) {
 	const mintTx = useAsync<string | undefined>()
 	const poolTx = useAsync<string | undefined>()
+	const depositTx = useAsync<string | undefined>()
 
 	const value = useMemo(() => {
-		return [mintTx, poolTx]
-	}, [mintTx, poolTx])
+		return [mintTx, poolTx, depositTx]
+	}, [mintTx, poolTx, depositTx])
 
 	return <TxContext.Provider value={value}>{children}</TxContext.Provider>
 }
@@ -61,6 +62,19 @@ function usePoolTx(tx?: Uint8Array) {
 	return { ...rest }
 }
 
+function useDepositTx(tx?: Uint8Array) {
+	const [_mintTx, _poolTx, depositTx] = useTx()
+	const { run, ...rest } = depositTx
+
+	const sign = useSignAndSendTx()
+
+	useEffect(() => {
+		if (tx) run(sign(tx))
+	}, [run, sign, tx])
+
+	return { ...rest }
+}
+
 function useTxStatus() {
 	const txs = useTx()
 	const { pending } = useFormStatus()
@@ -75,4 +89,12 @@ function useResetTx() {
 	}, [txs])
 }
 
-export { TxProvider, useTx, useMintTx, usePoolTx, useTxStatus, useResetTx }
+export {
+	TxProvider,
+	useTx,
+	useMintTx,
+	usePoolTx,
+	useDepositTx,
+	useTxStatus,
+	useResetTx,
+}

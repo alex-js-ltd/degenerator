@@ -3,6 +3,8 @@ import {
 	TxVersion,
 	DEV_API_URLS,
 	API_URLS,
+	CREATE_CPMM_POOL_PROGRAM,
+	DEV_CREATE_CPMM_POOL_PROGRAM,
 } from '@raydium-io/raydium-sdk-v2'
 import { connection } from '@/app/utils/setup'
 import { PublicKey } from '@solana/web3.js'
@@ -36,5 +38,14 @@ async function initSdk(params: { owner?: PublicKey; loadToken?: boolean }) {
 	return raydium
 }
 
+const VALID_PROGRAM_ID = new Set([
+	CREATE_CPMM_POOL_PROGRAM.toBase58(),
+	DEV_CREATE_CPMM_POOL_PROGRAM.toBase58(),
+])
+
+function isValidCpmm(id: string) {
+	return VALID_PROGRAM_ID.has(id)
+}
+
 export * from '@raydium-io/raydium-sdk-v2'
-export { initSdk, txVersion, cluster }
+export { initSdk, isValidCpmm, txVersion, cluster }

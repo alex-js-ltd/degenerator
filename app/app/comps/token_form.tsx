@@ -13,10 +13,12 @@ import { parseWithZod } from '@conform-to/zod'
 
 import { Schema } from '@/app/utils/schemas'
 import { mintToken } from '@/app/actions/mint_token'
+import { createPool } from '@/app/actions/create_pool'
+import { deposit } from '@/app/actions/deposit'
 
 import { usePayer } from '@/app/hooks/use_payer'
 
-import { useMintTx, usePoolTx } from '@/app/context/tx_context'
+import { useMintTx, usePoolTx, useDepositTx } from '@/app/context/tx_context'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
@@ -25,7 +27,6 @@ import { SubmitButton } from '@/app/comps/submit_button'
 import { CpmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
 import { useServerAction } from '@/app/hooks/use_server_action'
-import { createPool } from '@/app/actions/create_pool'
 
 const initialMintState = {
 	serializedTransaction: undefined,
@@ -37,9 +38,17 @@ const initialPoolState = {
 	poolId: undefined,
 }
 
+const initialDepositState = {
+	serializedTransaction: undefined,
+}
+
 export function TokenForm({ children }: { children: ReactNode }) {
 	const [lastMint, mintAction] = useFormState(mintToken, initialMintState)
 	const [lastPool, poolAction] = useFormState(createPool, initialPoolState)
+	const [lastDeposit, depositAction] = useFormState(
+		deposit,
+		initialDepositState,
+	)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -55,12 +64,15 @@ export function TokenForm({ children }: { children: ReactNode }) {
 	})
 
 	const { mintA, serializedTransaction: mintTx } = lastMint
-	const { serializedTransaction: poolTx } = lastPool
+	const { poolId, serializedTransaction: poolTx } = lastPool
+	const { serializedTransaction: depositTx } = lastPool
 
 	const { data: mintTxSig } = useMintTx(mintTx)
 	const { data: poolTxSig } = usePoolTx(poolTx)
+	useDepositTx(depositTx)
 
-	const { getButtonProps } = useServerAction(poolAction, mintTxSig)
+	const getPoolProps = useServerAction(poolAction, mintTxSig)
+	const getDepositProps = useServerAction(depositAction, poolTxSig)
 
 	const payer = usePayer()
 	const showCpmm = fields.cpmm.value === 'on'
@@ -130,6 +142,11 @@ export function TokenForm({ children }: { children: ReactNode }) {
 								{...getInputProps(fields.mintA, { type: 'hidden' })}
 								defaultValue={mintA}
 							/>
+
+							<Input
+								{...getInputProps(fields.poolId, { type: 'hidden' })}
+								defaultValue={poolId}
+							/>
 						</div>
 
 						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
@@ -144,7 +161,8 @@ export function TokenForm({ children }: { children: ReactNode }) {
 								content="Submit"
 							/>
 
-							{showCpmm && <button {...getButtonProps()} />}
+							{showCpmm && <button {...getPoolProps()} />}
+							{showCpmm && <button {...getDepositProps()} />}
 						</div>
 					</fieldset>
 				</form>
