@@ -1,15 +1,15 @@
 'use client'
 
+import { type ReactElement } from 'react'
 import { type SelectItemConfig } from '@/app/comps/select'
 import { Popover, Content } from '@/app/comps/popover'
 import { Button } from '@/app/comps/button'
-import { Input, InputProps } from '@/app/comps/input'
+import { Input, type InputProps } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
 import { TokenLogo } from '@/app/comps/token_logo'
 import { useSelected } from '@/app/hooks/use_selected'
 import { usePoolAmount } from '@/app/hooks/use_pool_amount'
 import { useImage } from '@/app/context/image_context'
-import { ReactElement } from 'react'
 
 export function Pool({ items }: { items: SelectItemConfig[] }) {
 	const mintAInputProps = usePoolAmount('mintAAmount', 'Mint A Amount')
