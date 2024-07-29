@@ -65,7 +65,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 
 	const { mintA, serializedTransaction: mintTx } = lastMint
 	const { poolId, serializedTransaction: poolTx } = lastPool
-	const { serializedTransaction: depositTx } = lastPool
+	const { serializedTransaction: depositTx } = lastDeposit
 
 	const { data: mintTxSig } = useMintTx(mintTx)
 	const { data: poolTxSig } = usePoolTx(poolTx)
