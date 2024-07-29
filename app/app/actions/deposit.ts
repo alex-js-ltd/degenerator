@@ -12,7 +12,7 @@ import {
 	Percent,
 	isValidCpmm,
 } from '@/app/utils/raydium'
-import BN from 'bn.js'
+import { BN } from '@coral-xyz/anchor'
 import Decimal from 'decimal.js'
 
 export async function deposit(_prevState: unknown, formData: FormData) {

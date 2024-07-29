@@ -13,7 +13,7 @@ import {
 	CREATE_CPMM_POOL_FEE_ACC,
 	DEV_CREATE_CPMM_POOL_FEE_ACC,
 } from '@/app/utils/raydium'
-import BN from 'bn.js'
+import { BN } from '@coral-xyz/anchor'
 
 export async function createPool(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
