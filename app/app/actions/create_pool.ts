@@ -27,7 +27,7 @@ export async function createPool(_prevState: unknown, formData: FormData) {
 		}
 	}
 
-	const { payerKey, mintA, mintB } = submission.value
+	const { payerKey, mintA, mintB, mintAAmount, mintBAmount } = submission.value
 
 	const raydium = await initSdk({ owner: payerKey })
 
@@ -35,6 +35,8 @@ export async function createPool(_prevState: unknown, formData: FormData) {
 		raydium,
 		mintA,
 		mintB,
+		mintAAmount,
+		mintBAmount,
 		payerKey,
 	})
 
@@ -58,11 +60,15 @@ async function getPoolTx({
 	raydium,
 	mintA: a,
 	mintB: b,
+	mintAAmount,
+	mintBAmount,
 	payerKey,
 }: {
 	raydium: Raydium
 	mintA: PublicKey
 	mintB: PublicKey
+	mintAAmount: number
+	mintBAmount: number
 	payerKey: PublicKey
 }) {
 	const mintA = await raydium.token.getTokenInfo(a)
@@ -76,8 +82,8 @@ async function getPoolTx({
 		poolFeeAccount: poolFeeAccount[cluster],
 		mintA,
 		mintB,
-		mintAAmount: new BN(100),
-		mintBAmount: new BN(100),
+		mintAAmount: new BN(mintAAmount),
+		mintBAmount: new BN(mintBAmount),
 		startTime: new BN(0),
 		associatedOnly: false,
 		ownerInfo: {
