@@ -10,17 +10,12 @@ import * as RadixSelect from '@radix-ui/react-select'
 
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 
-import {
-	useInputControl,
-	useField,
-	useForm,
-	type FieldName,
-} from '@conform-to/react'
+import { useInputControl, useField, type FieldName } from '@conform-to/react'
 import { Option } from '@/app/comps/option'
-import Image, { ImageProps } from 'next/image'
+import { type ImageProps, TokenLogo } from '@/app/comps/token_logo'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
-import { Icon } from './_icon'
+import { useSelected } from '@/app/hooks/use_selected'
 
 interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
@@ -56,19 +51,16 @@ function Select({
 	logo: Component,
 	children,
 }: SelectFieldProps) {
-	const [meta] = useField(name)
+	const { meta, title, imageProps: logoProps } = useSelected(name, items)
+
 	const control = useInputControl(meta)
 
 	const selectRef = useRef<ElementRef<typeof RadixSelect.Trigger>>(null)
 
 	const border = meta.errors?.length ? 'border-teal-300' : 'border-gray-800'
 
-	const selected = items.find(el => el.value === meta.value)
-
-	const logoProps = selected?.imageProps
-
 	return (
-		<div className="relative flex-1">
+		<div className="relative w-28">
 			<Input
 				name={meta.name}
 				defaultValue={meta.initialValue}
@@ -97,9 +89,7 @@ function Select({
 				>
 					{Component && logoProps && <Component {...logoProps} />}
 
-					<RadixSelect.Value {...valueProps}>
-						{selected?.title ?? ''}
-					</RadixSelect.Value>
+					<RadixSelect.Value {...valueProps}>{title ?? ''}</RadixSelect.Value>
 
 					<RadixSelect.Icon className="text-violet11 ml-auto">
 						<ChevronDownIcon />
@@ -111,7 +101,7 @@ function Select({
 						position="popper"
 						side="bottom"
 						sideOffset={20}
-						className="relative overflow-hidden bg-gray-900 rounded-md z-10 w-fit min-w-[124px] h-auto max-h-[136px] data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-50 "
+						className="relative overflow-hidden bg-gray-900 rounded-md z-10 w-full h-auto max-h-[136px] data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-50 "
 						{...contentProps}
 					>
 						<RadixSelect.Viewport className="z-50">
@@ -152,30 +142,12 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 	},
 )
 
-function TokenLogo({ src, alt }: ImageProps) {
-	return (
-		<div className="shrink-0 relative flex items-center overflow-hidden h-5 w-5 rounded pr-1">
-			<Image
-				className="relative aspect-[48/44] object-cover object-center rounded-lg"
-				fill={true}
-				src={src}
-				alt={alt}
-				sizes="1.25rem"
-			/>
-		</div>
-	)
-}
-
-function FeeTierLogo({ src }: ImageProps) {
-	if (typeof src === 'string') return <Icon className="w-full h-5" name={src} />
-}
-
-function QuoteToken({ name, items }: CompoundSelect) {
+function MintB({ name, items }: CompoundSelect) {
 	return (
 		<Select
 			name={name}
 			items={items}
-			valueProps={{ placeholder: 'Quote Token' }}
+			valueProps={{ placeholder: '🌿  Mint B' }}
 			logo={TokenLogo}
 		>
 			{items.map(item => (
@@ -196,69 +168,5 @@ function QuoteToken({ name, items }: CompoundSelect) {
 		</Select>
 	)
 }
-function FeeTier({ name, items }: CompoundSelect) {
-	return (
-		<Select
-			name={name}
-			items={items}
-			valueProps={{ placeholder: 'Fee Tier', children: null }}
-			logo={FeeTierLogo}
-		>
-			{items.map(item => (
-				<SelectItem
-					value={item.value}
-					id={`${name}-${item.value}`}
-					key={item.value}
-					fieldName={name}
-				>
-					<div className="flex items-center gap-2">
-						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-normal whitespace-nowrap">
-							{item.children}
-						</RadixSelect.ItemText>
-					</div>
-				</SelectItem>
-			))}
-		</Select>
-	)
-}
 
-function InitialPrice({
-	name,
-	items: priceItems,
-	quoteItems,
-}: CompoundSelect & { quoteItems: SelectItemConfig[] }) {
-	const [, fields] = useForm({})
-	const [mint2] = useField(fields.mint2.name)
-	const selected = quoteItems.find(el => el.value === mint2.value)
-
-	const items = priceItems.map(({ children, title, ...rest }) => ({
-		...rest,
-		children: selected?.title ? `${children} / ${selected.title}` : children,
-		title: selected?.title ? `${title} / ${selected.title}` : title,
-	}))
-
-	return (
-		<Select
-			name={name}
-			items={items}
-			valueProps={{ placeholder: 'Initial Price' }}
-		>
-			{items.map(item => (
-				<SelectItem
-					value={item.value}
-					id={`${name}-${item.value}`}
-					key={item.value}
-					fieldName={name}
-				>
-					<div className="flex items-center gap-2">
-						<RadixSelect.ItemText className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-normal whitespace-nowrap">
-							{item.children}
-						</RadixSelect.ItemText>
-					</div>
-				</SelectItem>
-			))}
-		</Select>
-	)
-}
-
-export { Select, SelectItem, QuoteToken, FeeTier, InitialPrice }
+export { Select, SelectItem, MintB }

@@ -1,20 +1,14 @@
 'use client'
 
-import type { ListOfErrors } from './field'
 import { Icon } from './_icon'
-import Image, { type StaticImageData } from 'next/image'
+import Image from 'next/image'
+import { useField } from '@conform-to/react'
+import { useImage } from '@/app/context/image_context'
 
-type PreviewImageProps = {
-	src: string | StaticImageData | undefined
-	clearPreviewImage: () => void
-	errors: ListOfErrors
-}
+export function PreviewImage() {
+	const [{ errors }] = useField('image')
+	const { image, clearImage } = useImage()
 
-export function PreviewImage({
-	src,
-	clearPreviewImage,
-	errors,
-}: PreviewImageProps) {
 	return (
 		<div className="h-[69px] w-full">
 			<div
@@ -23,21 +17,20 @@ export function PreviewImage({
 				}
 			>
 				<div className="group relative h-[44px] w-[48px] shrink-0 rounded-lg border border-white/10 transition-all duration-500 ease-in-out">
-					{src ? (
+					{image ? (
 						<>
 							<button
 								className="focus-visible:ring-ring absolute -right-1.5 -top-1.5 z-10 inline-flex h-4 w-4 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-gray-900 bg-gray-100 text-sm font-medium text-gray-900 opacity-0 shadow-sm transition-opacity hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 group-hover:opacity-100"
-								onClick={clearPreviewImage}
+								onClick={clearImage}
 							>
 								<span className="sr-only">Remove image</span>
 								<Icon className="h-2.5 w-2.5" name="close" />
 							</button>
 							<div className="overflow-hidden rounded-lg group-hover:opacity-80">
 								<Image
-									alt="your uploaded image"
 									className="relative aspect-[48/44] object-cover object-center rounded-lg"
-									src={src}
 									fill={true}
+									{...image}
 								/>
 							</div>
 						</>

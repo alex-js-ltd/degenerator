@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode } from 'react'
+import { type ReactNode, Fragment } from 'react'
 import { useFormState } from 'react-dom'
 
 import {
@@ -13,28 +13,42 @@ import { parseWithZod } from '@conform-to/zod'
 
 import { Schema } from '@/app/utils/schemas'
 import { mintToken } from '@/app/actions/mint_token'
+import { createPool } from '@/app/actions/create_pool'
+import { deposit } from '@/app/actions/deposit'
 
-import { useImageUpload } from '@/app/hooks/use_image_upload'
 import { usePayer } from '@/app/hooks/use_payer'
 
-import { useMintTx } from '@/app/context/tx_context'
-
+import { useMintTx, usePoolTx, useDepositTx } from '@/app/context/tx_context'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { Input } from '@/app/comps/input'
 import { SubmitButton } from '@/app/comps/submit_button'
-import { ClmmCheckbox } from '@/app/comps/checkbox'
+import { CpmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
-import { ClmmButton } from '@/app/comps/clmm_button'
+import { useServerAction } from '@/app/hooks/use_server_action'
 
-const initialState = {
+const initialMintState = {
 	serializedTransaction: undefined,
-	mint1: undefined,
+	mintA: undefined,
 }
 
-export function TokenForm({ children = null }: { children?: ReactNode }) {
-	const [lastResult, action] = useFormState(mintToken, initialState)
+const initialPoolState = {
+	serializedTransaction: undefined,
+	poolId: undefined,
+}
+
+const initialDepositState = {
+	serializedTransaction: undefined,
+}
+
+export function TokenForm({ children }: { children: ReactNode }) {
+	const [lastMint, mintAction] = useFormState(mintToken, initialMintState)
+	const [lastPool, poolAction] = useFormState(createPool, initialPoolState)
+	const [lastDeposit, depositAction] = useFormState(
+		deposit,
+		initialDepositState,
+	)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -43,35 +57,37 @@ export function TokenForm({ children = null }: { children?: ReactNode }) {
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
 		shouldRevalidate: 'onInput',
-		lastResult,
+		lastResult: lastMint,
 		defaultValue: {
-			clmm: 'on',
+			cpmm: 'on',
 		},
 	})
 
-	const { mint1, serializedTransaction: tx } = lastResult
-	useMintTx(tx)
+	const { mintA, serializedTransaction: mintTx } = lastMint
+	const { poolId, serializedTransaction: poolTx } = lastPool
+	const { serializedTransaction: depositTx } = lastDeposit
 
-	const { previewImage, clearPreviewImage, fileRef, onChange } =
-		useImageUpload()
+	const { data: mintTxSig } = useMintTx(mintTx)
+	const { data: poolTxSig } = usePoolTx(poolTx)
+	const { data: depositTxSig } = useDepositTx(depositTx)
+
+	const getPoolProps = useServerAction(poolAction, mintTxSig)
+	const getDepositProps = useServerAction(depositAction, poolTxSig)
+
 	const payer = usePayer()
-	const showClmm = fields.clmm.value === 'on'
+	const showCpmm = fields.cpmm.value === 'on'
 
 	return (
 		<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 			<FormProvider context={form.context}>
-				<PreviewImage
-					src={previewImage}
-					clearPreviewImage={clearPreviewImage}
-					errors={fields.image.errors}
-				/>
+				<PreviewImage />
 
 				<div className="absolute top-2.5 right-10 p-1 w-5 h-5">
-					<ResetButton onClick={clearPreviewImage} />
+					<ResetButton />
 				</div>
 
 				<div className="absolute right-3.5 top-2.5 z-10 p-1 w-5 h-5">
-					<ClmmCheckbox />
+					<CpmmCheckbox />
 				</div>
 
 				<form
@@ -121,29 +137,36 @@ export function TokenForm({ children = null }: { children?: ReactNode }) {
 								{...getInputProps(fields.payerKey, { type: 'hidden' })}
 								defaultValue={payer}
 							/>
+
 							<Input
-								{...getInputProps(fields.mint1, { type: 'hidden' })}
-								defaultValue={mint1}
+								{...getInputProps(fields.mintA, { type: 'hidden' })}
+								defaultValue={mintA}
+							/>
+
+							<Input
+								{...getInputProps(fields.poolId, { type: 'hidden' })}
+								defaultValue={poolId}
 							/>
 						</div>
 
 						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
 							<div className="flex flex-1 gap-1 sm:gap-2">
-								<ImageChooser
-									name={fields.image.name}
-									fileRef={fileRef}
-									onChange={onChange}
-								/>
-								{showClmm && children}
+								<ImageChooser />
+								{showCpmm && children}
 							</div>
 
 							<SubmitButton
 								form={form.id}
-								formAction={action}
-								content={showClmm ? 'Mint Token + Create Pool' : 'Mint Token'}
+								formAction={mintAction}
+								content="Submit"
 							/>
 
-							{showClmm && <ClmmButton />}
+							{showCpmm && (
+								<Fragment>
+									<button {...getPoolProps()} />
+									<button {...getDepositProps()} />
+								</Fragment>
+							)}
 						</div>
 					</fieldset>
 				</form>

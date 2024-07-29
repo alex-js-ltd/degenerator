@@ -29,46 +29,64 @@ export const TokenSchema = z.object({
 	image: z.instanceof(File).refine(file => {
 		return !file || file.size <= MAX_UPLOAD_SIZE
 	}, 'File size must be less than 4.5MB'),
-	clmm: z
+	cpmm: z
 		.string()
 		.transform(value => value === 'on')
 		.optional(),
+	poolId: z.string().optional(),
 })
 
-export const ClmmSchema = z.object({
+export const PoolSchema = z.object({
 	payerKey: PublicKey,
-	mint1: PublicKey,
-	mint2: PublicKey,
-	feeTierId: z.string(),
-	initialPrice: z.preprocess(val => Number(val), z.number()),
+	mintA: PublicKey,
+	mintB: PublicKey,
+	mintAAmount: z.number({
+		invalid_type_error: 'Expected Number',
+	}),
+	mintBAmount: z.number({
+		invalid_type_error: 'Expected Number',
+	}),
 })
 
-export const ClmmOptions = ClmmSchema.partial()
+export const DepositSchema = z.object({
+	payerKey: PublicKey,
+	poolId: z.string(),
+})
+
+const PoolOptions = PoolSchema.partial()
 
 export const Schema = z
-	.intersection(TokenSchema, ClmmOptions)
-	.superRefine(({ clmm, mint2, feeTierId, initialPrice }, context) => {
-		if (clmm && !mint2) {
+	.intersection(TokenSchema, PoolOptions)
+	.superRefine(({ cpmm, mintB, mintAAmount, mintBAmount, supply }, context) => {
+		if (cpmm && !mintB) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: 'Required',
-				path: ['mint2'],
+				path: ['mintB'],
 			})
 		}
 
-		if (clmm && !feeTierId) {
+		if (cpmm && !mintAAmount) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: 'Required',
-				path: ['feeTierId'],
+				path: ['mintAAmount'],
 			})
 		}
 
-		if (clmm && !initialPrice) {
+		if (cpmm && !mintBAmount) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: 'Required',
-				path: ['initialPrice'],
+				path: ['mintBAmount'],
+			})
+		}
+
+		if (cpmm && mintAAmount && mintAAmount > supply) {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'mintAAmount exceeds supply',
+				path: ['mintAAmount'],
 			})
 		}
 	})

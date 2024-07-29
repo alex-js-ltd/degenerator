@@ -46,7 +46,7 @@ const Checkbox = React.forwardRef<
 
 Checkbox.displayName = 'Checkbox'
 
-function ClmmCheckbox() {
+function CpmmCheckbox() {
 	return (
 		<Tooltip
 			content={
@@ -69,15 +69,15 @@ function ClmmCheckbox() {
 		>
 			<Checkbox
 				className="rounded-full border border-gray-200/50 w-5 h-5 hover:border-gray-200/80"
-				name="clmm"
+				name="cpmm"
 			>
 				<Icon
 					className="size-2.5 translate-y-[-2.5px] transition-all"
-					name="clmm"
+					name="cpmm"
 				/>
 			</Checkbox>
 		</Tooltip>
 	)
 }
 
-export { Checkbox, ClmmCheckbox }
+export { Checkbox, CpmmCheckbox }

@@ -2,23 +2,27 @@ import * as React from 'react'
 import { TokenForm } from '@/app/comps/token_form'
 import { type Raydium } from '@raydium-io/raydium-sdk-v2'
 import { type SelectItemConfig } from '@/app/comps/select'
-import { QuoteToken, FeeTier, InitialPrice } from '@/app/comps/select'
-import { initSdk, getClmmConfigs } from '@/app/utils/raydium'
+import { MintB } from '@/app/comps/select'
+import { initSdk } from '@/app/utils/raydium'
+import { Pool } from '@/app/comps/pool'
 
 export default async function Page() {
 	return (
 		<TokenForm>
 			<React.Suspense fallback={<Loading />}>
-				<ClmmOptions />
+				<MintList />
 			</React.Suspense>
 		</TokenForm>
 	)
 }
 
-async function getQuoteTokenProps(raydium: Raydium) {
-	const data = await raydium.fetchV3TokenList()
+async function getMintBProps(raydium: Raydium) {
+	const data = await raydium.api.getTokenInfo([
+		'So11111111111111111111111111111111111111112',
+		'4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R',
+	])
 
-	const mintItems = data.mintList.reduce<SelectItemConfig[]>((acc, curr) => {
+	const mintItems = data.reduce<SelectItemConfig[]>((acc, curr) => {
 		const { address, name, logoURI, symbol } = curr
 
 		const option = {
@@ -33,43 +37,18 @@ async function getQuoteTokenProps(raydium: Raydium) {
 		return acc
 	}, [])
 
-	return { items: mintItems, name: 'mint2' }
+	return { items: mintItems, name: 'mintB' }
 }
 
-async function getFeeTierProps(raydium: Raydium) {
-	const clmmConfigs = await getClmmConfigs(raydium)
-
-	return {
-		items: clmmConfigs?.map(({ id, description }) => ({
-			value: id,
-			children: description,
-			imageProps: { src: id, alt: description },
-		})),
-		name: 'feeTierId',
-	}
-}
-
-async function ClmmOptions() {
+async function MintList() {
 	const raydium = await initSdk({})
 
-	const quote = getQuoteTokenProps(raydium)
-	const fee = getFeeTierProps(raydium)
-
-	const [quoteProps, feeProps] = await Promise.all([quote, fee])
+	const mintBprops = await getMintBProps(raydium)
 
 	return (
 		<React.Fragment>
-			<QuoteToken {...quoteProps} />
-			<FeeTier {...feeProps} />
-			<InitialPrice
-				items={Array.from([1, 10, 100, 1000, 10000], n => ({
-					value: String(n),
-					children: String(n),
-					title: String(n),
-				}))}
-				name="initialPrice"
-				quoteItems={quoteProps.items}
-			/>
+			<MintB {...mintBprops} />
+			<Pool {...mintBprops} />
 		</React.Fragment>
 	)
 }
@@ -77,9 +56,8 @@ async function ClmmOptions() {
 function Loading() {
 	return (
 		<React.Fragment>
-			<div className="flex-1 h-[32px] rounded bg-slate-800 animate-pulse" />
-			<div className="flex-1 h-[32px] rounded bg-slate-800 animate-pulse" />
-			<div className="flex-1 h-[32px] rounded bg-slate-800 animate-pulse" />
+			<div className="w-28 h-[32px] rounded bg-slate-800 animate-pulse" />
+			<div className="w-28 h-[32px] rounded bg-slate-800 animate-pulse" />
 		</React.Fragment>
 	)
 }

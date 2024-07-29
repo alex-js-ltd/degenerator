@@ -1,15 +1,17 @@
 'use client'
 
 import { useResetForm } from '@/app/hooks/use_reset_form'
-import { Button, type ButtonProps } from './button'
+import { Button } from './button'
 import { Icon } from './_icon'
 import { callAll, cn } from '@/app/utils/misc'
 import { useState } from 'react'
 import { delay } from '@/app/utils/misc'
 import { Tooltip, Content } from '@/app/comps/tooltip'
 import { useTxStatus, useResetTx } from '@/app/context/tx_context'
+import { useImage } from '@/app/context/image_context'
 
-export function ResetButton({ onClick }: ButtonProps) {
+export function ResetButton() {
+	const { clearImage } = useImage()
 	const resetForm = useResetForm()
 	const resetTx = useResetTx()
 
@@ -42,7 +44,7 @@ export function ResetButton({ onClick }: ButtonProps) {
 			<Button
 				variant="reset"
 				disabled={isLoading}
-				onClick={callAll(onClick, resetForm, toggle, resetTx)}
+				onClick={callAll(clearImage, resetForm, toggle, resetTx)}
 			>
 				<Icon
 					name="reset"

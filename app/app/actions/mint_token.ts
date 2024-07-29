@@ -21,11 +21,11 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		return {
 			...submission.reply(),
 			serializedTransaction: undefined,
-			mint1: undefined,
+			mintA: undefined,
 		}
 	}
 
-	const { image, name, symbol, description, decimals, supply, payerKey, clmm } =
+	const { image, name, symbol, description, decimals, supply, payerKey, cpmm } =
 		submission.value
 
 	const blob = await put(image.name, image, { access: 'public' })
@@ -59,8 +59,8 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		metadata,
 		decimals,
 		supply,
-		revokeMint: clmm,
-		revokeFreeze: clmm,
+		revokeMint: cpmm,
+		revokeFreeze: cpmm,
 	})
 
 	const transaction = await buildTransaction({
@@ -75,7 +75,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	return {
 		...submission.reply(),
 		serializedTransaction,
-		mint1: mintKeypair.publicKey.toBase58(),
+		mintA: mintKeypair.publicKey.toBase58(),
 	}
 }
 

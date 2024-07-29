@@ -1,21 +1,25 @@
-import { connection } from '@/app/utils/setup'
-import { PublicKey } from '@solana/web3.js'
 import {
 	Raydium,
 	TxVersion,
 	DEV_API_URLS,
 	API_URLS,
+	CREATE_CPMM_POOL_PROGRAM,
+	DEV_CREATE_CPMM_POOL_PROGRAM,
 } from '@raydium-io/raydium-sdk-v2'
+import { connection } from '@/app/utils/setup'
+import { PublicKey } from '@solana/web3.js'
 import { getEnv } from '@/app/utils/env'
+
+const txVersion = TxVersion.V0
 
 const { CLUSTER } = getEnv()
 
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : 'devnet'
 
-const BASE_HOST =
-	CLUSTER === 'devnet' ? DEV_API_URLS.BASE_HOST : API_URLS.BASE_HOST
-
-const txVersion = TxVersion.V0 // or TxVersion.LEGACY
+const BASE_HOST = {
+	mainnet: API_URLS.BASE_HOST,
+	devnet: DEV_API_URLS.BASE_HOST,
+}
 
 async function initSdk(params: { owner?: PublicKey; loadToken?: boolean }) {
 	const raydium = await Raydium.load({
@@ -27,66 +31,21 @@ async function initSdk(params: { owner?: PublicKey; loadToken?: boolean }) {
 		blockhashCommitment: 'finalized',
 
 		urlConfigs: {
-			BASE_HOST,
+			BASE_HOST: BASE_HOST[cluster],
 		},
 	})
 
 	return raydium
 }
 
-async function getClmmConfigs(raydium: Raydium) {
-	const clmmConfigs =
-		cluster === 'mainnet' ? await raydium.api.getClmmConfigs() : devConfigs
+const VALID_PROGRAM_ID = new Set([
+	CREATE_CPMM_POOL_PROGRAM.toBase58(),
+	DEV_CREATE_CPMM_POOL_PROGRAM.toBase58(),
+])
 
-	return clmmConfigs
+function isValidCpmm(id: string) {
+	return VALID_PROGRAM_ID.has(id)
 }
 
-const devConfigs = [
-	{
-		id: 'CQYbhr6amxUER4p5SC44C63R4qw4NFc9Z4Db9vF4tZwG',
-		index: 0,
-		protocolFeeRate: 120000,
-		tradeFeeRate: 100,
-		tickSpacing: 10,
-		fundFeeRate: 40000,
-		description: 'Best for very stable pairs',
-		defaultRange: 0.005,
-		defaultRangePoint: [0.001, 0.003, 0.005, 0.008, 0.01],
-	},
-	{
-		id: 'B9H7TR8PSjJT7nuW2tuPkFC63z7drtMZ4LoCtD7PrCN1',
-		index: 1,
-		protocolFeeRate: 120000,
-		tradeFeeRate: 2500,
-		tickSpacing: 60,
-		fundFeeRate: 40000,
-		description: 'Best for most pairs',
-		defaultRange: 0.1,
-		defaultRangePoint: [0.01, 0.05, 0.1, 0.2, 0.5],
-	},
-	{
-		id: 'GjLEiquek1Nc2YjcBhufUGFRkaqW1JhaGjsdFd8mys38',
-		index: 3,
-		protocolFeeRate: 120000,
-		tradeFeeRate: 10000,
-		tickSpacing: 120,
-		fundFeeRate: 40000,
-		description: 'Best for exotic pairs',
-		defaultRange: 0.1,
-		defaultRangePoint: [0.01, 0.05, 0.1, 0.2, 0.5],
-	},
-	{
-		id: 'GVSwm4smQBYcgAJU7qjFHLQBHTc4AdB3F2HbZp6KqKof',
-		index: 2,
-		protocolFeeRate: 120000,
-		tradeFeeRate: 500,
-		tickSpacing: 10,
-		fundFeeRate: 40000,
-		description: 'Best for tighter ranges',
-		defaultRange: 0.1,
-		defaultRangePoint: [0.01, 0.05, 0.1, 0.2, 0.5],
-	},
-]
-
 export * from '@raydium-io/raydium-sdk-v2'
-export { initSdk, txVersion, cluster, getClmmConfigs }
+export { initSdk, isValidCpmm, txVersion, cluster }
