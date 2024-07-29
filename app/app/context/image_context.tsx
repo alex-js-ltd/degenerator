@@ -11,8 +11,8 @@ import React, {
 	useRef,
 } from 'react'
 import { type InputProps } from '@/app/comps/input'
-import invariant from 'tiny-invariant'
 import { type ImageProps } from 'next/image'
+import invariant from 'tiny-invariant'
 
 type Context = {
 	fileRef: RefObject<HTMLInputElement>
@@ -50,10 +50,11 @@ function ImageProvider({ children }: { children: ReactNode }) {
 					const reader = new FileReader()
 
 					reader.onloadend = () => {
-						setImage({
-							src: reader.result as string,
-							alt: 'your uploaded image',
-						})
+						if (typeof reader.result === 'string')
+							setImage({
+								src: reader.result,
+								alt: 'your uploaded image',
+							})
 					}
 					reader.readAsDataURL(file)
 				} else {
