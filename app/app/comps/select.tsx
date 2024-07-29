@@ -15,6 +15,7 @@ import { Option } from '@/app/comps/option'
 import { type TokenLogoProps, TokenLogo } from '@/app/comps/token_logo'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
+import { useSelected } from '@/app/hooks/use_selected'
 
 interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
@@ -50,16 +51,13 @@ function Select({
 	logo: Component,
 	children,
 }: SelectFieldProps) {
-	const [meta] = useField(name)
+	const { meta, title, imageProps: logoProps } = useSelected(name, items)
+
 	const control = useInputControl(meta)
 
 	const selectRef = useRef<ElementRef<typeof RadixSelect.Trigger>>(null)
 
 	const border = meta.errors?.length ? 'border-teal-300' : 'border-gray-800'
-
-	const selected = items.find(el => el.value === meta.value)
-
-	const logoProps = selected?.imageProps
 
 	return (
 		<div className="relative w-28">
@@ -91,9 +89,7 @@ function Select({
 				>
 					{Component && logoProps && <Component {...logoProps} />}
 
-					<RadixSelect.Value {...valueProps}>
-						{selected?.title ?? ''}
-					</RadixSelect.Value>
+					<RadixSelect.Value {...valueProps}>{title ?? ''}</RadixSelect.Value>
 
 					<RadixSelect.Icon className="text-violet11 ml-auto">
 						<ChevronDownIcon />

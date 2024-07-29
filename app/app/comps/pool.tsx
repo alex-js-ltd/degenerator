@@ -1,11 +1,13 @@
 'use client'
 
 import { type SelectItemConfig } from '@/app/comps/select'
-import { useField, useInputControl } from '@conform-to/react'
+import { type FieldName, useField, useInputControl } from '@conform-to/react'
 import { Popover, Content } from '@/app/comps/popover'
 import { Button } from '@/app/comps/button'
 import { Input, InputProps } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
+import { TokenLogo } from './token_logo'
+import { useSelected } from '@/app/hooks/use_selected'
 
 type Control = ReturnType<typeof useInputControl<string>>
 
@@ -26,16 +28,13 @@ function getErrorProps(errors?: string[]) {
 
 export function Pool({ items }: { items: SelectItemConfig[] }) {
 	const [symbol] = useField('symbol')
-	const [mintB] = useField('mintB')
 
-	const selected = items.find(el => el.value === mintB.value)
+	const { title, imageProps } = useSelected('mintB', items)
 
 	const mintAPlaceholder = symbol.value
 		? `Mint A amount (${symbol.value})`
 		: 'Mint A amount'
-	const mintBPlaceholder = selected?.title
-		? `Mint B amount (${selected.title})`
-		: 'Mint B amount'
+	const mintBPlaceholder = title ? `Mint B amount (${title})` : 'Mint B amount'
 
 	const [mintAAmount] = useField<string>('mintAAmount')
 	const [mintBAmount] = useField<string>('mintBAmount')
@@ -53,7 +52,7 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 					sideOffset={20}
 					className="w-full h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0"
 				>
-					<fieldset className="flex flex-col gap-2 p-2">
+					<fieldset className="grid grid-cols-2 gap-2 p-2 w-fit">
 						<Input
 							variant="pool"
 							placeholder={mintAPlaceholder}
