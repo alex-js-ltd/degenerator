@@ -25,14 +25,21 @@ import { SubmitButton } from '@/app/comps/submit_button'
 import { CpmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
 import { PoolAction } from '@/app/comps/pool_action'
+import { useServerAction } from '@/app/hooks/use_server_action'
+import { createPool } from '@/app/actions/create_pool'
 
-const initialState = {
+const initialMintState = {
 	serializedTransaction: undefined,
 	mintA: undefined,
 }
 
+const initialPoolState = {
+	serializedTransaction: undefined,
+	poolId: undefined,
+}
+
 export function TokenForm({ children }: { children: ReactNode }) {
-	const [lastResult, action] = useFormState(mintToken, initialState)
+	const [lastResult, action] = useFormState(mintToken, initialMintState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -52,6 +59,12 @@ export function TokenForm({ children }: { children: ReactNode }) {
 
 	const payer = usePayer()
 	const showCpmm = fields.cpmm.value === 'on'
+
+	const { getButtonProps } = useServerAction(
+		createPool,
+		initialPoolState,
+		false,
+	)
 
 	return (
 		<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
@@ -132,7 +145,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 								content="Submit"
 							/>
 
-							{showCpmm && <PoolAction />}
+							{showCpmm && <button {...getButtonProps()} />}
 						</div>
 					</fieldset>
 				</form>
