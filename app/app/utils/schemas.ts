@@ -24,7 +24,7 @@ export const TokenSchema = z.object({
 		.number({
 			invalid_type_error: 'Expected Number',
 		})
-		.min(1, { message: 'Supply is too low' }),
+		.min(100, { message: 'Supply is too low' }),
 	description: z.string(),
 	image: z.instanceof(File).refine(file => {
 		return !file || file.size <= MAX_UPLOAD_SIZE
@@ -40,12 +40,16 @@ export const PoolSchema = z.object({
 	payerKey: PublicKey,
 	mintA: PublicKey,
 	mintB: PublicKey,
-	mintAAmount: z.number({
-		invalid_type_error: 'Expected Number',
-	}),
-	mintBAmount: z.number({
-		invalid_type_error: 'Expected Number',
-	}),
+	mintAAmount: z
+		.number({
+			invalid_type_error: 'Expected Number',
+		})
+		.min(100, { message: 'Amount is too low' }),
+	mintBAmount: z
+		.number({
+			invalid_type_error: 'Expected Number',
+		})
+		.min(100, { message: 'Amount is too low' }),
 })
 
 export const DepositSchema = z.object({
