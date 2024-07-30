@@ -45,6 +45,7 @@ export const PoolSchema = z.object({
 			invalid_type_error: 'Expected Number',
 		})
 		.min(100, { message: 'Amount is too low' }),
+
 	mintBAmount: z
 		.number({
 			invalid_type_error: 'Expected Number',
@@ -86,11 +87,11 @@ export const Schema = z
 			})
 		}
 
-		if (cpmm && mintAAmount && mintAAmount > supply) {
+		if (cpmm && mintAAmount && mintAAmount >= supply) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
-				message: 'mintAAmount exceeds supply',
-				path: ['mintAAmount'],
+				message: 'Supply is too low',
+				path: ['supply'],
 			})
 		}
 	})
