@@ -28,27 +28,24 @@ import { CpmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
 import { useServerAction } from '@/app/hooks/use_server_action'
 
-const initialMintState = {
+const initialMint = {
 	serializedTransaction: undefined,
 	mintA: undefined,
 }
 
-const initialPoolState = {
+const initialPool = {
 	serializedTransaction: undefined,
 	poolId: undefined,
 }
 
-const initialDepositState = {
+const initialDeposit = {
 	serializedTransaction: undefined,
 }
 
 export function TokenForm({ children }: { children: ReactNode }) {
-	const [lastMint, mintAction] = useFormState(mintToken, initialMintState)
-	const [lastPool, poolAction] = useFormState(createPool, initialPoolState)
-	const [lastDeposit, depositAction] = useFormState(
-		deposit,
-		initialDepositState,
-	)
+	const [lastMint, mintAction] = useFormState(mintToken, initialMint)
+	const [lastPool, poolAction] = useFormState(createPool, initialPool)
+	const [lastDeposit, depositAction] = useFormState(deposit, initialDeposit)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
