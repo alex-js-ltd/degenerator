@@ -57,13 +57,7 @@ function CpmmCheckbox() {
 					alignOffset={-12}
 					side="top"
 				>
-					Create liquidity pool{' '}
-					<ExternalLink
-						variant="underline"
-						href="https://docs.raydium.io/raydium/pool-creation/creating-a-clmm-pool-and-farm"
-					>
-						info
-					</ExternalLink>
+					Create liquidity pool
 				</Content>
 			}
 		>

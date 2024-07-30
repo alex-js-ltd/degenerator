@@ -30,7 +30,7 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 					align="start"
 					alignOffset={0}
 					sideOffset={20}
-					className="w-full h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0"
+					className="w-full h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0 data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-95"
 				>
 					<fieldset className="grid grid-cols-1 gap-2 p-2 w-fit">
 						<Field inputProps={{ ...mintAInputProps }} logo={mintALogo} />
