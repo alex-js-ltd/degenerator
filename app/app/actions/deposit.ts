@@ -11,9 +11,8 @@ import {
 	CpmmKeys,
 	Percent,
 	isValidCpmm,
+	getAmount,
 } from '@/app/utils/raydium'
-import BN from 'bn.js'
-import Decimal from 'decimal.js'
 
 export async function deposit(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -64,9 +63,8 @@ async function getDepositTx({
 		poolKeys = data.poolKeys
 	}
 
-	const inputAmount = new BN(
-		new Decimal(amount).mul(10 ** poolInfo.mintA.decimals).toFixed(0),
-	)
+	const inputAmount = getAmount(amount, poolInfo.mintA.decimals)
+
 	const slippage = new Percent(1, 100) // 1%
 	const baseIn = true
 

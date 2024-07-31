@@ -9,6 +9,8 @@ import {
 import { connection } from '@/app/utils/setup'
 import { PublicKey } from '@solana/web3.js'
 import { getEnv } from '@/app/utils/env'
+import BN from 'bn.js'
+import Decimal from 'decimal.js'
 
 const txVersion = TxVersion.V0
 
@@ -47,5 +49,13 @@ function isValidCpmm(id: string) {
 	return VALID_PROGRAM_ID.has(id)
 }
 
+function getAmount(amount: number, decimals: number): BN {
+	// Convert the human-readable token amount to the smallest unit based on its decimals
+	const scale = new Decimal(amount).mul(10 ** decimals).toFixed(0)
+	// Return the scaled amount as a BN (Big Number) object
+
+	return new BN(scale)
+}
+
 export * from '@raydium-io/raydium-sdk-v2'
-export { initSdk, isValidCpmm, txVersion, cluster }
+export { initSdk, isValidCpmm, getAmount, txVersion, cluster }

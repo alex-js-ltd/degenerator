@@ -66,7 +66,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 
 	const { data: mintTxSig } = useMintTx(mintTx)
 	const { data: poolTxSig } = usePoolTx(poolTx)
-	const { data: depositTxSig } = useDepositTx(depositTx)
+	useDepositTx(depositTx)
 
 	const getPoolProps = useServerAction(poolAction, mintTxSig)
 	const getDepositProps = useServerAction(depositAction, poolTxSig)
@@ -144,6 +144,8 @@ export function TokenForm({ children }: { children: ReactNode }) {
 								{...getInputProps(fields.poolId, { type: 'hidden' })}
 								defaultValue={poolId}
 							/>
+
+							<input name="amount" defaultValue={0.1} type="hidden" />
 						</div>
 
 						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
