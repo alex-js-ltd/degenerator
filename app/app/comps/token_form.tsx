@@ -75,22 +75,21 @@ export function TokenForm({ children }: { children: ReactNode }) {
 	const showCpmm = fields.cpmm.value === 'on'
 
 	return (
-		<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
-			<FormProvider context={form.context}>
+		<FormProvider context={form.context}>
+			<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 				<PreviewImage />
 
-				<div className="absolute top-2.5 right-10 p-1 w-5 h-5">
-					<ResetButton />
-				</div>
-
-				<div className="absolute right-3.5 top-2.5 z-10 p-1 w-5 h-5">
-					<CpmmCheckbox />
-				</div>
-
 				<form
-					className="relative z-10 h-full w-full min-w-0 bg-gray-900"
+					className="z-10 h-full w-full min-w-0 bg-gray-900"
 					{...getFormProps(form)}
 				>
+					<div className="absolute top-2.5 right-10 p-1 w-5 h-5">
+						<ResetButton />
+					</div>
+
+					<div className="absolute right-3.5 top-2.5 z-10 p-1 w-5 h-5">
+						<CpmmCheckbox />
+					</div>
 					<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
 						<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
 							<Field
@@ -154,7 +153,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 						</div>
 					</fieldset>
 				</form>
-			</FormProvider>
-		</div>
+			</div>
+		</FormProvider>
 	)
 }
