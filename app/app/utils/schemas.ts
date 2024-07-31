@@ -33,24 +33,19 @@ export const TokenSchema = z.object({
 		.string()
 		.transform(value => value === 'on')
 		.optional(),
-	poolId: z.string().optional(),
 })
 
 export const PoolSchema = z.object({
 	payerKey: PublicKey,
 	mintA: PublicKey,
 	mintB: PublicKey,
-	mintAAmount: z
-		.number({
-			invalid_type_error: 'Expected Number',
-		})
-		.min(1, { message: 'Amount is too low' }),
+	mintAAmount: z.number({
+		invalid_type_error: 'Expected Number',
+	}),
 
-	mintBAmount: z
-		.number({
-			invalid_type_error: 'Expected Number',
-		})
-		.min(1, { message: 'Amount is too low' }),
+	mintBAmount: z.number({
+		invalid_type_error: 'Expected Number',
+	}),
 })
 
 export const DepositSchema = z.object({

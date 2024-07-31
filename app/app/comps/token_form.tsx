@@ -130,22 +130,11 @@ export function TokenForm({ children }: { children: ReactNode }) {
 								errors={fields.description.errors}
 							/>
 
-							<Input
-								{...getInputProps(fields.payerKey, { type: 'hidden' })}
-								defaultValue={payer}
-							/>
-
-							<Input
-								{...getInputProps(fields.mintA, { type: 'hidden' })}
-								defaultValue={mintA}
-							/>
-
-							<Input
-								{...getInputProps(fields.poolId, { type: 'hidden' })}
-								defaultValue={poolId}
-							/>
-
-							<input name="amount" defaultValue={0.1} type="hidden" />
+							{/* hidden inputs */}
+							<Input name="payerKey" defaultValue={payer} type="hidden" />
+							<Input name="mintA" defaultValue={mintA} type="hidden" />
+							<Input name="poolId" defaultValue={poolId} type="hidden" />
+							<Input name="amount" defaultValue={0.1} type="hidden" />
 						</div>
 
 						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
