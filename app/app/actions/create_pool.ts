@@ -13,7 +13,9 @@ import {
 	CREATE_CPMM_POOL_FEE_ACC,
 	DEV_CREATE_CPMM_POOL_FEE_ACC,
 } from '@/app/utils/raydium'
+
 import BN from 'bn.js'
+import Decimal from 'decimal.js'
 
 export async function createPool(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -81,8 +83,8 @@ async function getPoolTx({
 		poolFeeAccount: poolFeeAccount[cluster],
 		mintA,
 		mintB,
-		mintAAmount: new BN(mintAAmount),
-		mintBAmount: new BN(mintBAmount),
+		mintAAmount: getAmount(mintAAmount, mintA.decimals),
+		mintBAmount: getAmount(mintBAmount, mintB.decimals),
 		startTime: new BN(0),
 		associatedOnly: false,
 		ownerInfo: {
@@ -98,4 +100,11 @@ async function getPoolTx({
 	})
 
 	return { transaction, poolId: extInfo.address.poolId.toBase58() }
+}
+
+function getAmount(amount: number, decimals: number): BN {
+	// Convert the human-readable token amount to the smallest unit based on its decimals
+	const scale = new Decimal(amount).mul(10 ** decimals).toFixed(0)
+	// Return the scaled amount as a BN (Big Number) object
+	return new BN(scale)
 }

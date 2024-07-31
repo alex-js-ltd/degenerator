@@ -12,11 +12,12 @@ export function useMintList({ items }: Omit<CompoundSelect, 'name'>) {
 		if (!publicKey) return items
 
 		// Convert to Set for efficient lookup
-		const inWalletSet = new Set([
-			...(data?.map(el => el.mint.toBase58()) ?? []),
-			NATIVE_MINT.toBase58(),
-			NATIVE_MINT_2022.toBase58(),
-		])
+		const inWalletSet = new Set(
+			data
+				?.map(el => el.mint.toBase58())
+				.concat(NATIVE_MINT.toBase58())
+				.concat(NATIVE_MINT_2022.toBase58()),
+		)
 
 		// Filter items based on presence in the wallet
 		return items.filter(item => inWalletSet.has(item.value))

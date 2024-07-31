@@ -44,18 +44,19 @@ export const PoolSchema = z.object({
 		.number({
 			invalid_type_error: 'Expected Number',
 		})
-		.min(100, { message: 'Amount is too low' }),
+		.min(1, { message: 'Amount is too low' }),
 
 	mintBAmount: z
 		.number({
 			invalid_type_error: 'Expected Number',
 		})
-		.min(100, { message: 'Amount is too low' }),
+		.min(1, { message: 'Amount is too low' }),
 })
 
 export const DepositSchema = z.object({
 	payerKey: PublicKey,
 	poolId: z.string(),
+	amount: z.number(),
 })
 
 const PoolOptions = PoolSchema.partial()

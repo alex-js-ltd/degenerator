@@ -27,11 +27,11 @@ export async function deposit(_prevState: unknown, formData: FormData) {
 		}
 	}
 
-	const { payerKey, poolId } = submission.value
+	const { payerKey, poolId, amount } = submission.value
 
 	const raydium = await initSdk({ owner: payerKey })
 
-	const { transaction } = await getDepositTx({ raydium, poolId })
+	const { transaction } = await getDepositTx({ raydium, poolId, amount })
 
 	return {
 		...submission.reply(),
@@ -42,9 +42,11 @@ export async function deposit(_prevState: unknown, formData: FormData) {
 async function getDepositTx({
 	raydium,
 	poolId,
+	amount,
 }: {
 	raydium: Raydium
 	poolId: string
+	amount: number
 }) {
 	let poolInfo: ApiV3PoolInfoStandardItemCpmm
 	let poolKeys: CpmmKeys | undefined
@@ -62,9 +64,8 @@ async function getDepositTx({
 		poolKeys = data.poolKeys
 	}
 
-	const uiInputAmount = '0.0001'
 	const inputAmount = new BN(
-		new Decimal(uiInputAmount).mul(10 ** poolInfo.mintA.decimals).toFixed(0),
+		new Decimal(amount).mul(10 ** poolInfo.mintA.decimals).toFixed(0),
 	)
 	const slippage = new Percent(1, 100) // 1%
 	const baseIn = true
