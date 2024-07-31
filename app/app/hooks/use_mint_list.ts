@@ -11,7 +11,6 @@ export function useMintList({ items }: Omit<CompoundSelect, 'name'>) {
 	return useMemo(() => {
 		if (!publicKey) return items
 
-		// Convert to Set for efficient lookup
 		const inWalletSet = new Set(
 			data
 				?.map(el => el.mint.toBase58())
