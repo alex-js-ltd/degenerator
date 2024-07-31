@@ -7,7 +7,7 @@ import { Button } from '@/app/comps/button'
 import { Input, type InputProps } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
 import { TokenLogo } from '@/app/comps/token_logo'
-import { useSelected } from '@/app/hooks/use_selected'
+import { useSelectedItem } from '@/app/hooks/use_selected_item'
 import { usePoolAmount } from '@/app/hooks/use_pool_amount'
 import { useImage } from '@/app/context/image_context'
 import { cn } from '@/app/utils/misc'
@@ -17,7 +17,7 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 	const mintBInputProps = usePoolAmount('mintBAmount', 'Mint B Amount')
 
 	const { image: mintALogoProps } = useImage()
-	const { imageProps: mintBLogoProps } = useSelected('mintB', items)
+	const { imageProps: mintBLogoProps } = useSelectedItem('mintB', items)
 
 	const mintALogo = mintALogoProps ? <TokenLogo {...mintALogoProps} /> : <>🤔</>
 	const mintBLogo = mintBLogoProps ? <TokenLogo {...mintBLogoProps} /> : <>🌿</>

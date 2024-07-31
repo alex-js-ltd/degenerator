@@ -1,7 +1,7 @@
 import { type SelectItemConfig } from '@/app/comps/select'
 import { type FieldName, useField } from '@conform-to/react'
 
-export function useSelected(
+export function useSelectedItem(
 	name: FieldName<string>,
 	items: SelectItemConfig[],
 ) {

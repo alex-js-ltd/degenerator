@@ -93,7 +93,7 @@ function useToastTxs() {
 
 			return acc
 		}, [])
-	}, [mintTx, poolTx])
+	}, [mintTx, poolTx, depositTx])
 
 	const handleOpenChange = useCallback((open: boolean) => setIsOpen(open), [])
 

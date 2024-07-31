@@ -15,7 +15,7 @@ import { Option } from '@/app/comps/option'
 import { type ImageProps, TokenLogo } from '@/app/comps/token_logo'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
-import { useSelected } from '@/app/hooks/use_selected'
+import { useSelectedItem } from '@/app/hooks/use_selected_item'
 import { useMintList } from '@/app/hooks/use_mint_list'
 
 interface SelectFieldProps {
@@ -52,7 +52,7 @@ function Select({
 	logo: Component,
 	children,
 }: SelectFieldProps) {
-	const { meta, title, imageProps: logoProps } = useSelected(name, items)
+	const { meta, title, imageProps: logoProps } = useSelectedItem(name, items)
 
 	const control = useInputControl(meta)
 
