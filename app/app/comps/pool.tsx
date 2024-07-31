@@ -11,13 +11,14 @@ import { useSelected } from '@/app/hooks/use_selected'
 import { usePoolAmount } from '@/app/hooks/use_pool_amount'
 import { useImage } from '@/app/context/image_context'
 import { cn } from '@/app/utils/misc'
+import { useInitialPrice } from '../hooks/use_initial_price'
 
 export function Pool({ items }: { items: SelectItemConfig[] }) {
 	const mintAInputProps = usePoolAmount('mintAAmount', 'Mint A Amount')
 	const mintBInputProps = usePoolAmount('mintBAmount', 'Mint B Amount')
 
 	const { image: mintALogoProps } = useImage()
-	const { imageProps: mintBLogoProps } = useSelected('mintB', items)
+	const { title, imageProps: mintBLogoProps } = useSelected('mintB', items)
 
 	const mintALogo = mintALogoProps ? <TokenLogo {...mintALogoProps} /> : <>🤔</>
 	const mintBLogo = mintBLogoProps ? <TokenLogo {...mintBLogoProps} /> : <>🌿</>
@@ -64,3 +65,5 @@ function Field({
 		</div>
 	)
 }
+
+function getInitialPrice(mintAAmount: any, mintBAmount: any) {}
