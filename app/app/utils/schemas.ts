@@ -39,13 +39,17 @@ export const PoolSchema = z.object({
 	payerKey: PublicKey,
 	mintA: PublicKey,
 	mintB: PublicKey,
-	mintAAmount: z.number({
-		invalid_type_error: 'Expected Number',
-	}),
+	mintAAmount: z
+		.number({
+			invalid_type_error: 'Expected Number',
+		})
+		.min(0.1),
 
-	mintBAmount: z.number({
-		invalid_type_error: 'Expected Number',
-	}),
+	mintBAmount: z
+		.number({
+			invalid_type_error: 'Expected Number',
+		})
+		.min(0.1),
 })
 
 export const DepositSchema = z.object({
