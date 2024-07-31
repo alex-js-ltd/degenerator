@@ -16,6 +16,7 @@ import { type ImageProps, TokenLogo } from '@/app/comps/token_logo'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
 import { useSelected } from '@/app/hooks/use_selected'
+import { useMintList } from '@/app/hooks/use_mint_list'
 
 interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
@@ -36,7 +37,7 @@ interface SelectItemProps
 	imageProps?: ImageProps
 }
 
-interface CompoundSelect {
+export interface CompoundSelect {
 	name: FieldName<string>
 	items: SelectItemConfig[]
 }
@@ -142,7 +143,9 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 	},
 )
 
-function MintB({ name, items }: CompoundSelect) {
+function MintB({ name, ...props }: CompoundSelect) {
+	const items = useMintList({ ...props })
+
 	return (
 		<Select
 			name={name}
