@@ -62,3 +62,15 @@ export function callAll<Args extends Array<unknown>>(
 ) {
 	return (...args: Args) => fns.forEach(fn => fn?.(...args))
 }
+
+interface Error {
+	message: string
+}
+
+export function isError(error: unknown): error is Error {
+	return (
+		Boolean(error) &&
+		typeof error === 'object' &&
+		typeof (error as Error).message === 'string'
+	)
+}

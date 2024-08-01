@@ -11,37 +11,44 @@ import { program } from '@/app/utils/setup'
 import { PublicKey } from '@solana/web3.js'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import { buildTransaction } from '@/app/utils/transaction'
+import { isError } from '@/app/utils/misc'
 
 export async function mintToken(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
 		schema: TokenSchema,
 	})
 
+	const response = {
+		...submission.reply(),
+		serializedTransaction: undefined,
+		mintA: undefined,
+	}
+
 	if (submission.status !== 'success') {
-		return {
-			...submission.reply(),
-			serializedTransaction: undefined,
-			mintA: undefined,
-		}
+		return response
 	}
 
 	const { image, name, symbol, description, decimals, supply, payerKey, cpmm } =
 		submission.value
 
-	const blob = await put(image.name, image, { access: 'public' })
+	const blob = await put(image.name, image, { access: 'public' }).catch(
+		err => ({ message: 'failed to create blob' }),
+	)
 
-	invariant(blob, 'Failed to upload image')
+	if (isError(blob)) return { ...response, message: blob.message }
 
-	const upload = await prisma.tokenMetaData.create({
-		data: {
-			name,
-			symbol,
-			image: blob.url,
-			description,
-		},
-	})
+	const upload = await prisma.tokenMetaData
+		.create({
+			data: {
+				name,
+				symbol,
+				image: blob.url,
+				description,
+			},
+		})
+		.catch(err => ({ message: 'failed to upload image' }))
 
-	invariant(upload, 'Failed to upload metadata')
+	if (isError(upload)) return { ...response, message: upload.message }
 
 	const metadata = {
 		name,
@@ -61,20 +68,23 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		supply,
 		revokeMint: cpmm,
 		revokeFreeze: cpmm,
-	})
+	}).catch(err => ({ message: 'failed to get mint instructions' }))
+
+	if (isError(instructions))
+		return { ...response, message: instructions.message }
 
 	const transaction = await buildTransaction({
 		connection,
 		payer: payerKey,
 		instructions,
 		signers: [mintKeypair],
-	})
+	}).catch(err => ({ message: 'failed to get mint instructions' }))
 
-	const serializedTransaction = transaction.serialize()
+	if (isError(transaction)) return { ...response, message: transaction.message }
 
 	return {
-		...submission.reply(),
-		serializedTransaction,
+		...response,
+		serializedTransaction: transaction.serialize(),
 		mintA: mintKeypair.publicKey.toBase58(),
 	}
 }

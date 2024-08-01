@@ -13,24 +13,38 @@ import {
 	isValidCpmm,
 	getAmount,
 } from '@/app/utils/raydium'
+import { isError } from '@/app/utils/misc'
 
 export async function deposit(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
 		schema: DepositSchema,
 	})
 
+	const error = {
+		...submission.reply(),
+		serializedTransaction: undefined,
+	}
 	if (submission.status !== 'success') {
-		return {
-			...submission.reply(),
-			serializedTransaction: undefined,
-		}
+		return error
 	}
 
 	const { payerKey, poolId, amount } = submission.value
 
-	const raydium = await initSdk({ owner: payerKey })
+	const raydium = await initSdk({ owner: payerKey }).catch(err => ({
+		message: 'failed to init raydium',
+	}))
 
-	const { transaction } = await getDepositTx({ raydium, poolId, amount })
+	if (isError(raydium)) return { ...error, message: raydium.message }
+
+	const depositTx = await getDepositTx({ raydium, poolId, amount }).catch(
+		err => ({
+			message: 'failed to get deposit tx',
+		}),
+	)
+
+	if (isError(depositTx)) return { ...error, message: depositTx.message }
+
+	const { transaction } = depositTx
 
 	return {
 		...submission.reply(),

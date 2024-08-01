@@ -14,34 +14,46 @@ import {
 	DEV_CREATE_CPMM_POOL_FEE_ACC,
 	getAmount,
 } from '@/app/utils/raydium'
-
 import BN from 'bn.js'
+import { isError } from '@/app/utils/misc'
 
 export async function createPool(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
 		schema: PoolSchema,
 	})
 
+	const error = {
+		...submission.reply(),
+		serializedTransaction: undefined,
+		poolId: undefined,
+	}
+
 	if (submission.status !== 'success') {
-		return {
-			...submission.reply(),
-			serializedTransaction: undefined,
-			poolId: undefined,
-		}
+		return error
 	}
 
 	const { payerKey, mintA, mintB, mintAAmount, mintBAmount } = submission.value
 
-	const raydium = await initSdk({ owner: payerKey })
+	const raydium = await initSdk({ owner: payerKey }).catch(err => ({
+		message: 'failed to init raydium',
+	}))
 
-	const { transaction, poolId } = await getPoolTx({
+	if (isError(raydium)) return { ...error, message: raydium.message }
+
+	const poolTx = await getPoolTx({
 		raydium,
 		mintA,
 		mintB,
 		mintAAmount,
 		mintBAmount,
 		payerKey,
-	})
+	}).catch(err => ({
+		message: 'failed to get pool tx',
+	}))
+
+	if (isError(poolTx)) return { ...error, message: poolTx.message }
+
+	const { transaction, poolId } = poolTx
 
 	return {
 		...submission.reply(),
