@@ -20,12 +20,12 @@ export function Field({
 				inputProps.className,
 			)}
 		>
-			{errors?.map(el => (
+			{errors?.map(error => (
 				<div
-					key={el}
+					key={error}
 					className="text-teal-300 text-xs absolute top-3 left-3 flex"
 				>
-					{el}
+					{error}
 				</div>
 			))}
 
