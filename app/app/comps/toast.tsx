@@ -68,7 +68,7 @@ function Error({ error, label }: { error: unknown; label: string }) {
 }
 
 function useToastTxs() {
-	const [isOpen, setIsOpen] = useState(false)
+	const [open, setOpen] = useState(false)
 	const [mintTx, poolTx, depositTx] = useTx()
 
 	const toastDescriptions = useMemo(() => {
@@ -97,17 +97,17 @@ function useToastTxs() {
 		}, [])
 	}, [mintTx, poolTx, depositTx])
 
-	const handleOpenChange = useCallback((open: boolean) => setIsOpen(open), [])
+	const onOpenChange = useCallback((open: boolean) => setOpen(open), [])
 
 	useEffect(() => {
-		setIsOpen(toastDescriptions.length > 0)
+		setOpen(toastDescriptions.length > 0)
 	}, [toastDescriptions])
 
-	return { toastDescriptions, isOpen, handleOpenChange }
+	return { toastDescriptions, open, onOpenChange }
 }
 
 function ToastTxs() {
-	const { toastDescriptions, ...props } = useToastTxs()
+	const { toastDescriptions, open, onOpenChange } = useToastTxs()
 
 	const toastElements = toastDescriptions.map(element => (
 		<Description key={element.props.label}>{element}</Description>
@@ -115,7 +115,11 @@ function ToastTxs() {
 
 	if (toastElements.length === 0) return null
 
-	return <Toast {...props}>{toastElements}</Toast>
+	return (
+		<Toast open={open} onOpenChange={onOpenChange}>
+			{toastElements}
+		</Toast>
+	)
 }
 
 export { Toast, Description, ToastTxs }
