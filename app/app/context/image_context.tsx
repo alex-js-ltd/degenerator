@@ -50,11 +50,8 @@ function ImageProvider({ children }: { children: ReactNode }) {
 					const reader = new FileReader()
 
 					reader.onloadend = () => {
-						if (typeof reader.result === 'string')
-							setImage({
-								src: reader.result,
-								alt: 'your uploaded image',
-							})
+						const image = { src: reader.result, alt: 'your uploaded image' }
+						if (isImage(image)) setImage(image)
 					}
 					reader.readAsDataURL(file)
 				} else {
@@ -79,3 +76,12 @@ function useImage() {
 }
 
 export { ImageProvider, useImage }
+
+function isImage(image: unknown): image is ImageProps {
+	return (
+		Boolean(image) &&
+		typeof image === 'object' &&
+		typeof (image as ImageProps).src === 'string' &&
+		typeof (image as ImageProps).alt === 'string'
+	)
+}
