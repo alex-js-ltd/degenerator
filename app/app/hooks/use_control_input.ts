@@ -18,9 +18,9 @@ function getErrorProps(errors?: string[]) {
 	}
 }
 
-export function usePoolAmount(
+export function useControlInput(
 	name: FieldName<string>,
-	placeholder: string,
+	{ ...rest }: InputProps,
 ): InputProps {
 	const [meta] = useField<string>(name)
 	const control = useInputControl(meta)
@@ -28,7 +28,6 @@ export function usePoolAmount(
 	return {
 		...getControlProps(control),
 		...getErrorProps(meta.errors),
-		placeholder,
-		variant: 'pool',
+		...rest,
 	}
 }
