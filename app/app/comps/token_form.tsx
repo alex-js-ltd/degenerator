@@ -148,7 +148,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 								content="Submit"
 							/>
 
-							{showCpmm && <button {...getPoolProps()} />}
+							{showCpmm && mintA && <button {...getPoolProps()} />}
 							{showCpmm && poolId && <button {...getDepositProps()} />}
 						</div>
 					</fieldset>
