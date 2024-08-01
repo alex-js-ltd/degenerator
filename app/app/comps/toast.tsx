@@ -12,7 +12,7 @@ import {
 import { useTx } from '@/app/context/tx_context'
 import { getEnv } from '@/app/utils/env'
 import { getErrorMessage } from '@/app/utils/misc'
-import { ExternalLink } from '@/app/comps/external_link'
+import Link from 'next/link'
 
 const { CLUSTER } = getEnv()
 const cluster = CLUSTER === 'mainnet-beta' ? 'mainnet' : CLUSTER
@@ -47,12 +47,14 @@ function Loading({ label }: { label: string }) {
 
 function Finalized({ txSig, label }: { txSig: string; label: string }) {
 	return (
-		<ExternalLink
+		<Link
 			href={`https://solscan.io/tx/${txSig}?cluster=${cluster}`}
-			variant="toast"
+			target="_blank"
+			rel="noopener noreferrer"
+			className="flex text-toast-text text-sm"
 		>
 			{`${label}: finalized 🚀`}
-		</ExternalLink>
+		</Link>
 	)
 }
 

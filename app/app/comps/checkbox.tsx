@@ -6,7 +6,6 @@ import * as RadixCheckbox from '@radix-ui/react-checkbox'
 import { type ElementRef } from 'react'
 import { Icon } from './_icon'
 import { Tooltip, Content } from '@/app/comps/tooltip'
-import { ExternalLink } from '@/app/comps/external_link'
 import { useTxStatus } from '@/app/context/tx_context'
 
 export interface CheckboxProps extends RadixCheckbox.CheckboxProps {
