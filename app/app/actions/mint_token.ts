@@ -4,7 +4,6 @@ import { parseWithZod } from '@conform-to/zod'
 import { TokenSchema } from '@/app/utils/schemas'
 import { put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
-import invariant from 'tiny-invariant'
 import { connection } from '@/app/utils/setup'
 import { web3, BN } from '@coral-xyz/anchor'
 import { program } from '@/app/utils/setup'
@@ -18,14 +17,14 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		schema: TokenSchema,
 	})
 
-	const response = {
+	const error = {
 		...submission.reply(),
 		serializedTransaction: undefined,
 		mintA: undefined,
 	}
 
 	if (submission.status !== 'success') {
-		return response
+		return error
 	}
 
 	const { image, name, symbol, description, decimals, supply, payerKey, cpmm } =
@@ -35,7 +34,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		err => ({ message: 'failed to create blob' }),
 	)
 
-	if (isError(blob)) return { ...response, message: blob.message }
+	if (isError(blob)) return { ...error, message: blob.message }
 
 	const upload = await prisma.tokenMetaData
 		.create({
@@ -48,7 +47,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		})
 		.catch(err => ({ message: 'failed to upload image' }))
 
-	if (isError(upload)) return { ...response, message: upload.message }
+	if (isError(upload)) return { ...error, message: upload.message }
 
 	const metadata = {
 		name,
@@ -70,8 +69,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		revokeFreeze: cpmm,
 	}).catch(err => ({ message: 'failed to get mint instructions' }))
 
-	if (isError(instructions))
-		return { ...response, message: instructions.message }
+	if (isError(instructions)) return { ...error, message: instructions.message }
 
 	const transaction = await buildTransaction({
 		connection,
@@ -80,10 +78,10 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		signers: [mintKeypair],
 	}).catch(err => ({ message: 'failed to get mint instructions' }))
 
-	if (isError(transaction)) return { ...response, message: transaction.message }
+	if (isError(transaction)) return { ...error, message: transaction.message }
 
 	return {
-		...response,
+		...submission.reply(),
 		serializedTransaction: transaction.serialize(),
 		mintA: mintKeypair.publicKey.toBase58(),
 	}
@@ -123,8 +121,6 @@ async function getMintInstructions({
 		.accounts({ mintAccount: mintKey, payer: payerKey })
 		.instruction()
 
-	invariant(initialize, 'Failed to create mint')
-
 	// Create Associated Token Account
 	const createAta = await program.methods
 		.createAssociatedTokenAccount()
@@ -136,8 +132,6 @@ async function getMintInstructions({
 		})
 		.instruction()
 
-	invariant(createAta, 'Failed to create associated token account')
-
 	// Mint Token to Payer
 	const mintToken = await program.methods
 		.mintToken(new BN(supply))
@@ -148,8 +142,6 @@ async function getMintInstructions({
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
 		.instruction()
-
-	invariant(mintToken, 'Failed to mint token')
 
 	// additional instructions
 	const revokeMintAuth =
@@ -183,8 +175,6 @@ async function getRevokeMintAuth(
 		})
 		.instruction()
 
-	invariant(res, 'Failed to revoke mint authority')
-
 	return res
 }
 
@@ -199,8 +189,6 @@ async function getFreezeAuth(
 			mintAccount,
 		})
 		.instruction()
-
-	invariant(res, 'Failed to revoke freeze authority')
 
 	return res
 }
