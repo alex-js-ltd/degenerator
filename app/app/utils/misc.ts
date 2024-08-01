@@ -74,3 +74,7 @@ export function isError(error: unknown): error is Error {
 		typeof (error as Error).message === 'string'
 	)
 }
+
+export function catchError(error: unknown): Error {
+	return { message: getErrorMessage(error) }
+}

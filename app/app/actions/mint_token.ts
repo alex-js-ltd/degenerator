@@ -10,7 +10,7 @@ import { program } from '@/app/utils/setup'
 import { PublicKey } from '@solana/web3.js'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import { buildTransaction } from '@/app/utils/transaction'
-import { isError } from '@/app/utils/misc'
+import { isError, catchError } from '@/app/utils/misc'
 
 export async function mintToken(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -31,7 +31,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		submission.value
 
 	const blob = await put(image.name, image, { access: 'public' }).catch(
-		err => ({ message: 'failed to create blob' }),
+		catchError,
 	)
 
 	if (isError(blob)) return { ...error, message: blob.message }
@@ -45,7 +45,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 				description,
 			},
 		})
-		.catch(err => ({ message: 'failed to upload image' }))
+		.catch(catchError)
 
 	if (isError(upload)) return { ...error, message: upload.message }
 
@@ -67,7 +67,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		supply,
 		revokeMint: cpmm,
 		revokeFreeze: cpmm,
-	}).catch(err => ({ message: 'failed to get mint instructions' }))
+	}).catch(catchError)
 
 	if (isError(instructions)) return { ...error, message: instructions.message }
 
@@ -76,7 +76,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		payer: payerKey,
 		instructions,
 		signers: [mintKeypair],
-	}).catch(err => ({ message: 'failed to get mint instructions' }))
+	}).catch(catchError)
 
 	if (isError(transaction)) return { ...error, message: transaction.message }
 
