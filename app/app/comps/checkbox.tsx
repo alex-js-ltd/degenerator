@@ -56,7 +56,7 @@ function CpmmCheckbox() {
 					alignOffset={-12}
 					side="top"
 				>
-					Create liquidity pool
+					~0.2 SOL for new pools.
 				</Content>
 			}
 		>
