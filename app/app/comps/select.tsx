@@ -101,7 +101,7 @@ function Select({
 						sticky="always"
 						position="popper"
 						side="bottom"
-						sideOffset={20}
+						sideOffset={18}
 						className="relative overflow-hidden bg-gray-900 rounded-md z-10 w-full h-auto max-h-[136px] data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-50"
 						{...contentProps}
 					>
