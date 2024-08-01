@@ -167,28 +167,24 @@ async function getRevokeMintAuth(
 	currentAuthority: PublicKey,
 	mintAccount: PublicKey,
 ) {
-	const res = await program.methods
+	return await program.methods
 		.revokeMintAuthority()
 		.accounts({
 			currentAuthority,
 			mintAccount,
 		})
 		.instruction()
-
-	return res
 }
 
 async function getFreezeAuth(
 	currentAuthority: PublicKey,
 	mintAccount: PublicKey,
 ) {
-	const res = await program.methods
+	return await program.methods
 		.revokeFreezeAuthority()
 		.accounts({
 			currentAuthority,
 			mintAccount,
 		})
 		.instruction()
-
-	return res
 }
