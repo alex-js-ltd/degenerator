@@ -27,6 +27,7 @@ import { SubmitButton } from '@/app/comps/submit_button'
 import { CpmmCheckbox } from '@/app/comps/checkbox'
 import { ResetButton } from '@/app/comps/reset_button'
 import { useServerAction } from '@/app/hooks/use_server_action'
+import { useHiddenInputs } from '@/app/hooks/use_hidden_inputs'
 
 const initialMint = {
 	serializedTransaction: undefined,
@@ -73,6 +74,8 @@ export function TokenForm({ children }: { children: ReactNode }) {
 
 	const payer = usePayer()
 	const showCpmm = fields.cpmm.value === 'on'
+
+	const hiddenInputs = useHiddenInputs(payer, mintA, poolId)
 
 	return (
 		<FormProvider context={form.context}>
@@ -129,11 +132,9 @@ export function TokenForm({ children }: { children: ReactNode }) {
 								errors={fields.description.errors}
 							/>
 
-							{/* hidden inputs */}
-							<Input name="payerKey" defaultValue={payer} type="hidden" />
-							<Input name="mintA" defaultValue={mintA} type="hidden" />
-							<Input name="poolId" defaultValue={poolId} type="hidden" />
-							<Input name="amount" defaultValue={0.1} type="hidden" />
+							{hiddenInputs.map(input => (
+								<Input key={input.name} {...input} />
+							))}
 						</div>
 
 						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
