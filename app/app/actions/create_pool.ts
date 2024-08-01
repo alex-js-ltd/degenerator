@@ -53,12 +53,10 @@ export async function createPool(_prevState: unknown, formData: FormData) {
 
 	if (isError(poolTx)) return { ...error, message: poolTx.message }
 
-	const { transaction, poolId } = poolTx
-
 	return {
 		...submission.reply(),
-		serializedTransaction: transaction.serialize(),
-		poolId,
+		serializedTransaction: poolTx.transaction.serialize(),
+		poolId: poolTx.poolId,
 	}
 }
 

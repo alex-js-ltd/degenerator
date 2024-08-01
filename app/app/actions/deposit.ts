@@ -44,11 +44,9 @@ export async function deposit(_prevState: unknown, formData: FormData) {
 
 	if (isError(depositTx)) return { ...error, message: depositTx.message }
 
-	const { transaction } = depositTx
-
 	return {
 		...submission.reply(),
-		serializedTransaction: transaction.serialize(),
+		serializedTransaction: depositTx.transaction.serialize(),
 	}
 }
 
