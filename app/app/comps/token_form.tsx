@@ -73,9 +73,9 @@ export function TokenForm({ children }: { children: ReactNode }) {
 	const getDepositProps = useServerAction(depositAction, poolTxSig)
 
 	const payer = usePayer()
-	const showCpmm = fields.cpmm.value === 'on'
-
 	const hiddenInputs = useHiddenInputs(payer, mintA, poolId)
+
+	const showCpmm = fields.cpmm.value === 'on'
 
 	return (
 		<FormProvider context={form.context}>
