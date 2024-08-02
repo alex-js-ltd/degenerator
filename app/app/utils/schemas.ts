@@ -90,8 +90,8 @@ export const Schema = z
 		if (cpmm && mintAAmount && mintAAmount >= supply) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
-				message: 'Supply is too low',
-				path: ['supply'],
+				message: 'mintAAmount is too high',
+				path: ['mintAAmount'],
 			})
 		}
 	})
