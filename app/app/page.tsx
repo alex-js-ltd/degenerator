@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { TokenForm } from '@/app/comps/token_form'
-import { type Raydium } from '@raydium-io/raydium-sdk-v2'
+import { type ApiV3TokenRes, initSdk } from '@/app/utils/raydium'
 import { type SelectItemConfig } from '@/app/comps/select'
 import { MintB } from '@/app/comps/select'
-import { initSdk } from '@/app/utils/raydium'
+
 import { Pool } from '@/app/comps/pool'
 
 export default async function Page() {
@@ -16,9 +16,7 @@ export default async function Page() {
 	)
 }
 
-async function getMintBProps(raydium: Raydium) {
-	const data = await raydium.api.getTokenList()
-
+function getMintBProps(data: ApiV3TokenRes) {
 	const mintItems = data.mintList.reduce<SelectItemConfig[]>((acc, curr) => {
 		const { address, name, logoURI, symbol } = curr
 
@@ -39,8 +37,8 @@ async function getMintBProps(raydium: Raydium) {
 
 async function MintList() {
 	const raydium = await initSdk({})
-
-	const mintBprops = await getMintBProps(raydium)
+	const data = await raydium.api.getTokenList()
+	const mintBprops = getMintBProps(data)
 
 	return (
 		<React.Fragment>
