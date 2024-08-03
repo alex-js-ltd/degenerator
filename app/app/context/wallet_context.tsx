@@ -16,7 +16,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 			<UnifiedWalletProvider
 				wallets={[]}
 				config={{
-					autoConnect: true,
+					autoConnect: false,
 					env: CLUSTER,
 					metadata: {
 						name: 'Degenerator',
