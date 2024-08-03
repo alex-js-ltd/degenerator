@@ -22,7 +22,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 						name: 'Degenerator',
 						description: 'Generate SPL Tokens on Solana',
 						url: 'https://www.degenerator.dev',
-						iconUrls: [],
+						iconUrls: ['https://www.degenerator.dev/favicon.ico'],
 					},
 
 					theme: 'light',
