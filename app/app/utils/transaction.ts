@@ -42,25 +42,3 @@ export async function buildTransaction({
 
 	return tx
 }
-
-/**
- * Auto airdrop the given wallet of of a balance of < 0.5 SOL
- */
-export async function airdropOnLowBalance(
-	connection: Connection,
-	address: PublicKey,
-	forceAirdrop: boolean = false,
-) {
-	if (CLUSTER === 'mainnet-beta') return
-	// get the current balance
-	let balance = await connection.getBalance(address)
-
-	// define the low balance threshold before airdrop
-	const MIN_BALANCE_TO_AIRDROP = LAMPORTS_PER_SOL / 2 // current: 0.5 SOL
-
-	// check the balance of the two accounts, airdrop when low
-	if (forceAirdrop === true || balance < MIN_BALANCE_TO_AIRDROP) {
-		console.log(`Requesting airdrop of 1 SOL to ${address.toBase58()}...`)
-		await connection.requestAirdrop(address, LAMPORTS_PER_SOL)
-	}
-}
