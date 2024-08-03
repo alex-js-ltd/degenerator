@@ -5,12 +5,7 @@ import {
 	type TransactionInstruction,
 	TransactionMessage,
 	VersionedTransaction,
-	LAMPORTS_PER_SOL,
 } from '@solana/web3.js'
-
-import { getEnv } from '@/app/utils/env'
-
-const { CLUSTER } = getEnv()
 
 /**
  * Helper function to build a signed transaction
