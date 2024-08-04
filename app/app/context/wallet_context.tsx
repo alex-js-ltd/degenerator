@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { UnifiedWalletProvider } from '@jup-ag/wallet-adapter'
 
 import { getEnv } from '@/app/utils/env'
@@ -9,11 +9,13 @@ const { CLUSTER } = getEnv()
 
 const noop = () => {}
 
+type Params = Omit<Parameters<typeof UnifiedWalletProvider>[0], 'children'>
+
 export function WalletProvider({ children }: { children: ReactNode }) {
-	return (
-		<UnifiedWalletProvider
-			wallets={[]}
-			config={{
+	const params: Params = useMemo(
+		() => ({
+			wallets: [],
+			config: {
 				autoConnect: true,
 				env: CLUSTER,
 				metadata: {
@@ -33,9 +35,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 				},
 				theme: 'light',
 				lang: 'en',
-			}}
-		>
-			{children}
-		</UnifiedWalletProvider>
+			},
+		}),
+		[],
 	)
+
+	return <UnifiedWalletProvider {...params}>{children}</UnifiedWalletProvider>
 }
