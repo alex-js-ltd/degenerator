@@ -46,3 +46,7 @@ input[type=file]::-webkit-file-upload-button {
 	/* chromes and blink button */
 	cursor: pointer;
 }
+
+.css-jm4zg7-CurrentUserBadge-CurrentUserBadge {
+	color: white !important;
+}
