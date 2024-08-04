@@ -90,7 +90,9 @@ function Select({
 				>
 					{Component && logoProps && <Component {...logoProps} />}
 
-					<RadixSelect.Value {...valueProps}>{title ?? ''}</RadixSelect.Value>
+					<RadixSelect.Value {...valueProps}>
+						{title ?? valueProps?.placeholder}
+					</RadixSelect.Value>
 
 					<RadixSelect.Icon className="text-violet11 ml-auto">
 						<ChevronDownIcon />
