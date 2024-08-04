@@ -1,11 +1,11 @@
 import { VersionedTransaction } from '@solana/web3.js'
-import { useConnection, useWallet } from '@jup-ag/wallet-adapter'
+import { useWallet } from '@jup-ag/wallet-adapter'
 import { useCallback } from 'react'
+import { connection } from '@/app/utils/setup'
 
 const { deserialize } = VersionedTransaction
 
 export function useSignAndSendTx() {
-	const { connection } = useConnection()
 	const { sendTransaction } = useWallet()
 
 	return useCallback(
@@ -31,6 +31,6 @@ export function useSignAndSendTx() {
 
 			return signature
 		},
-		[connection, sendTransaction],
+		[sendTransaction],
 	)
 }
