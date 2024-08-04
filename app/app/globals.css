@@ -47,6 +47,10 @@ input[type=file]::-webkit-file-upload-button {
 	cursor: pointer;
 }
 
-.css-jm4zg7-CurrentUserBadge-CurrentUserBadge {
+.button {
+	background: linear-gradient(45deg, #06b0f9, #f906b0) !important;
+}
+
+.button span {
 	color: white !important;
 }

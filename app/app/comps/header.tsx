@@ -10,7 +10,7 @@ export function Header() {
 					<div className="ml-auto flex items-center gap-2 sm:gap-4">
 						<ConnectWallet
 							overrideContent={<Button variant="connect">Connect</Button>}
-							currentUserClassName="bg-gradient-pink"
+							currentUserClassName="button"
 						/>
 					</div>
 				</div>
