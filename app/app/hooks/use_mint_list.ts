@@ -4,7 +4,7 @@ import { CompoundSelect } from '@/app/comps/select'
 import { useMemo } from 'react'
 import { useWallet } from '@jup-ag/wallet-adapter'
 
-export function useMintList({ items }: Omit<CompoundSelect, 'name'>) {
+export function useMintList(items: CompoundSelect['items']) {
 	const { data } = useTokenAccountData()
 	const { publicKey } = useWallet()
 

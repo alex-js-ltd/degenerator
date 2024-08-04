@@ -23,7 +23,7 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 	})
 
 	const { image: mintALogoProps } = useImage()
-	const mintList = useMintList({ items })
+	const mintList = useMintList(items)
 	const { imageProps: mintBLogoProps } = useSelectedItem('mintB', mintList)
 
 	const mintALogo = mintALogoProps ? <TokenLogo {...mintALogoProps} /> : <>🤔</>

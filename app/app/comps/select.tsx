@@ -146,7 +146,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 )
 
 function MintB({ name, ...props }: CompoundSelect) {
-	const items = useMintList({ ...props })
+	const items = useMintList(props.items)
 
 	return (
 		<Select
