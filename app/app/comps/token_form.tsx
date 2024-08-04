@@ -136,7 +136,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 						</div>
 
 						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
-							<div className="flex flex-1 gap-1 sm:gap-2">
+							<div className="flex flex-1 gap-2">
 								<ImageChooser />
 								{showCpmm && children}
 							</div>
