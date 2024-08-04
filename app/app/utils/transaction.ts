@@ -42,23 +42,17 @@ export async function buildTransaction({
 export async function getLookupTable({
 	publicKey,
 	connection,
-	transaction,
 }: {
 	connection: Connection
 	publicKey: PublicKey
-	transaction: VersionedTransaction
-}): Promise<TransactionInstruction> {
+}): Promise<[TransactionInstruction, PublicKey]> {
 	// create an Address Lookup Table
-	const [, lookupTableAddress] = AddressLookupTableProgram.createLookupTable({
-		authority: publicKey,
-		payer: publicKey,
-		recentSlot: await connection.getSlot(),
-	})
+	const [instruction, lookupTableAddress] =
+		AddressLookupTableProgram.createLookupTable({
+			authority: publicKey,
+			payer: publicKey,
+			recentSlot: await connection.getSlot(),
+		})
 
-	return AddressLookupTableProgram.extendLookupTable({
-		payer: publicKey,
-		authority: publicKey,
-		lookupTable: lookupTableAddress,
-		addresses: [...transaction.message.getAccountKeys().staticAccountKeys],
-	})
+	return [instruction, lookupTableAddress]
 }
