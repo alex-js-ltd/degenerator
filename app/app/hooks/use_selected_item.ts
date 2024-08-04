@@ -8,7 +8,6 @@ export function useSelectedItem(
 ) {
 	const [meta] = useField<string>(name)
 
-	const mintList = useMintList({ items })
-	const selected = mintList.find(el => el.value === meta.value)
+	const selected = items.find(el => el.value === meta.value)
 	return { meta, title: selected?.title, imageProps: selected?.imageProps }
 }

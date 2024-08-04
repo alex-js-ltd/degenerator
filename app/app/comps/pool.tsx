@@ -10,6 +10,7 @@ import { TokenLogo } from '@/app/comps/token_logo'
 import { useSelectedItem } from '@/app/hooks/use_selected_item'
 import { useControlInput } from '@/app/hooks/use_control_input'
 import { useImage } from '@/app/context/image_context'
+import { useMintList } from '@/app/hooks/use_mint_list'
 
 export function Pool({ items }: { items: SelectItemConfig[] }) {
 	const mintAInputProps = useControlInput('mintAAmount', {
@@ -22,7 +23,8 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 	})
 
 	const { image: mintALogoProps } = useImage()
-	const { imageProps: mintBLogoProps } = useSelectedItem('mintB', items)
+	const mintList = useMintList({ items })
+	const { imageProps: mintBLogoProps } = useSelectedItem('mintB', mintList)
 
 	const mintALogo = mintALogoProps ? <TokenLogo {...mintALogoProps} /> : <>🤔</>
 	const mintBLogo = mintBLogoProps ? <TokenLogo {...mintBLogoProps} /> : <>🌿</>
