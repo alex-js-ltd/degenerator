@@ -5,6 +5,7 @@ import {
 	type TransactionInstruction,
 	TransactionMessage,
 	VersionedTransaction,
+	AddressLookupTableProgram,
 } from '@solana/web3.js'
 
 /**
@@ -36,4 +37,28 @@ export async function buildTransaction({
 	signers.forEach(s => tx.sign([s]))
 
 	return tx
+}
+
+export async function getLookupTable({
+	publicKey,
+	connection,
+	transaction,
+}: {
+	connection: Connection
+	publicKey: PublicKey
+	transaction: VersionedTransaction
+}): Promise<TransactionInstruction> {
+	// create an Address Lookup Table
+	const [, lookupTableAddress] = AddressLookupTableProgram.createLookupTable({
+		authority: publicKey,
+		payer: publicKey,
+		recentSlot: await connection.getSlot(),
+	})
+
+	return AddressLookupTableProgram.extendLookupTable({
+		payer: publicKey,
+		authority: publicKey,
+		lookupTable: lookupTableAddress,
+		addresses: [...transaction.message.getAccountKeys().staticAccountKeys],
+	})
 }
