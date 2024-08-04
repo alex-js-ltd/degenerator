@@ -2,7 +2,7 @@
 
 import { type ReactElement } from 'react'
 import { type SelectItemConfig } from '@/app/comps/select'
-import { Popover, Content } from '@/app/comps/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/app/comps/popover'
 import { Button } from '@/app/comps/button'
 import { Input, type InputProps } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
@@ -30,26 +30,26 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 	const mintBLogo = mintBLogoProps ? <TokenLogo {...mintBLogoProps} /> : <>🌿</>
 
 	return (
-		<Popover
-			content={
-				<Content
-					side="bottom"
-					align="start"
-					alignOffset={0}
-					sideOffset={18}
-					className="w-full h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0 data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-95"
-				>
-					<fieldset className="grid grid-cols-1 gap-2 p-2 w-fit">
-						<Field inputProps={{ ...mintAInputProps }} logo={mintALogo} />
-						<Field inputProps={{ ...mintBInputProps }} logo={mintBLogo} />
-					</fieldset>
-				</Content>
-			}
-		>
-			<Button variant="pool">
-				🏊‍♂️&nbsp;&nbsp;Pool
-				<Icon className="size-[15px] ml-auto" name="arrow" />
-			</Button>
+		<Popover>
+			<PopoverContent
+				side="bottom"
+				align="start"
+				alignOffset={0}
+				sideOffset={18}
+				className="w-full h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0 data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-95"
+			>
+				<fieldset className="grid grid-cols-1 gap-2 p-2 w-fit">
+					<Field inputProps={{ ...mintAInputProps }} logo={mintALogo} />
+					<Field inputProps={{ ...mintBInputProps }} logo={mintBLogo} />
+				</fieldset>
+			</PopoverContent>
+
+			<PopoverTrigger asChild>
+				<Button variant="pool">
+					🏊‍♂️&nbsp;&nbsp;Pool
+					<Icon className="size-[15px] ml-auto" name="arrow" />
+				</Button>
+			</PopoverTrigger>
 		</Popover>
 	)
 }
