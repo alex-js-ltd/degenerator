@@ -104,7 +104,7 @@ function Select({
 						position="popper"
 						side="bottom"
 						sideOffset={18}
-						className="relative overflow-hidden bg-gray-900 rounded-md z-10 w-full h-auto max-h-[136px] data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-50"
+						className="w-[calc(100vw-3rem-2px)] mr-4 sm:mr-0 relative overflow-hidden bg-gray-900 rounded-md z-10 sm:w-[300px] h-auto max-h-[136px] data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-50"
 						{...contentProps}
 					>
 						<RadixSelect.Viewport className="z-50">
