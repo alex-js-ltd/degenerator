@@ -1,24 +1,32 @@
 'use client'
-
+import React, { forwardRef } from 'react'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
-import { type ReactElement } from 'react'
 
-interface TooltipProps {
-	rootProps?: TooltipPrimitive.TooltipProps
-	children: TooltipPrimitive.TooltipTriggerProps['children']
-	content: ReactElement<TooltipPrimitive.TooltipContentProps>
-}
-function Tooltip({ rootProps, content, children }: TooltipProps) {
+function Tooltip({ children, ...props }: TooltipPrimitive.TooltipProps) {
 	return (
 		<TooltipPrimitive.Provider>
-			<TooltipPrimitive.Root delayDuration={100} {...rootProps}>
-				<TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
-				<TooltipPrimitive.Portal>{content}</TooltipPrimitive.Portal>
+			<TooltipPrimitive.Root delayDuration={100} {...props}>
+				{children}
 			</TooltipPrimitive.Root>
 		</TooltipPrimitive.Provider>
 	)
 }
 
-const Content = TooltipPrimitive.Content
+const TooltipTrigger = TooltipPrimitive.Trigger
 
-export { Tooltip, Content }
+interface TooltipContentProps
+	extends React.ComponentProps<typeof TooltipPrimitive.Content> {
+	children: React.ReactNode
+}
+
+const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
+	({ children, ...props }, forwardedRef) => (
+		<TooltipPrimitive.Portal>
+			<TooltipPrimitive.Content {...props} ref={forwardedRef}>
+				{children}
+			</TooltipPrimitive.Content>
+		</TooltipPrimitive.Portal>
+	),
+)
+
+export { Tooltip, TooltipTrigger, TooltipContent }
