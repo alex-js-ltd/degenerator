@@ -6,6 +6,7 @@ import { Header } from '@/app/comps/header'
 import { ToastTxs } from '@/app/comps/toast'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
+import { Footer } from './comps/footer'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -27,6 +28,8 @@ export default function RootLayout({
 						<Background>{children}</Background>
 						<ToastTxs />
 					</AppProviders>
+
+					<Footer />
 				</div>
 			</body>
 		</html>
