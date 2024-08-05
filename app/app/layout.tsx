@@ -12,6 +12,27 @@ import './globals.css'
 export const metadata: Metadata = {
 	title: 'Degenerator',
 	description: 'Generate SPL tokens on Solana',
+	twitter: {
+		card: 'summary_large_image',
+		title: 'Degenerator',
+		description: 'Generate SPL tokens on Solana',
+		site: '@yoursite', // Replace with your site's Twitter username
+		creator: '@yourcreator', // Replace with your creator's Twitter username
+		images: ['https://www.degenerator.dev/favicon.ico'],
+	},
+	openGraph: {
+		title: 'Degenerator',
+		description: 'Generate SPL tokens on Solana',
+		url: 'https://www.degenerator.dev',
+		images: [
+			{
+				url: 'https://www.degenerator.dev/favicon.ico',
+				width: 800,
+				height: 600,
+				alt: 'Og Image Alt',
+			},
+		],
+	},
 }
 
 export default function RootLayout({
