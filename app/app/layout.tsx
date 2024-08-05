@@ -4,9 +4,10 @@ import Image from 'next/image'
 import { AppProviders } from '@/app/context'
 import { Header } from '@/app/comps/header'
 import { ToastTxs } from '@/app/comps/toast'
+import { Footer } from '@/app/comps/footer'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
-import { Footer } from './comps/footer'
+
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -48,9 +49,9 @@ export default function RootLayout({
 						<Header />
 						<Background>{children}</Background>
 						<ToastTxs />
-					</AppProviders>
 
-					<Footer />
+						<Footer />
+					</AppProviders>
 				</div>
 			</body>
 		</html>
