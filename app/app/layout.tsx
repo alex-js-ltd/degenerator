@@ -11,29 +11,12 @@ import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 
 export const metadata: Metadata = {
-	title: 'Degenerator',
-	description: 'Generate SPL tokens on Solana',
-	twitter: {
-		card: 'summary_large_image',
-		title: 'Degenerator',
-		description: 'Generate SPL tokens on Solana',
-		site: '@degenerato2774', // Replace with your site's Twitter username
-		creator: '@degenerato2774', // Replace with your creator's Twitter username
-		images: ['https://www.degenerator.dev/api/og'],
+	title: {
+		template: '%s | Degenerator',
+		default: 'Degenerator',
 	},
-	openGraph: {
-		title: 'Degenerator',
-		description: 'Generate SPL tokens on Solana',
-		url: 'https://www.degenerator.dev',
-		images: [
-			{
-				url: 'https://www.degenerator.dev/api/og',
-				width: 800,
-				height: 600,
-				alt: 'Og Image Alt',
-			},
-		],
-	},
+	description: 'Generate SPL Tokens on Solana',
+	metadataBase: new URL('https://www.degenerator.dev'),
 }
 
 export default function RootLayout({
@@ -43,7 +26,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html className={`${GeistSans.variable} ${GeistMono.variable}`} lang="en">
-			<body className="font-sans">
+			<body className="font-sans mx-h-[100vh]">
 				<div className="min-h-screen-patched flex flex-col border w-full">
 					<AppProviders>
 						<Header />
