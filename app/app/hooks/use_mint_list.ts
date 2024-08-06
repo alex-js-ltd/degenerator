@@ -1,10 +1,10 @@
 import { useTokenAccountData } from './use_token_account_data'
 import { NATIVE_MINT, NATIVE_MINT_2022 } from '@solana/spl-token'
-import { CompoundSelect } from '@/app/comps/select'
+import { SelectItemConfig } from '@/app/comps/select'
 import { useMemo } from 'react'
 import { useWallet } from '@jup-ag/wallet-adapter'
 
-export function useMintList(items: CompoundSelect['items']) {
+export function useMintList(items: SelectItemConfig[]) {
 	const { data } = useTokenAccountData()
 	const { publicKey } = useWallet()
 

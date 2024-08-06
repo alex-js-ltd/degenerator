@@ -104,11 +104,11 @@ function Select({
 						position="popper"
 						side="bottom"
 						sideOffset={18}
-						className="w-[calc(100vw-3rem-2px)] mr-4 sm:mr-0 relative overflow-hidden bg-gray-900 rounded-md z-10 sm:w-[300px] h-auto max-h-[136px] data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-50"
+						className="w-[calc(100vw-3rem-2px)] mr-[15px] sm:mr-0 relative overflow-hidden bg-gray-900 rounded-lg z-10 sm:w-[300px] h-auto max-h-[136px] data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-50"
 						{...contentProps}
 					>
 						<RadixSelect.Viewport className="z-50">
-							<RadixSelect.Group className="overflow-y-scroll flex h-full w-full flex-col overflow-hidden rounded-md bg-transparent text-gray-100 [&_[cmdk-input-wrapper]]:border-b-gray-800 p-1.5 gap-1">
+							<RadixSelect.Group className="overflow-y-scroll flex h-full w-full flex-col overflow-hidden rounded-[10px] bg-transparent text-gray-100 [&_[cmdk-input-wrapper]]:border-b-gray-800 p-1.5 gap-1">
 								{children}
 							</RadixSelect.Group>
 						</RadixSelect.Viewport>
