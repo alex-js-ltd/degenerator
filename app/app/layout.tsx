@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 		description: 'Generate SPL tokens on Solana',
 		site: '@degenerato2774', // Replace with your site's Twitter username
 		creator: '@degenerato2774', // Replace with your creator's Twitter username
-		images: ['https://www.degenerator.dev/pepe.png'],
+		images: ['https://www.degenerator.dev/api/og'],
 	},
 	openGraph: {
 		title: 'Degenerator',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 		url: 'https://www.degenerator.dev',
 		images: [
 			{
-				url: 'https://www.degenerator.dev/pepe.png',
+				url: 'https://www.degenerator.dev/api/og',
 				width: 800,
 				height: 600,
 				alt: 'Og Image Alt',
