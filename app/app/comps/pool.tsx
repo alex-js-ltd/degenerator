@@ -32,6 +32,7 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 	return (
 		<Popover modal={true}>
 			<PopoverContent
+				sticky="always"
 				side="bottom"
 				align="start"
 				alignOffset={0}
