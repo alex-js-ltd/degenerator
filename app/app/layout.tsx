@@ -17,8 +17,8 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: 'Degenerator',
 		description: 'Generate SPL tokens on Solana',
-		site: '@yoursite', // Replace with your site's Twitter username
-		creator: '@yourcreator', // Replace with your creator's Twitter username
+		site: '@degenerato2774', // Replace with your site's Twitter username
+		creator: '@degenerato2774', // Replace with your creator's Twitter username
 		images: ['https://www.degenerator.dev/pepe.png'],
 	},
 	openGraph: {
