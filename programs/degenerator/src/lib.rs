@@ -2,13 +2,13 @@
 
 use anchor_lang::prelude::*;
 
-mod constants;
-mod errors;
+
+
 mod instructions;
-mod state;
+
 
 // Set the correct key here
-declare_id!("EaMLjud2kCucAoFf2NGLtp3rVQeHaCR4N5XeL2bDZbRN");
+declare_id!("2iB6387msY2gkiJJo4vw5GmhbxTtw1t5teg6a75v3Rgx");
 
 #[program]
 pub mod degenerator {

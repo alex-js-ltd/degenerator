@@ -26,7 +26,7 @@ describe('degenerator', () => {
 
 	it('Create Mint with MetadataPointer and TokenMetadata Extensions', async () => {
 		const tx = await program.methods
-			.initialize(metadata, 2)
+			.initialize(metadata, 9)
 			.accounts({ mintAccount: mintKeypair.publicKey })
 			.signers([mintKeypair])
 			.rpc({ skipPreflight: true })

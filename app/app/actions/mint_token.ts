@@ -133,8 +133,10 @@ async function getMintInstructions({
 		.instruction()
 
 	// Mint Token to Payer
+	const amount = new BN(supply)
+	console.log(amount.toString())
 	const mintToken = await program.methods
-		.mintToken(new BN(supply))
+		.mintToken(amount)
 		.accounts({
 			mint: mintKey,
 			signer: payerKey,

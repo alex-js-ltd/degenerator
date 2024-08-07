@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "EaMLjud2kCucAoFf2NGLtp3rVQeHaCR4N5XeL2bDZbRN",
+  "address": "2iB6387msY2gkiJJo4vw5GmhbxTtw1t5teg6a75v3Rgx",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -340,33 +340,6 @@ export type Degenerator = {
       ]
     }
   ],
-  "errors": [
-    {
-      "code": 6000,
-      "name": "invalidFee",
-      "msg": "Invalid fee value"
-    },
-    {
-      "code": 6001,
-      "name": "invalidMint",
-      "msg": "Invalid mint for the pool"
-    },
-    {
-      "code": 6002,
-      "name": "depositTooSmall",
-      "msg": "Depositing too little liquidity"
-    },
-    {
-      "code": 6003,
-      "name": "outputTooSmall",
-      "msg": "Output is below the minimum expected"
-    },
-    {
-      "code": 6004,
-      "name": "invariantViolated",
-      "msg": "Invariant does not hold"
-    }
-  ],
   "types": [
     {
       "name": "anchorField",
@@ -436,23 +409,6 @@ export type Degenerator = {
           }
         ]
       }
-    }
-  ],
-  "constants": [
-    {
-      "name": "authoritySeed",
-      "type": "bytes",
-      "value": "[97, 117, 116, 104, 111, 114, 105, 116, 121]"
-    },
-    {
-      "name": "liquiditySeed",
-      "type": "bytes",
-      "value": "[108, 105, 113, 117, 105, 100, 105, 116, 121]"
-    },
-    {
-      "name": "minimumLiquidity",
-      "type": "u64",
-      "value": "100"
     }
   ]
 };
