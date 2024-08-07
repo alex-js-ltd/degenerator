@@ -7,8 +7,8 @@ use anchor_lang::prelude::*;
 mod instructions;
 
 
-// Set the correct key here
-declare_id!("2iB6387msY2gkiJJo4vw5GmhbxTtw1t5teg6a75v3Rgx");
+
+declare_id!("4dPcMAag9zD8Kj15FJiAUwRPCqrrBMk4wnyzbpKwT1wx");
 
 #[program]
 pub mod degenerator {
@@ -16,8 +16,8 @@ pub mod degenerator {
     pub use super::instructions::*;
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>, args: TokenMetadataArgs, token_decimals: u8) -> Result<()> {
-        instructions::initialize(ctx, args, token_decimals)
+    pub fn initialize(ctx: Context<Initialize>,  token_decimals: u8, args: TokenMetadataArgs) -> Result<()> {
+        instructions::initialize(ctx, token_decimals, args)
     }
 
     pub fn update_field(ctx: Context<UpdateField>, args: UpdateFieldArgs) -> Result<()> {

@@ -1,5 +1,5 @@
 {
-  "address": "2iB6387msY2gkiJJo4vw5GmhbxTtw1t5teg6a75v3Rgx",
+  "address": "4dPcMAag9zD8Kj15FJiAUwRPCqrrBMk4wnyzbpKwT1wx",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -103,16 +103,16 @@
       ],
       "args": [
         {
+          "name": "token_decimals",
+          "type": "u8"
+        },
+        {
           "name": "args",
           "type": {
             "defined": {
               "name": "TokenMetadataArgs"
             }
           }
-        },
-        {
-          "name": "token_decimals",
-          "type": "u8"
         }
       ]
     },

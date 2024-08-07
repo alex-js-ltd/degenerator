@@ -13,7 +13,7 @@ use spl_type_length_value::variable_len_pack::VariableLenPack;
 
 
 #[derive(Accounts)]
-#[instruction(_token_decimals: u8)]
+#[instruction(token_decimals: u8)]
 pub struct Initialize<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
@@ -21,11 +21,12 @@ pub struct Initialize<'info> {
     #[account(
         init,
         payer = payer,
-        mint::decimals = _token_decimals,
+        mint::decimals = token_decimals,
         mint::authority = payer,
         mint::freeze_authority = payer,
         extensions::metadata_pointer::authority = payer,
         extensions::metadata_pointer::metadata_address = mint_account,
+
     
     )]
     pub mint_account: InterfaceAccount<'info, Mint>,
@@ -33,7 +34,7 @@ pub struct Initialize<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn initialize(ctx: Context<Initialize>, args: TokenMetadataArgs,  _token_decimals: u8) -> Result<()> {
+pub fn initialize(ctx: Context<Initialize>, token_decimals: u8, args: TokenMetadataArgs) -> Result<()> {
     let TokenMetadataArgs { name, symbol, uri } = args;
 
     // Define token metadata

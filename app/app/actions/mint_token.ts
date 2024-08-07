@@ -117,7 +117,7 @@ async function getMintInstructions({
 
 	// Create Mint with MetadataPointer and TokenMetadata Extensions
 	const initialize = await program.methods
-		.initialize(metadata, decimals)
+		.initialize(decimals, metadata)
 		.accounts({ mintAccount: mintKey, payer: payerKey })
 		.instruction()
 
