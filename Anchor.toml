@@ -14,10 +14,10 @@ degenerator = "4dPcMAag9zD8Kj15FJiAUwRPCqrrBMk4wnyzbpKwT1wx"
 degenerator = "4dPcMAag9zD8Kj15FJiAUwRPCqrrBMk4wnyzbpKwT1wx"
 
 [registry]
-url = "https://divine-ultra-diagram.solana-devnet.quiknode.pro"
+url = "https://api.mainnet-beta.solana.com"
 
 [provider]
-cluster = "https://divine-ultra-diagram.solana-devnet.quiknode.pro"
+cluster = "https://api.mainnet-beta.solana.com"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
