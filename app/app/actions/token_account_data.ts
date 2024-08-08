@@ -1,29 +1,8 @@
-'use server'
-
-import { parseWithZod } from '@conform-to/zod'
-import { TokenAccountDataSchema } from '@/app/utils/schemas'
 import { parseTokenAccountResp } from '@raydium-io/raydium-sdk-v2'
-import { type PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 import { connection } from '@/app/utils/setup'
-import invariant from 'tiny-invariant'
-
-export async function tokenAccountData(
-	_prevState: unknown,
-	formData: FormData,
-) {
-	const submission = parseWithZod(formData, {
-		schema: TokenAccountDataSchema,
-	})
-
-	invariant(submission.status === 'success')
-
-	const { payerKey } = submission.value
-
-	const tokenAccounts = await fetchTokenAccountData(payerKey)
-
-	return tokenAccounts
-}
+import { cache } from 'react'
 
 async function fetchTokenAccountData(owner: PublicKey) {
 	const solAccountResp = await connection.getAccountInfo(owner)
@@ -48,3 +27,12 @@ async function fetchTokenAccountData(owner: PublicKey) {
 		amount: el.amount.toString(),
 	}))
 }
+
+export const preload = (pk: string) => {
+	void getTokenAccountData(pk)
+}
+
+export const getTokenAccountData = cache(async (pk: string) => {
+	const tokenAccounts = await fetchTokenAccountData(new PublicKey(pk))
+	return tokenAccounts
+})

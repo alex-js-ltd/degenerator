@@ -93,7 +93,3 @@ export const TokenSchema = z
 			})
 		}
 	})
-
-export const TokenAccountDataSchema = z.object({
-	payerKey: PublicKey,
-})

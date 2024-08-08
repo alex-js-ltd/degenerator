@@ -3,8 +3,9 @@ import { TokenForm } from '@/app/comps/token_form'
 import { type ApiV3TokenRes, initSdk } from '@/app/utils/raydium'
 import { type SelectItemConfig } from '@/app/comps/select'
 import { MintB } from '@/app/comps/select'
-
 import { Pool } from '@/app/comps/pool'
+
+export const revalidate = 600 // revalidate the data every 10 minutes
 
 export default async function Page() {
 	return (
