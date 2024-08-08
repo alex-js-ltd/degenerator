@@ -1,7 +1,7 @@
 'use server'
 
 import { parseWithZod } from '@conform-to/zod'
-import { TokenSchema } from '@/app/utils/schemas'
+import { MintSchema } from '@/app/utils/schemas'
 import { put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
 import { connection } from '@/app/utils/setup'
@@ -14,7 +14,7 @@ import { isError, catchError } from '@/app/utils/misc'
 
 export async function mintToken(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
-		schema: TokenSchema,
+		schema: MintSchema,
 	})
 
 	const error = {

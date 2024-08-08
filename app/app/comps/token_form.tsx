@@ -11,7 +11,7 @@ import {
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
-import { Schema } from '@/app/utils/schemas'
+import { TokenSchema } from '@/app/utils/schemas'
 import { mintToken } from '@/app/actions/mint_token'
 import { createPool } from '@/app/actions/create_pool'
 import { deposit } from '@/app/actions/deposit'
@@ -49,7 +49,8 @@ export function TokenForm({ children }: { children: ReactNode }) {
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
-		onValidate: ({ formData }) => parseWithZod(formData, { schema: Schema }),
+		onValidate: ({ formData }) =>
+			parseWithZod(formData, { schema: TokenSchema }),
 
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',

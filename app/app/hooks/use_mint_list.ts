@@ -13,7 +13,7 @@ export function useMintList(items: SelectItemConfig[]) {
 
 		const inWalletSet = new Set(
 			data
-				?.map(el => el.mint.toBase58())
+				?.map(el => el.mint)
 				.concat(NATIVE_MINT.toBase58())
 				.concat(NATIVE_MINT_2022.toBase58()),
 		)

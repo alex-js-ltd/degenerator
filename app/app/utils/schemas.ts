@@ -10,7 +10,7 @@ const PublicKey = z
 		message: 'Not on the ed25519 curve',
 	})
 
-export const TokenSchema = z.object({
+export const MintSchema = z.object({
 	payerKey: PublicKey,
 	name: z.string(),
 	symbol: z.string(),
@@ -58,10 +58,8 @@ export const DepositSchema = z.object({
 	amount: z.number(),
 })
 
-const PoolOptions = PoolSchema.partial()
-
-export const Schema = z
-	.intersection(TokenSchema, PoolOptions)
+export const TokenSchema = z
+	.intersection(MintSchema, PoolSchema.partial())
 	.superRefine(({ cpmm, mintB, mintAAmount, mintBAmount, supply }, context) => {
 		if (cpmm && !mintB) {
 			context.addIssue({
@@ -95,3 +93,7 @@ export const Schema = z
 			})
 		}
 	})
+
+export const TokenAccountDataSchema = z.object({
+	payerKey: PublicKey,
+})
