@@ -6,23 +6,24 @@ import { useSelectedItem } from '@/app/hooks/use_selected_item'
 import invariant from 'tiny-invariant'
 import { useMintList } from '../hooks/use_mint_list'
 
+type PoolProviderProps = {
+	items: SelectItemConfig[]
+	children: ReactNode
+}
+
 type Selected = ReturnType<typeof useSelectedItem>
 type Context = { items: SelectItemConfig[]; selected: Selected }
 const PoolContext = createContext<Context | undefined>(undefined)
 PoolContext.displayName = 'PoolContext'
 
-function PoolProvider({
-	items,
-	children,
-}: {
-	items: SelectItemConfig[]
-	children: ReactNode
-}) {
-	const mintList = useMintList(items)
+function PoolProvider(props: PoolProviderProps) {
+	const mintList = useMintList(props.items)
 	const selected = useSelectedItem('mintB', mintList)
 	const value = { items: mintList, selected }
 
-	return <PoolContext.Provider value={value}>{children}</PoolContext.Provider>
+	return (
+		<PoolContext.Provider value={value}>{props.children}</PoolContext.Provider>
+	)
 }
 
 function usePool() {
