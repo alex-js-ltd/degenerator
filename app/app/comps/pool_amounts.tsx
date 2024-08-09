@@ -11,23 +11,8 @@ import { useImage } from '@/app/context/image_context'
 import { usePool } from '@/app/context/pool_context'
 
 export function PoolAmounts() {
-	const mintAInputProps = useControlInput('mintAAmount', {
-		placeholder: 'Mint A Amount',
-		variant: 'pool',
-	})
-	const mintBInputProps = useControlInput('mintBAmount', {
-		placeholder: 'Mint B Amount',
-		variant: 'pool',
-	})
-
-	const { image: mintALogoProps } = useImage()
-
-	const {
-		selected: { image: mintBLogoProps },
-	} = usePool()
-
-	const mintALogo = mintALogoProps ? <TokenLogo {...mintALogoProps} /> : <>🤔</>
-	const mintBLogo = mintBLogoProps ? <TokenLogo {...mintBLogoProps} /> : <>🌿</>
+	const amountA = useAmountA()
+	const amountB = useAmountB()
 
 	return (
 		<Popover modal={true}>
@@ -40,8 +25,8 @@ export function PoolAmounts() {
 				className="w-[calc(100vw-3rem-2px)] mr-[25px] sm:mr-0 sm:w-[324px] h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0 data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-95"
 			>
 				<fieldset className="grid grid-cols-1 gap-2 p-2 w-full">
-					<Field inputProps={{ ...mintAInputProps }} logo={mintALogo} />
-					<Field inputProps={{ ...mintBInputProps }} logo={mintBLogo} />
+					<Field {...amountA} />
+					<Field {...amountB} />
 				</fieldset>
 			</PopoverContent>
 
@@ -59,7 +44,7 @@ function Field({
 	logo,
 	inputProps,
 }: {
-	logo?: ReactElement
+	logo?: ReactElement | string
 	inputProps: InputProps
 }) {
 	return (
@@ -68,4 +53,31 @@ function Field({
 			<Input {...inputProps} />
 		</div>
 	)
+}
+
+function useAmountA() {
+	const inputProps = useControlInput('mintAAmount', {
+		placeholder: 'Mint A Amount',
+		variant: 'pool',
+	})
+
+	const { image } = useImage()
+
+	const logo = image ? <TokenLogo {...image} /> : '🤔'
+
+	return { inputProps: { ...inputProps }, logo }
+}
+
+function useAmountB() {
+	const inputProps = useControlInput('mintBAmount', {
+		placeholder: 'Mint B Amount',
+		variant: 'pool',
+	})
+
+	const { selected } = usePool()
+	const { image } = selected
+
+	const logo = image ? <TokenLogo {...image} /> : '🌿'
+
+	return { inputProps: { ...inputProps }, logo }
 }
