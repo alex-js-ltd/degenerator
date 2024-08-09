@@ -1,17 +1,15 @@
 import { useEffect } from 'react'
 import { useAsync } from '@/app/hooks/use_async'
 import { usePayer } from '@/app/hooks/use_payer'
-import { preload, getTokenAccountData } from '@/app/actions/token_account_data'
+import { preload, getTokenAccountData } from '@/app/actions/accounts'
 
-interface TokenAccount {
-	mint: string
-	amount: string
-}
+type TokenAccountData = Awaited<ReturnType<typeof getTokenAccountData>>
 
 export function useTokenAccountData() {
 	const pk = usePayer()
-	const { run, ...rest } = useAsync<TokenAccount[]>()
+	const { run, data, ...rest } = useAsync<TokenAccountData>()
 
+	console.log(data)
 	useEffect(() => {
 		if (pk) {
 			preload(pk)
@@ -19,5 +17,5 @@ export function useTokenAccountData() {
 		}
 	}, [pk])
 
-	return { ...rest }
+	return { ...rest, data }
 }
