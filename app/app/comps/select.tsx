@@ -9,8 +9,7 @@ import { Option } from '@/app/comps/option'
 import { type ImageProps, TokenLogo } from '@/app/comps/token_logo'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
-import { useMintList } from '@/app/hooks/use_mint_list'
-import { useMintB } from '@/app/hooks/use_mint_b'
+import { usePool } from '@/app/context/pool_context'
 
 interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
@@ -137,9 +136,9 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 )
 
 function MintList({ name = 'mintB' }: { name?: 'mintB' }) {
-	const items = useMintList()
+	const { items, selected } = usePool()
 
-	const { image, title } = useMintB()
+	const { image, title } = selected
 
 	const logo = image ? <TokenLogo {...image} /> : undefined
 

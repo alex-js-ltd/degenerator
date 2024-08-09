@@ -1,11 +1,10 @@
 import { useMemo } from 'react'
-import { usePool } from '@/app/context/pool_context'
 import { useTokenAccountData } from '@/app/hooks/use_token_account_data'
 import { useWallet } from '@jup-ag/wallet-adapter'
 import { NATIVE_MINT, NATIVE_MINT_2022 } from '@solana/spl-token'
+import { SelectItemConfig } from '../comps/select'
 
-export function useMintList() {
-	const { items } = usePool()
+export function useMintList(items: SelectItemConfig[]) {
 	const { data } = useTokenAccountData()
 	const { publicKey } = useWallet()
 

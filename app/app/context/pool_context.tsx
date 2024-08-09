@@ -1,12 +1,13 @@
 'use client'
 
-import React, { createContext, ReactNode, use, useMemo } from 'react'
+import React, { createContext, ReactNode, use } from 'react'
 import { type SelectItemConfig } from '@/app/comps/select'
 import { useSelectedItem } from '@/app/hooks/use_selected_item'
 import invariant from 'tiny-invariant'
+import { useMintList } from '../hooks/use_mint_list'
 
 type Selected = ReturnType<typeof useSelectedItem>
-type Context = { items: SelectItemConfig[]; mintB: Selected }
+type Context = { items: SelectItemConfig[]; selected: Selected }
 const PoolContext = createContext<Context | undefined>(undefined)
 PoolContext.displayName = 'PoolContext'
 
@@ -17,11 +18,9 @@ function PoolProvider({
 	items: SelectItemConfig[]
 	children: ReactNode
 }) {
-	const mintB = useSelectedItem('mintB', items)
-
-	const value = useMemo(() => {
-		return { items, mintB }
-	}, [items, mintB])
+	const mintList = useMintList(items)
+	const selected = useSelectedItem('mintB', mintList)
+	const value = { items: mintList, selected }
 
 	return <PoolContext.Provider value={value}>{children}</PoolContext.Provider>
 }
