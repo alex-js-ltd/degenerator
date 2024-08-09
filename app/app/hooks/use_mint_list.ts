@@ -1,24 +1,23 @@
-import { useTokenAccountData } from './use_token_account_data'
-import { NATIVE_MINT, NATIVE_MINT_2022 } from '@solana/spl-token'
-import { SelectItemConfig } from '@/app/comps/select'
 import { useMemo } from 'react'
+import { usePool } from '@/app/context/pool_context'
+import { useTokenAccountData } from '@/app/hooks/use_token_account_data'
 import { useWallet } from '@jup-ag/wallet-adapter'
+import { NATIVE_MINT, NATIVE_MINT_2022 } from '@solana/spl-token'
 
-export function useMintList(items: SelectItemConfig[]) {
+export function useMintList() {
+	const { items } = usePool()
 	const { data } = useTokenAccountData()
 	const { publicKey } = useWallet()
 
 	return useMemo(() => {
-		if (!publicKey) return items
+		const inWalletSet = new Set([
+			...(data?.map(el => el.mint) || []),
+			NATIVE_MINT.toBase58(),
+			NATIVE_MINT_2022.toBase58(),
+		])
 
-		const inWalletSet = new Set(
-			data
-				?.map(el => el.mint)
-				.concat(NATIVE_MINT.toBase58())
-				.concat(NATIVE_MINT_2022.toBase58()),
-		)
+		const filteredItems = items.filter(item => inWalletSet.has(item.value))
 
-		// Filter items based on presence in the wallet
-		return items.filter(item => inWalletSet.has(item.value))
+		return publicKey ? filteredItems : items
 	}, [data, publicKey, items])
 }

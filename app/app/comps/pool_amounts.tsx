@@ -1,18 +1,16 @@
 'use client'
 
 import { type ReactElement } from 'react'
-import { type SelectItemConfig } from '@/app/comps/select'
 import { Popover, PopoverContent, PopoverTrigger } from '@/app/comps/popover'
 import { Button } from '@/app/comps/button'
 import { Input, type InputProps } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
 import { TokenLogo } from '@/app/comps/token_logo'
-import { useSelectedItem } from '@/app/hooks/use_selected_item'
 import { useControlInput } from '@/app/hooks/use_control_input'
 import { useImage } from '@/app/context/image_context'
-import { useMintList } from '@/app/hooks/use_mint_list'
+import { usePool } from '@/app/context/pool_context'
 
-export function Pool({ items }: { items: SelectItemConfig[] }) {
+export function PoolAmounts() {
 	const mintAInputProps = useControlInput('mintAAmount', {
 		placeholder: 'Mint A Amount',
 		variant: 'pool',
@@ -23,8 +21,10 @@ export function Pool({ items }: { items: SelectItemConfig[] }) {
 	})
 
 	const { image: mintALogoProps } = useImage()
-	const mintList = useMintList(items)
-	const { imageProps: mintBLogoProps } = useSelectedItem('mintB', mintList)
+
+	const {
+		selected: { imageProps: mintBLogoProps },
+	} = usePool()
 
 	const mintALogo = mintALogoProps ? <TokenLogo {...mintALogoProps} /> : <>🤔</>
 	const mintBLogo = mintBLogoProps ? <TokenLogo {...mintBLogoProps} /> : <>🌿</>

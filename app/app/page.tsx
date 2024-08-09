@@ -1,59 +1,38 @@
-import * as React from 'react'
+import { Suspense, Fragment } from 'react'
 import { TokenForm } from '@/app/comps/token_form'
-import { type ApiV3TokenRes, initSdk } from '@/app/utils/raydium'
-import { type SelectItemConfig } from '@/app/comps/select'
-import { MintB } from '@/app/comps/select'
-import { Pool } from '@/app/comps/pool'
+import { MintList } from '@/app/comps/select'
+import { PoolAmounts } from '@/app/comps/pool_amounts'
+import { PoolProvider } from '@/app/context/pool_context'
+import { getMintList } from './actions/mint_list'
 
 export const revalidate = 600 // revalidate the data every 10 minutes
 
 export default async function Page() {
 	return (
 		<TokenForm>
-			<React.Suspense fallback={<Loading />}>
-				<MintList />
-			</React.Suspense>
+			<Suspense fallback={<Loading />}>
+				<Pool />
+			</Suspense>
 		</TokenForm>
 	)
 }
 
-function getMintBProps(data: ApiV3TokenRes) {
-	const mintItems = data.mintList.reduce<SelectItemConfig[]>((acc, curr) => {
-		const { address, name, logoURI, symbol } = curr
-
-		const option = {
-			value: address,
-			children: name,
-			title: symbol,
-			imageProps: { src: logoURI, alt: symbol },
-		}
-
-		if (name) acc.push(option)
-
-		return acc
-	}, [])
-
-	return { items: mintItems, name: 'mintB' }
-}
-
-async function MintList() {
-	const raydium = await initSdk({})
-	const data = await raydium.api.getTokenList()
-	const mintBprops = getMintBProps(data)
+async function Pool() {
+	const data = await getMintList()
 
 	return (
-		<React.Fragment>
-			<MintB {...mintBprops} />
-			<Pool {...mintBprops} />
-		</React.Fragment>
+		<PoolProvider {...data}>
+			<MintList />
+			<PoolAmounts />
+		</PoolProvider>
 	)
 }
 
 function Loading() {
 	return (
-		<React.Fragment>
+		<Fragment>
 			<div className="w-28 h-[32px] rounded bg-slate-800 animate-pulse" />
 			<div className="w-28 h-[32px] rounded bg-slate-800 animate-pulse" />
-		</React.Fragment>
+		</Fragment>
 	)
 }

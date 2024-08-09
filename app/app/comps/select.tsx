@@ -1,21 +1,15 @@
 'use client'
 
-import React, {
-	type ReactNode,
-	type ComponentType,
-	type ElementRef,
-	useRef,
-} from 'react'
+import React, { type ReactNode, type ElementRef, useRef } from 'react'
 import * as RadixSelect from '@radix-ui/react-select'
 
 import { ChevronDownIcon } from '@radix-ui/react-icons'
-
 import { useInputControl, useField, type FieldName } from '@conform-to/react'
 import { Option } from '@/app/comps/option'
 import { type ImageProps, TokenLogo } from '@/app/comps/token_logo'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
-import { useSelectedItem } from '@/app/hooks/use_selected_item'
+import { usePool } from '@/app/context/pool_context'
 import { useMintList } from '@/app/hooks/use_mint_list'
 
 interface SelectFieldProps {
@@ -24,7 +18,8 @@ interface SelectFieldProps {
 	name: FieldName<string>
 	items: SelectItemConfig[]
 	children: ReactNode
-	logo?: ComponentType<ImageProps>
+	title?: string
+	logo?: React.JSX.Element
 	valueProps?: RadixSelect.SelectValueProps
 	triggerProps?: RadixSelect.SelectTriggerProps
 	contentProps?: RadixSelect.SelectContentProps
@@ -37,11 +32,6 @@ interface SelectItemProps
 	imageProps?: ImageProps
 }
 
-export interface CompoundSelect {
-	name: FieldName<string>
-	items: SelectItemConfig[]
-}
-
 export type SelectItemConfig = Omit<SelectItemProps, 'fieldName'>
 
 function Select({
@@ -49,17 +39,16 @@ function Select({
 	items,
 	valueProps,
 	contentProps,
-	logo: Component,
+	logo,
+	title,
 	children,
 }: SelectFieldProps) {
-	const { meta, title, imageProps: logoProps } = useSelectedItem(name, items)
-
+	const [meta] = useField<string>(name)
 	const control = useInputControl(meta)
 
 	const selectRef = useRef<ElementRef<typeof RadixSelect.Trigger>>(null)
 
 	const border = meta.errors?.length ? 'border-teal-300' : 'border-gray-800'
-	const pulse = items.length === 0 ? 'animate-pulse' : undefined
 
 	return (
 		<div className="relative w-28">
@@ -88,10 +77,9 @@ function Select({
 					className={cn(
 						'disabled:pointer-events-none disabled:opacity-60 inline-flex h-[32px] w-full items-center gap-1.5 rounded-md bg-gray-800 hover:bg-gray-700/70 hover:text-gray-100 text-gray-400 text-sm px-2 transition-colors whitespace-nowrap focus:outline-none border',
 						border,
-						pulse,
 					)}
 				>
-					{Component && logoProps && <Component {...logoProps} />}
+					{logo}
 
 					<RadixSelect.Value {...valueProps}>
 						{title ?? valueProps?.placeholder}
@@ -148,15 +136,22 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 	},
 )
 
-function MintB({ name, ...props }: CompoundSelect) {
-	const items = useMintList(props.items)
+function MintList({ name = 'mintB' }: { name?: 'mintB' }) {
+	const items = useMintList()
+
+	const {
+		selected: { imageProps, title },
+	} = usePool()
+
+	const logo = imageProps ? <TokenLogo {...imageProps} /> : undefined
 
 	return (
 		<Select
 			name={name}
 			items={items}
 			valueProps={{ placeholder: '🌿  Mint B' }}
-			logo={TokenLogo}
+			title={title}
+			logo={logo}
 		>
 			{items.map(item => (
 				<SelectItem
@@ -177,4 +172,4 @@ function MintB({ name, ...props }: CompoundSelect) {
 	)
 }
 
-export { Select, SelectItem, MintB }
+export { Select, SelectItem, MintList }
