@@ -9,7 +9,6 @@ export function useTokenAccountData() {
 	const pk = usePayer()
 	const { run, data, ...rest } = useAsync<TokenAccountData>()
 
-	console.log(data)
 	useEffect(() => {
 		if (pk) {
 			preload(pk)
