@@ -17,9 +17,9 @@ const PoolContext = createContext<Context | undefined>(undefined)
 PoolContext.displayName = 'PoolContext'
 
 function PoolProvider(props: PoolProviderProps) {
-	const mintList = useMintList(props.items)
-	const selected = useSelectedItem('mintB', mintList)
-	const value = { items: mintList, selected }
+	const items = useMintList(props.items)
+	const selected = useSelectedItem('mintB', items)
+	const value = { items, selected }
 
 	return (
 		<PoolContext.Provider value={value}>{props.children}</PoolContext.Provider>
