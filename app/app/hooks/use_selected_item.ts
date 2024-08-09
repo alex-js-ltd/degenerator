@@ -6,6 +6,7 @@ export function useSelectedItem(
 	items: SelectItemConfig[],
 ) {
 	const [meta] = useField<string>(name)
+
 	const selected = items.find(el => el.value === meta.value)
-	return { meta, title: selected?.title, imageProps: selected?.imageProps }
+	return { meta, title: selected?.title, image: selected?.image }
 }

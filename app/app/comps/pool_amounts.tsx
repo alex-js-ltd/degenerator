@@ -8,7 +8,7 @@ import { Icon } from '@/app/comps/_icon'
 import { TokenLogo } from '@/app/comps/token_logo'
 import { useControlInput } from '@/app/hooks/use_control_input'
 import { useImage } from '@/app/context/image_context'
-import { usePool } from '@/app/context/pool_context'
+import { useMintB } from '@/app/hooks/use_mint_b'
 
 export function PoolAmounts() {
 	const mintAInputProps = useControlInput('mintAAmount', {
@@ -22,9 +22,7 @@ export function PoolAmounts() {
 
 	const { image: mintALogoProps } = useImage()
 
-	const {
-		selected: { imageProps: mintBLogoProps },
-	} = usePool()
+	const { image: mintBLogoProps } = useMintB()
 
 	const mintALogo = mintALogoProps ? <TokenLogo {...mintALogoProps} /> : <>🤔</>
 	const mintBLogo = mintBLogoProps ? <TokenLogo {...mintBLogoProps} /> : <>🌿</>

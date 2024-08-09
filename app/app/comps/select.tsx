@@ -9,8 +9,8 @@ import { Option } from '@/app/comps/option'
 import { type ImageProps, TokenLogo } from '@/app/comps/token_logo'
 import { cn } from '@/app/utils/misc'
 import { Input } from '@/app/comps/input'
-import { usePool } from '@/app/context/pool_context'
 import { useMintList } from '@/app/hooks/use_mint_list'
+import { useMintB } from '@/app/hooks/use_mint_b'
 
 interface SelectFieldProps {
 	// You can use the `FieldMetadata` type to define the `meta` prop
@@ -29,7 +29,7 @@ interface SelectItemProps
 	extends React.ComponentPropsWithoutRef<typeof RadixSelect.Item> {
 	fieldName: FieldName<string>
 	title?: string
-	imageProps?: ImageProps
+	image?: ImageProps
 }
 
 export type SelectItemConfig = Omit<SelectItemProps, 'fieldName'>
@@ -139,11 +139,9 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 function MintList({ name = 'mintB' }: { name?: 'mintB' }) {
 	const items = useMintList()
 
-	const {
-		selected: { imageProps, title },
-	} = usePool()
+	const { image, title } = useMintB()
 
-	const logo = imageProps ? <TokenLogo {...imageProps} /> : undefined
+	const logo = image ? <TokenLogo {...image} /> : undefined
 
 	return (
 		<Select
@@ -165,7 +163,7 @@ function MintList({ name = 'mintB' }: { name?: 'mintB' }) {
 							{item.children}
 						</RadixSelect.ItemText>
 					</div>
-					{item.imageProps ? <TokenLogo {...item.imageProps} /> : null}
+					{item.image ? <TokenLogo {...item.image} /> : null}
 				</SelectItem>
 			))}
 		</Select>

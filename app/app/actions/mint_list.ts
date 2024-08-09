@@ -11,7 +11,7 @@ function parseMintList(data: ApiV3TokenRes) {
 			value: address,
 			children: name,
 			title: symbol,
-			imageProps: { src: logoURI, alt: symbol },
+			image: { src: logoURI, alt: symbol },
 		}
 
 		if (name) acc.push(option)

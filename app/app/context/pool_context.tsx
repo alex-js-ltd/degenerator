@@ -6,7 +6,7 @@ import { useSelectedItem } from '@/app/hooks/use_selected_item'
 import invariant from 'tiny-invariant'
 
 type Selected = ReturnType<typeof useSelectedItem>
-type Context = { items: SelectItemConfig[]; selected: Selected }
+type Context = { items: SelectItemConfig[]; mintB: Selected }
 const PoolContext = createContext<Context | undefined>(undefined)
 PoolContext.displayName = 'PoolContext'
 
@@ -17,11 +17,11 @@ function PoolProvider({
 	items: SelectItemConfig[]
 	children: ReactNode
 }) {
-	const selected = useSelectedItem('mintB', items)
+	const mintB = useSelectedItem('mintB', items)
 
 	const value = useMemo(() => {
-		return { items, selected }
-	}, [items, selected])
+		return { items, mintB }
+	}, [items, mintB])
 
 	return <PoolContext.Provider value={value}>{children}</PoolContext.Provider>
 }
