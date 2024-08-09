@@ -4,7 +4,7 @@ import React, { createContext, ReactNode, use } from 'react'
 import { type SelectItemConfig } from '@/app/comps/select'
 import { useSelectedItem } from '@/app/hooks/use_selected_item'
 import invariant from 'tiny-invariant'
-import { useMintList } from '../hooks/use_mint_list'
+import { useMintList } from '@/app/hooks/use_mint_list'
 
 type PoolProviderProps = {
 	items: SelectItemConfig[]
