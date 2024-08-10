@@ -6,11 +6,13 @@ import { Button, type ButtonProps } from '@/app/comps/button'
 import { Input, type InputProps } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
 import { TokenLogo } from '@/app/comps/token_logo'
-import { useControlInput } from '@/app/hooks/use_control_input'
+import { Control, useControlInput } from '@/app/hooks/use_control_input'
 import { useImage } from '@/app/context/image_context'
 import { usePool } from '@/app/context/pool_context'
 import { useBalance } from '@/app/hooks/use_balance'
 import { useUpButton } from '@/app/hooks/use_up_button'
+import { NATIVE_MINT, NATIVE_MINT_2022 } from '@solana/spl-token'
+import { useField } from '@conform-to/react'
 
 export function PoolAmounts() {
 	const inputA = useControlInput('mintAAmount', {
@@ -28,10 +30,17 @@ export function PoolAmounts() {
 
 	const { selected } = usePool()
 	const logoB = selected.image ? <TokenLogo {...selected.image} /> : '🌿'
+
+	const [supply] = useField<number>('supply')
+
 	const mintBAdress = selected.meta.value
+	const isWSOL = mintBAdress === NATIVE_MINT.toBase58()
 	const { data: balance } = useBalance()
 
-	const { getButtonProps } = useUpButton()
+	function getAmountBButtonProps(): [string, Control] {
+		if (isWSOL && balance) return [`${balance}`, inputB.control]
+		return [``, inputB.control]
+	}
 
 	return (
 		<Popover modal={true}>
@@ -48,19 +57,13 @@ export function PoolAmounts() {
 						inputProps={{ ...inputA.inputProps }}
 						logo={logoA}
 						button={
-							<Up
-								{...getButtonProps({ max: balance, control: inputA.control })}
-							/>
+							<Max onClick={() => getMax(supply.value, inputA.control)} />
 						}
 					/>
 					<Field
 						inputProps={{ ...inputB.inputProps }}
 						logo={logoB}
-						button={
-							<Up
-								{...getButtonProps({ max: balance, control: inputB.control })}
-							/>
-						}
+						button={<Max onClick={() => getMax(...getAmountBButtonProps())} />}
 					/>
 				</fieldset>
 			</PopoverContent>
@@ -93,6 +96,10 @@ function Field({
 	)
 }
 
-function Up(props: ButtonProps) {
-	return <Button {...props}>🆙</Button>
+function Max(props: ButtonProps) {
+	return <Button {...props}>🔝</Button>
+}
+
+function getMax(max: string | undefined, control: Control) {
+	control.change(max)
 }

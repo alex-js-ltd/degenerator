@@ -1,31 +1,26 @@
+import { useCallback, useEffect } from 'react'
 import { type Control } from '@/app/hooks/use_control_input'
 import { type ButtonProps } from '@/app/comps/button'
 
-interface GetButtonProps extends ButtonProps {
-	max: number
-	control: Control
-}
+export function useUpButton(max: number | null | undefined, control: Control) {
+	// Memoize getButtonProps using useCallback
+	const onClick = useCallback(() => {
+		if (!max) return {}
 
-export function useUpButton() {
-	function getButtonProps({ max, control }: GetButtonProps) {
-		const increment = max * 0.25 // Keep this as a number
+		const increment = max * 0.25
 
-		return {
-			onClick: () => {
-				control.change(prev => {
-					const prevValue = prev ? parseFloat(prev) : 0 // Convert prev to a number
+		control.change(prev => {
+			const prevValue = prev ? parseFloat(prev) : 0 // Convert prev to a number
 
-					// Calculate new value
-					const newValue = prevValue + increment
+			// Calculate new value
+			const newValue = prevValue + increment
 
-					// Ensure new value does not exceed max
-					const cappedValue = Math.min(newValue, max)
+			// Ensure new value does not exceed max
+			const cappedValue = Math.min(newValue, max)
 
-					return cappedValue.toString() // Return the result as a string
-				})
-			},
-		}
-	}
+			return cappedValue.toString() // Return the result as a string
+		})
+	}, [max, control])
 
-	return { getButtonProps }
+	return { onClick }
 }
