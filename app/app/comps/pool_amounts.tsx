@@ -59,7 +59,7 @@ function Field({
 }
 
 function Up() {
-	return <Button>🆙</Button>
+	return <Button disabled>🆙</Button>
 }
 
 function useAmountA() {
@@ -72,7 +72,7 @@ function useAmountA() {
 
 	const logo = image ? <TokenLogo {...image} /> : '🤔'
 
-	return { inputProps: { ...inputProps }, logo, button: <Up /> }
+	return { inputProps: { ...inputProps }, logo, button: image && <Up /> }
 }
 
 function useAmountB() {
@@ -86,5 +86,5 @@ function useAmountB() {
 
 	const logo = image ? <TokenLogo {...image} /> : '🌿'
 
-	return { inputProps: { ...inputProps }, logo, button: <Up /> }
+	return { inputProps: { ...inputProps }, logo, button: image && <Up /> }
 }
