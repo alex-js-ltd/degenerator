@@ -11,8 +11,21 @@ import { useImage } from '@/app/context/image_context'
 import { usePool } from '@/app/context/pool_context'
 
 export function PoolAmounts() {
-	const amountA = useAmountA()
-	const amountB = useAmountB()
+	const inputA = useControlInput('mintAAmount', {
+		placeholder: 'Mint A Amount',
+		variant: 'pool',
+	})
+
+	const inputB = useControlInput('mintBAmount', {
+		placeholder: 'Mint B Amount',
+		variant: 'pool',
+	})
+
+	const { image } = useImage()
+	const logoA = image ? <TokenLogo {...image} /> : '🤔'
+
+	const { selected } = usePool()
+	const logoB = selected.image ? <TokenLogo {...selected.image} /> : '🌿'
 
 	return (
 		<Popover modal={true}>
@@ -25,8 +38,8 @@ export function PoolAmounts() {
 				className="w-[calc(100vw-3rem-2px)] mr-[25px] sm:mr-0 sm:w-[324px] h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0 data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-95"
 			>
 				<fieldset className="grid grid-cols-1 gap-2 p-2 w-full">
-					<Field {...amountA} />
-					<Field {...amountB} />
+					<Field inputProps={{ ...inputA }} logo={logoA} button={<Up />} />
+					<Field inputProps={{ ...inputB }} logo={logoB} button={<Up />} />
 				</fieldset>
 			</PopoverContent>
 
@@ -60,31 +73,4 @@ function Field({
 
 function Up() {
 	return <Button disabled>🆙</Button>
-}
-
-function useAmountA() {
-	const inputProps = useControlInput('mintAAmount', {
-		placeholder: 'Mint A Amount',
-		variant: 'pool',
-	})
-
-	const { image } = useImage()
-
-	const logo = image ? <TokenLogo {...image} /> : '🤔'
-
-	return { inputProps: { ...inputProps }, logo, button: image && <Up /> }
-}
-
-function useAmountB() {
-	const inputProps = useControlInput('mintBAmount', {
-		placeholder: 'Mint B Amount',
-		variant: 'pool',
-	})
-
-	const { selected } = usePool()
-	const { image } = selected
-
-	const logo = image ? <TokenLogo {...image} /> : '🌿'
-
-	return { inputProps: { ...inputProps }, logo, button: image && <Up /> }
 }
