@@ -10,5 +10,5 @@ export function useMaxButton(
 		control.change(max)
 	}, [max, control])
 
-	return { onClick }
+	return { onClick, disabled: max ? false : true }
 }

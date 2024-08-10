@@ -94,5 +94,5 @@ function Field({
 }
 
 function Max(props: ButtonProps) {
-	return <Button {...props}>🔝</Button>
+	return <Button {...props}>🆙</Button>
 }
