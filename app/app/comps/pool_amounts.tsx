@@ -2,7 +2,7 @@
 
 import { type ReactElement } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/app/comps/popover'
-import { Button } from '@/app/comps/button'
+import { Button, type ButtonProps } from '@/app/comps/button'
 import { Input, type InputProps } from '@/app/comps/input'
 import { Icon } from '@/app/comps/_icon'
 import { TokenLogo } from '@/app/comps/token_logo'
@@ -10,6 +10,7 @@ import { useControlInput } from '@/app/hooks/use_control_input'
 import { useImage } from '@/app/context/image_context'
 import { usePool } from '@/app/context/pool_context'
 import { useBalance } from '@/app/hooks/use_balance'
+import { useUpButton } from '@/app/hooks/use_up_button'
 
 export function PoolAmounts() {
 	const inputA = useControlInput('mintAAmount', {
@@ -27,10 +28,10 @@ export function PoolAmounts() {
 
 	const { selected } = usePool()
 	const logoB = selected.image ? <TokenLogo {...selected.image} /> : '🌿'
+	const mintBAdress = selected.meta.value
+	const { data: balance } = useBalance()
 
-	const { data } = useBalance()
-
-	console.log('balance', data)
+	const { getButtonProps } = useUpButton()
 
 	return (
 		<Popover modal={true}>
@@ -43,8 +44,24 @@ export function PoolAmounts() {
 				className="w-[calc(100vw-3rem-2px)] mr-[25px] sm:mr-0 sm:w-[324px] h-auto z-20 overflow-hidden rounded-lg border-gray-800 bg-gray-900 p-0 data-[state=open]:animate-scale-in-95 data-[state=closed]:animate-scale-out-95"
 			>
 				<fieldset className="grid grid-cols-1 gap-2 p-2 w-full">
-					<Field inputProps={{ ...inputA }} logo={logoA} button={<Up />} />
-					<Field inputProps={{ ...inputB }} logo={logoB} button={<Up />} />
+					<Field
+						inputProps={{ ...inputA.inputProps }}
+						logo={logoA}
+						button={
+							<Up
+								{...getButtonProps({ max: balance, control: inputA.control })}
+							/>
+						}
+					/>
+					<Field
+						inputProps={{ ...inputB.inputProps }}
+						logo={logoB}
+						button={
+							<Up
+								{...getButtonProps({ max: balance, control: inputB.control })}
+							/>
+						}
+					/>
 				</fieldset>
 			</PopoverContent>
 
@@ -59,12 +76,12 @@ export function PoolAmounts() {
 }
 
 function Field({
-	logo,
 	button,
+	logo,
 	inputProps,
 }: {
+	button: ReactElement
 	logo: ReactElement | string
-	button?: ReactElement
 	inputProps: InputProps
 }) {
 	return (
@@ -76,6 +93,6 @@ function Field({
 	)
 }
 
-function Up() {
-	return <Button disabled>🆙</Button>
+function Up(props: ButtonProps) {
+	return <Button {...props}>🆙</Button>
 }

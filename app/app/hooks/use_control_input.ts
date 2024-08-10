@@ -1,7 +1,7 @@
 import { type FieldName, useField, useInputControl } from '@conform-to/react'
 import { type InputProps } from '@/app/comps/input'
 
-type Control = ReturnType<typeof useInputControl<string>>
+export type Control = ReturnType<typeof useInputControl<string>>
 
 function getControlProps(control: Control): InputProps {
 	return {
@@ -21,13 +21,16 @@ function getErrorProps(errors?: string[]) {
 export function useControlInput(
 	name: FieldName<string>,
 	{ ...rest }: InputProps,
-): InputProps {
+) {
 	const [meta] = useField<string>(name)
 	const control = useInputControl(meta)
 
 	return {
-		...getControlProps(control),
-		...getErrorProps(meta.errors),
-		...rest,
+		inputProps: {
+			...getControlProps(control),
+			...getErrorProps(meta.errors),
+			...rest,
+		},
+		control,
 	}
 }
