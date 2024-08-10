@@ -1,7 +1,11 @@
 'use server'
 
-import { PublicKey } from '@solana/web3.js'
-import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js'
+import {
+	TOKEN_PROGRAM_ID,
+	TOKEN_2022_PROGRAM_ID,
+	NATIVE_MINT,
+} from '@solana/spl-token'
 import { connection } from '@/app/utils/setup'
 import { cache } from 'react'
 
@@ -41,11 +45,19 @@ async function fetchAllTokens(pk: PublicKey) {
 	return reducedResult
 }
 
+async function fetchBalance(pk: PublicKey) {
+	const res = await connection.getBalance(pk)
+	return res / LAMPORTS_PER_SOL
+}
+
 export const preload = (pk: string) => {
 	void getTokenAccountData(pk)
 }
 
 export const getTokenAccountData = cache(async (pk: string) => {
-	const tokenAccounts = await fetchAllTokens(new PublicKey(pk))
-	return tokenAccounts
+	const account = new PublicKey(pk)
+	const tokenAccounts = await fetchAllTokens(account)
+	const balance = await fetchBalance(account)
+	const native: Account = { mint: NATIVE_MINT.toBase58(), balance, decimals: 9 }
+	return [...tokenAccounts, native]
 })
