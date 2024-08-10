@@ -42,17 +42,24 @@ export function PoolAmounts() {
 
 function Field({
 	logo,
+	button,
 	inputProps,
 }: {
-	logo?: ReactElement | string
+	logo: ReactElement | string
+	button?: ReactElement
 	inputProps: InputProps
 }) {
 	return (
 		<div className="relative flex items-center h-auto">
 			<span className="absolute left-2">{logo}</span>
+			<span className="absolute right-2">{button}</span>
 			<Input {...inputProps} />
 		</div>
 	)
+}
+
+function Up() {
+	return <Button>🆙</Button>
 }
 
 function useAmountA() {
@@ -65,7 +72,7 @@ function useAmountA() {
 
 	const logo = image ? <TokenLogo {...image} /> : '🤔'
 
-	return { inputProps: { ...inputProps }, logo }
+	return { inputProps: { ...inputProps }, logo, button: <Up /> }
 }
 
 function useAmountB() {
@@ -79,5 +86,5 @@ function useAmountB() {
 
 	const logo = image ? <TokenLogo {...image} /> : '🌿'
 
-	return { inputProps: { ...inputProps }, logo }
+	return { inputProps: { ...inputProps }, logo, button: <Up /> }
 }
