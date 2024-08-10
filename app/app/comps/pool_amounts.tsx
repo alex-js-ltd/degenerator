@@ -9,6 +9,7 @@ import { TokenLogo } from '@/app/comps/token_logo'
 import { useControlInput } from '@/app/hooks/use_control_input'
 import { useImage } from '@/app/context/image_context'
 import { usePool } from '@/app/context/pool_context'
+import { useBalance } from '@/app/hooks/use_balance'
 
 export function PoolAmounts() {
 	const inputA = useControlInput('mintAAmount', {
@@ -26,6 +27,10 @@ export function PoolAmounts() {
 
 	const { selected } = usePool()
 	const logoB = selected.image ? <TokenLogo {...selected.image} /> : '🌿'
+
+	const { data } = useBalance()
+
+	console.log('balance', data)
 
 	return (
 		<Popover modal={true}>
