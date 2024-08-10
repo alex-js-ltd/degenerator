@@ -137,10 +137,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 
 function MintList({ name = 'mintB' }: { name?: 'mintB' }) {
 	const { items, selected } = usePool()
-
 	const { image, title } = selected
-
-	const logo = image ? <TokenLogo {...image} /> : undefined
 
 	return (
 		<Select
@@ -148,7 +145,7 @@ function MintList({ name = 'mintB' }: { name?: 'mintB' }) {
 			items={items}
 			valueProps={{ placeholder: '🌿  Mint B' }}
 			title={title}
-			logo={logo}
+			logo={image && <TokenLogo {...image} />}
 		>
 			{items.map(item => (
 				<SelectItem
