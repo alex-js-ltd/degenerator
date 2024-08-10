@@ -15,8 +15,9 @@ export function useMintList(items: SelectItemConfig[]) {
 			NATIVE_MINT_2022.toBase58(),
 		])
 
-		const filteredItems = items.filter(item => inWalletSet.has(item.value))
+		const itemsInWallet = items.filter(item => inWalletSet.has(item.value))
+		const itemsNotInWallet = items.filter(item => !inWalletSet.has(item.value))
 
-		return publicKey ? filteredItems : items
+		return [...itemsInWallet, ...itemsNotInWallet]
 	}, [data, publicKey, items])
 }
