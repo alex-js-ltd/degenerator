@@ -11,7 +11,7 @@ import { useImage } from '@/app/context/image_context'
 import { usePool } from '@/app/context/pool_context'
 import { useMaxButton } from '@/app/hooks/use_max_button'
 import { useField } from '@conform-to/react'
-import { useTokenAccountData } from '@/app/hooks/use_token_account_data'
+import { useBalance } from '@/app/hooks/use_balance'
 
 export function PoolAmounts() {
 	const inputA = useControlInput('mintAAmount', {
@@ -31,12 +31,7 @@ export function PoolAmounts() {
 	const logoB = selected.image ? <TokenLogo {...selected.image} /> : '🌿'
 
 	const [{ value: balanceA }] = useField<number>('supply')
-
-	const { data } = useTokenAccountData()
-
-	const balanceB = data
-		?.find(account => account.mint === selected.meta.value)
-		?.balance.toString()
+	const balanceB = useBalance(selected.meta.value)
 
 	const buttonA = useMaxButton(balanceA, inputA.control)
 	const buttonB = useMaxButton(balanceB, inputB.control)
