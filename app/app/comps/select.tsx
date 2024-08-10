@@ -44,9 +44,7 @@ function Select({
 }: SelectFieldProps) {
 	const [meta] = useField<string>(name)
 	const control = useInputControl(meta)
-
 	const selectRef = useRef<ElementRef<typeof RadixSelect.Trigger>>(null)
-
 	const border = meta.errors?.length ? 'border-teal-300' : 'border-gray-800'
 
 	return (
@@ -143,7 +141,7 @@ function MintList({ name = 'mintB' }: { name?: 'mintB' }) {
 		<Select
 			name={name}
 			items={items}
-			valueProps={{ placeholder: '🌿  Mint B' }}
+			valueProps={{ placeholder: '🌿 Mint B' }}
 			title={title}
 			logo={image && <TokenLogo {...image} />}
 		>
