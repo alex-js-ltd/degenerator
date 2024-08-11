@@ -1,6 +1,3 @@
-'use client'
-
-import { useGeneratedTokens } from '@/app/hooks/use_generated_tokens'
 import { type TokenMetadata } from '@prisma/client'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -8,9 +5,7 @@ function timeAgo(createdAt: Date): string {
 	return formatDistanceToNow(createdAt, { addSuffix: true })
 }
 
-export function GeneratedTokens() {
-	const { data } = useGeneratedTokens()
-
+export function GeneratedTokens({ data }: { data: TokenMetadata[] }) {
 	return (
 		<ul className="mx-auto grid w-full grid-cols-[repeat(auto-fit,_minmax(296px,1fr))] gap-4">
 			{data?.map(token => (
