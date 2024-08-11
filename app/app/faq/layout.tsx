@@ -15,11 +15,11 @@ export default function Layout({ children }: { children: ReactNode }) {
 					</div>
 				</div>
 				<div className="mx-auto flex max-w-screen-md flex-col items-center px-4 py-10 sm:px-6 sm:pt-20 lg:px-8">
-					<article className="prose-headings:font-display prose prose-gray max-w-none transition-all prose-headings:relative prose-headings:scroll-mt-20 prose-headings:font-semibold">
+					<article className="prose-headings:font-display prose prose-gray max-w-none transition-all prose-headings:relative prose-headings:scroll-mt-20 prose-headings:font-semibold pb-64">
 						{children}
 					</article>
 					<div className="mt-10 w-full border-t border-zinc-200 pt-10 text-center">
-						<p className="text-zinc-500">Last updated: September 12, 2023</p>
+						<p className="text-zinc-500">Last updated: Augist 10, 2024</p>
 					</div>
 				</div>
 			</div>
