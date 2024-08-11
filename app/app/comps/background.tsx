@@ -15,7 +15,6 @@ export function Background({ children }: { children: ReactNode }) {
 					/>
 				</div>
 			</div>
-
 			<div className="relative flex w-full flex-col items-center gap-6 px-6 text-center">
 				<div className="flex w-full flex-col items-center gap-1.5">
 					<h2 className="text-4xl font-semibold tracking-tighter sm:text-5xl @media(max-width:480px):text-[2rem]">

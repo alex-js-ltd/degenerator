@@ -17,7 +17,11 @@ export const metadata: Metadata = {
 	metadataBase: new URL('https://www.degenerator.dev'),
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+	children,
+}: Readonly<{
+	children: ReactNode
+}>) {
 	return (
 		<html className={`${GeistSans.variable} ${GeistMono.variable}`} lang="en">
 			<body className="font-sans mx-h-[100vh]">
@@ -26,6 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 						<Header />
 						{children}
 						<ToastTxs />
+
 						<Footer />
 					</AppProviders>
 				</div>
