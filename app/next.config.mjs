@@ -17,6 +17,13 @@ const nextConfig = {
 				port: '',
 				pathname: '/icon/**',
 			},
+
+			{
+				protocol: 'https',
+				hostname: 'rwssyl4cftw4nvaq.public.blob.vercel-storage.com',
+				port: '',
+				pathname: '/**',
+			},
 		],
 	},
 	transpilePackages: ['geist'],
