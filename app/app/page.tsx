@@ -1,4 +1,5 @@
 import { Suspense, Fragment } from 'react'
+import { Background } from '@/app/comps/background'
 import { TokenForm } from '@/app/comps/token_form'
 import { MintList } from '@/app/comps/select'
 import { PoolAmounts } from '@/app/comps/pool_amounts'
@@ -9,11 +10,13 @@ export const revalidate = 600 // revalidate the data every 10 minutes
 
 export default async function Page() {
 	return (
-		<TokenForm>
-			<Suspense fallback={<Loading />}>
-				<Pool />
-			</Suspense>
-		</TokenForm>
+		<Background>
+			<TokenForm>
+				<Suspense fallback={<Loading />}>
+					<Pool />
+				</Suspense>
+			</TokenForm>
+		</Background>
 	)
 }
 
