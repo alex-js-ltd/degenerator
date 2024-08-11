@@ -36,21 +36,19 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 
 	if (isError(blob)) return { ...error, message: blob.message }
 
+	const publicKey = payerKey.toBase58()
 	const mintKeypair = new web3.Keypair()
 	const mintKey = mintKeypair.publicKey
 	const mint = mintKey.toBase58()
 
-	const upload = await prisma.tokenMetadata
-		.create({
-			data: {
-				mint,
-				name,
-				symbol,
-				image: blob.url,
-				description,
-			},
-		})
-		.catch(catchError)
+	const upload = await uploadMetadata({
+		publicKey,
+		mint,
+		name,
+		symbol,
+		image: blob.url,
+		description,
+	}).catch(catchError)
 
 	if (isError(upload)) return { ...error, message: upload.message }
 
@@ -88,7 +86,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	}
 }
 
-type GetMintInstructionsParams = {
+interface GetMintInstructionsParams {
 	payerKey: PublicKey
 	mintKey: PublicKey
 	metadata: { name: string; symbol: string; uri: string }
@@ -189,4 +187,42 @@ async function getFreezeAuth(
 			mintAccount,
 		})
 		.instruction()
+}
+
+interface UploadMetadataParams {
+	publicKey: string
+	mint: string
+	name: string
+	symbol: string
+	image: string
+	description: string
+}
+
+async function uploadMetadata({
+	publicKey,
+	mint,
+	name,
+	symbol,
+	image,
+	description,
+}: UploadMetadataParams) {
+	const existingUser = await prisma.user.findUnique({
+		where: { publicKey },
+	})
+
+	// Create TokenMetadata with User
+	const upload = await prisma.tokenMetadata.create({
+		data: {
+			mint,
+			name,
+			symbol,
+			image,
+			description,
+			owner: existingUser
+				? { connect: { publicKey: publicKey } }
+				: { create: { publicKey: publicKey } },
+		},
+	})
+
+	return upload
 }
