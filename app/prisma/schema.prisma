@@ -14,10 +14,12 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model TokenMetaData {
+model TokenMetadata {  
   id           String   @id @default(cuid())
+  mint         String   // Added mint field
   name         String
   symbol       String
   description  String
   image        String
+  createdAt    DateTime @default(now()) // Automatically sets the current time when the record is created
 }

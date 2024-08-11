@@ -36,9 +36,14 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 
 	if (isError(blob)) return { ...error, message: blob.message }
 
-	const upload = await prisma.tokenMetaData
+	const mintKeypair = new web3.Keypair()
+	const mintKey = mintKeypair.publicKey
+	const mint = mintKey.toBase58()
+
+	const upload = await prisma.tokenMetadata
 		.create({
 			data: {
+				mint,
 				name,
 				symbol,
 				image: blob.url,
@@ -54,10 +59,6 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		symbol,
 		uri: `https://degenerator-tawny.vercel.app/api/metadata/${upload.id}`,
 	}
-
-	const mintKeypair = new web3.Keypair()
-
-	const mintKey = mintKeypair.publicKey
 
 	const instructions = await getMintInstructions({
 		payerKey,
