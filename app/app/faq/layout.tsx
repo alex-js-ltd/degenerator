@@ -19,7 +19,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 						{children}
 					</article>
 					<div className="mt-10 w-full border-t border-zinc-200 pt-10 text-center">
-						<p className="text-zinc-500">Last updated: Augist 10, 2024</p>
+						<p className="text-zinc-500">Last updated: August 10, 2024</p>
 					</div>
 				</div>
 			</div>
