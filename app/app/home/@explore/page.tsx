@@ -13,7 +13,9 @@ export default async function Page() {
 				<Tabs>
 					<List>
 						<Trigger value="tab1" asChild>
-							<Button variant="tab">Featured</Button>
+							<Button variant="tab" className="pointer-events-none">
+								Featured
+							</Button>
 						</Trigger>
 					</List>
 

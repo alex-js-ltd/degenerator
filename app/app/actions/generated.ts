@@ -1,7 +1,6 @@
-'use server'
-
 import { prisma } from '@/app/utils/db'
 import { cache } from 'react'
+import 'server-only'
 
 async function fetchGeneratedTokens() {
 	const tokens = await prisma.tokenMetadata.findMany({
