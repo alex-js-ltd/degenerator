@@ -14,7 +14,9 @@ interface ContentProps
 	extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content> {}
 
 function Tabs(props: RootProps) {
-	return <TabsPrimitive.Root defaultValue="tab1" {...props} />
+	return (
+		<TabsPrimitive.Root className="grid gap-6" defaultValue="tab1" {...props} />
+	)
 }
 
 function List(props: ListProps) {
