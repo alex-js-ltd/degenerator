@@ -4,7 +4,10 @@ import { prisma } from '@/app/utils/db'
 import { cache } from 'react'
 
 async function fetchGeneratedTokens() {
-	const tokens = await prisma.tokenMetadata.findMany()
+	const tokens = await prisma.tokenMetadata.findMany({
+		take: 10,
+	})
+
 	return tokens
 }
 
