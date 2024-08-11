@@ -20,7 +20,7 @@ export default async function Page() {
 					<Content value="tab1">
 						<div className="grid auto-cols-[minmax(0,_1fr)]">
 							<div className="col-start-1 row-start-1">
-								<GeneratedTokens data={data} />
+								<GeneratedTokens {...data} />
 							</div>
 						</div>
 					</Content>

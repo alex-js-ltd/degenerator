@@ -5,10 +5,10 @@ function timeAgo(createdAt: Date): string {
 	return formatDistanceToNow(createdAt, { addSuffix: true })
 }
 
-export function GeneratedTokens({ data }: { data: TokenMetadata[] }) {
+export function GeneratedTokens({ tokens }: { tokens: TokenMetadata[] }) {
 	return (
 		<ul className="mx-auto grid w-full grid-cols-[repeat(auto-fit,_minmax(296px,1fr))] gap-4">
-			{data?.map(token => (
+			{tokens?.map(token => (
 				<li key={token.id} className="space-y-4 w-full">
 					<Card {...token} />
 				</li>
