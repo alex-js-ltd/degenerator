@@ -16,7 +16,7 @@ export async function GET(
 
 	invariantResponse(token, 'Failed to retrieve token metadata', { status: 500 })
 
-	const { id, mint, createdAt, ...meta } = token
+	const { id, mint, createdAt, updatedAt, ownerId, ...meta } = token
 
 	return NextResponse.json({ ...meta })
 }
