@@ -6,8 +6,6 @@ import { PoolAmounts } from '@/app/comps/pool_amounts'
 import { PoolProvider } from '@/app/context/pool_context'
 import { getMintList } from '@/app/actions/mint_list'
 
-export const revalidate = 600 // revalidate the data every 10 minutes
-
 export default async function Page() {
 	return (
 		<Background>

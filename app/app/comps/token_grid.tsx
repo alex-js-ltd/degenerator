@@ -5,6 +5,10 @@ function timeAgo(createdAt: Date): string {
 	return formatDistanceToNow(createdAt, { addSuffix: true })
 }
 
+const loading = Array.from({ length: 4 }, (v, index) => ({
+	id: `loading-card-${index}`,
+}))
+
 function TokenCard({ image, name, createdAt }: TokenMetadata) {
 	return (
 		<div className="group relative block aspect-[16/9] w-full overflow-hidden rounded-lg border border-gray-200 shadow transition-all hover:shadow-lg">
@@ -30,12 +34,30 @@ function TokenCard({ image, name, createdAt }: TokenMetadata) {
 	)
 }
 
-function LoadingCard() {
+async function TokenGrid({ data }: { data?: TokenMetadata[] }) {
 	return (
-		<div className="group relative block aspect-[16/9] w-full overflow-hidden rounded-lg border border-gray-200 shadow transition-all hover:shadow-lg">
-			<div className="w-full h-full bg-gray-200 animate-pulse" />
-		</div>
+		<ul className="mx-auto grid w-full grid-cols-[repeat(auto-fit,_minmax(296px,1fr))] gap-4">
+			{data?.map(token => (
+				<li key={token.id} className="space-y-4 w-full">
+					<TokenCard {...token} />
+				</li>
+			))}
+		</ul>
 	)
 }
 
-export { TokenCard, LoadingCard }
+function Fallback() {
+	return (
+		<ul className="mx-auto grid w-full grid-cols-[repeat(auto-fit,_minmax(296px,1fr))] gap-4">
+			{loading?.map(token => (
+				<li key={token.id} className="space-y-4 w-full">
+					<div className="group relative block aspect-[16/9] w-full overflow-hidden rounded-lg border border-gray-200 shadow transition-all hover:shadow-lg">
+						<div className="w-full h-full bg-gray-200 animate-pulse" />
+					</div>
+				</li>
+			))}
+		</ul>
+	)
+}
+
+export { TokenGrid, Fallback }
