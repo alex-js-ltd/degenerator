@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useAsync } from '@/app/hooks/use_async'
 import { usePayer } from '@/app/hooks/use_payer'
-import { preload } from '@/app/data/your_tokens'
 import { type TokenMetadata } from '@prisma/client'
 
 interface Data {
@@ -19,10 +18,7 @@ export function useYourTokens() {
 	const { run, ...rest } = useAsync<Data>()
 
 	useEffect(() => {
-		if (pk) {
-			preload(pk)
-			run(fetchYourTokens(pk))
-		}
+		if (pk) run(fetchYourTokens(pk))
 	}, [pk])
 
 	return { ...rest }

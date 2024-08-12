@@ -34,7 +34,7 @@ function TokenCard({ image, name, createdAt }: TokenMetadata) {
 	)
 }
 
-async function TokenGrid({ data }: { data?: TokenMetadata[] }) {
+function TokenGrid({ data }: { data?: TokenMetadata[] }) {
 	return (
 		<ul className="mx-auto grid w-full grid-cols-[repeat(auto-fit,_minmax(296px,1fr))] gap-4">
 			{data?.map(token => (

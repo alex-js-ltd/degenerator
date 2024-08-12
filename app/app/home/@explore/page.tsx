@@ -4,24 +4,15 @@ import { Button } from '@/app/comps/button'
 import { fetchFeaturedTokens } from '@/app/data/featured_tokens'
 import { TokenGrid, Fallback } from '@/app/comps/token_grid'
 import { YourTokens } from '@/app/comps/your_tokens'
+import { use } from 'react'
 
-import { type TokenMetadata } from '@prisma/client'
-
-interface Data {
-	data: TokenMetadata[]
+function FeaturedTokens() {
+	const promise = fetchFeaturedTokens()
+	const data = use(promise)
+	return <TokenGrid {...data} />
 }
 
-export async function fetchYourTokens(id: string): Promise<Data> {
-	const res = await fetch(`api/user/${id}`)
-	const data = res.json()
-	return data
-}
-
-export const revalidate = 60 // revalidate at most every minute
-
-export const dynamic = 'force-dynamic'
-
-export default async function Page() {
+export default function Page() {
 	return (
 		<div className="mx-auto flex max-w-7xl flex-col px-6 pb-20">
 			<section className="grid gap-4">
@@ -42,18 +33,16 @@ export default async function Page() {
 						<div className="grid auto-cols-[minmax(0,_1fr)]">
 							<div className="col-start-1 row-start-1">
 								<Suspense fallback={<Fallback />}>
-									<TokenGrid {...await fetchFeaturedTokens()} />
+									<FeaturedTokens />
 								</Suspense>
 							</div>
 						</div>
 					</Content>
 
-					<Content value="tab2">
+					<Content value="tab2" className="min-h-[165px]">
 						<div className="grid auto-cols-[minmax(0,_1fr)]">
 							<div className="col-start-1 row-start-1">
-								<Suspense fallback={<Fallback />}>
-									<YourTokens />
-								</Suspense>
+								<YourTokens />
 							</div>
 						</div>
 					</Content>

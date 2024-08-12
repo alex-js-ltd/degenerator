@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/app/utils/db'
 import { invariantResponse } from '@/app/utils/misc'
 
+export const fetchCache = 'auto'
+
 export async function GET(
 	_request: Request,
 	{ params }: { params: { id: string } },
