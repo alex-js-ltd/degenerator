@@ -5,7 +5,21 @@ import { fetchFeaturedTokens } from '@/app/data/featured_tokens'
 import { TokenGrid, Fallback } from '@/app/comps/token_grid'
 import { YourTokens } from '@/app/comps/your_tokens'
 
+import { type TokenMetadata } from '@prisma/client'
+
+interface Data {
+	data: TokenMetadata[]
+}
+
+export async function fetchYourTokens(id: string): Promise<Data> {
+	const res = await fetch(`api/user/${id}`)
+	const data = res.json()
+	return data
+}
+
 export const revalidate = 60 // revalidate at most every minute
+
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
 	return (

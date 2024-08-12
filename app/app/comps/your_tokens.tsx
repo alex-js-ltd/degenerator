@@ -5,5 +5,5 @@ import { TokenGrid } from './token_grid'
 export function YourTokens() {
 	const { data } = useYourTokens()
 
-	return <TokenGrid {...data} />
+	return data ? <TokenGrid {...data} /> : null
 }
