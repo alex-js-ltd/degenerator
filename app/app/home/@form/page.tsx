@@ -4,7 +4,9 @@ import { TokenForm } from '@/app/comps/token_form'
 import { MintList } from '@/app/comps/select'
 import { PoolAmounts } from '@/app/comps/pool_amounts'
 import { PoolProvider } from '@/app/context/pool_context'
-import { getMintList } from '@/app/actions/mint_list'
+import { getMintList } from '@/app/data/mint_list'
+
+export const revalidate = 3600 // revalidate at most every hour
 
 export default async function Page() {
 	return (

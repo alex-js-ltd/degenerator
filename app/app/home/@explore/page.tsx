@@ -1,10 +1,11 @@
 import { Suspense } from 'react'
 import { Tabs, List, Trigger, Content } from '@/app/comps/tabs'
 import { Button } from '@/app/comps/button'
-
-import { fetchFeaturedTokens } from '@/app/actions/featured_tokens'
+import { fetchFeaturedTokens } from '@/app/data/featured_tokens'
 import { TokenGrid, Fallback } from '@/app/comps/token_grid'
 import { YourTokens } from '@/app/comps/your_tokens'
+
+export const revalidate = 60 // revalidate at most every minute
 
 export default async function Page() {
 	return (
@@ -37,7 +38,7 @@ export default async function Page() {
 						<div className="grid auto-cols-[minmax(0,_1fr)]">
 							<div className="col-start-1 row-start-1">
 								<Suspense fallback={<Fallback />}>
-									<TokenGrid {...await fetchFeaturedTokens()} />
+									<YourTokens />
 								</Suspense>
 							</div>
 						</div>
