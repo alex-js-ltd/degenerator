@@ -4,15 +4,17 @@ import { prisma } from '@/app/utils/db'
 import { cache } from 'react'
 
 async function fetchYourTokens(pk: string) {
-	const tokens = await prisma.tokenMetadata.findMany({
+	const user = await prisma.user.findUnique({
 		where: {
-			owner: {
-				publicKey: pk,
-			},
+			publicKey: pk,
+		},
+
+		include: {
+			tokenMetadata: true,
 		},
 	})
 
-	return { data: tokens }
+	return { data: user?.tokenMetadata }
 }
 
 const preload = (pk: string) => {

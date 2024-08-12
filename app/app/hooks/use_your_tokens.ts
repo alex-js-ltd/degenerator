@@ -1,24 +1,19 @@
 import { useEffect } from 'react'
 import { useAsync } from '@/app/hooks/use_async'
 import { usePayer } from '@/app/hooks/use_payer'
-import { type TokenMetadata } from '@prisma/client'
+import { preload, getYourTokens } from '@/app/data/your_tokens'
 
-interface Data {
-	data: TokenMetadata[]
-}
-
-export async function fetchYourTokens(id: string): Promise<Data> {
-	const res = await fetch(`api/user/${id}`)
-	const data = res.json()
-	return data
-}
+type YourTokens = Awaited<ReturnType<typeof getYourTokens>>
 
 export function useYourTokens() {
 	const pk = usePayer()
-	const { run, ...rest } = useAsync<Data>()
+	const { run, ...rest } = useAsync<YourTokens>()
 
 	useEffect(() => {
-		if (pk) run(fetchYourTokens(pk))
+		if (pk) {
+			preload(pk)
+			run(getYourTokens(pk))
+		}
 	}, [pk])
 
 	return { ...rest }
