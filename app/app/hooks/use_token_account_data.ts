@@ -1,7 +1,7 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect } from 'react'
 import { useAsync } from '@/app/hooks/use_async'
 import { usePayer } from '@/app/hooks/use_payer'
-import { preload, getTokenAccountData } from '@/app/actions/accounts'
+import { preload, getTokenAccountData } from '@/app/data/accounts'
 
 type TokenAccountData = Awaited<ReturnType<typeof getTokenAccountData>>
 
