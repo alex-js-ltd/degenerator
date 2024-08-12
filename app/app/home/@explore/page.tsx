@@ -6,6 +6,8 @@ import { TokenGrid, Fallback } from '@/app/comps/token_grid'
 import { YourTokens } from '@/app/comps/your_tokens'
 import { use } from 'react'
 
+export const dynamic = 'auto'
+
 function FeaturedTokens() {
 	const promise = fetchFeaturedTokens()
 	const data = use(promise)
