@@ -30,21 +30,13 @@ export default function Page() {
 					</List>
 
 					<Content value="tab1">
-						<div className="grid auto-cols-[minmax(0,_1fr)]">
-							<div className="col-start-1 row-start-1">
-								<Suspense fallback={<Fallback />}>
-									<FeaturedTokens />
-								</Suspense>
-							</div>
-						</div>
+						<Suspense fallback={<Fallback />}>
+							<FeaturedTokens />
+						</Suspense>
 					</Content>
 
 					<Content value="tab2" className="min-h-[165px]">
-						<div className="grid auto-cols-[minmax(0,_1fr)]">
-							<div className="col-start-1 row-start-1">
-								<YourTokens />
-							</div>
-						</div>
+						<YourTokens />
 					</Content>
 				</Tabs>
 			</section>

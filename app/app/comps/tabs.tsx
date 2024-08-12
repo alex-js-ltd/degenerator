@@ -27,12 +27,16 @@ function Trigger(props: TriggerProps) {
 	return <TabsPrimitive.Trigger className="flex gap-2" {...props} />
 }
 
-function Content(props: ContentProps) {
+function Content({ children, ...props }: ContentProps) {
 	return (
 		<TabsPrimitive.Content
 			className="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 			{...props}
-		/>
+		>
+			<div className="grid auto-cols-[minmax(0,_1fr)]">
+				<div className="col-start-1 row-start-1">{children}</div>
+			</div>
+		</TabsPrimitive.Content>
 	)
 }
 
