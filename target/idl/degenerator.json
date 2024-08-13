@@ -242,8 +242,7 @@
           "name": "token_program",
           "docs": [
             "Solana ecosystem accounts"
-          ],
-          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          ]
         },
         {
           "name": "associated_token_program",

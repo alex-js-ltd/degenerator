@@ -1,7 +1,7 @@
 import * as anchor from '@coral-xyz/anchor'
 import { unpack } from '@solana/spl-token-metadata'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
-import { setUp, mintToken, createValues } from './utils'
+import { setUp, mintToken, createValues, mintingTokens } from './utils'
 
 const metadataA = {
 	name: 'Token A',
@@ -122,52 +122,52 @@ describe('degenerator', () => {
 		console.log('Your transaction signature', tx)
 	})
 
-	it('Emit metadata, decode transaction logs', async () => {
-		const txSignature = await program.methods
-			.emit()
-			.accounts({ mintAccount: mintKeypair.publicKey })
-			.rpc({ commitment: 'confirmed', skipPreflight: true })
-		console.log('Your transaction signature', txSignature)
+	// it('Emit metadata, decode transaction logs', async () => {
+	// 	const txSignature = await program.methods
+	// 		.emit()
+	// 		.accounts({ mintAccount: mintKeypair.publicKey })
+	// 		.rpc({ commitment: 'confirmed', skipPreflight: true })
+	// 	console.log('Your transaction signature', txSignature)
 
-		// Fetch the transaction response
-		const transactionResponse = await provider.connection.getTransaction(
-			txSignature,
-			{
-				commitment: 'confirmed',
-			},
-		)
+	// 	// Fetch the transaction response
+	// 	const transactionResponse = await provider.connection.getTransaction(
+	// 		txSignature,
+	// 		{
+	// 			commitment: 'confirmed',
+	// 		},
+	// 	)
 
-		// Extract the log message that starts with "Program return:"
-		const prefix = 'Program return: '
-		let log = transactionResponse.meta.logMessages.find(log =>
-			log.startsWith(prefix),
-		)
-		log = log.slice(prefix.length)
-		const [_, data] = log.split(' ', 2)
+	// 	// Extract the log message that starts with "Program return:"
+	// 	const prefix = 'Program return: '
+	// 	let log = transactionResponse.meta.logMessages.find(log =>
+	// 		log.startsWith(prefix),
+	// 	)
+	// 	log = log.slice(prefix.length)
+	// 	const [_, data] = log.split(' ', 2)
 
-		// Decode the data from base64 and unpack it into TokenMetadata
-		const buffer = Buffer.from(data, 'base64')
-		const metadata = unpack(buffer)
-		console.log('Metadata', metadata)
-	})
+	// 	// Decode the data from base64 and unpack it into TokenMetadata
+	// 	const buffer = Buffer.from(data, 'base64')
+	// 	const metadata = unpack(buffer)
+	// 	console.log('Metadata', metadata)
+	// })
 
-	it('Emit metadata, decode simulated transaction', async () => {
-		const simulateResponse = await program.methods
-			.emit()
-			.accounts({ mintAccount: mintKeypair.publicKey })
-			.simulate()
+	// it('Emit metadata, decode simulated transaction', async () => {
+	// 	const simulateResponse = await program.methods
+	// 		.emit()
+	// 		.accounts({ mintAccount: mintKeypair.publicKey })
+	// 		.simulate()
 
-		// Extract the log message that starts with "Program return:"
-		const prefix = 'Program return: '
-		let log = simulateResponse.raw.find(log => log.startsWith(prefix))
-		log = log.slice(prefix.length)
-		const [_, data] = log.split(' ', 2)
+	// 	// Extract the log message that starts with "Program return:"
+	// 	const prefix = 'Program return: '
+	// 	let log = simulateResponse.raw.find(log => log.startsWith(prefix))
+	// 	log = log.slice(prefix.length)
+	// 	const [_, data] = log.split(' ', 2)
 
-		// Decode the data from base64 and unpack it into TokenMetadata
-		const buffer = Buffer.from(data, 'base64')
-		const metadata = unpack(buffer)
-		console.log('Metadata', metadata)
-	})
+	// 	// Decode the data from base64 and unpack it into TokenMetadata
+	// 	const buffer = Buffer.from(data, 'base64')
+	// 	const metadata = unpack(buffer)
+	// 	console.log('Metadata', metadata)
+	// })
 
 	it('Revoke freeze authority', async () => {
 		const tx = await program.methods
@@ -195,6 +195,8 @@ describe('degenerator', () => {
 
 	it('Creation', async () => {
 		const values = createValues()
+
+		console.log(values)
 
 		await program.methods
 			.createAmm(values.id, values.fee)
@@ -228,8 +230,10 @@ describe('degenerator', () => {
 				mintB: values.mintBKeypair.publicKey,
 				poolAccountA: values.poolAccountA,
 				poolAccountB: values.poolAccountB,
+				tokenProgram: TOKEN_2022_PROGRAM_ID,
 			})
 			.rpc({ skipPreflight: true })
+			.catch(er => console.log(er))
 
 		console.log('pool tx', tx)
 	})

@@ -15,6 +15,9 @@ import {
 } from '@solana/spl-token'
 import { Keypair, PublicKey } from '@solana/web3.js'
 
+import { createMint, mintTo } from '@solana/spl-token'
+import { type Connection, type Signer } from '@solana/web3.js'
+
 const program = workspace.Degenerator as Program<Degenerator>
 
 export function setUp() {
@@ -197,26 +200,31 @@ export function createValues(defaults?: TestValuesDefaults): TestValues {
 			mintAKeypair.publicKey,
 			poolAuthority,
 			true,
+			TOKEN_2022_PROGRAM_ID,
 		),
 		poolAccountB: getAssociatedTokenAddressSync(
 			mintBKeypair.publicKey,
 			poolAuthority,
 			true,
+			TOKEN_2022_PROGRAM_ID,
 		),
 		liquidityAccount: getAssociatedTokenAddressSync(
 			mintLiquidity,
 			admin.publicKey,
 			true,
+			TOKEN_2022_PROGRAM_ID,
 		),
 		holderAccountA: getAssociatedTokenAddressSync(
 			mintAKeypair.publicKey,
 			admin.publicKey,
 			true,
+			TOKEN_2022_PROGRAM_ID,
 		),
 		holderAccountB: getAssociatedTokenAddressSync(
 			mintBKeypair.publicKey,
 			admin.publicKey,
 			true,
+			TOKEN_2022_PROGRAM_ID,
 		),
 		depositAmountA: new BN(4 * 10 ** 6),
 		depositAmountB: new BN(1 * 10 ** 6),
@@ -224,44 +232,3 @@ export function createValues(defaults?: TestValuesDefaults): TestValues {
 		defaultSupply: new BN(100 * 10 ** 6),
 	}
 }
-
-// export const mintingTokens = async ({
-//     connection,
-//     creator,
-//     holder = creator,
-//     mintAKeypair,
-//     mintBKeypair,
-//     mintedAmount = 100,
-//     decimals = 6,
-//   }: {
-//     connection: Connection;
-//     creator: Signer;
-//     holder?: Signer;
-//     mintAKeypair: Keypair;
-//     mintBKeypair: Keypair;
-//     mintedAmount?: number;
-//     decimals?: number;
-//   }) => {
-//     // Mint tokens
-//     await connection.confirmTransaction(await connection.requestAirdrop(creator.publicKey, 10 ** 10));
-//     await createMint(connection, creator, creator.publicKey, creator.publicKey, decimals, mintAKeypair);
-//     await createMint(connection, creator, creator.publicKey, creator.publicKey, decimals, mintBKeypair);
-//     await getOrCreateAssociatedTokenAccount(connection, holder, mintAKeypair.publicKey, holder.publicKey, true);
-//     await getOrCreateAssociatedTokenAccount(connection, holder, mintBKeypair.publicKey, holder.publicKey, true);
-//     await mintTo(
-//       connection,
-//       creator,
-//       mintAKeypair.publicKey,
-//       getAssociatedTokenAddressSync(mintAKeypair.publicKey, holder.publicKey, true),
-//       creator.publicKey,
-//       mintedAmount * 10 ** decimals,
-//     );
-//     await mintTo(
-//       connection,
-//       creator,
-//       mintBKeypair.publicKey,
-//       getAssociatedTokenAddressSync(mintBKeypair.publicKey, holder.publicKey, true),
-//       creator.publicKey,
-//       mintedAmount * 10 ** decimals,
-//     );
-//   };

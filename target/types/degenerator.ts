@@ -248,8 +248,7 @@ export type Degenerator = {
           "name": "tokenProgram",
           "docs": [
             "Solana ecosystem accounts"
-          ],
-          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          ]
         },
         {
           "name": "associatedTokenProgram",

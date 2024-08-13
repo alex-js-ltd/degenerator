@@ -67,11 +67,11 @@ pub struct CreatePool<'info> {
         mint::decimals = 6,
         mint::authority = pool_authority,
     )]
-    pub mint_liquidity:InterfaceAccount<'info, Mint>,
+    pub mint_liquidity: Box<InterfaceAccount<'info, Mint>>,
 
-    pub mint_a: InterfaceAccount<'info, Mint>,
+    pub mint_a: Box<InterfaceAccount<'info, Mint>>,
 
-    pub mint_b: InterfaceAccount<'info, Mint>,
+    pub mint_b: Box<InterfaceAccount<'info, Mint>>,
 
     #[account(
         init,
@@ -79,7 +79,7 @@ pub struct CreatePool<'info> {
         associated_token::mint = mint_a,
         associated_token::authority = pool_authority,
     )]
-    pub pool_account_a:  InterfaceAccount<'info, TokenAccount>,
+    pub pool_account_a: Box<InterfaceAccount<'info, TokenAccount>>,
 
     #[account(
         init,
@@ -87,7 +87,7 @@ pub struct CreatePool<'info> {
         associated_token::mint = mint_b,
         associated_token::authority = pool_authority,
     )]
-    pub pool_account_b:  InterfaceAccount<'info, TokenAccount>,
+    pub pool_account_b: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// The account paying for all rents
     #[account(mut)]
@@ -98,4 +98,3 @@ pub struct CreatePool<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
-

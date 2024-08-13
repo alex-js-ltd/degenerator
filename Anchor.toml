@@ -17,7 +17,7 @@ degenerator = "4dPcMAag9zD8Kj15FJiAUwRPCqrrBMk4wnyzbpKwT1wx"
 url = "https://api.mainnet-beta.solana.com"
 
 [provider]
-cluster = "https://api.mainnet-beta.solana.com"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
