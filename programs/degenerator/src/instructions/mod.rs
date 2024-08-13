@@ -7,6 +7,8 @@ mod create_ata;
 mod mint_token;
 mod revoke_mint;
 mod revoke_freeze;
+mod create_amm;
+mod create_pool;
 
 
 
@@ -19,6 +21,8 @@ pub use create_ata::*;
 pub use mint_token::*;
 pub use revoke_mint::*;
 pub use revoke_freeze::*;
+pub use create_amm::*;
+pub use create_pool::*;
 
 
 
