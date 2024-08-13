@@ -1,16 +1,10 @@
 import * as anchor from '@coral-xyz/anchor'
-import { Program } from '@coral-xyz/anchor'
-import { Degenerator } from '../target/types/degenerator'
 import { unpack } from '@solana/spl-token-metadata'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import { setUp, mintToken } from './utils'
 
 describe('degenerator', () => {
-	const provider = anchor.AnchorProvider.env()
-	anchor.setProvider(provider)
-
-	const program = anchor.workspace.Degenerator as Program<Degenerator>
-
-	const wallet = provider.wallet as anchor.Wallet
+	const { program, provider, wallet } = setUp()
 
 	const mintKeypair = new anchor.web3.Keypair()
 
@@ -191,5 +185,16 @@ describe('degenerator', () => {
 			.rpc()
 
 		console.log('Your transaction signature', tx)
+	})
+
+	it('Mint Token', async () => {
+		const mintKeypair = new anchor.web3.Keypair()
+		await mintToken({
+			wallet,
+			mintKeypair,
+			metadata,
+			decimals: 9,
+			supply: 1000000000,
+		})
 	})
 })
