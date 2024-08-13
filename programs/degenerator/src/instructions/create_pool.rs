@@ -1,8 +1,9 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{
-    associated_token::AssociatedToken,
-    token::{Mint, Token, TokenAccount},
+use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token_interface::{
+ Mint, TokenAccount, TokenInterface, 
 };
+
 
 use crate::{
     constants::{AUTHORITY_SEED, LIQUIDITY_SEED},
@@ -66,11 +67,11 @@ pub struct CreatePool<'info> {
         mint::decimals = 6,
         mint::authority = pool_authority,
     )]
-    pub mint_liquidity: Box<Account<'info, Mint>>,
+    pub mint_liquidity:InterfaceAccount<'info, Mint>,
 
-    pub mint_a: Box<Account<'info, Mint>>,
+    pub mint_a: InterfaceAccount<'info, Mint>,
 
-    pub mint_b: Box<Account<'info, Mint>>,
+    pub mint_b: InterfaceAccount<'info, Mint>,
 
     #[account(
         init,
@@ -78,7 +79,7 @@ pub struct CreatePool<'info> {
         associated_token::mint = mint_a,
         associated_token::authority = pool_authority,
     )]
-    pub pool_account_a: Box<Account<'info, TokenAccount>>,
+    pub pool_account_a:  InterfaceAccount<'info, TokenAccount>,
 
     #[account(
         init,
@@ -86,14 +87,15 @@ pub struct CreatePool<'info> {
         associated_token::mint = mint_b,
         associated_token::authority = pool_authority,
     )]
-    pub pool_account_b: Box<Account<'info, TokenAccount>>,
+    pub pool_account_b:  InterfaceAccount<'info, TokenAccount>,
 
     /// The account paying for all rents
     #[account(mut)]
     pub payer: Signer<'info>,
 
     /// Solana ecosystem accounts
-    pub token_program: Program<'info, Token>,
+    pub token_program: Interface<'info, TokenInterface>,
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
+

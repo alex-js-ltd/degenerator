@@ -1,18 +1,24 @@
 import * as anchor from '@coral-xyz/anchor'
 import { unpack } from '@solana/spl-token-metadata'
 import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
-import { setUp, mintToken } from './utils'
+import { setUp, mintToken, createValues } from './utils'
+
+const metadataA = {
+	name: 'Token A',
+	symbol: 'A',
+	uri: 'https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json',
+}
+
+const metadataB = {
+	name: 'Token B',
+	symbol: 'B',
+	uri: 'https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json',
+}
 
 describe('degenerator', () => {
 	const { program, provider, wallet } = setUp()
 
 	const mintKeypair = new anchor.web3.Keypair()
-
-	const metadata = {
-		name: 'OPOS',
-		symbol: 'OPOS',
-		uri: 'https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json',
-	}
 
 	const ATA_PROGRAM_ID = new anchor.web3.PublicKey(
 		'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
@@ -20,7 +26,7 @@ describe('degenerator', () => {
 
 	it('Create Mint with MetadataPointer and TokenMetadata Extensions', async () => {
 		const tx = await program.methods
-			.initialize(9, metadata)
+			.initialize(9, metadataA)
 			.accounts({ mintAccount: mintKeypair.publicKey })
 			.signers([mintKeypair])
 			.rpc({ skipPreflight: true })
@@ -187,14 +193,44 @@ describe('degenerator', () => {
 		console.log('Your transaction signature', tx)
 	})
 
-	it('Mint Token', async () => {
-		const mintKeypair = new anchor.web3.Keypair()
+	it('Creation', async () => {
+		const values = createValues()
+
+		await program.methods
+			.createAmm(values.id, values.fee)
+			.accounts({ amm: values.ammKey, admin: values.admin.publicKey })
+			.rpc()
+
 		await mintToken({
 			wallet,
-			mintKeypair,
-			metadata,
+			mintKeypair: values.mintAKeypair,
+			metadata: metadataA,
 			decimals: 9,
-			supply: 1000000000,
+			supply: 1000000,
 		})
+
+		await mintToken({
+			wallet,
+			mintKeypair: values.mintBKeypair,
+			metadata: metadataB,
+			decimals: 9,
+			supply: 1000000,
+		})
+
+		const tx = await program.methods
+			.createPool()
+			.accounts({
+				amm: values.ammKey,
+				pool: values.poolKey,
+				poolAuthority: values.poolAuthority,
+				mintLiquidity: values.mintLiquidity,
+				mintA: values.mintAKeypair.publicKey,
+				mintB: values.mintBKeypair.publicKey,
+				poolAccountA: values.poolAccountA,
+				poolAccountB: values.poolAccountB,
+			})
+			.rpc({ skipPreflight: true })
+
+		console.log('pool tx', tx)
 	})
 })
