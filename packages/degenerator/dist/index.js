@@ -16,7 +16,7 @@ var NATIVE_MINT_2022 = new PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXe
 
 // target/idl/degenerator.json
 var degenerator_default = {
-  address: "EvWUsdbUMvo7ZEykj4Hpo1rPsuaTHpqezJ7sj2u2fk6R",
+  address: "4dPcMAag9zD8Kj15FJiAUwRPCqrrBMk4wnyzbpKwT1wx",
   metadata: {
     name: "degenerator",
     version: "0.1.0",
@@ -24,64 +24,6 @@ var degenerator_default = {
     description: "Created with Anchor"
   },
   instructions: [
-    {
-      name: "create_amm",
-      discriminator: [
-        242,
-        91,
-        21,
-        170,
-        5,
-        68,
-        125,
-        64
-      ],
-      accounts: [
-        {
-          name: "amm",
-          writable: true,
-          pda: {
-            seeds: [
-              {
-                kind: "arg",
-                path: "id"
-              }
-            ]
-          }
-        },
-        {
-          name: "admin",
-          docs: [
-            "The admin of the AMM"
-          ]
-        },
-        {
-          name: "payer",
-          docs: [
-            "The account paying for all rents"
-          ],
-          writable: true,
-          signer: true
-        },
-        {
-          name: "system_program",
-          docs: [
-            "Solana ecosystem accounts"
-          ],
-          address: "11111111111111111111111111111111"
-        }
-      ],
-      args: [
-        {
-          name: "id",
-          type: "pubkey"
-        },
-        {
-          name: "fee",
-          type: "u16"
-        }
-      ]
-    },
     {
       name: "create_associated_token_account",
       discriminator: [
@@ -117,158 +59,6 @@ var degenerator_default = {
         {
           name: "associated_token_program",
           address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
-        }
-      ],
-      args: []
-    },
-    {
-      name: "create_pool",
-      discriminator: [
-        233,
-        146,
-        209,
-        142,
-        207,
-        104,
-        64,
-        188
-      ],
-      accounts: [
-        {
-          name: "amm",
-          pda: {
-            seeds: [
-              {
-                kind: "account",
-                path: "amm.id",
-                account: "Amm"
-              }
-            ]
-          }
-        },
-        {
-          name: "pool",
-          writable: true,
-          pda: {
-            seeds: [
-              {
-                kind: "account",
-                path: "amm"
-              },
-              {
-                kind: "account",
-                path: "mint_a"
-              },
-              {
-                kind: "account",
-                path: "mint_b"
-              }
-            ]
-          }
-        },
-        {
-          name: "pool_authority",
-          pda: {
-            seeds: [
-              {
-                kind: "account",
-                path: "amm"
-              },
-              {
-                kind: "account",
-                path: "mint_a"
-              },
-              {
-                kind: "account",
-                path: "mint_b"
-              },
-              {
-                kind: "const",
-                value: [
-                  97,
-                  117,
-                  116,
-                  104,
-                  111,
-                  114,
-                  105,
-                  116,
-                  121
-                ]
-              }
-            ]
-          }
-        },
-        {
-          name: "mint_liquidity",
-          writable: true,
-          pda: {
-            seeds: [
-              {
-                kind: "account",
-                path: "amm"
-              },
-              {
-                kind: "account",
-                path: "mint_a"
-              },
-              {
-                kind: "account",
-                path: "mint_b"
-              },
-              {
-                kind: "const",
-                value: [
-                  108,
-                  105,
-                  113,
-                  117,
-                  105,
-                  100,
-                  105,
-                  116,
-                  121
-                ]
-              }
-            ]
-          }
-        },
-        {
-          name: "mint_a"
-        },
-        {
-          name: "mint_b"
-        },
-        {
-          name: "pool_account_a",
-          writable: true
-        },
-        {
-          name: "pool_account_b",
-          writable: true
-        },
-        {
-          name: "payer",
-          docs: [
-            "The account paying for all rents"
-          ],
-          writable: true,
-          signer: true
-        },
-        {
-          name: "token_program",
-          docs: [
-            "Solana ecosystem accounts"
-          ],
-          address: "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          name: "associated_token_program",
-          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
-        },
-        {
-          name: "system_program",
-          address: "11111111111111111111111111111111"
         }
       ],
       args: []
@@ -561,91 +351,7 @@ var degenerator_default = {
       ]
     }
   ],
-  accounts: [
-    {
-      name: "Amm",
-      discriminator: [
-        143,
-        245,
-        200,
-        17,
-        74,
-        214,
-        196,
-        135
-      ]
-    },
-    {
-      name: "Pool",
-      discriminator: [
-        241,
-        154,
-        109,
-        4,
-        17,
-        177,
-        109,
-        188
-      ]
-    }
-  ],
-  errors: [
-    {
-      code: 6e3,
-      name: "InvalidFee",
-      msg: "Invalid fee value"
-    },
-    {
-      code: 6001,
-      name: "InvalidMint",
-      msg: "Invalid mint for the pool"
-    },
-    {
-      code: 6002,
-      name: "DepositTooSmall",
-      msg: "Depositing too little liquidity"
-    },
-    {
-      code: 6003,
-      name: "OutputTooSmall",
-      msg: "Output is below the minimum expected"
-    },
-    {
-      code: 6004,
-      name: "InvariantViolated",
-      msg: "Invariant does not hold"
-    }
-  ],
   types: [
-    {
-      name: "Amm",
-      type: {
-        kind: "struct",
-        fields: [
-          {
-            name: "id",
-            docs: [
-              "The primary key of the AMM"
-            ],
-            type: "pubkey"
-          },
-          {
-            name: "admin",
-            docs: [
-              "Account that has admin authority over the AMM"
-            ],
-            type: "pubkey"
-          },
-          {
-            name: "fee",
-            docs: [
-              "The LP fee taken on each trade, in basis points"
-            ],
-            type: "u16"
-          }
-        ]
-      }
-    },
     {
       name: "AnchorField",
       type: {
@@ -665,35 +371,6 @@ var degenerator_default = {
             fields: [
               "string"
             ]
-          }
-        ]
-      }
-    },
-    {
-      name: "Pool",
-      type: {
-        kind: "struct",
-        fields: [
-          {
-            name: "amm",
-            docs: [
-              "Primary key of the AMM"
-            ],
-            type: "pubkey"
-          },
-          {
-            name: "mint_a",
-            docs: [
-              "Mint of token A"
-            ],
-            type: "pubkey"
-          },
-          {
-            name: "mint_b",
-            docs: [
-              "Mint of token B"
-            ],
-            type: "pubkey"
           }
         ]
       }
@@ -743,23 +420,6 @@ var degenerator_default = {
           }
         ]
       }
-    }
-  ],
-  constants: [
-    {
-      name: "AUTHORITY_SEED",
-      type: "bytes",
-      value: "[97, 117, 116, 104, 111, 114, 105, 116, 121]"
-    },
-    {
-      name: "LIQUIDITY_SEED",
-      type: "bytes",
-      value: "[108, 105, 113, 117, 105, 100, 105, 116, 121]"
-    },
-    {
-      name: "MINIMUM_LIQUIDITY",
-      type: "u64",
-      value: "100"
     }
   ]
 };
