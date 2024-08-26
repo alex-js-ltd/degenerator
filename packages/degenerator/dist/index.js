@@ -487,7 +487,8 @@ async function getMintInstructions({
   mint,
   metadata,
   decimals,
-  supply
+  supply,
+  revoke
 }) {
   const tokenAccount = getAssociatedAddress({
     mint,
@@ -509,7 +510,19 @@ async function getMintInstructions({
     receiver: tokenAccount,
     tokenProgram: TOKEN_2022_PROGRAM_ID
   }).instruction();
-  return [init, createAta, mintToken];
+  const revokeMint = revoke && await program.methods.revokeMintAuthority().accounts({
+    currentAuthority: payer,
+    mintAccount: mint
+  }).instruction();
+  const revokeFreeze = revoke && await program.methods.revokeFreezeAuthority().accounts({
+    currentAuthority: payer,
+    mintAccount: mint
+  }).instruction();
+  const instructions = [init, createAta, mintToken, revokeMint, revokeFreeze];
+  return instructions.reduce((acc, curr) => {
+    if (curr) acc.push(curr);
+    return acc;
+  }, []);
 }
 export {
   degenerator_default as IDL,

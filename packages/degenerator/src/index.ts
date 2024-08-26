@@ -1,5 +1,5 @@
 import { Degenerator } from '../target/types/degenerator'
-import { Program, BN } from '@coral-xyz/anchor'
+import { Program, BN, web3 } from '@coral-xyz/anchor'
 
 import {
 	type Signer,
@@ -106,6 +106,7 @@ interface GetMintInstructionsParams {
 	metadata: { name: string; symbol: string; uri: string }
 	decimals: number
 	supply: number
+	revoke: boolean | undefined
 }
 
 async function getMintInstructions({
@@ -115,6 +116,7 @@ async function getMintInstructions({
 	metadata,
 	decimals,
 	supply,
+	revoke,
 }: GetMintInstructionsParams) {
 	const tokenAccount = getAssociatedAddress({
 		mint: mint,
@@ -149,7 +151,32 @@ async function getMintInstructions({
 		})
 		.instruction()
 
-	return [init, createAta, mintToken]
+	const revokeMint =
+		revoke &&
+		(await program.methods
+			.revokeMintAuthority()
+			.accounts({
+				currentAuthority: payer,
+				mintAccount: mint,
+			})
+			.instruction())
+
+	const revokeFreeze =
+		revoke &&
+		(await program.methods
+			.revokeFreezeAuthority()
+			.accounts({
+				currentAuthority: payer,
+				mintAccount: mint,
+			})
+			.instruction())
+
+	const instructions = [init, createAta, mintToken, revokeMint, revokeFreeze]
+
+	return instructions.reduce<web3.TransactionInstruction[]>((acc, curr) => {
+		if (curr) acc.push(curr)
+		return acc
+	}, [])
 }
 
 export {

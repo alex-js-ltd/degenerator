@@ -1,4 +1,4 @@
-import { Program } from '@coral-xyz/anchor';
+import { web3, Program } from '@coral-xyz/anchor';
 import { Keypair, Connection, PublicKey, Signer, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
 
 /**
@@ -863,7 +863,8 @@ interface GetMintInstructionsParams {
     };
     decimals: number;
     supply: number;
+    revoke: boolean | undefined;
 }
-declare function getMintInstructions({ program, payer, mint, metadata, decimals, supply, }: GetMintInstructionsParams): Promise<TransactionInstruction[]>;
+declare function getMintInstructions({ program, payer, mint, metadata, decimals, supply, revoke, }: GetMintInstructionsParams): Promise<web3.TransactionInstruction[]>;
 
 export { type Degenerator, degenerator as IDL, airDrop, buildTransaction, getAssociatedAddress, getMintInstructions, sendAndConfirm };

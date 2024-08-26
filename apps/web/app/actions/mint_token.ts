@@ -67,6 +67,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 				metadata,
 				decimals,
 				supply,
+				revoke: cpmm,
 			})),
 		],
 		signers: [mintKeypair],
