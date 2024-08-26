@@ -2,13 +2,14 @@
 
 import { parseWithZod } from '@conform-to/zod'
 import { MintSchema } from '@/app/utils/schemas'
-import { put } from '@vercel/blob'
+import { type PutBlobResult, put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
 import { connection } from '@/app/utils/setup'
 import { web3 } from '@coral-xyz/anchor'
 import { program } from '@/app/utils/setup'
 import { getMintInstructions, buildTransaction } from '@repo/degenerator'
 import { isError, catchError } from '@/app/utils/misc'
+import { Keypair, PublicKey } from '@solana/web3.js'
 
 export async function mintToken(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -25,7 +26,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		return error
 	}
 
-	const { image, name, symbol, description, decimals, supply, payerKey, cpmm } =
+	const { image, name, symbol, description, decimals, supply, payer, cpmm } =
 		submission.value
 
 	const blob = await put(image.name, image, { access: 'public' }).catch(
@@ -34,18 +35,10 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 
 	if (isError(blob)) return { ...error, message: blob.message }
 
-	const publicKey = payerKey.toBase58()
-	const mintKeypair = new web3.Keypair()
-	const mintKey = mintKeypair.publicKey
-	const mint = mintKey.toBase58()
+	const mint = web3.Keypair.generate()
 
 	const upload = await uploadMetadata({
-		publicKey,
-		mint,
-		name,
-		symbol,
-		image: blob.url,
-		description,
+		...getMetadataParams({ payer, mint, name, symbol, blob, description }),
 	}).catch(catchError)
 
 	if (isError(upload)) return { ...error, message: upload.message }
@@ -58,19 +51,19 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 
 	const transaction = await buildTransaction({
 		connection,
-		payer: payerKey,
+		payer,
 		instructions: [
 			...(await getMintInstructions({
 				program,
-				payer: payerKey,
-				mint: mintKey,
+				payer,
+				mint: mint.publicKey,
 				metadata,
 				decimals,
 				supply,
 				revoke: cpmm,
 			})),
 		],
-		signers: [mintKeypair],
+		signers: [mint],
 	}).catch(catchError)
 
 	if (isError(transaction)) return { ...error, message: transaction.message }
@@ -78,7 +71,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	return {
 		...submission.reply(),
 		serializedTransaction: transaction.serialize(),
-		mintA: mintKeypair.publicKey.toBase58(),
+		mintA: mint.publicKey.toBase58(),
 	}
 }
 
@@ -118,4 +111,31 @@ async function uploadMetadata({
 	})
 
 	return upload
+}
+
+interface GetMetadataParams {
+	payer: PublicKey
+	mint: Keypair
+	name: string
+	symbol: string
+	blob: PutBlobResult
+	description: string
+}
+
+function getMetadataParams({
+	payer,
+	mint,
+	name,
+	symbol,
+	blob,
+	description,
+}: GetMetadataParams) {
+	return {
+		publicKey: payer.toBase58(),
+		mint: mint.publicKey.toBase58(),
+		name,
+		symbol,
+		image: blob.url,
+		description,
+	}
 }

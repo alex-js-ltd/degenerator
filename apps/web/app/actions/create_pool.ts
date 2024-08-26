@@ -32,9 +32,9 @@ export async function createPool(_prevState: unknown, formData: FormData) {
 		return error
 	}
 
-	const { payerKey, mintA, mintB, mintAAmount, mintBAmount } = submission.value
+	const { payer, mintA, mintB, mintAAmount, mintBAmount } = submission.value
 
-	const raydium = await initSdk({ owner: payerKey }).catch(catchError)
+	const raydium = await initSdk({ owner: payer }).catch(catchError)
 
 	if (isError(raydium)) return { ...error, message: raydium.message }
 
@@ -44,7 +44,7 @@ export async function createPool(_prevState: unknown, formData: FormData) {
 		mintB,
 		mintAAmount,
 		mintBAmount,
-		payerKey,
+		payer,
 	}).catch(catchError)
 
 	if (isError(poolTx)) return { ...error, message: poolTx.message }
@@ -72,14 +72,14 @@ async function getPoolTx({
 	mintB: b,
 	mintAAmount,
 	mintBAmount,
-	payerKey,
+	payer,
 }: {
 	raydium: Raydium
 	mintA: PublicKey
 	mintB: PublicKey
 	mintAAmount: number
 	mintBAmount: number
-	payerKey: PublicKey
+	payer: PublicKey
 }) {
 	const mintA = await raydium.token.getTokenInfo(a)
 	const mintB = await raydium.token.getTokenInfo(b)
@@ -95,7 +95,7 @@ async function getPoolTx({
 		associatedOnly: false,
 		ownerInfo: {
 			useSOLBalance: true,
-			feePayer: payerKey,
+			feePayer: payer,
 		},
 		txVersion,
 		// optional: set up priority fee here

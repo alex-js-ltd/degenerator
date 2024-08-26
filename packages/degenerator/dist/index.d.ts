@@ -863,7 +863,7 @@ interface GetMintInstructionsParams {
     };
     decimals: number;
     supply: number;
-    revoke: boolean | undefined;
+    revoke?: boolean | undefined;
 }
 declare function getMintInstructions({ program, payer, mint, metadata, decimals, supply, revoke, }: GetMintInstructionsParams): Promise<web3.TransactionInstruction[]>;
 

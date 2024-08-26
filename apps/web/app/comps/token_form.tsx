@@ -130,7 +130,7 @@ export function TokenForm({ children }: { children: ReactNode }) {
 								errors={fields.description.errors}
 							/>
 							{/* hidden inputs */}
-							<Input name="payerKey" defaultValue={payer} type="hidden" />
+							<Input name="payer" defaultValue={payer} type="hidden" />
 							<Input name="mintA" defaultValue={mintA} type="hidden" />
 							<Input name="poolId" defaultValue={poolId} type="hidden" />
 							<Input name="amount" defaultValue={0.1} type="hidden" />

@@ -29,9 +29,9 @@ export async function deposit(_prevState: unknown, formData: FormData) {
 		return error
 	}
 
-	const { payerKey, poolId, amount } = submission.value
+	const { payer, poolId, amount } = submission.value
 
-	const raydium = await initSdk({ owner: payerKey }).catch(catchError)
+	const raydium = await initSdk({ owner: payer }).catch(catchError)
 
 	if (isError(raydium)) return { ...error, message: raydium.message }
 

@@ -11,7 +11,7 @@ const PublicKey = z
 	})
 
 export const MintSchema = z.object({
-	payerKey: PublicKey,
+	payer: PublicKey,
 	name: z.string(),
 	symbol: z.string(),
 	decimals: z
@@ -36,7 +36,7 @@ export const MintSchema = z.object({
 })
 
 export const PoolSchema = z.object({
-	payerKey: PublicKey,
+	payer: PublicKey,
 	mintA: PublicKey,
 	mintB: PublicKey,
 	mintAAmount: z.number({
@@ -49,7 +49,7 @@ export const PoolSchema = z.object({
 })
 
 export const DepositSchema = z.object({
-	payerKey: PublicKey,
+	payer: PublicKey,
 	poolId: z.string(),
 	amount: z.number(),
 })
