@@ -1,6 +1,6 @@
 
 
-> web@0.1.0 build /Users/alexandergilbert/Desktop/my-turborepo/apps/web
+> web@0.1.0 build /Users/alexandergilbert/Desktop/degenerator/apps/web
 > next build
 
   [1m[38;2;173;127;168m▲ Next.js 14.2.6[39m[22m
@@ -17,23 +17,21 @@
 bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
 bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
 bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
-bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
-[2K[1G [37m[1m [22m[39m Generating static pages (4/9)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[=== ][39m[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[ ===][39m[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[  ==][39m[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[   =][39mprisma:query BEGIN
-prisma:query DEALLOCATE ALL
-[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[    ][39mprisma:query SELECT "public"."TokenMetadata"."id", "public"."TokenMetadata"."mint", "public"."TokenMetadata"."name", "public"."TokenMetadata"."symbol", "public"."TokenMetadata"."description", "public"."TokenMetadata"."image", "public"."TokenMetadata"."createdAt", "public"."TokenMetadata"."updatedAt", "public"."TokenMetadata"."ownerId" FROM "public"."TokenMetadata" WHERE 1=1 ORDER BY "public"."TokenMetadata"."id" ASC LIMIT $1 OFFSET $2
-[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[   =][39mprisma:query COMMIT
-prisma:query BEGIN
-[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[  ==][39mprisma:query BEGIN
-prisma:query DEALLOCATE ALL
+[2K[1G [37m[1m [22m[39m Generating static pages (2/9)  [36m[=   ][39mbigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[=== ][39mprisma:query BEGIN
 prisma:query DEALLOCATE ALL
 [2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[ ===][39mprisma:query SELECT "public"."TokenMetadata"."id", "public"."TokenMetadata"."mint", "public"."TokenMetadata"."name", "public"."TokenMetadata"."symbol", "public"."TokenMetadata"."description", "public"."TokenMetadata"."image", "public"."TokenMetadata"."createdAt", "public"."TokenMetadata"."updatedAt", "public"."TokenMetadata"."ownerId" FROM "public"."TokenMetadata" WHERE 1=1 ORDER BY "public"."TokenMetadata"."id" ASC LIMIT $1 OFFSET $2
-prisma:query SELECT "public"."TokenMetadata"."id", "public"."TokenMetadata"."mint", "public"."TokenMetadata"."name", "public"."TokenMetadata"."symbol", "public"."TokenMetadata"."description", "public"."TokenMetadata"."image", "public"."TokenMetadata"."createdAt", "public"."TokenMetadata"."updatedAt", "public"."TokenMetadata"."ownerId" FROM "public"."TokenMetadata" WHERE 1=1 ORDER BY "public"."TokenMetadata"."id" ASC LIMIT $1 OFFSET $2
-prisma:query COMMIT
-[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[====][39m[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (9/9)
 prisma:query COMMIT
 prisma:query BEGIN
+[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[  ==][39mprisma:query DEALLOCATE ALL
+prisma:query BEGIN
 prisma:query DEALLOCATE ALL
-[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
+[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[   =][39mprisma:query SELECT "public"."TokenMetadata"."id", "public"."TokenMetadata"."mint", "public"."TokenMetadata"."name", "public"."TokenMetadata"."symbol", "public"."TokenMetadata"."description", "public"."TokenMetadata"."image", "public"."TokenMetadata"."createdAt", "public"."TokenMetadata"."updatedAt", "public"."TokenMetadata"."ownerId" FROM "public"."TokenMetadata" WHERE 1=1 ORDER BY "public"."TokenMetadata"."id" ASC LIMIT $1 OFFSET $2
+prisma:query COMMIT
+prisma:query SELECT "public"."TokenMetadata"."id", "public"."TokenMetadata"."mint", "public"."TokenMetadata"."name", "public"."TokenMetadata"."symbol", "public"."TokenMetadata"."description", "public"."TokenMetadata"."image", "public"."TokenMetadata"."createdAt", "public"."TokenMetadata"."updatedAt", "public"."TokenMetadata"."ownerId" FROM "public"."TokenMetadata" WHERE 1=1 ORDER BY "public"."TokenMetadata"."id" ASC LIMIT $1 OFFSET $2
+[2K[1G [37m[1m [22m[39m Generating static pages (8/9)  [36m[    ][39mprisma:query COMMIT
+[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (9/9)
+[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
 [2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
 
 [4mRoute (app)[24m                              [4mSize[24m     [4mFirst Load JS[24m

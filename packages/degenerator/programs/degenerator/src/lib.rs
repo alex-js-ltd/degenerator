@@ -1,17 +1,14 @@
-
+#![allow(clippy::result_large_err)]
 
 use anchor_lang::prelude::*;
 
 
 
-mod constants;
-mod errors;
 mod instructions;
-mod state;
 
 
 
-declare_id!("EvWUsdbUMvo7ZEykj4Hpo1rPsuaTHpqezJ7sj2u2fk6R");
+declare_id!("4dPcMAag9zD8Kj15FJiAUwRPCqrrBMk4wnyzbpKwT1wx");
 
 #[program]
 pub mod degenerator {
@@ -54,14 +51,6 @@ pub mod degenerator {
      pub fn revoke_freeze_authority(ctx: Context<RevokeFreeze>) -> Result<()> {
         instructions::revoke_freeze(ctx)
      }
-
-     pub fn create_amm(ctx: Context<CreateAmm>, id: Pubkey, fee: u16) -> Result<()> {
-        instructions::create_amm(ctx, id, fee)
-    }
-
-    pub fn create_pool(ctx: Context<CreatePool>) -> Result<()> {
-        instructions::create_pool(ctx)
-    }
 
  
 }
