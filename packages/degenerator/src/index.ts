@@ -106,7 +106,7 @@ interface GetMintInstructionsParams {
 	metadata: { name: string; symbol: string; uri: string }
 	decimals: number
 	supply: number
-	revoke: boolean | undefined
+	revoke?: boolean | undefined
 }
 
 async function getMintInstructions({
