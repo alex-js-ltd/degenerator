@@ -1,5 +1,5 @@
 import { prisma } from '@/app/utils/db'
-import { cache } from 'react'
+import { unstable_cache } from 'next/cache'
 import 'server-only'
 
 async function fetchFeaturedTokens() {
@@ -10,9 +10,13 @@ async function fetchFeaturedTokens() {
 	return { data: tokens }
 }
 
-export const getFeaturedTokens = cache(async () => {
-	const tokens = await fetchFeaturedTokens()
-	return tokens
-})
+export const getFeaturedTokens = unstable_cache(
+	async () => {
+		const tokens = await fetchFeaturedTokens()
+		return tokens
+	},
+	['tokens'],
+	{ revalidate: 3600, tags: ['tokens'] },
+)
 
 export { fetchFeaturedTokens }
