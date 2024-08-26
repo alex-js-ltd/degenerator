@@ -1,0 +1,32 @@
+[toolchain]
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.devnet]
+degenerator = "EvWUsdbUMvo7ZEykj4Hpo1rPsuaTHpqezJ7sj2u2fk6R"
+
+[programs.localnet]
+degenerator = "2UFkyELVqAoa1Wrrs5Uhd8fjjxyLmS1e9k7vcpDGMEYG"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "Localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "pnpm run jest"
+
+[test]
+startup_wait = 5000
+shutdown_wait = 2000
+upgradeable = false
+
+[test.validator]
+bind_address = "0.0.0.0"
+url = "https://api.mainnet-beta.solana.com"
+ledger = ".anchor/test-ledger"
+rpc_port = 8899
