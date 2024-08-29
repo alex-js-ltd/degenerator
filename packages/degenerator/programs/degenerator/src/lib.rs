@@ -52,5 +52,9 @@ pub mod degenerator {
         instructions::revoke_freeze(ctx)
      }
 
+     pub fn transfer_token(ctx: Context<TransferToken>, amount: u64) -> Result<()> {
+        instructions::transfer_token(ctx, amount)
+    }
+
  
 }

@@ -7,6 +7,7 @@ mod create_ata;
 mod mint_token;
 mod revoke_mint;
 mod revoke_freeze;
+mod transfer_token;
 
 
 
@@ -19,6 +20,7 @@ pub use create_ata::*;
 pub use mint_token::*;
 pub use revoke_mint::*;
 pub use revoke_freeze::*;
+pub use transfer_token::*;
 
 
 
