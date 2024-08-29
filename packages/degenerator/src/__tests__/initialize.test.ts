@@ -20,6 +20,8 @@ describe('initialize', () => {
 
 	const mint = Keypair.generate()
 
+	const receiver = Keypair.generate()
+
 	const metadata = {
 		name: 'OPOS',
 		symbol: 'OPOS',
@@ -44,7 +46,8 @@ describe('initialize', () => {
 					mint: mint.publicKey,
 					metadata,
 					decimals: 9,
-					supply: 100,
+					supply: 2000,
+					receiver: receiver.publicKey,
 				})),
 			],
 			signers: [mint],
@@ -53,7 +56,7 @@ describe('initialize', () => {
 		tx.sign([payer])
 
 		const res = await connection.simulateTransaction(tx)
-
+		console.log(res)
 		expect(res.value.err).toBeNull()
 
 		await sendAndConfirm({ connection, tx })

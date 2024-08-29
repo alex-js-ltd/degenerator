@@ -103,24 +103,35 @@ interface GetMintInstructionsParams {
 	program: Program<Degenerator>
 	payer: PublicKey
 	mint: PublicKey
+	receiver: PublicKey
 	metadata: { name: string; symbol: string; uri: string }
 	decimals: number
 	supply: number
-	revoke?: boolean | undefined
 }
 
 async function getMintInstructions({
 	program,
 	payer,
 	mint,
+	receiver,
 	metadata,
 	decimals,
 	supply,
-	revoke,
 }: GetMintInstructionsParams) {
-	const tokenAccount = getAssociatedAddress({
+	// Convert supply to BN (BigNumber) instance
+	const supplyBN = new BN(supply)
+
+	// Calculate 90% of the supply
+	const transferAmount = supplyBN.mul(new BN(90)).div(new BN(100))
+
+	const payerATA = getAssociatedAddress({
 		mint: mint,
 		owner: payer,
+	})
+
+	const receiverATA = getAssociatedAddress({
+		mint: mint,
+		owner: receiver,
 	})
 
 	const init = await program.methods
@@ -131,10 +142,10 @@ async function getMintInstructions({
 		})
 		.instruction()
 
-	const createAta = await program.methods
+	const createAtaPayer = await program.methods
 		.createAssociatedTokenAccount()
 		.accounts({
-			tokenAccount: tokenAccount,
+			tokenAccount: payerATA,
 			mint: mint,
 			signer: payer,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -142,41 +153,30 @@ async function getMintInstructions({
 		.instruction()
 
 	const mintToken = await program.methods
-		.mintToken(new BN(supply))
+		.mintToken(supplyBN)
 		.accounts({
 			mint: mint,
 			signer: payer,
-			receiver: tokenAccount,
+			receiver: payerATA,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
 		.instruction()
 
-	const revokeMint =
-		revoke &&
-		(await program.methods
-			.revokeMintAuthority()
-			.accounts({
-				currentAuthority: payer,
-				mintAccount: mint,
-			})
-			.instruction())
+	const transfer = await program.methods
+		.transferToken(transferAmount)
+		.accounts({
+			mint: mint,
+			signer: payer,
+			from: payerATA,
+			to: receiver,
+			tokenProgram: TOKEN_2022_PROGRAM_ID,
+			toAta: receiverATA,
+		})
+		.instruction()
 
-	const revokeFreeze =
-		revoke &&
-		(await program.methods
-			.revokeFreezeAuthority()
-			.accounts({
-				currentAuthority: payer,
-				mintAccount: mint,
-			})
-			.instruction())
+	const instructions = [init, createAtaPayer, mintToken, transfer]
 
-	const instructions = [init, createAta, mintToken, revokeMint, revokeFreeze]
-
-	return instructions.reduce<web3.TransactionInstruction[]>((acc, curr) => {
-		if (curr) acc.push(curr)
-		return acc
-	}, [])
+	return instructions
 }
 
 export {

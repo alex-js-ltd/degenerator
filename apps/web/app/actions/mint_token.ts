@@ -36,6 +36,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	if (isError(blob)) return { ...error, message: blob.message }
 
 	const mint = web3.Keypair.generate()
+	const receiver = web3.Keypair.generate()
 
 	const upload = await uploadMetadata({
 		...getMetadataParams({ payer, mint, name, symbol, blob, description }),
@@ -60,7 +61,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 				metadata,
 				decimals,
 				supply,
-				revoke: cpmm,
+				receiver: receiver.publicKey,
 			})),
 		],
 		signers: [mint],

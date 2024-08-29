@@ -8,7 +8,7 @@ import { Keypair, Connection, PublicKey, Signer, TransactionInstruction, Version
  * IDL can be found at `target/idl/degenerator.json`.
  */
 type Degenerator = {
-    "address": "4dPcMAag9zD8Kj15FJiAUwRPCqrrBMk4wnyzbpKwT1wx";
+    "address": "7d8qJx4mFJhxNHkGpgDcaK9DbokNJSVFKjtYq89ESFUa";
     "metadata": {
         "name": "degenerator";
         "version": "0.1.0";
@@ -51,6 +51,82 @@ type Degenerator = {
                 {
                     "name": "associatedTokenProgram";
                     "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL";
+                }
+            ];
+            "args": [];
+        },
+        {
+            "name": "createTokenAccount";
+            "discriminator": [
+                147,
+                241,
+                123,
+                100,
+                244,
+                132,
+                174,
+                118
+            ];
+            "accounts": [
+                {
+                    "name": "signer";
+                    "writable": true;
+                    "signer": true;
+                },
+                {
+                    "name": "mint";
+                },
+                {
+                    "name": "tokenAccount";
+                    "writable": true;
+                    "pda": {
+                        "seeds": [
+                            {
+                                "kind": "const";
+                                "value": [
+                                    116,
+                                    111,
+                                    107,
+                                    101,
+                                    110,
+                                    45,
+                                    50,
+                                    48,
+                                    50,
+                                    50,
+                                    45,
+                                    116,
+                                    111,
+                                    107,
+                                    101,
+                                    110,
+                                    45,
+                                    97,
+                                    99,
+                                    99,
+                                    111,
+                                    117,
+                                    110,
+                                    116
+                                ];
+                            },
+                            {
+                                "kind": "account";
+                                "path": "signer";
+                            },
+                            {
+                                "kind": "account";
+                                "path": "mint";
+                            }
+                        ];
+                    };
+                },
+                {
+                    "name": "systemProgram";
+                    "address": "11111111111111111111111111111111";
+                },
+                {
+                    "name": "tokenProgram";
                 }
             ];
             "args": [];
@@ -265,6 +341,58 @@ type Degenerator = {
             "args": [];
         },
         {
+            "name": "transferToken";
+            "discriminator": [
+                219,
+                17,
+                122,
+                53,
+                237,
+                171,
+                232,
+                222
+            ];
+            "accounts": [
+                {
+                    "name": "signer";
+                    "writable": true;
+                    "signer": true;
+                },
+                {
+                    "name": "from";
+                    "writable": true;
+                },
+                {
+                    "name": "to";
+                },
+                {
+                    "name": "toAta";
+                    "writable": true;
+                },
+                {
+                    "name": "mint";
+                    "writable": true;
+                },
+                {
+                    "name": "tokenProgram";
+                },
+                {
+                    "name": "systemProgram";
+                    "address": "11111111111111111111111111111111";
+                },
+                {
+                    "name": "associatedTokenProgram";
+                    "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL";
+                }
+            ];
+            "args": [
+                {
+                    "name": "amount";
+                    "type": "u64";
+                }
+            ];
+        },
+        {
             "name": "updateAuthority";
             "discriminator": [
                 32,
@@ -416,7 +544,7 @@ type Degenerator = {
     ];
 };
 
-var address = "4dPcMAag9zD8Kj15FJiAUwRPCqrrBMk4wnyzbpKwT1wx";
+var address = "7d8qJx4mFJhxNHkGpgDcaK9DbokNJSVFKjtYq89ESFUa";
 var metadata = {
 	name: "degenerator",
 	version: "0.1.0",
@@ -459,6 +587,83 @@ var instructions = [
 			{
 				name: "associated_token_program",
 				address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+			}
+		],
+		args: [
+		]
+	},
+	{
+		name: "create_token_account",
+		discriminator: [
+			147,
+			241,
+			123,
+			100,
+			244,
+			132,
+			174,
+			118
+		],
+		accounts: [
+			{
+				name: "signer",
+				writable: true,
+				signer: true
+			},
+			{
+				name: "mint"
+			},
+			{
+				name: "token_account",
+				writable: true,
+				pda: {
+					seeds: [
+						{
+							kind: "const",
+							value: [
+								116,
+								111,
+								107,
+								101,
+								110,
+								45,
+								50,
+								48,
+								50,
+								50,
+								45,
+								116,
+								111,
+								107,
+								101,
+								110,
+								45,
+								97,
+								99,
+								99,
+								111,
+								117,
+								110,
+								116
+							]
+						},
+						{
+							kind: "account",
+							path: "signer"
+						},
+						{
+							kind: "account",
+							path: "mint"
+						}
+					]
+				}
+			},
+			{
+				name: "system_program",
+				address: "11111111111111111111111111111111"
+			},
+			{
+				name: "token_program"
 			}
 		],
 		args: [
@@ -677,6 +882,58 @@ var instructions = [
 		]
 	},
 	{
+		name: "transfer_token",
+		discriminator: [
+			219,
+			17,
+			122,
+			53,
+			237,
+			171,
+			232,
+			222
+		],
+		accounts: [
+			{
+				name: "signer",
+				writable: true,
+				signer: true
+			},
+			{
+				name: "from",
+				writable: true
+			},
+			{
+				name: "to"
+			},
+			{
+				name: "to_ata",
+				writable: true
+			},
+			{
+				name: "mint",
+				writable: true
+			},
+			{
+				name: "token_program"
+			},
+			{
+				name: "system_program",
+				address: "11111111111111111111111111111111"
+			},
+			{
+				name: "associated_token_program",
+				address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+			}
+		],
+		args: [
+			{
+				name: "amount",
+				type: "u64"
+			}
+		]
+	},
+	{
 		name: "update_authority",
 		discriminator: [
 			32,
@@ -856,6 +1113,7 @@ interface GetMintInstructionsParams {
     program: Program<Degenerator>;
     payer: PublicKey;
     mint: PublicKey;
+    receiver: PublicKey;
     metadata: {
         name: string;
         symbol: string;
@@ -863,8 +1121,7 @@ interface GetMintInstructionsParams {
     };
     decimals: number;
     supply: number;
-    revoke?: boolean | undefined;
 }
-declare function getMintInstructions({ program, payer, mint, metadata, decimals, supply, revoke, }: GetMintInstructionsParams): Promise<web3.TransactionInstruction[]>;
+declare function getMintInstructions({ program, payer, mint, receiver, metadata, decimals, supply, }: GetMintInstructionsParams): Promise<web3.TransactionInstruction[]>;
 
 export { type Degenerator, degenerator as IDL, airDrop, buildTransaction, getAssociatedAddress, getMintInstructions, sendAndConfirm };

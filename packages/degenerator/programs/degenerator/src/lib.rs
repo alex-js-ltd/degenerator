@@ -8,7 +8,7 @@ mod instructions;
 
 
 
-declare_id!("4dPcMAag9zD8Kj15FJiAUwRPCqrrBMk4wnyzbpKwT1wx");
+declare_id!("7d8qJx4mFJhxNHkGpgDcaK9DbokNJSVFKjtYq89ESFUa");
 
 #[program]
 pub mod degenerator {
@@ -34,6 +34,10 @@ pub mod degenerator {
 
     pub fn update_authority(ctx: Context<UpdateAuthority>) -> Result<()> {
         instructions::update_authority(ctx)
+    }
+
+    pub fn create_token_account(ctx: Context<CreateTokenAccount>) -> Result<()> {
+        instructions::create_token_account(ctx)
     }
 
     pub fn create_associated_token_account(ctx: Context<CreateAssociatedTokenAccount>) -> Result<()> {

@@ -16,7 +16,7 @@ var NATIVE_MINT_2022 = new PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXe
 
 // target/idl/degenerator.json
 var degenerator_default = {
-  address: "4dPcMAag9zD8Kj15FJiAUwRPCqrrBMk4wnyzbpKwT1wx",
+  address: "7d8qJx4mFJhxNHkGpgDcaK9DbokNJSVFKjtYq89ESFUa",
   metadata: {
     name: "degenerator",
     version: "0.1.0",
@@ -59,6 +59,82 @@ var degenerator_default = {
         {
           name: "associated_token_program",
           address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      args: []
+    },
+    {
+      name: "create_token_account",
+      discriminator: [
+        147,
+        241,
+        123,
+        100,
+        244,
+        132,
+        174,
+        118
+      ],
+      accounts: [
+        {
+          name: "signer",
+          writable: true,
+          signer: true
+        },
+        {
+          name: "mint"
+        },
+        {
+          name: "token_account",
+          writable: true,
+          pda: {
+            seeds: [
+              {
+                kind: "const",
+                value: [
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  45,
+                  50,
+                  48,
+                  50,
+                  50,
+                  45,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  45,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                kind: "account",
+                path: "signer"
+              },
+              {
+                kind: "account",
+                path: "mint"
+              }
+            ]
+          }
+        },
+        {
+          name: "system_program",
+          address: "11111111111111111111111111111111"
+        },
+        {
+          name: "token_program"
         }
       ],
       args: []
@@ -273,6 +349,58 @@ var degenerator_default = {
       args: []
     },
     {
+      name: "transfer_token",
+      discriminator: [
+        219,
+        17,
+        122,
+        53,
+        237,
+        171,
+        232,
+        222
+      ],
+      accounts: [
+        {
+          name: "signer",
+          writable: true,
+          signer: true
+        },
+        {
+          name: "from",
+          writable: true
+        },
+        {
+          name: "to"
+        },
+        {
+          name: "to_ata",
+          writable: true
+        },
+        {
+          name: "mint",
+          writable: true
+        },
+        {
+          name: "token_program"
+        },
+        {
+          name: "system_program",
+          address: "11111111111111111111111111111111"
+        },
+        {
+          name: "associated_token_program",
+          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      args: [
+        {
+          name: "amount",
+          type: "u64"
+        }
+      ]
+    },
+    {
       name: "update_authority",
       discriminator: [
         32,
@@ -485,44 +613,47 @@ async function getMintInstructions({
   program,
   payer,
   mint,
+  receiver,
   metadata,
   decimals,
-  supply,
-  revoke
+  supply
 }) {
-  const tokenAccount = getAssociatedAddress({
+  const supplyBN = new BN(supply);
+  const transferAmount = supplyBN.mul(new BN(90)).div(new BN(100));
+  const payerATA = getAssociatedAddress({
     mint,
     owner: payer
+  });
+  const receiverATA = getAssociatedAddress({
+    mint,
+    owner: receiver
   });
   const init = await program.methods.initialize(decimals, metadata).accounts({
     mintAccount: mint,
     payer
   }).instruction();
-  const createAta = await program.methods.createAssociatedTokenAccount().accounts({
-    tokenAccount,
+  const createAtaPayer = await program.methods.createAssociatedTokenAccount().accounts({
+    tokenAccount: payerATA,
     mint,
     signer: payer,
     tokenProgram: TOKEN_2022_PROGRAM_ID
   }).instruction();
-  const mintToken = await program.methods.mintToken(new BN(supply)).accounts({
+  const mintToken = await program.methods.mintToken(supplyBN).accounts({
     mint,
     signer: payer,
-    receiver: tokenAccount,
+    receiver: payerATA,
     tokenProgram: TOKEN_2022_PROGRAM_ID
   }).instruction();
-  const revokeMint = revoke && await program.methods.revokeMintAuthority().accounts({
-    currentAuthority: payer,
-    mintAccount: mint
+  const transfer = await program.methods.transferToken(transferAmount).accounts({
+    mint,
+    signer: payer,
+    from: payerATA,
+    to: receiver,
+    tokenProgram: TOKEN_2022_PROGRAM_ID,
+    toAta: receiverATA
   }).instruction();
-  const revokeFreeze = revoke && await program.methods.revokeFreezeAuthority().accounts({
-    currentAuthority: payer,
-    mintAccount: mint
-  }).instruction();
-  const instructions = [init, createAta, mintToken, revokeMint, revokeFreeze];
-  return instructions.reduce((acc, curr) => {
-    if (curr) acc.push(curr);
-    return acc;
-  }, []);
+  const instructions = [init, createAtaPayer, mintToken, transfer];
+  return instructions;
 }
 export {
   degenerator_default as IDL,
