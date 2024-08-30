@@ -176,6 +176,22 @@ async function getMintInstructions({
 		})
 		.instruction()
 
+	const revokeMint = await program.methods
+		.revokeMintAuthority()
+		.accounts({
+			currentAuthority: payer,
+			mintAccount: mint,
+		})
+		.instruction()
+
+	const revokeFreeze = await program.methods
+		.revokeFreezeAuthority()
+		.accounts({
+			currentAuthority: payer,
+			mintAccount: mint,
+		})
+		.instruction()
+
 	const createPool = await program.methods
 		.createPool()
 		.accounts({
@@ -198,7 +214,15 @@ async function getMintInstructions({
 		})
 		.instruction()
 
-	const instructions = [init, createAtaPayer, mintToken, createPool, transfer]
+	const instructions = [
+		init,
+		createAtaPayer,
+		mintToken,
+		revokeMint,
+		revokeFreeze,
+		createPool,
+		transfer,
+	]
 
 	return instructions
 }
