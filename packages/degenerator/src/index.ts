@@ -129,9 +129,14 @@ async function getMintInstructions({
 		owner: payer,
 	})
 
+	const [pda] = PublicKey.findProgramAddressSync(
+		[Buffer.from('pool')],
+		program.programId,
+	)
+
 	const receiverATA = getAssociatedAddress({
 		mint: mint,
-		owner: receiver,
+		owner: pda,
 	})
 
 	const init = await program.methods
@@ -162,19 +167,29 @@ async function getMintInstructions({
 		})
 		.instruction()
 
+	const createPool = await program.methods
+		.createPool()
+		.accounts({
+			payer: payer,
+			tokenAccount: receiverATA,
+			mint: mint,
+			tokenProgram: TOKEN_2022_PROGRAM_ID,
+		})
+		.instruction()
+
 	const transfer = await program.methods
 		.transferToken(transferAmount)
 		.accounts({
 			mint: mint,
 			signer: payer,
 			from: payerATA,
-			to: receiver,
+			to: pda.toBase58(),
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 			toAta: receiverATA,
 		})
 		.instruction()
 
-	const instructions = [init, createAtaPayer, mintToken, transfer]
+	const instructions = [init, createAtaPayer, mintToken, createPool, transfer]
 
 	return instructions
 }

@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "7d8qJx4mFJhxNHkGpgDcaK9DbokNJSVFKjtYq89ESFUa",
+  "address": "3dXhKyN5rsmEYceAFhvkYbdEKP1hyj6LfowHJDS4WPBF",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -47,6 +47,91 @@ export type Degenerator = {
         },
         {
           "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "createPool",
+      "discriminator": [
+        233,
+        146,
+        209,
+        142,
+        207,
+        104,
+        64,
+        188
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "docs": [
+            "The payer for the transaction"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pda",
+          "docs": [
+            "The PDA that will control the ATA",
+            "PDA seeds can be anything; this is just an example.",
+            "Make sure to use the same seeds when signing the transaction."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "docs": [
+            "The Mint for which the ATA is being created"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "docs": [
+            "The ATA that will be created"
+          ],
+          "writable": true
+        },
+        {
+          "name": "systemProgram",
+          "docs": [
+            "System Program"
+          ],
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "docs": [
+            "Rent Sysvar"
+          ],
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "tokenProgram",
+          "docs": [
+            "Token Program"
+          ]
+        },
+        {
+          "name": "associatedTokenProgram",
+          "docs": [
+            "Associated Token Program"
+          ],
           "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],

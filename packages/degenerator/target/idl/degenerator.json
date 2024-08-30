@@ -1,5 +1,5 @@
 {
-  "address": "7d8qJx4mFJhxNHkGpgDcaK9DbokNJSVFKjtYq89ESFUa",
+  "address": "3dXhKyN5rsmEYceAFhvkYbdEKP1hyj6LfowHJDS4WPBF",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -41,6 +41,91 @@
         },
         {
           "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_pool",
+      "discriminator": [
+        233,
+        146,
+        209,
+        142,
+        207,
+        104,
+        64,
+        188
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "docs": [
+            "The payer for the transaction"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pda",
+          "docs": [
+            "The PDA that will control the ATA",
+            "PDA seeds can be anything; this is just an example.",
+            "Make sure to use the same seeds when signing the transaction."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "docs": [
+            "The Mint for which the ATA is being created"
+          ]
+        },
+        {
+          "name": "token_account",
+          "docs": [
+            "The ATA that will be created"
+          ],
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "System Program"
+          ],
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "docs": [
+            "Rent Sysvar"
+          ],
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "docs": [
+            "Token Program"
+          ]
+        },
+        {
+          "name": "associated_token_program",
+          "docs": [
+            "Associated Token Program"
+          ],
           "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],

@@ -29,7 +29,7 @@ pub struct TransferToken<'info> {
     pub from: InterfaceAccount<'info, TokenAccount>,
     pub to: SystemAccount<'info>,
     #[account(
-        init,
+        init_if_needed,
         associated_token::mint = mint,
         payer = signer,
         associated_token::authority = to

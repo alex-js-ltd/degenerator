@@ -8,7 +8,7 @@ mod instructions;
 
 
 
-declare_id!("7d8qJx4mFJhxNHkGpgDcaK9DbokNJSVFKjtYq89ESFUa");
+declare_id!("3dXhKyN5rsmEYceAFhvkYbdEKP1hyj6LfowHJDS4WPBF");
 
 #[program]
 pub mod degenerator {
@@ -58,6 +58,10 @@ pub mod degenerator {
 
      pub fn transfer_token(ctx: Context<TransferToken>, amount: u64) -> Result<()> {
         instructions::transfer_token(ctx, amount)
+    }
+
+    pub fn create_pool(ctx: Context<CreatePool>) -> Result<()> {
+        instructions::create_pool(ctx)
     }
 
  
