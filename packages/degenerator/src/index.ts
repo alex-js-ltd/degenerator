@@ -50,6 +50,13 @@ function getAssociatedAddress({
 	)[0]
 }
 
+function getPoolPda({ program }: { program: Program<Degenerator> }): PublicKey {
+	return PublicKey.findProgramAddressSync(
+		[Buffer.from('pool')],
+		program.programId,
+	)[0]
+}
+
 async function buildTransaction({
 	connection,
 	payer,
@@ -103,7 +110,7 @@ interface GetMintInstructionsParams {
 	program: Program<Degenerator>
 	payer: PublicKey
 	mint: PublicKey
-	receiver: PublicKey
+
 	metadata: { name: string; symbol: string; uri: string }
 	decimals: number
 	supply: number
@@ -113,7 +120,7 @@ async function getMintInstructions({
 	program,
 	payer,
 	mint,
-	receiver,
+
 	metadata,
 	decimals,
 	supply,
@@ -129,10 +136,7 @@ async function getMintInstructions({
 		owner: payer,
 	})
 
-	const [pda] = PublicKey.findProgramAddressSync(
-		[Buffer.from('pool')],
-		program.programId,
-	)
+	const pda = getPoolPda({ program })
 
 	const receiverATA = getAssociatedAddress({
 		mint: mint,
@@ -198,6 +202,7 @@ export {
 	type Degenerator,
 	airDrop,
 	getAssociatedAddress,
+	getPoolPda,
 	buildTransaction,
 	getMintInstructions,
 	sendAndConfirm,

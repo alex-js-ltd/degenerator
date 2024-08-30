@@ -6,7 +6,11 @@ import {
 	getMintInstructions,
 	buildTransaction,
 	sendAndConfirm,
+	getPoolPda,
+	getAssociatedAddress,
 } from '../index'
+
+const { BN } = anchor
 
 describe('initialize', () => {
 	const provider = anchor.AnchorProvider.env()
@@ -20,7 +24,14 @@ describe('initialize', () => {
 
 	const mint = Keypair.generate()
 
-	const receiver = Keypair.generate()
+	const pda = getPoolPda({ program })
+
+	const poolATA = getAssociatedAddress({
+		mint: mint.publicKey,
+		owner: pda,
+	})
+
+	const supply = 1000000000
 
 	const metadata = {
 		name: 'OPOS',
@@ -35,7 +46,7 @@ describe('initialize', () => {
 		})
 	})
 
-	it('mint token to payer', async () => {
+	it('mint token to payer & init pool', async () => {
 		const tx = await buildTransaction({
 			connection: connection,
 			payer: payer.publicKey,
@@ -46,8 +57,7 @@ describe('initialize', () => {
 					mint: mint.publicKey,
 					metadata,
 					decimals: 9,
-					supply: 2000,
-					receiver: receiver.publicKey,
+					supply,
 				})),
 			],
 			signers: [mint],
@@ -56,9 +66,28 @@ describe('initialize', () => {
 		tx.sign([payer])
 
 		const res = await connection.simulateTransaction(tx)
-		console.log(res)
+
 		expect(res.value.err).toBeNull()
 
 		await sendAndConfirm({ connection, tx })
+	})
+
+	it('check pool', async () => {
+		// Fetch the token account balance of the PDA's associated token account
+		const balanceResult = await connection.getTokenAccountBalance(poolATA)
+
+		// Extract the balance from the result
+		const amount = balanceResult.value.amount
+
+		// Convert the fetched amount to a BN
+		const amountBN = new BN(amount)
+
+		const supplyBN = new BN(supply)
+
+		// Calculate 90% of the supply
+		const transferAmount = supplyBN.mul(new BN(90)).div(new BN(100))
+
+		// Use BN's `eq` method to compare the BN instances
+		expect(amountBN.eq(transferAmount)).toBe(true) // .eq() returns a boolean
 	})
 })
