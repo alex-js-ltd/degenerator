@@ -23,7 +23,7 @@ use anchor_spl::token_interface::{
         /// PDA seeds can be anything; this is just an example.
         /// Make sure to use the same seeds when signing the transaction.
         #[account(
-            seeds = [b"pool"],
+            seeds = [b"pool", mint.key().as_ref()],
             bump,
         )]
         pub pda: UncheckedAccount<'info>,

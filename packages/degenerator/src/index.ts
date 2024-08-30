@@ -50,9 +50,15 @@ function getAssociatedAddress({
 	)[0]
 }
 
-function getPoolPda({ program }: { program: Program<Degenerator> }): PublicKey {
+function getPoolPda({
+	program,
+	mint,
+}: {
+	program: Program<Degenerator>
+	mint: PublicKey
+}): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('pool')],
+		[Buffer.from('pool'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }
@@ -120,7 +126,6 @@ async function getMintInstructions({
 	program,
 	payer,
 	mint,
-
 	metadata,
 	decimals,
 	supply,
@@ -136,7 +141,7 @@ async function getMintInstructions({
 		owner: payer,
 	})
 
-	const pda = getPoolPda({ program })
+	const pda = getPoolPda({ program, mint })
 
 	const receiverATA = getAssociatedAddress({
 		mint: mint,

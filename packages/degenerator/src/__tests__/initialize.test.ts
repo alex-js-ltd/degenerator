@@ -24,7 +24,7 @@ describe('initialize', () => {
 
 	const mint = Keypair.generate()
 
-	const pda = getPoolPda({ program })
+	const pda = getPoolPda({ program, mint: mint.publicKey })
 
 	const poolATA = getAssociatedAddress({
 		mint: mint.publicKey,

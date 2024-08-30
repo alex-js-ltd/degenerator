@@ -8,7 +8,7 @@ mod instructions;
 
 
 
-declare_id!("3dXhKyN5rsmEYceAFhvkYbdEKP1hyj6LfowHJDS4WPBF");
+declare_id!("7TSYVRqBnGuwsJFf2cht5Pg3NDzHFuRgrGY8QbJ415g6");
 
 #[program]
 pub mod degenerator {
