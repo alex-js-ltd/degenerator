@@ -4,7 +4,16 @@ use anchor_spl::token_interface::{
     self, Mint, TokenAccount, TokenInterface, TransferChecked,
 };
 
+use crate::errors::Errors;
+
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
+
+    let supply = ctx.accounts.from.amount;
+
+    if amount > supply {
+        return Err(Errors::InsufficientTokens.into());
+    }
+
     let mint_key = ctx.accounts.mint.key();
     let seeds = &[
         b"pool".as_ref(),

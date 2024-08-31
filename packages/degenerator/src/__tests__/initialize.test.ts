@@ -9,6 +9,7 @@ import {
 	getPoolPda,
 	getAssociatedAddress,
 	getBuyTokenInstruction,
+	getTokenAmount,
 } from '../index'
 
 const { BN } = anchor
@@ -74,12 +75,8 @@ describe('initialize', () => {
 	})
 
 	it('check pool', async () => {
-		// Fetch the token account balance of the PDA's associated token account
-		const balanceResult = await connection.getTokenAccountBalance(poolATA)
+		const amount = await getTokenAmount({ connection, address: poolATA })
 
-		// Extract the balance from the result
-		const amount = balanceResult.value.amount
-		console.log('pool amount before buy', amount)
 		// Convert the fetched amount to a BN
 		const amountBN = new BN(amount)
 
@@ -93,11 +90,13 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
+		const amountToBuy = 10
+
 		const ix = await getBuyTokenInstruction({
 			program,
 			payer: payer.publicKey,
 			mint: mint.publicKey,
-			amount: 10,
+			amount: amountToBuy,
 		})
 
 		const tx = await buildTransaction({
@@ -113,14 +112,15 @@ describe('initialize', () => {
 
 		expect(res.value.err).toBeNull()
 
+		const beforeAmount = await getTokenAmount({ connection, address: poolATA })
+
 		await sendAndConfirm({ connection, tx })
 
-		console.log(res)
+		const afterAmount = await getTokenAmount({ connection, address: poolATA })
 
-		const balanceResult = await connection.getTokenAccountBalance(poolATA)
-
-		// Extract the balance from the result
-		const amount = balanceResult.value.amount
-		console.log('pool amount after buy', amount)
+		// Check that the amount in the pool decreased by the amount of tokens bought
+		expect(
+			new BN(afterAmount).eq(new BN(beforeAmount).sub(new BN(amountToBuy))),
+		).toBe(true)
 	})
 })

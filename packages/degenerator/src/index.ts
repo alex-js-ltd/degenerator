@@ -112,11 +112,21 @@ async function sendAndConfirm({
 	return signature
 }
 
+async function getTokenAmount({
+	connection,
+	address,
+}: {
+	connection: Connection
+	address: PublicKey
+}) {
+	const res = await connection.getTokenAccountBalance(address)
+	return res.value.amount
+}
+
 interface GetMintInstructionsParams {
 	program: Program<Degenerator>
 	payer: PublicKey
 	mint: PublicKey
-
 	metadata: { name: string; symbol: string; uri: string }
 	decimals: number
 	supply: number
@@ -275,6 +285,7 @@ export {
 	buildTransaction,
 	getMintInstructions,
 	sendAndConfirm,
+	getTokenAmount,
 	getBuyTokenInstruction,
 }
 export { default as IDL } from '../target/idl/degenerator.json'
