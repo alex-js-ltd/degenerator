@@ -10,7 +10,7 @@ mod instructions;
 
 
 
-declare_id!("CZLPp4M7GeTYGmFqU7xH763dtZ362rtMQ9ZPmSJDLCJm");
+declare_id!("zaPNrfUnwNCaWhgdcXf6tu8Zn2buC1794yZqFSfVgqw");
 
 #[program]
 pub mod degenerator {
@@ -64,6 +64,10 @@ pub mod degenerator {
 
     pub fn create_pool(ctx: Context<CreatePool>) -> Result<()> {
         instructions::create_pool(ctx)
+    }
+
+    pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
+        instructions::buy_token(ctx, amount)
     }
 
  

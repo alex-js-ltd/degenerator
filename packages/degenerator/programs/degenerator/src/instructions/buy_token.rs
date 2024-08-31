@@ -1,22 +1,28 @@
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{Mint, TokenInterface, TokenAccount, transfer_checked, TransferCheckedBumps};
-use crate::errors::Errors;
+use anchor_spl::token_interface::{
+    self, Mint, TokenAccount, TokenInterface, TransferChecked,
+};
 
-
-/// Buy tokens from the pool using an inverse linear bonding curve.
-/// The price per token increases as the current supply decreases.
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
-    // Get the current supply of tokens in the pool
-    let current_supply = ctx.accounts.pool_token_account.amount;
+    let mint_key = ctx.accounts.mint.key();
+    let seeds = &[
+        b"pool".as_ref(),
+        mint_key.as_ref(),
+        &[ctx.bumps.pda],
+    ];
+    let signer = &[&seeds[..]];
 
-   
-    // Ensure there are enough tokens available in the pool
-    if amount > current_supply {
-        return Err(Errors::InsufficientTokens.into());
-    }
-
-
+    let cpi_accounts = TransferChecked {
+        from: ctx.accounts.from.to_account_info().clone(),
+        mint: ctx.accounts.mint.to_account_info().clone(),
+        to: ctx.accounts.to_ata.to_account_info().clone(),
+        authority: ctx.accounts.pda.to_account_info(),
+    };
+    let cpi_program = ctx.accounts.token_program.to_account_info();
+    let cpi_context = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
+    token_interface::transfer_checked(cpi_context, amount, ctx.accounts.mint.decimals)?;
+    msg!("Transfer Token");
 
 
     Ok(())
@@ -24,40 +30,36 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
 
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
-    /// The buyer of the tokens, must sign the transaction
     #[account(mut)]
-    pub buyer: Signer<'info>,
+    pub signer: Signer<'info>,
 
-    /// The PDA that controls the pool's token account
     #[account(
         mut,
-        seeds = [b"pool".as_ref(), mint.key().as_ref()],
-        bump,
+        seeds = [b"pool", mint.key().as_ref()],
+        bump
     )]
     pub pda: AccountInfo<'info>,
 
-    /// The token account controlled by the pool (from which tokens are withdrawn)
-    #[account(mut)]
-    pub pool_token_account: InterfaceAccount<'info, TokenAccount>,
+    #[account(
+        associated_token::mint = mint,
+        associated_token::authority = pda
+    )]
+    pub from: InterfaceAccount<'info, TokenAccount>,
 
-    /// The token account for the buyer. Initialized if needed
+    pub to: SystemAccount<'info>,
+
     #[account(
         init_if_needed,
-        payer = buyer,
         associated_token::mint = mint,
-        associated_token::authority = buyer,
+        payer = signer,
+        associated_token::authority = to
     )]
-    pub buyer_token_account: InterfaceAccount<'info, TokenAccount>,
+    pub to_ata: InterfaceAccount<'info, TokenAccount>,
 
-    /// The mint account for the tokens
+    #[account(mut)]
     pub mint: InterfaceAccount<'info, Mint>,
 
-    /// The token program used for token operations
     pub token_program: Interface<'info, TokenInterface>,
-
-    /// The system program (needed for account initialization)
     pub system_program: Program<'info, System>,
-
-    /// The associated token program (used for managing associated token accounts)
     pub associated_token_program: Program<'info, AssociatedToken>,
 }

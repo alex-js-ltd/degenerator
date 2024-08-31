@@ -8,6 +8,7 @@ import {
 	sendAndConfirm,
 	getPoolPda,
 	getAssociatedAddress,
+	getBuyTokenInstruction,
 } from '../index'
 
 const { BN } = anchor
@@ -89,5 +90,27 @@ describe('initialize', () => {
 
 		// Use BN's `eq` method to compare the BN instances
 		expect(amountBN.eq(transferAmount)).toBe(true) // .eq() returns a boolean
+	})
+
+	it('buy token', async () => {
+		const ix = await getBuyTokenInstruction({
+			program,
+			payer: payer.publicKey,
+			mint: mint.publicKey,
+			amount: 10,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		const res = await connection.simulateTransaction(tx)
+
+		console.log(res)
 	})
 })

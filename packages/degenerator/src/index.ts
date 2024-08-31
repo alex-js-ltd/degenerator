@@ -227,6 +227,47 @@ async function getMintInstructions({
 	return instructions
 }
 
+interface GetBuyTokenInstructionParams {
+	program: Program<Degenerator>
+	payer: PublicKey
+	mint: PublicKey
+	amount: number
+}
+
+async function getBuyTokenInstruction({
+	program,
+	payer,
+	mint,
+	amount,
+}: GetBuyTokenInstructionParams) {
+	const payerATA = getAssociatedAddress({
+		mint: mint,
+		owner: payer,
+	})
+
+	const pda = getPoolPda({ program, mint })
+
+	const poolATA = getAssociatedAddress({
+		mint: mint,
+		owner: pda,
+	})
+
+	const amountBN = new BN(amount)
+	const buy = await program.methods
+		.buyToken(amountBN)
+		.accounts({
+			mint: mint,
+			signer: payer,
+			from: poolATA,
+			to: payer,
+			tokenProgram: TOKEN_2022_PROGRAM_ID,
+			toAta: payerATA,
+		})
+		.instruction()
+
+	return buy
+}
+
 export {
 	type Degenerator,
 	airDrop,
@@ -235,5 +276,6 @@ export {
 	buildTransaction,
 	getMintInstructions,
 	sendAndConfirm,
+	getBuyTokenInstruction,
 }
 export { default as IDL } from '../target/idl/degenerator.json'
