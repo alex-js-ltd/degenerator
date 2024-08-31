@@ -1,14 +1,16 @@
-#![allow(clippy::result_large_err)]
+
 
 use anchor_lang::prelude::*;
 
 
 
+mod constants;
+mod errors;
 mod instructions;
 
 
 
-declare_id!("FofLf6BhJsj1HLvwLSXLMcsbxWHAZtEAFZ7EDcDGugNG");
+declare_id!("CZLPp4M7GeTYGmFqU7xH763dtZ362rtMQ9ZPmSJDLCJm");
 
 #[program]
 pub mod degenerator {

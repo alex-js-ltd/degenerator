@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "FofLf6BhJsj1HLvwLSXLMcsbxWHAZtEAFZ7EDcDGugNG",
+  "address": "CZLPp4M7GeTYGmFqU7xH763dtZ362rtMQ9ZPmSJDLCJm",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -557,6 +557,13 @@ export type Degenerator = {
       ]
     }
   ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "insufficientTokens",
+      "msg": "Insufficient tokens in the pool."
+    }
+  ],
   "types": [
     {
       "name": "anchorField",
@@ -626,6 +633,18 @@ export type Degenerator = {
           }
         ]
       }
+    }
+  ],
+  "constants": [
+    {
+      "name": "basePrice",
+      "type": "u64",
+      "value": "100"
+    },
+    {
+      "name": "slope",
+      "type": "u64",
+      "value": "2"
     }
   ]
 };
