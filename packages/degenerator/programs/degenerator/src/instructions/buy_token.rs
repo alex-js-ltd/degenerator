@@ -33,32 +33,22 @@ pub struct BuyToken<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
-    #[account(
-        mut,
+    #[account(mut,
         seeds = [b"pool", mint.key().as_ref()],
-        bump
+        bump,
     )]
     pub pda: AccountInfo<'info>,
-
-    #[account(
-        associated_token::mint = mint,
-        associated_token::authority = pda
-    )]
+    #[account(mut)]
     pub from: InterfaceAccount<'info, TokenAccount>,
-
-    pub to: SystemAccount<'info>,
-
     #[account(
         init_if_needed,
         associated_token::mint = mint,
         payer = signer,
-        associated_token::authority = to
+        associated_token::authority = signer
     )]
     pub to_ata: InterfaceAccount<'info, TokenAccount>,
-
     #[account(mut)]
     pub mint: InterfaceAccount<'info, Mint>,
-
     pub token_program: Interface<'info, TokenInterface>,
     pub system_program: Program<'info, System>,
     pub associated_token_program: Program<'info, AssociatedToken>,

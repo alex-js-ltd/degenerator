@@ -259,7 +259,6 @@ async function getBuyTokenInstruction({
 			mint: mint,
 			signer: payer,
 			from: poolATA,
-			to: payer,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 			toAta: payerATA,
 		})

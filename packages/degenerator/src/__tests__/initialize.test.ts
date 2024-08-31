@@ -79,7 +79,7 @@ describe('initialize', () => {
 
 		// Extract the balance from the result
 		const amount = balanceResult.value.amount
-
+		console.log('pool amount before buy', amount)
 		// Convert the fetched amount to a BN
 		const amountBN = new BN(amount)
 
@@ -111,6 +111,16 @@ describe('initialize', () => {
 
 		const res = await connection.simulateTransaction(tx)
 
+		expect(res.value.err).toBeNull()
+
+		await sendAndConfirm({ connection, tx })
+
 		console.log(res)
+
+		const balanceResult = await connection.getTokenAccountBalance(poolATA)
+
+		// Extract the balance from the result
+		const amount = balanceResult.value.amount
+		console.log('pool amount after buy', amount)
 	})
 })
