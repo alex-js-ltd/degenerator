@@ -13,13 +13,11 @@ pub struct CreatePool<'info> {
     pub payer: Signer<'info>,
 
     /// The PDA that will control the ATA
-    /// PDA seeds can be anything; this is just an example.
-    /// Make sure to use the same seeds when signing the transaction.
     #[account(mut,
         seeds = [b"pool", mint.key().as_ref()],
         bump,
     )]
-    pub pda: AccountInfo<'info>,
+    pub pool_authority: AccountInfo<'info>,
 
     /// The Mint for which the ATA is being created
     pub mint: Box<InterfaceAccount<'info, Mint>>,
@@ -29,7 +27,7 @@ pub struct CreatePool<'info> {
         init,
         payer = payer,
         associated_token::mint = mint,
-        associated_token::authority = pda,
+        associated_token::authority = pool_authority,
     )]
     pub token_account: Box<InterfaceAccount<'info, TokenAccount>>,
 

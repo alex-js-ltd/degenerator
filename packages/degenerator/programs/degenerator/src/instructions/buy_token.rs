@@ -16,7 +16,7 @@ pub struct BuyToken<'info> {
         seeds = [b"pool", mint.key().as_ref()],
         bump,
     )]
-    pub pda: AccountInfo<'info>,
+    pub pool_authority: AccountInfo<'info>,
 
     #[account(mut)]
     pub from: InterfaceAccount<'info, TokenAccount>,
@@ -46,7 +46,7 @@ impl<'info> BuyToken<'info> {
     ) -> ProgramResult {
         let cpi_accounts = Transfer {
             from: self.signer.to_account_info(),
-            to: self.pda.to_account_info(),
+            to: self.pool_authority.to_account_info(),
         };
         let cpi_ctx = CpiContext::new(self.system_program.to_account_info(), cpi_accounts);
         transfer(cpi_ctx, amount)?;
@@ -65,7 +65,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     let seeds = &[
         b"pool".as_ref(),
         mint_key.as_ref(),
-        &[ctx.bumps.pda],
+        &[ctx.bumps.pool_authority],
     ];
     let signer = &[&seeds[..]];
 
@@ -73,7 +73,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         from: ctx.accounts.from.to_account_info().clone(),
         mint: ctx.accounts.mint.to_account_info().clone(),
         to: ctx.accounts.to_ata.to_account_info().clone(),
-        authority: ctx.accounts.pda.to_account_info(),
+        authority: ctx.accounts.pool_authority.to_account_info(),
     };
     let cpi_program = ctx.accounts.token_program.to_account_info();
     let cpi_context = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);

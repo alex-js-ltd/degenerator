@@ -1,5 +1,5 @@
 {
-  "address": "H5HPGRodHySw5MjENDZP2s5BmK518anZbvJYBEvzJUtv",
+  "address": "J33yJyeoggn7R6SVgw9LmQYL7BRemunLTzMVYAP7uWHz",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -26,7 +26,7 @@
           "signer": true
         },
         {
-          "name": "pda",
+          "name": "pool_authority",
           "writable": true,
           "pda": {
             "seeds": [
@@ -138,11 +138,9 @@
           "signer": true
         },
         {
-          "name": "pda",
+          "name": "pool_authority",
           "docs": [
-            "The PDA that will control the ATA",
-            "PDA seeds can be anything; this is just an example.",
-            "Make sure to use the same seeds when signing the transaction."
+            "The PDA that will control the ATA"
           ],
           "writable": true,
           "pda": {
