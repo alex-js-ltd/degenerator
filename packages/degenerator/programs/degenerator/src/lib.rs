@@ -10,7 +10,7 @@ mod instructions;
 
 
 
-declare_id!("J33yJyeoggn7R6SVgw9LmQYL7BRemunLTzMVYAP7uWHz");
+declare_id!("C2npFofLubwGAwQ2UGH7yJ68y6Zj2hZUHnqqMpMM5x8e");
 
 #[program]
 pub mod degenerator {

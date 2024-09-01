@@ -80,6 +80,6 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     token_interface::transfer_checked(cpi_context, amount, ctx.accounts.mint.decimals)?;
     msg!("Transfer Token");
 
-    ctx.accounts.transfer_sol(100)?;
+    ctx.accounts.transfer_sol(100000)?;
     Ok(())
 }

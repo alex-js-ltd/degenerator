@@ -89,13 +89,6 @@ describe('initialize', () => {
 		expect(amountBN.eq(transferAmount)).toBe(true) // .eq() returns a boolean
 	})
 
-	it('airdrop payer', async () => {
-		await airDrop({
-			connection,
-			account: pda,
-		})
-	})
-
 	it('buy token', async () => {
 		const amountToBuy = 10
 
