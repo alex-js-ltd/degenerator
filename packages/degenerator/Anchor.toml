@@ -11,7 +11,7 @@ degenerator = "CHoihhKjmqyrpjf5HcjdBwNmSqekGEX7jzzRCKFtRBah"
 degenerator = "9FgmwaUAKR5Vqqh4gPZoAGrPGUBtG4h5Mt8PdEZGTfy8"
 
 [programs.mainnet]
-degenerator = "CAEd1fx32Nz16jj7BrX2efKTyHhGJjKNVfZaTzVMtqCM"
+degenerator = "H5HPGRodHySw5MjENDZP2s5BmK518anZbvJYBEvzJUtv"
 
 [registry]
 url = "https://api.mainnet-beta.solana.com"

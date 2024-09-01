@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "CAEd1fx32Nz16jj7BrX2efKTyHhGJjKNVfZaTzVMtqCM",
+  "address": "H5HPGRodHySw5MjENDZP2s5BmK518anZbvJYBEvzJUtv",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -150,6 +150,7 @@ export type Degenerator = {
             "PDA seeds can be anything; this is just an example.",
             "Make sure to use the same seeds when signing the transaction."
           ],
+          "writable": true,
           "pda": {
             "seeds": [
               {

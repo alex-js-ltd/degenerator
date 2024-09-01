@@ -15,7 +15,7 @@ pub struct CreatePool<'info> {
     /// The PDA that will control the ATA
     /// PDA seeds can be anything; this is just an example.
     /// Make sure to use the same seeds when signing the transaction.
-    #[account(
+    #[account(mut,
         seeds = [b"pool", mint.key().as_ref()],
         bump,
     )]
