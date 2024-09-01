@@ -1,13 +1,60 @@
-use anchor_lang::prelude::*;
+use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
+use anchor_lang::system_program::{Transfer, transfer};
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{
     self, Mint, TokenAccount, TokenInterface, TransferChecked,
 };
-
 use crate::errors::Errors;
 
-pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
+#[derive(Accounts)]
+pub struct BuyToken<'info> {
+    #[account(mut)]
+    pub signer: Signer<'info>,
 
+    #[account(
+        mut,
+        seeds = [b"pool", mint.key().as_ref()],
+        bump,
+    )]
+    pub pda: AccountInfo<'info>,
+
+    #[account(mut)]
+    pub from: InterfaceAccount<'info, TokenAccount>,
+
+    #[account(
+        init_if_needed,
+        associated_token::mint = mint,
+        payer = signer,
+        associated_token::authority = signer
+    )]
+    pub to_ata: InterfaceAccount<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub mint: InterfaceAccount<'info, Mint>,
+
+    pub token_program: Interface<'info, TokenInterface>,
+
+    pub system_program: Program<'info, System>,
+
+    pub associated_token_program: Program<'info, AssociatedToken>,
+}
+
+impl<'info> BuyToken<'info> {
+    fn transfer_sol(
+        &self,
+        amount: u64
+    ) -> ProgramResult {
+        let cpi_accounts = Transfer {
+            from: self.signer.to_account_info(),
+            to: self.pda.to_account_info(),
+        };
+        let cpi_ctx = CpiContext::new(self.system_program.to_account_info(), cpi_accounts);
+        transfer(cpi_ctx, amount)?;
+        Ok(())
+    }
+}
+
+pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     let supply = ctx.accounts.from.amount;
 
     if amount > supply {
@@ -35,30 +82,4 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
 
 
     Ok(())
-}
-
-#[derive(Accounts)]
-pub struct BuyToken<'info> {
-    #[account(mut)]
-    pub signer: Signer<'info>,
-
-    #[account(mut,
-        seeds = [b"pool", mint.key().as_ref()],
-        bump,
-    )]
-    pub pda: AccountInfo<'info>,
-    #[account(mut)]
-    pub from: InterfaceAccount<'info, TokenAccount>,
-    #[account(
-        init_if_needed,
-        associated_token::mint = mint,
-        payer = signer,
-        associated_token::authority = signer
-    )]
-    pub to_ata: InterfaceAccount<'info, TokenAccount>,
-    #[account(mut)]
-    pub mint: InterfaceAccount<'info, Mint>,
-    pub token_program: Interface<'info, TokenInterface>,
-    pub system_program: Program<'info, System>,
-    pub associated_token_program: Program<'info, AssociatedToken>,
 }
