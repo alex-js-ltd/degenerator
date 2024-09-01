@@ -22,7 +22,7 @@ pub struct CreatePool<'info> {
     pub pda: AccountInfo<'info>,
 
     /// The Mint for which the ATA is being created
-    pub mint: InterfaceAccount<'info, Mint>,
+    pub mint: Box<InterfaceAccount<'info, Mint>>,
 
     /// The ATA that will be created
     #[account(
@@ -31,7 +31,7 @@ pub struct CreatePool<'info> {
         associated_token::mint = mint,
         associated_token::authority = pda,
     )]
-    pub token_account: InterfaceAccount<'info, TokenAccount>,
+    pub token_account: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// System Program
     pub system_program: Program<'info, System>,
