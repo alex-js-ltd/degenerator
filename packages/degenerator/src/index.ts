@@ -17,14 +17,14 @@ import {
 } from '@solana/spl-token'
 
 async function airDrop({
-	payer,
+	account,
 	connection,
 }: {
-	payer: Keypair
+	account: PublicKey
 	connection: Connection
 }) {
 	const blocks = connection.getLatestBlockhash()
-	const airDrop = connection.requestAirdrop(payer.publicKey, 10000000000)
+	const airDrop = connection.requestAirdrop(account, 10000000000)
 
 	const [latestBlockhash, signature] = await Promise.all([blocks, airDrop])
 

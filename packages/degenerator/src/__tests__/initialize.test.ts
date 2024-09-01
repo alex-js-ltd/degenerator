@@ -44,7 +44,7 @@ describe('initialize', () => {
 	it('airdrop payer', async () => {
 		await airDrop({
 			connection,
-			payer,
+			account: payer.publicKey,
 		})
 	})
 
@@ -87,6 +87,13 @@ describe('initialize', () => {
 
 		// Use BN's `eq` method to compare the BN instances
 		expect(amountBN.eq(transferAmount)).toBe(true) // .eq() returns a boolean
+	})
+
+	it('airdrop payer', async () => {
+		await airDrop({
+			connection,
+			account: pda,
+		})
 	})
 
 	it('buy token', async () => {
