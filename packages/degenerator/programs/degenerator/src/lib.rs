@@ -4,13 +4,14 @@ use anchor_lang::prelude::*;
 
 
 
-mod constants;
+
 mod errors;
 mod instructions;
+mod utils;
 
 
 
-declare_id!("C2npFofLubwGAwQ2UGH7yJ68y6Zj2hZUHnqqMpMM5x8e");
+declare_id!("9AhVbqJUYDEa6GNhfQb8FgfZZDvrdxDNv4uoJL4aURuu");
 
 #[program]
 pub mod degenerator {
