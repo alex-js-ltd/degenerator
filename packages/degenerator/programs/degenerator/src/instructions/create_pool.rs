@@ -22,7 +22,7 @@ pub struct CreatePool<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
 
-    /// The PDA that will control the ATA
+    /// CHECK: pool vault
     #[account(mut,
         seeds = [POOL_ACCOUNT_SEED, mint.key().as_ref()],
         bump,

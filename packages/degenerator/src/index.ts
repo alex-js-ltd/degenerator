@@ -1,5 +1,5 @@
 import { Degenerator } from '../target/types/degenerator'
-import { Program, BN, web3 } from '@coral-xyz/anchor'
+import { Program, BN, web3, utils } from '@coral-xyz/anchor'
 
 import {
 	type Signer,
@@ -153,25 +153,27 @@ async function getMintInstructions({
 
 	const pda = getPoolPda({ program, mint })
 
-	const receiverATA = getAssociatedAddress({
+	const poolATA = getAssociatedAddress({
 		mint: mint,
 		owner: pda,
 	})
 
-	const init = await program.methods
-		.initialize(decimals, metadata)
-		.accounts({
-			mintAccount: mint,
-			payer: payer,
-		})
-		.instruction()
+	const [extraMetasAccount] = PublicKey.findProgramAddressSync(
+		[utils.bytes.utf8.encode('extra-account-metas'), mint.toBuffer()],
+		program.programId,
+	)
 
-	const createAtaPayer = await program.methods
-		.createAssociatedTokenAccount()
-		.accounts({
-			tokenAccount: payerATA,
+	const init = await program.methods
+		.createMintAccount(metadata)
+		.accountsStrict({
+			payer: payer,
+			authority: payer,
+			receiver: payer,
 			mint: mint,
-			signer: payer,
+			mintTokenAccount: payerATA,
+			extraMetasAccount: extraMetasAccount,
+			systemProgram: web3.SystemProgram.programId,
+			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
 		.instruction()
@@ -206,7 +208,7 @@ async function getMintInstructions({
 		.createPool()
 		.accounts({
 			payer: payer,
-			tokenAccount: receiverATA,
+			tokenAccount: poolATA,
 			mint: mint,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
@@ -220,13 +222,12 @@ async function getMintInstructions({
 			from: payerATA,
 			to: pda.toBase58(),
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
-			toAta: receiverATA,
+			toAta: poolATA,
 		})
 		.instruction()
 
 	const instructions = [
 		init,
-		createAtaPayer,
 		mintToken,
 		revokeMint,
 		revokeFreeze,

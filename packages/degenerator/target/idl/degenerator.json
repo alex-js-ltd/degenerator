@@ -1,5 +1,5 @@
 {
-  "address": "7LTx3vbps7QAwTBjFksHL45ogCNwgenS1RCAE193nZng",
+  "address": "8vwVBn7gexccqn4mYpcxxquupzKuBhmTMVgoiCK3nzHV",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -78,43 +78,123 @@
       ]
     },
     {
-      "name": "create_associated_token_account",
+      "name": "check_mint_extensions_constraints",
       "discriminator": [
-        112,
-        83,
-        122,
-        159,
-        174,
-        104,
-        244,
-        19
+        116,
+        106,
+        124,
+        163,
+        185,
+        116,
+        224,
+        224
       ],
       "accounts": [
         {
-          "name": "signer",
+          "name": "authority",
           "writable": true,
           "signer": true
         },
         {
           "name": "mint"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_mint_account",
+      "discriminator": [
+        76,
+        184,
+        50,
+        62,
+        162,
+        141,
+        47,
+        103
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "token_account",
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "receiver"
+        },
+        {
+          "name": "mint",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint_token_account",
           "writable": true
+        },
+        {
+          "name": "extra_metas_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  120,
+                  116,
+                  114,
+                  97,
+                  45,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  45,
+                  109,
+                  101,
+                  116,
+                  97,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
         },
         {
-          "name": "token_program"
-        },
-        {
           "name": "associated_token_program",
           "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "CreateMintAccountArgs"
+            }
+          }
+        }
+      ]
     },
     {
       "name": "create_pool",
@@ -139,9 +219,6 @@
         },
         {
           "name": "pool_authority",
-          "docs": [
-            "The PDA that will control the ATA"
-          ],
           "writable": true,
           "pda": {
             "seeds": [
@@ -205,152 +282,6 @@
       "args": []
     },
     {
-      "name": "create_token_account",
-      "discriminator": [
-        147,
-        241,
-        123,
-        100,
-        244,
-        132,
-        174,
-        118
-      ],
-      "accounts": [
-        {
-          "name": "signer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mint"
-        },
-        {
-          "name": "token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  45,
-                  50,
-                  48,
-                  50,
-                  50,
-                  45,
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  45,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "signer"
-              },
-              {
-                "kind": "account",
-                "path": "mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        },
-        {
-          "name": "token_program"
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "emit",
-      "discriminator": [
-        252,
-        45,
-        156,
-        110,
-        150,
-        14,
-        45,
-        99
-      ],
-      "accounts": [
-        {
-          "name": "mint_account"
-        },
-        {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "initialize",
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
-      "accounts": [
-        {
-          "name": "payer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mint_account",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "token_decimals",
-          "type": "u8"
-        },
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "TokenMetadataArgs"
-            }
-          }
-        }
-      ]
-    },
-    {
       "name": "mint_token",
       "discriminator": [
         172,
@@ -384,44 +315,6 @@
         {
           "name": "amount",
           "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "remove_key",
-      "discriminator": [
-        210,
-        40,
-        193,
-        233,
-        8,
-        77,
-        176,
-        144
-      ],
-      "accounts": [
-        {
-          "name": "update_authority",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mint_account",
-          "writable": true
-        },
-        {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "key",
-          "type": "string"
         }
       ]
     },
@@ -540,84 +433,6 @@
           "type": "u64"
         }
       ]
-    },
-    {
-      "name": "update_authority",
-      "discriminator": [
-        32,
-        46,
-        64,
-        28,
-        149,
-        75,
-        243,
-        88
-      ],
-      "accounts": [
-        {
-          "name": "current_authority",
-          "signer": true
-        },
-        {
-          "name": "new_authority",
-          "optional": true
-        },
-        {
-          "name": "mint_account",
-          "writable": true
-        },
-        {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "update_field",
-      "discriminator": [
-        164,
-        49,
-        117,
-        6,
-        187,
-        205,
-        13,
-        217
-      ],
-      "accounts": [
-        {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mint_account",
-          "writable": true
-        },
-        {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "UpdateFieldArgs"
-            }
-          }
-        }
-      ]
     }
   ],
   "errors": [
@@ -629,30 +444,7 @@
   ],
   "types": [
     {
-      "name": "AnchorField",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Name"
-          },
-          {
-            "name": "Symbol"
-          },
-          {
-            "name": "Uri"
-          },
-          {
-            "name": "Key",
-            "fields": [
-              "string"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "name": "TokenMetadataArgs",
+      "name": "CreateMintAccountArgs",
       "type": {
         "kind": "struct",
         "fields": [
@@ -666,32 +458,6 @@
           },
           {
             "name": "uri",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    {
-      "name": "UpdateFieldArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "field",
-            "docs": [
-              "Field to update in the metadata"
-            ],
-            "type": {
-              "defined": {
-                "name": "AnchorField"
-              }
-            }
-          },
-          {
-            "name": "value",
-            "docs": [
-              "Value to write for the field"
-            ],
             "type": "string"
           }
         ]

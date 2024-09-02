@@ -4,6 +4,11 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{
     self, Mint, TokenAccount, TokenInterface, TransferChecked,
 };
+
+use crate::utils::{
+  POOL_ACCOUNT_SEED,
+};
+
 use crate::errors::Errors;
 
 #[derive(Accounts)]
@@ -13,7 +18,7 @@ pub struct BuyToken<'info> {
 
     #[account(
         mut,
-        seeds = [b"pool", mint.key().as_ref()],
+        seeds = [POOL_ACCOUNT_SEED, mint.key().as_ref()],
         bump,
     )]
     pub pool_authority: AccountInfo<'info>,
