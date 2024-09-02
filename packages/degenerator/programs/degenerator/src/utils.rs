@@ -87,3 +87,21 @@ pub fn get_meta_list_size(approve_account: Option<Pubkey>) -> usize {
     // safe because it's either 0 or 1
     ExtraAccountMetaList::size_of(get_meta_list(approve_account).len()).unwrap()
 }
+
+const BASE_PRICE: u64 = 10_000; // Base price in lamports (0.00001 SOL)
+const LAMPORTS_PER_SOL: u128 = 1_000_000_000; // Conversion factor from SOL to lamports
+
+pub fn calculate_price(supply: u64, amount: u64) -> u64 {
+    let supply_u128 = supply as u128;
+    let base_price_u128 = BASE_PRICE as u128;
+
+    // Calculate price per token with a base price and a term that increases with supply
+    let price_per_token = base_price_u128
+        .saturating_add(supply_u128.saturating_mul(base_price_u128) / LAMPORTS_PER_SOL);
+
+    // Calculate total price
+    let total_price = price_per_token.saturating_mul(amount as u128);
+
+    // Return total price, converting back to u64 and handling potential overflow
+    total_price.try_into().unwrap_or(u64::MAX)
+}
