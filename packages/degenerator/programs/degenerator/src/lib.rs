@@ -11,7 +11,7 @@ mod utils;
 
 
 
-declare_id!("AuHX6GoMBdw9iQCVQHkVx8jx639eMeTiCkV2GzQaqufM");
+declare_id!("EBQ22Zz1yBuFmm9GFM6Smp2oSwhLLm7NZDgvVKUCchv");
 
 #[program]
 pub mod degenerator {
@@ -55,6 +55,10 @@ pub mod degenerator {
 
     pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         instructions::buy_token(ctx, amount)
+    }
+
+    pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
+        instructions::sell_token(ctx, amount)
     }
 
  

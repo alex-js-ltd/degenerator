@@ -24,7 +24,7 @@ pub struct BuyToken<'info> {
 
     /// Token account from which the tokens will be transferred
     #[account(mut)]
-    pub from: InterfaceAccount<'info, TokenAccount>,
+    pub from: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Token account to which the tokens will be transferred (created if needed)
     #[account(
@@ -33,7 +33,7 @@ pub struct BuyToken<'info> {
         payer = signer,
         associated_token::authority = signer
     )]
-    pub to_ata: InterfaceAccount<'info, TokenAccount>,
+    pub to_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Mint associated with the token
     #[account(mut)]

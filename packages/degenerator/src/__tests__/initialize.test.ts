@@ -9,6 +9,7 @@ import {
 	getPoolPda,
 	getAssociatedAddress,
 	getBuyTokenInstruction,
+	getSellTokenInstruction,
 	getTokenAmount,
 	getBalance,
 } from '../index'
@@ -129,5 +130,33 @@ describe('initialize', () => {
 
 		// Check that the SOL balance of the PDA has increased by the amount paid
 		expect(new BN(afterSol).gt(new BN(beforeSol))).toBe(true)
+	})
+
+	it('sell token', async () => {
+		const amountToSell = 5
+
+		const ix = await getSellTokenInstruction({
+			program,
+			payer: payer.publicKey,
+			mint: mint.publicKey,
+			amount: amountToSell,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+		console.log(res)
+		expect(res.value.err).toBeNull()
+
+		// Confirm the transaction
+		await sendAndConfirm({ connection, tx })
 	})
 })
