@@ -10,6 +10,7 @@ import {
 	getAssociatedAddress,
 	getBuyTokenInstruction,
 	getTokenAmount,
+	getBalance,
 } from '../index'
 
 const { BN } = anchor
@@ -108,19 +109,25 @@ describe('initialize', () => {
 
 		tx.sign([payer])
 
-		const res = await connection.simulateTransaction(tx)
+		const beforeAmount = await getTokenAmount({ connection, address: poolATA })
+		const beforeSol = await getBalance({ connection, address: pda })
 
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
 		expect(res.value.err).toBeNull()
 
-		const beforeAmount = await getTokenAmount({ connection, address: poolATA })
-
+		// Confirm the transaction
 		await sendAndConfirm({ connection, tx })
 
 		const afterAmount = await getTokenAmount({ connection, address: poolATA })
+		const afterSol = await getBalance({ connection, address: pda })
 
 		// Check that the amount in the pool decreased by the amount of tokens bought
 		expect(
 			new BN(afterAmount).eq(new BN(beforeAmount).sub(new BN(amountToBuy))),
 		).toBe(true)
+
+		// Check that the SOL balance of the PDA has increased by the amount paid
+		expect(new BN(afterSol).gt(new BN(beforeSol))).toBe(true)
 	})
 })

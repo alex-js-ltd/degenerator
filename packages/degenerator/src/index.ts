@@ -123,6 +123,17 @@ async function getTokenAmount({
 	return res.value.amount
 }
 
+async function getBalance({
+	connection,
+	address,
+}: {
+	connection: Connection
+	address: PublicKey
+}) {
+	const res = await connection.getBalance(address)
+	return res
+}
+
 interface GetMintInstructionsParams {
 	program: Program<Degenerator>
 	payer: PublicKey
@@ -288,5 +299,6 @@ export {
 	sendAndConfirm,
 	getTokenAmount,
 	getBuyTokenInstruction,
+	getBalance,
 }
 export { default as IDL } from '../target/idl/degenerator.json'
