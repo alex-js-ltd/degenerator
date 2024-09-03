@@ -5,13 +5,13 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-degenerator = "b6qhGGibZd5NveWmWrT2nMVnQMoK25kufQrVY9gm4Cf"
+degenerator = "6NNF6ytdZFChrX8aSqfWETsYKphkESUj2mHW7CCQG1zL"
 
 [programs.localnet]
 degenerator = "9FgmwaUAKR5Vqqh4gPZoAGrPGUBtG4h5Mt8PdEZGTfy8"
 
 [programs.mainnet]
-degenerator = "b6qhGGibZd5NveWmWrT2nMVnQMoK25kufQrVY9gm4Cf"
+degenerator = "6NNF6ytdZFChrX8aSqfWETsYKphkESUj2mHW7CCQG1zL"
 
 [registry]
 url = "https://api.mainnet-beta.solana.com"

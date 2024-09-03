@@ -11,6 +11,7 @@ pub fn create_pool(ctx: Context<CreatePool>) -> Result<()> {
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
     )?;
+
     Ok(())
 }
 

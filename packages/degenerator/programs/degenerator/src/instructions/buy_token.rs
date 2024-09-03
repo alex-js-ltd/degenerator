@@ -4,7 +4,7 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 
 use crate::errors::Errors;
-use crate::utils::{calculate_price, POOL_ACCOUNT_SEED};
+use crate::utils::{calculate_price, get_pool_bump, POOL_ACCOUNT_SEED};
 
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
@@ -58,6 +58,25 @@ impl<'info> BuyToken<'info> {
         transfer(cpi_ctx, amount)?;
         Ok(())
     }
+
+    fn transfer_token(&self, amount: u64) -> ProgramResult {
+        let mint_key = self.mint.key();
+        let bump = get_pool_bump(mint_key);
+        let seeds: &[&[u8]; 3] = &[b"pool".as_ref(), mint_key.as_ref(), &[bump]];
+        let signer = &[&seeds[..]];
+
+        let cpi_accounts = TransferChecked {
+            from: self.pool_ata.to_account_info(),
+            mint: self.mint.to_account_info(),
+            to: self.payer_ata.to_account_info(),
+            authority: self.pool_authority.to_account_info(),
+        };
+        let cpi_program = self.token_program.to_account_info();
+        let cpi_context = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
+
+        token_interface::transfer_checked(cpi_context, amount, self.mint.decimals)?;
+        Ok(())
+    }
 }
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
@@ -78,29 +97,8 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
-    // Prepare CPI accounts and context for token transfer
-    let mint_key = ctx.accounts.mint.key();
-    let seeds = &[
-        b"pool".as_ref(),
-        mint_key.as_ref(),
-        &[ctx.bumps.pool_authority],
-    ];
-    let signer = &[&seeds[..]];
-
-    let cpi_accounts = TransferChecked {
-        from: ctx.accounts.pool_ata.to_account_info().clone(),
-        mint: ctx.accounts.mint.to_account_info().clone(),
-        to: ctx.accounts.payer_ata.to_account_info().clone(),
-        authority: ctx.accounts.pool_authority.to_account_info(),
-    };
-    let cpi_program = ctx.accounts.token_program.to_account_info();
-    let cpi_context = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
-
-    // Transfer tokens
-    token_interface::transfer_checked(cpi_context, amount, ctx.accounts.mint.decimals)?;
-    msg!("Transfer Token");
-
-    // Transfer SOL to the pool authority
+    ctx.accounts.transfer_token(amount)?;
     ctx.accounts.transfer_sol(price)?;
+
     Ok(())
 }

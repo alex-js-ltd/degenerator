@@ -4,7 +4,7 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 
 use crate::errors::Errors;
-use crate::utils::{calculate_price, POOL_ACCOUNT_SEED};
+use crate::utils::{calculate_price, get_pool_bump, POOL_ACCOUNT_SEED};
 
 #[derive(Accounts)]
 pub struct SellToken<'info> {
@@ -41,15 +41,35 @@ impl<'info> SellToken<'info> {
     /// Transfers SOL to the pool authority
     fn transfer_token(&self, amount: u64) -> ProgramResult {
         let cpi_accounts = TransferChecked {
-            from: self.payer_ata.to_account_info().clone(),
-            mint: self.mint.to_account_info().clone(),
-            to: self.pool_ata.to_account_info().clone(),
+            from: self.payer_ata.to_account_info(),
+            mint: self.mint.to_account_info(),
+            to: self.pool_ata.to_account_info(),
             authority: self.signer.to_account_info(),
         };
         let cpi_program = self.token_program.to_account_info();
         let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
 
         token_interface::transfer_checked(cpi_context, amount, self.mint.decimals)?;
+        Ok(())
+    }
+
+    fn transfer_sol(&self, amount: u64) -> ProgramResult {
+        let mint_key = self.mint.key();
+        let bump = get_pool_bump(mint_key);
+        let seeds = &[b"pool".as_ref(), mint_key.as_ref(), &[bump]];
+        let signer = &[&seeds[..]];
+
+        // Perform the transfer of SOL from the pool authority to the signer
+        let cpi_accounts = Transfer {
+            from: self.pool_authority.to_account_info(),
+            to: self.signer.to_account_info(),
+        };
+        let cpi_ctx = CpiContext::new_with_signer(
+            self.system_program.to_account_info(),
+            cpi_accounts,
+            signer,
+        );
+        transfer(cpi_ctx, amount)?;
         Ok(())
     }
 }
@@ -74,29 +94,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     // Transfer the tokens
     ctx.accounts.transfer_token(amount)?;
-
-    // Prepare for the signed transfer of SOL
-    let mint_key = ctx.accounts.mint.key();
-    let seeds = &[
-        b"pool".as_ref(),
-        mint_key.as_ref(),
-        &[ctx.bumps.pool_authority],
-    ];
-    let signer = &[&seeds[..]];
-
-    // Perform the transfer of SOL from the pool authority to the signer
-    let cpi_accounts = Transfer {
-        from: ctx.accounts.pool_authority.to_account_info(),
-        to: ctx.accounts.signer.to_account_info(),
-    };
-    let cpi_ctx = CpiContext::new_with_signer(
-        ctx.accounts.system_program.to_account_info(),
-        cpi_accounts,
-        signer,
-    );
-    transfer(cpi_ctx, price)?;
-
-    msg!("Transfer Token");
+    ctx.accounts.transfer_sol(price)?;
 
     Ok(())
 }

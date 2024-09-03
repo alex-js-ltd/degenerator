@@ -62,6 +62,13 @@ pub fn get_approve_account_pda(mint: Pubkey) -> Pubkey {
     Pubkey::find_program_address(&[APPROVE_ACCOUNT_SEED, mint.as_ref()], &crate::id()).0
 }
 
+pub fn get_pool_bump(mint: Pubkey) -> u8 {
+    // Find the PDA bump seed
+    let (_, bump) = Pubkey::find_program_address(&[POOL_ACCOUNT_SEED, mint.as_ref()], &crate::id());
+
+    bump
+}
+
 /// Determine if we are in CPI
 pub fn hook_in_cpi() -> bool {
     let stack_height = get_stack_height();
