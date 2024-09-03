@@ -12,7 +12,7 @@ pub struct SellToken<'info> {
     pub signer: Signer<'info>,
 
     #[account(mut)]
-    pub from: InterfaceAccount<'info, TokenAccount>,
+    pub payer_ata: InterfaceAccount<'info, TokenAccount>,
 
     #[account(
         mut,
@@ -27,7 +27,7 @@ pub struct SellToken<'info> {
         payer = signer,
         associated_token::authority = pool_authority
     )]
-    pub to_ata: InterfaceAccount<'info, TokenAccount>,
+    pub pool_ata: InterfaceAccount<'info, TokenAccount>,
 
     #[account(mut)]
     pub mint: InterfaceAccount<'info, Mint>,
@@ -41,9 +41,9 @@ impl<'info> SellToken<'info> {
     /// Transfers SOL to the pool authority
     fn transfer_token(&self, amount: u64) -> ProgramResult {
         let cpi_accounts = TransferChecked {
-            from: self.from.to_account_info().clone(),
+            from: self.payer_ata.to_account_info().clone(),
             mint: self.mint.to_account_info().clone(),
-            to: self.to_ata.to_account_info().clone(),
+            to: self.pool_ata.to_account_info().clone(),
             authority: self.signer.to_account_info(),
         };
         let cpi_program = self.token_program.to_account_info();
@@ -56,7 +56,7 @@ impl<'info> SellToken<'info> {
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     // Get the current supply of tokens
-    let supply = ctx.accounts.from.amount;
+    let supply = ctx.accounts.payer_ata.amount;
 
     // Ensure the requested amount does not exceed available supply
     if amount > supply {

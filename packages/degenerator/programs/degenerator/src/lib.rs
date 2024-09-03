@@ -11,7 +11,7 @@ mod utils;
 
 
 
-declare_id!("72Fj7AQRXcpq4Zb2q5KXtcMiVhJEFVhM4H4aZj4bF17Y");
+declare_id!("96dmhc22zfG72mx88bRqtDkk6z7KUTEDWa3sGJajxkmJ");
 
 #[program]
 pub mod degenerator {

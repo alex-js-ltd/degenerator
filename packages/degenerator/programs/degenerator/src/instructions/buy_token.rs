@@ -24,7 +24,7 @@ pub struct BuyToken<'info> {
 
     /// Token account from which the tokens will be transferred
     #[account(mut)]
-    pub from: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub pool_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Token account to which the tokens will be transferred (created if needed)
     #[account(
@@ -33,7 +33,7 @@ pub struct BuyToken<'info> {
         payer = signer,
         associated_token::authority = signer
     )]
-    pub to_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Mint associated with the token
     #[account(mut)]
@@ -67,7 +67,7 @@ impl<'info> BuyToken<'info> {
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     // Get the current supply of tokens
-    let supply = ctx.accounts.from.amount;
+    let supply = ctx.accounts.pool_ata.amount;
 
     // Ensure the requested amount does not exceed available supply
     if amount > supply {
@@ -93,9 +93,9 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     let signer = &[&seeds[..]];
 
     let cpi_accounts = TransferChecked {
-        from: ctx.accounts.from.to_account_info().clone(),
+        from: ctx.accounts.pool_ata.to_account_info().clone(),
         mint: ctx.accounts.mint.to_account_info().clone(),
-        to: ctx.accounts.to_ata.to_account_info().clone(),
+        to: ctx.accounts.payer_ata.to_account_info().clone(),
         authority: ctx.accounts.pool_authority.to_account_info(),
     };
     let cpi_program = ctx.accounts.token_program.to_account_info();

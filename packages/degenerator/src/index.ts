@@ -280,9 +280,9 @@ async function getBuyTokenInstruction({
 		.accounts({
 			mint: mint,
 			signer: payer,
-			from: poolATA,
+			poolAta: poolATA,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
-			toAta: payerATA,
+			payerAta: payerATA,
 		})
 		.instruction()
 
@@ -313,10 +313,9 @@ async function getSellTokenInstruction({
 		.accounts({
 			mint: mint,
 			signer: payer,
-			from: payerATA,
-
+			payerAta: payerATA,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
-			toAta: poolATA,
+			poolAta: poolATA,
 		})
 		.instruction()
 
