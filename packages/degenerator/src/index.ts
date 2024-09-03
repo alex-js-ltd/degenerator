@@ -231,7 +231,7 @@ async function getMintInstructions({
 			mint: mint,
 			signer: payer,
 			from: payerATA,
-			to: pda.toBase58(),
+			to: pda,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 			toAta: poolATA,
 		})
@@ -314,7 +314,7 @@ async function getSellTokenInstruction({
 			mint: mint,
 			signer: payer,
 			from: payerATA,
-			to: pda.toBase58(),
+
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 			toAta: poolATA,
 		})

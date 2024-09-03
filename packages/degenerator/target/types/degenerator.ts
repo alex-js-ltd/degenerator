@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "EBQ22Zz1yBuFmm9GFM6Smp2oSwhLLm7NZDgvVKUCchv",
+  "address": "72Fj7AQRXcpq4Zb2q5KXtcMiVhJEFVhM4H4aZj4bF17Y",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -432,7 +432,25 @@ export type Degenerator = {
           "writable": true
         },
         {
-          "name": "to"
+          "name": "poolAuthority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
           "name": "toAta",

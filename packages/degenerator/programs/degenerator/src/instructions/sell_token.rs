@@ -1,35 +1,58 @@
 use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
-use anchor_lang::system_program::{Transfer, transfer};
+use anchor_lang::system_program::{transfer, Transfer};
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{
-    self, Mint, TokenAccount, TokenInterface, TransferChecked,
-};
+use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 
-use crate::utils::{POOL_ACCOUNT_SEED, calculate_price};
 use crate::errors::Errors;
+use crate::utils::{calculate_price, POOL_ACCOUNT_SEED};
 
 #[derive(Accounts)]
 pub struct SellToken<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
+
     #[account(mut)]
     pub from: InterfaceAccount<'info, TokenAccount>,
-    pub to: AccountInfo<'info>,
+
+    #[account(
+        mut,
+        seeds = [POOL_ACCOUNT_SEED, mint.key().as_ref()],
+        bump,
+    )]
+    pub pool_authority: AccountInfo<'info>,
+
     #[account(
         init_if_needed,
         associated_token::mint = mint,
         payer = signer,
-        associated_token::authority = to
+        associated_token::authority = pool_authority
     )]
     pub to_ata: InterfaceAccount<'info, TokenAccount>,
+
     #[account(mut)]
     pub mint: InterfaceAccount<'info, Mint>,
+
     pub token_program: Interface<'info, TokenInterface>,
     pub system_program: Program<'info, System>,
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
+impl<'info> SellToken<'info> {
+    /// Transfers SOL to the pool authority
+    fn transfer_token(&self, amount: u64) -> ProgramResult {
+        let cpi_accounts = TransferChecked {
+            from: self.from.to_account_info().clone(),
+            mint: self.mint.to_account_info().clone(),
+            to: self.to_ata.to_account_info().clone(),
+            authority: self.signer.to_account_info(),
+        };
+        let cpi_program = self.token_program.to_account_info();
+        let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
 
+        token_interface::transfer_checked(cpi_context, amount, self.mint.decimals)?;
+        Ok(())
+    }
+}
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     // Get the current supply of tokens
@@ -43,21 +66,37 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     // Calculate the price for the requested amount
     let price = calculate_price(supply, amount);
 
+    // Ensure the pool authority has enough balance to cover the price
+    let pool_balance = ctx.accounts.pool_authority.lamports();
+    if pool_balance < price {
+        return Err(ProgramError::InsufficientFunds.into());
+    }
 
+    // Transfer the tokens
+    ctx.accounts.transfer_token(amount)?;
 
-    let cpi_accounts = TransferChecked {
-        from: ctx.accounts.from.to_account_info().clone(),
-        mint: ctx.accounts.mint.to_account_info().clone(),
-        to: ctx.accounts.to_ata.to_account_info().clone(),
-        authority: ctx.accounts.signer.to_account_info(),
+    // Prepare for the signed transfer of SOL
+    let mint_key = ctx.accounts.mint.key();
+    let seeds = &[
+        b"pool".as_ref(),
+        mint_key.as_ref(),
+        &[ctx.bumps.pool_authority],
+    ];
+    let signer = &[&seeds[..]];
+
+    // Perform the transfer of SOL from the pool authority to the signer
+    let cpi_accounts = Transfer {
+        from: ctx.accounts.pool_authority.to_account_info(),
+        to: ctx.accounts.signer.to_account_info(),
     };
-    let cpi_program = ctx.accounts.token_program.to_account_info();
-    let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
-    token_interface::transfer_checked(cpi_context, amount, ctx.accounts.mint.decimals)?;
-
+    let cpi_ctx = CpiContext::new_with_signer(
+        ctx.accounts.system_program.to_account_info(),
+        cpi_accounts,
+        signer,
+    );
+    transfer(cpi_ctx, price)?;
 
     msg!("Transfer Token");
-
 
     Ok(())
 }
