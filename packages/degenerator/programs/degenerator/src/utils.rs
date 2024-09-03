@@ -1,3 +1,4 @@
+use anchor_lang::system_program;
 use anchor_lang::{
     prelude::Result,
     solana_program::{
@@ -11,6 +12,8 @@ use anchor_lang::{
     },
     Lamports,
 };
+use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
+use anchor_spl::token_2022;
 use anchor_spl::token_interface::spl_token_2022::{
     extension::{BaseStateWithExtensions, Extension, StateWithExtensions},
     solana_zk_token_sdk::zk_token_proof_instruction::Pod,
@@ -111,4 +114,31 @@ pub fn calculate_price(supply: u64, amount: u64) -> u64 {
 
     // Return total price, converting back to u64 and handling potential overflow
     total_price.try_into().unwrap_or(u64::MAX)
+}
+
+pub fn transfer_from_user_to_pool_vault<'a>(
+    authority: AccountInfo<'a>,
+    from: AccountInfo<'a>,
+    to_vault: AccountInfo<'a>,
+    mint: AccountInfo<'a>,
+    token_program: AccountInfo<'a>,
+    amount: u64,
+    mint_decimals: u8,
+) -> Result<()> {
+    if amount == 0 {
+        return Ok(());
+    }
+    token_2022::transfer_checked(
+        CpiContext::new(
+            token_program.to_account_info(),
+            token_2022::TransferChecked {
+                from,
+                to: to_vault,
+                authority,
+                mint,
+            },
+        ),
+        amount,
+        mint_decimals,
+    )
 }

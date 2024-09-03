@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "GvTRtvAoAACDfkD3zHsqi9wcYnpNykfdzNkU4NqYzDqy",
+  "address": "2gdL2YoeFyiLCvGPbF1AqBKqp8VffXw2kWe4FpAmbsJU",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -279,6 +279,10 @@ export type Degenerator = {
           "writable": true
         },
         {
+          "name": "payerAta",
+          "writable": true
+        },
+        {
           "name": "tokenProgram",
           "docs": [
             "Spl token program or token program 2022"
@@ -306,7 +310,12 @@ export type Degenerator = {
           "address": "SysvarRent111111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "mintToken",

@@ -216,35 +216,17 @@ async function getMintInstructions({
 		.instruction()
 
 	const createPool = await program.methods
-		.createPool()
+		.createPool(transferAmount)
 		.accounts({
 			payer: payer,
 			poolAta: poolATA,
 			mint: mint,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
+			payerAta: payerATA,
 		})
 		.instruction()
 
-	const transfer = await program.methods
-		.transferToken(transferAmount)
-		.accounts({
-			mint: mint,
-			signer: payer,
-			from: payerATA,
-			to: pda,
-			tokenProgram: TOKEN_2022_PROGRAM_ID,
-			toAta: poolATA,
-		})
-		.instruction()
-
-	const instructions = [
-		init,
-		mintToken,
-		revokeMint,
-		revokeFreeze,
-		createPool,
-		transfer,
-	]
+	const instructions = [init, mintToken, revokeMint, revokeFreeze, createPool]
 
 	return instructions
 }

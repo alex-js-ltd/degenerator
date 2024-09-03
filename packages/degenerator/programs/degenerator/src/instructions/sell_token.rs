@@ -1,11 +1,10 @@
 use anchor_lang::system_program;
 use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_2022;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
-use crate::utils::{calculate_price, POOL_ACCOUNT_SEED};
+use crate::utils::{calculate_price, transfer_from_user_to_pool_vault, POOL_ACCOUNT_SEED};
 
 #[derive(Accounts)]
 pub struct SellToken<'info> {
@@ -36,33 +35,6 @@ pub struct SellToken<'info> {
     pub token_program: Interface<'info, TokenInterface>,
     pub system_program: Program<'info, System>,
     pub associated_token_program: Program<'info, AssociatedToken>,
-}
-
-fn transfer_from_user_to_pool_vault<'a>(
-    authority: AccountInfo<'a>,
-    from: AccountInfo<'a>,
-    to_vault: AccountInfo<'a>,
-    mint: AccountInfo<'a>,
-    token_program: AccountInfo<'a>,
-    amount: u64,
-    mint_decimals: u8,
-) -> Result<()> {
-    if amount == 0 {
-        return Ok(());
-    }
-    token_2022::transfer_checked(
-        CpiContext::new(
-            token_program.to_account_info(),
-            token_2022::TransferChecked {
-                from,
-                to: to_vault,
-                authority,
-                mint,
-            },
-        ),
-        amount,
-        mint_decimals,
-    )
 }
 
 fn transfer_sol_to_user<'a>(

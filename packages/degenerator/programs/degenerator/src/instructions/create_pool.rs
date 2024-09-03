@@ -2,14 +2,26 @@ use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
-use crate::utils::{update_account_lamports_to_minimum_balance, POOL_ACCOUNT_SEED};
+use crate::utils::{
+    transfer_from_user_to_pool_vault, update_account_lamports_to_minimum_balance, POOL_ACCOUNT_SEED,
+};
 
-pub fn create_pool(ctx: Context<CreatePool>) -> Result<()> {
+pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
     // transfer minimum rent to pool account
     update_account_lamports_to_minimum_balance(
         ctx.accounts.pool_authority.to_account_info(),
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
+    )?;
+
+    transfer_from_user_to_pool_vault(
+        ctx.accounts.payer.to_account_info(),
+        ctx.accounts.payer_ata.to_account_info(),
+        ctx.accounts.pool_ata.to_account_info(),
+        ctx.accounts.mint.to_account_info(),
+        ctx.accounts.token_program.to_account_info(),
+        amount,
+        ctx.accounts.mint.decimals,
     )?;
 
     Ok(())
@@ -39,6 +51,9 @@ pub struct CreatePool<'info> {
         associated_token::authority = pool_authority,
     )]
     pub pool_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+
+    #[account(mut)]
+    pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Spl token program or token program 2022
     pub token_program: Interface<'info, TokenInterface>,

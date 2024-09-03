@@ -1,5 +1,5 @@
 {
-  "address": "GvTRtvAoAACDfkD3zHsqi9wcYnpNykfdzNkU4NqYzDqy",
+  "address": "2gdL2YoeFyiLCvGPbF1AqBKqp8VffXw2kWe4FpAmbsJU",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -273,6 +273,10 @@
           "writable": true
         },
         {
+          "name": "payer_ata",
+          "writable": true
+        },
+        {
           "name": "token_program",
           "docs": [
             "Spl token program or token program 2022"
@@ -300,7 +304,12 @@
           "address": "SysvarRent111111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "mint_token",
