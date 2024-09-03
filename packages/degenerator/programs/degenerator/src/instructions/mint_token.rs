@@ -1,10 +1,5 @@
-
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{
-    self, Mint, MintTo, TokenAccount, TokenInterface, 
-};
-
-
+use anchor_spl::token_interface::{self, Mint, MintTo, TokenAccount, TokenInterface};
 
 pub fn mint_token(ctx: Context<MintToken>, amount: u64) -> Result<()> {
     let cpi_accounts = MintTo {
@@ -14,12 +9,13 @@ pub fn mint_token(ctx: Context<MintToken>, amount: u64) -> Result<()> {
     };
     let cpi_program = ctx.accounts.token_program.to_account_info();
     let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
-    token_interface::mint_to(cpi_context,  amount * 10u64.pow(ctx.accounts.mint.decimals as u32))?;
+    token_interface::mint_to(
+        cpi_context,
+        amount * 10u64.pow(ctx.accounts.mint.decimals as u32),
+    )?;
     msg!("Mint Token");
     Ok(())
 }
-
-
 
 #[derive(Accounts)]
 pub struct MintToken<'info> {

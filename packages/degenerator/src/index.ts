@@ -219,7 +219,7 @@ async function getMintInstructions({
 		.createPool()
 		.accounts({
 			payer: payer,
-			tokenAccount: poolATA,
+			poolAta: poolATA,
 			mint: mint,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})

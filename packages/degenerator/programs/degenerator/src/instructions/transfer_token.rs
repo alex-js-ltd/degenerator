@@ -1,10 +1,6 @@
-
-
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{
-    self, Mint, TokenAccount, TokenInterface, TransferChecked,
-};
+use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 
 pub fn transfer_token(ctx: Context<TransferToken>, amount: u64) -> Result<()> {
     let cpi_accounts = TransferChecked {
@@ -41,4 +37,3 @@ pub struct TransferToken<'info> {
     pub system_program: Program<'info, System>,
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
-

@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "6NXPzmaDdCTzPpwQ3sT2pXtQv5VKm2Xd3Rs6X95v6Afw",
+  "address": "b6qhGGibZd5NveWmWrT2nMVnQMoK25kufQrVY9gm4Cf",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -272,11 +272,24 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "tokenAccount",
+          "name": "poolAta",
           "docs": [
             "The ATA that will be created"
           ],
           "writable": true
+        },
+        {
+          "name": "tokenProgram",
+          "docs": [
+            "Spl token program or token program 2022"
+          ]
+        },
+        {
+          "name": "associatedTokenProgram",
+          "docs": [
+            "Associated Token Program"
+          ],
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
           "name": "systemProgram",
@@ -288,22 +301,9 @@ export type Degenerator = {
         {
           "name": "rent",
           "docs": [
-            "Rent Sysvar"
+            "Sysvar for program account"
           ],
           "address": "SysvarRent111111111111111111111111111111111"
-        },
-        {
-          "name": "tokenProgram",
-          "docs": [
-            "Token Program"
-          ]
-        },
-        {
-          "name": "associatedTokenProgram",
-          "docs": [
-            "Associated Token Program"
-          ],
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
       "args": []

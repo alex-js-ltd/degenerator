@@ -1,5 +1,5 @@
-use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
 use anchor_lang::system_program::{transfer, Transfer};
+use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 

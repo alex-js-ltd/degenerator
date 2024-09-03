@@ -1,12 +1,10 @@
+use anchor_lang::system_program::{transfer, Transfer};
 use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
-use anchor_lang::system_program::{Transfer, transfer};
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{
-    self, Mint, TokenAccount, TokenInterface, TransferChecked,
-};
+use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 
-use crate::utils::{POOL_ACCOUNT_SEED, calculate_price};
 use crate::errors::Errors;
+use crate::utils::{calculate_price, POOL_ACCOUNT_SEED};
 
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
@@ -51,10 +49,7 @@ pub struct BuyToken<'info> {
 
 impl<'info> BuyToken<'info> {
     /// Transfers SOL to the pool authority
-    fn transfer_sol(
-        &self,
-        amount: u64
-    ) -> ProgramResult {
+    fn transfer_sol(&self, amount: u64) -> ProgramResult {
         let cpi_accounts = Transfer {
             from: self.signer.to_account_info(),
             to: self.pool_authority.to_account_info(),

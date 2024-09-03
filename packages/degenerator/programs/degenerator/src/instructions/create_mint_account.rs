@@ -1,31 +1,20 @@
-use anchor_lang::{
-    prelude::*,
-    solana_program::entrypoint::ProgramResult,
-};
+use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
 
 use anchor_spl::{
     associated_token::AssociatedToken,
     token_2022::spl_token_2022::extension::metadata_pointer::MetadataPointer,
     token_interface::{
-        spl_token_metadata_interface::state::TokenMetadata,
-        token_metadata_initialize,
-        Mint,
-        Token2022,
-        TokenAccount,
-        TokenMetadataInitialize,
+        spl_token_metadata_interface::state::TokenMetadata, token_metadata_initialize, Mint,
+        Token2022, TokenAccount, TokenMetadataInitialize,
     },
 };
 
 use spl_pod::optional_keys::OptionalNonZeroPubkey;
 
 use crate::utils::{
-    get_meta_list_size,
-    get_mint_extensible_extension_data,
-    get_mint_extension_data,
-    update_account_lamports_to_minimum_balance,
-    META_LIST_ACCOUNT_SEED,
+    get_meta_list_size, get_mint_extensible_extension_data, get_mint_extension_data,
+    update_account_lamports_to_minimum_balance, META_LIST_ACCOUNT_SEED,
 };
-
 
 #[derive(AnchorDeserialize, AnchorSerialize)]
 pub struct CreateMintAccountArgs {
@@ -124,7 +113,6 @@ pub fn handler(ctx: Context<CreateMintAccount>, args: CreateMintAccountArgs) -> 
         metadata_pointer.authority,
         OptionalNonZeroPubkey::try_from(authority_key)?
     );
-
 
     // transfer minimum rent to mint account
     update_account_lamports_to_minimum_balance(
