@@ -35,6 +35,11 @@ describe('initialize', () => {
 		owner: pda,
 	})
 
+	const payerATA = getAssociatedAddress({
+		mint: mint.publicKey,
+		owner: payer.publicKey,
+	})
+
 	const supply = 1000000000
 
 	const metadata = {
@@ -151,12 +156,50 @@ describe('initialize', () => {
 
 		tx.sign([payer])
 
+		// Fetch the token and SOL balances before the transaction
+		const beforePoolAmount = await getTokenAmount({
+			connection,
+			address: poolATA,
+		})
+		const beforePayerAmount = await getTokenAmount({
+			connection,
+			address: payerATA,
+		})
+		const beforeSol = await getBalance({ connection, address: pda })
+
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
-		console.log(res)
 		expect(res.value.err).toBeNull()
 
 		// Confirm the transaction
 		await sendAndConfirm({ connection, tx })
+
+		// Fetch the token and SOL balances after the transaction
+		const afterPoolAmount = await getTokenAmount({
+			connection,
+			address: poolATA,
+		})
+		const afterPayerAmount = await getTokenAmount({
+			connection,
+			address: payerATA,
+		})
+		const afterSol = await getBalance({ connection, address: pda })
+
+		// Check that the amount in the pool increased by the amount of tokens sold
+		expect(
+			new BN(afterPoolAmount).eq(
+				new BN(beforePoolAmount).add(new BN(amountToSell)),
+			),
+		).toBe(true)
+
+		// Check that the amount in the payer's account decreased by the amount of tokens sold
+		expect(
+			new BN(afterPayerAmount).eq(
+				new BN(beforePayerAmount).sub(new BN(amountToSell)),
+			),
+		).toBe(true)
+
+		// Check that the SOL balance of the PDA has decreased by the amount received for selling tokens
+		expect(new BN(afterSol).lt(new BN(beforeSol))).toBe(true)
 	})
 })
