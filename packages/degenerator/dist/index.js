@@ -1,5 +1,5 @@
 // src/index.ts
-import { BN } from "@coral-xyz/anchor";
+import { BN, web3, utils } from "@coral-xyz/anchor";
 import {
   PublicKey as PublicKey2,
   TransactionMessage,
@@ -16,7 +16,7 @@ var NATIVE_MINT_2022 = new PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXe
 
 // target/idl/degenerator.json
 var degenerator_default = {
-  address: "7d8qJx4mFJhxNHkGpgDcaK9DbokNJSVFKjtYq89ESFUa",
+  address: "8Ad2mhQUU1dQvwAbfksCjermBcZ15XjrGDGBQ6LWmrZB",
   metadata: {
     name: "degenerator",
     version: "0.1.0",
@@ -25,89 +25,168 @@ var degenerator_default = {
   },
   instructions: [
     {
-      name: "create_associated_token_account",
+      name: "buy_token",
       discriminator: [
-        112,
-        83,
-        122,
-        159,
-        174,
-        104,
-        244,
-        19
+        138,
+        127,
+        14,
+        91,
+        38,
+        87,
+        115,
+        105
       ],
       accounts: [
         {
           name: "signer",
+          docs: [
+            "The payer of the transaction and the signer"
+          ],
           writable: true,
           signer: true
         },
         {
-          name: "mint"
-        },
-        {
-          name: "token_account",
-          writable: true
-        },
-        {
-          name: "system_program",
-          address: "11111111111111111111111111111111"
-        },
-        {
-          name: "token_program"
-        },
-        {
-          name: "associated_token_program",
-          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
-        }
-      ],
-      args: []
-    },
-    {
-      name: "create_token_account",
-      discriminator: [
-        147,
-        241,
-        123,
-        100,
-        244,
-        132,
-        174,
-        118
-      ],
-      accounts: [
-        {
-          name: "signer",
-          writable: true,
-          signer: true
-        },
-        {
-          name: "mint"
-        },
-        {
-          name: "token_account",
+          name: "pool_authority",
           writable: true,
           pda: {
             seeds: [
               {
                 kind: "const",
                 value: [
-                  116,
+                  112,
                   111,
-                  107,
-                  101,
-                  110,
-                  45,
-                  50,
-                  48,
-                  50,
-                  50,
-                  45,
-                  116,
                   111,
-                  107,
+                  108
+                ]
+              },
+              {
+                kind: "account",
+                path: "mint"
+              }
+            ]
+          }
+        },
+        {
+          name: "pool_ata",
+          docs: [
+            "Token account from which the tokens will be transferred"
+          ],
+          writable: true
+        },
+        {
+          name: "payer_ata",
+          docs: [
+            "Token account to which the tokens will be transferred (created if needed)"
+          ],
+          writable: true
+        },
+        {
+          name: "mint",
+          docs: [
+            "Mint associated with the token"
+          ],
+          writable: true
+        },
+        {
+          name: "token_program",
+          docs: [
+            "Token program"
+          ]
+        },
+        {
+          name: "system_program",
+          docs: [
+            "System program"
+          ],
+          address: "11111111111111111111111111111111"
+        },
+        {
+          name: "associated_token_program",
+          docs: [
+            "Associated token program"
+          ],
+          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      args: [
+        {
+          name: "amount",
+          type: "u64"
+        }
+      ]
+    },
+    {
+      name: "check_mint_extensions_constraints",
+      discriminator: [
+        116,
+        106,
+        124,
+        163,
+        185,
+        116,
+        224,
+        224
+      ],
+      accounts: [
+        {
+          name: "authority",
+          writable: true,
+          signer: true
+        },
+        {
+          name: "mint"
+        }
+      ],
+      args: []
+    },
+    {
+      name: "create_mint_account",
+      discriminator: [
+        76,
+        184,
+        50,
+        62,
+        162,
+        141,
+        47,
+        103
+      ],
+      accounts: [
+        {
+          name: "payer",
+          writable: true,
+          signer: true
+        },
+        {
+          name: "authority",
+          writable: true,
+          signer: true
+        },
+        {
+          name: "receiver"
+        },
+        {
+          name: "mint",
+          writable: true,
+          signer: true
+        },
+        {
+          name: "mint_token_account",
+          writable: true
+        },
+        {
+          name: "extra_metas_account",
+          writable: true,
+          pda: {
+            seeds: [
+              {
+                kind: "const",
+                value: [
                   101,
-                  110,
+                  120,
+                  116,
+                  114,
+                  97,
                   45,
                   97,
                   99,
@@ -115,12 +194,14 @@ var degenerator_default = {
                   111,
                   117,
                   110,
-                  116
+                  116,
+                  45,
+                  109,
+                  101,
+                  116,
+                  97,
+                  115
                 ]
-              },
-              {
-                kind: "account",
-                path: "signer"
               },
               {
                 kind: "account",
@@ -134,78 +215,116 @@ var degenerator_default = {
           address: "11111111111111111111111111111111"
         },
         {
-          name: "token_program"
-        }
-      ],
-      args: []
-    },
-    {
-      name: "emit",
-      discriminator: [
-        252,
-        45,
-        156,
-        110,
-        150,
-        14,
-        45,
-        99
-      ],
-      accounts: [
-        {
-          name: "mint_account"
+          name: "associated_token_program",
+          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
           name: "token_program",
           address: "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        }
-      ],
-      args: []
-    },
-    {
-      name: "initialize",
-      discriminator: [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
-      accounts: [
-        {
-          name: "payer",
-          writable: true,
-          signer: true
-        },
-        {
-          name: "mint_account",
-          writable: true,
-          signer: true
-        },
-        {
-          name: "token_program",
-          address: "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          name: "system_program",
-          address: "11111111111111111111111111111111"
         }
       ],
       args: [
         {
-          name: "token_decimals",
-          type: "u8"
-        },
-        {
           name: "args",
           type: {
             defined: {
-              name: "TokenMetadataArgs"
+              name: "CreateMintAccountArgs"
             }
           }
+        }
+      ]
+    },
+    {
+      name: "create_pool",
+      discriminator: [
+        233,
+        146,
+        209,
+        142,
+        207,
+        104,
+        64,
+        188
+      ],
+      accounts: [
+        {
+          name: "payer",
+          docs: [
+            "The payer for the transaction"
+          ],
+          writable: true,
+          signer: true
+        },
+        {
+          name: "pool_authority",
+          writable: true,
+          pda: {
+            seeds: [
+              {
+                kind: "const",
+                value: [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                kind: "account",
+                path: "mint"
+              }
+            ]
+          }
+        },
+        {
+          name: "mint",
+          docs: [
+            "The Mint for which the ATA is being created"
+          ]
+        },
+        {
+          name: "pool_ata",
+          docs: [
+            "The ATA that will be created"
+          ],
+          writable: true
+        },
+        {
+          name: "payer_ata",
+          writable: true
+        },
+        {
+          name: "token_program",
+          docs: [
+            "Spl token program or token program 2022"
+          ]
+        },
+        {
+          name: "associated_token_program",
+          docs: [
+            "Associated Token Program"
+          ],
+          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          name: "system_program",
+          docs: [
+            "System Program"
+          ],
+          address: "11111111111111111111111111111111"
+        },
+        {
+          name: "rent",
+          docs: [
+            "Sysvar for program account"
+          ],
+          address: "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      args: [
+        {
+          name: "amount",
+          type: "u64"
         }
       ]
     },
@@ -243,44 +362,6 @@ var degenerator_default = {
         {
           name: "amount",
           type: "u64"
-        }
-      ]
-    },
-    {
-      name: "remove_key",
-      discriminator: [
-        210,
-        40,
-        193,
-        233,
-        8,
-        77,
-        176,
-        144
-      ],
-      accounts: [
-        {
-          name: "update_authority",
-          writable: true,
-          signer: true
-        },
-        {
-          name: "mint_account",
-          writable: true
-        },
-        {
-          name: "token_program",
-          address: "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          name: "system_program",
-          address: "11111111111111111111111111111111"
-        }
-      ],
-      args: [
-        {
-          name: "key",
-          type: "string"
         }
       ]
     },
@@ -349,16 +430,16 @@ var degenerator_default = {
       args: []
     },
     {
-      name: "transfer_token",
+      name: "sell_token",
       discriminator: [
-        219,
-        17,
-        122,
-        53,
-        237,
-        171,
-        232,
-        222
+        109,
+        61,
+        40,
+        187,
+        230,
+        176,
+        135,
+        174
       ],
       accounts: [
         {
@@ -367,14 +448,32 @@ var degenerator_default = {
           signer: true
         },
         {
-          name: "from",
+          name: "payer_ata",
           writable: true
         },
         {
-          name: "to"
+          name: "pool_authority",
+          writable: true,
+          pda: {
+            seeds: [
+              {
+                kind: "const",
+                value: [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                kind: "account",
+                path: "mint"
+              }
+            ]
+          }
         },
         {
-          name: "to_ata",
+          name: "pool_ata",
           writable: true
         },
         {
@@ -399,112 +498,18 @@ var degenerator_default = {
           type: "u64"
         }
       ]
-    },
+    }
+  ],
+  errors: [
     {
-      name: "update_authority",
-      discriminator: [
-        32,
-        46,
-        64,
-        28,
-        149,
-        75,
-        243,
-        88
-      ],
-      accounts: [
-        {
-          name: "current_authority",
-          signer: true
-        },
-        {
-          name: "new_authority",
-          optional: true
-        },
-        {
-          name: "mint_account",
-          writable: true
-        },
-        {
-          name: "token_program",
-          address: "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          name: "system_program",
-          address: "11111111111111111111111111111111"
-        }
-      ],
-      args: []
-    },
-    {
-      name: "update_field",
-      discriminator: [
-        164,
-        49,
-        117,
-        6,
-        187,
-        205,
-        13,
-        217
-      ],
-      accounts: [
-        {
-          name: "authority",
-          writable: true,
-          signer: true
-        },
-        {
-          name: "mint_account",
-          writable: true
-        },
-        {
-          name: "token_program",
-          address: "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          name: "system_program",
-          address: "11111111111111111111111111111111"
-        }
-      ],
-      args: [
-        {
-          name: "args",
-          type: {
-            defined: {
-              name: "UpdateFieldArgs"
-            }
-          }
-        }
-      ]
+      code: 6e3,
+      name: "InsufficientTokens",
+      msg: "Insufficient tokens in the pool."
     }
   ],
   types: [
     {
-      name: "AnchorField",
-      type: {
-        kind: "enum",
-        variants: [
-          {
-            name: "Name"
-          },
-          {
-            name: "Symbol"
-          },
-          {
-            name: "Uri"
-          },
-          {
-            name: "Key",
-            fields: [
-              "string"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      name: "TokenMetadataArgs",
+      name: "CreateMintAccountArgs",
       type: {
         kind: "struct",
         fields: [
@@ -522,43 +527,17 @@ var degenerator_default = {
           }
         ]
       }
-    },
-    {
-      name: "UpdateFieldArgs",
-      type: {
-        kind: "struct",
-        fields: [
-          {
-            name: "field",
-            docs: [
-              "Field to update in the metadata"
-            ],
-            type: {
-              defined: {
-                name: "AnchorField"
-              }
-            }
-          },
-          {
-            name: "value",
-            docs: [
-              "Value to write for the field"
-            ],
-            type: "string"
-          }
-        ]
-      }
     }
   ]
 };
 
 // src/index.ts
 async function airDrop({
-  payer,
+  account,
   connection
 }) {
   const blocks = connection.getLatestBlockhash();
-  const airDrop2 = connection.requestAirdrop(payer.publicKey, 1e10);
+  const airDrop2 = connection.requestAirdrop(account, 1e10);
   const [latestBlockhash, signature] = await Promise.all([blocks, airDrop2]);
   await connection.confirmTransaction(
     {
@@ -575,6 +554,24 @@ function getAssociatedAddress({
   return PublicKey2.findProgramAddressSync(
     [owner.toBuffer(), TOKEN_2022_PROGRAM_ID.toBuffer(), mint.toBuffer()],
     ASSOCIATED_TOKEN_PROGRAM_ID
+  )[0];
+}
+function getMetadataPda({
+  program,
+  mint
+}) {
+  return PublicKey2.findProgramAddressSync(
+    [utils.bytes.utf8.encode("extra-account-metas"), mint.toBuffer()],
+    program.programId
+  )[0];
+}
+function getPoolPda({
+  program,
+  mint
+}) {
+  return PublicKey2.findProgramAddressSync(
+    [Buffer.from("pool"), mint.toBuffer()],
+    program.programId
   )[0];
 }
 async function buildTransaction({
@@ -609,11 +606,24 @@ async function sendAndConfirm({
   );
   return signature;
 }
+async function getTokenAmount({
+  connection,
+  address
+}) {
+  const res = await connection.getTokenAccountBalance(address);
+  return res.value.amount;
+}
+async function getBalance({
+  connection,
+  address
+}) {
+  const res = await connection.getBalance(address);
+  return res;
+}
 async function getMintInstructions({
   program,
   payer,
   mint,
-  receiver,
   metadata,
   decimals,
   supply
@@ -624,18 +634,21 @@ async function getMintInstructions({
     mint,
     owner: payer
   });
-  const receiverATA = getAssociatedAddress({
+  const pda = getPoolPda({ program, mint });
+  const poolATA = getAssociatedAddress({
     mint,
-    owner: receiver
+    owner: pda
   });
-  const init = await program.methods.initialize(decimals, metadata).accounts({
-    mintAccount: mint,
-    payer
-  }).instruction();
-  const createAtaPayer = await program.methods.createAssociatedTokenAccount().accounts({
-    tokenAccount: payerATA,
+  const extraMetasAccount = getMetadataPda({ program, mint });
+  const init = await program.methods.createMintAccount(metadata).accountsStrict({
+    payer,
+    authority: payer,
+    receiver: payer,
     mint,
-    signer: payer,
+    mintTokenAccount: payerATA,
+    extraMetasAccount,
+    systemProgram: web3.SystemProgram.programId,
+    associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
     tokenProgram: TOKEN_2022_PROGRAM_ID
   }).instruction();
   const mintToken = await program.methods.mintToken(supplyBN).accounts({
@@ -644,22 +657,83 @@ async function getMintInstructions({
     receiver: payerATA,
     tokenProgram: TOKEN_2022_PROGRAM_ID
   }).instruction();
-  const transfer = await program.methods.transferToken(transferAmount).accounts({
+  const revokeMint = await program.methods.revokeMintAuthority().accounts({
+    currentAuthority: payer,
+    mintAccount: mint
+  }).instruction();
+  const revokeFreeze = await program.methods.revokeFreezeAuthority().accounts({
+    currentAuthority: payer,
+    mintAccount: mint
+  }).instruction();
+  const createPool = await program.methods.createPool(transferAmount).accounts({
+    payer,
+    poolAta: poolATA,
+    mint,
+    tokenProgram: TOKEN_2022_PROGRAM_ID,
+    payerAta: payerATA
+  }).instruction();
+  return [init, mintToken, revokeMint, revokeFreeze, createPool];
+}
+async function getBuyTokenInstruction({
+  program,
+  payer,
+  mint,
+  amount
+}) {
+  const payerATA = getAssociatedAddress({
+    mint,
+    owner: payer
+  });
+  const pda = getPoolPda({ program, mint });
+  const poolATA = getAssociatedAddress({
+    mint,
+    owner: pda
+  });
+  const amountBN = new BN(amount);
+  const buy = await program.methods.buyToken(amountBN).accounts({
     mint,
     signer: payer,
-    from: payerATA,
-    to: receiver,
+    poolAta: poolATA,
     tokenProgram: TOKEN_2022_PROGRAM_ID,
-    toAta: receiverATA
+    payerAta: payerATA
   }).instruction();
-  const instructions = [init, createAtaPayer, mintToken, transfer];
-  return instructions;
+  return buy;
+}
+async function getSellTokenInstruction({
+  program,
+  payer,
+  mint,
+  amount
+}) {
+  const payerATA = getAssociatedAddress({
+    mint,
+    owner: payer
+  });
+  const pda = getPoolPda({ program, mint });
+  const poolATA = getAssociatedAddress({
+    mint,
+    owner: pda
+  });
+  const amountBN = new BN(amount);
+  const sell = await program.methods.sellToken(amountBN).accounts({
+    mint,
+    signer: payer,
+    payerAta: payerATA,
+    tokenProgram: TOKEN_2022_PROGRAM_ID,
+    poolAta: poolATA
+  }).instruction();
+  return sell;
 }
 export {
   degenerator_default as IDL,
   airDrop,
   buildTransaction,
   getAssociatedAddress,
+  getBalance,
+  getBuyTokenInstruction,
   getMintInstructions,
+  getPoolPda,
+  getSellTokenInstruction,
+  getTokenAmount,
   sendAndConfirm
 };

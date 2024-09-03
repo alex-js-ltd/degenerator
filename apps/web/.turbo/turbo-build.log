@@ -13,11 +13,11 @@
 [?25l [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[31mFailed to compile.
 [39m
 [36m./app/actions/mint_token.ts[39m:[33m64[39m:[33m5[39m
-[31m[1mType error[22m[39m: Type 'Keypair' is missing the following properties from type 'PublicKey': equals, toBase58, toJSON, toBytes, and 3 more.
+[31m[1mType error[22m[39m: Object literal may only specify known properties, and 'receiver' does not exist in type 'GetMintInstructionsParams'.
 
 [0m [90m 62 |[39m 				decimals[33m,[39m[0m
 [0m [90m 63 |[39m 				supply[33m,[39m[0m
-[0m[31m[1m>[22m[39m[90m 64 |[39m 				receiver[33m,[39m[0m
+[0m[31m[1m>[22m[39m[90m 64 |[39m 				receiver[33m:[39m receiver[33m.[39mpublicKey[33m,[39m[0m
 [0m [90m    |[39m 				[31m[1m^[22m[39m[0m
 [0m [90m 65 |[39m 			}))[33m,[39m[0m
 [0m [90m 66 |[39m 		][33m,[39m[0m

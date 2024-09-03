@@ -19,14 +19,13 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	const error = {
 		...submission.reply(),
 		serializedTransaction: undefined,
-		mintA: undefined,
 	}
-
+	console.log(submission)
 	if (submission.status !== 'success') {
 		return error
 	}
 
-	const { image, name, symbol, description, decimals, supply, payer, cpmm } =
+	const { image, name, symbol, description, decimals, supply, payer } =
 		submission.value
 
 	const blob = await put(image.name, image, { access: 'public' }).catch(
@@ -36,7 +35,6 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	if (isError(blob)) return { ...error, message: blob.message }
 
 	const mint = web3.Keypair.generate()
-	const receiver = web3.Keypair.generate()
 
 	const upload = await uploadMetadata({
 		...getMetadataParams({ payer, mint, name, symbol, blob, description }),
@@ -61,7 +59,6 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 				metadata,
 				decimals,
 				supply,
-				receiver: receiver.publicKey,
 			})),
 		],
 		signers: [mint],
@@ -72,7 +69,6 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	return {
 		...submission.reply(),
 		serializedTransaction: transaction.serialize(),
-		mintA: mint.publicKey.toBase58(),
 	}
 }
 
