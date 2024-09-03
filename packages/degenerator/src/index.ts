@@ -50,6 +50,19 @@ function getAssociatedAddress({
 	)[0]
 }
 
+function getMetadataPda({
+	program,
+	mint,
+}: {
+	program: Program<Degenerator>
+	mint: PublicKey
+}): PublicKey {
+	return PublicKey.findProgramAddressSync(
+		[utils.bytes.utf8.encode('extra-account-metas'), mint.toBuffer()],
+		program.programId,
+	)[0]
+}
+
 function getPoolPda({
 	program,
 	mint,
@@ -169,10 +182,7 @@ async function getMintInstructions({
 		owner: pda,
 	})
 
-	const [extraMetasAccount] = PublicKey.findProgramAddressSync(
-		[utils.bytes.utf8.encode('extra-account-metas'), mint.toBuffer()],
-		program.programId,
-	)
+	const extraMetasAccount = getMetadataPda({ program, mint })
 
 	const init = await program.methods
 		.createMintAccount(metadata)
@@ -226,9 +236,7 @@ async function getMintInstructions({
 		})
 		.instruction()
 
-	const instructions = [init, mintToken, revokeMint, revokeFreeze, createPool]
-
-	return instructions
+	return [init, mintToken, revokeMint, revokeFreeze, createPool]
 }
 
 interface SwapTokenInstructionParams {
