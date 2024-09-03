@@ -4,7 +4,7 @@ mod errors;
 mod instructions;
 mod utils;
 
-declare_id!("45b9jtew83mukaCmUnwcXgTxntjH44PNNZyWxw2J6qpX");
+declare_id!("8Ad2mhQUU1dQvwAbfksCjermBcZ15XjrGDGBQ6LWmrZB");
 
 #[program]
 pub mod degenerator {
@@ -29,7 +29,7 @@ pub mod degenerator {
         instructions::mint_token(ctx, amount)
     }
 
-    pub fn revoke_mint_authority(ctx: Context<CloseMint>) -> Result<()> {
+    pub fn revoke_mint_authority(ctx: Context<RevokeMint>) -> Result<()> {
         instructions::revoke_mint(ctx)
     }
 

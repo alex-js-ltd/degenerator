@@ -5,8 +5,8 @@ use anchor_spl::token_interface::{
 
 pub fn revoke_freeze(ctx: Context<RevokeFreeze>) -> Result<()> {
     let cpi_accounts = SetAuthority {
-        current_authority: ctx.accounts.current_authority.to_account_info().clone(),
-        account_or_mint: ctx.accounts.mint_account.to_account_info().clone(),
+        current_authority: ctx.accounts.current_authority.to_account_info(),
+        account_or_mint: ctx.accounts.mint_account.to_account_info(),
     };
     let cpi_program = ctx.accounts.token_program.to_account_info();
     let cpi_context = CpiContext::new(cpi_program, cpi_accounts);

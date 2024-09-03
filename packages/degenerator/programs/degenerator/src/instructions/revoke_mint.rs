@@ -3,22 +3,19 @@ use anchor_spl::token_interface::{
     set_authority, spl_token_2022::instruction::AuthorityType, Mint, SetAuthority, Token2022,
 };
 
-pub fn revoke_mint(ctx: Context<CloseMint>) -> Result<()> {
+pub fn revoke_mint(ctx: Context<RevokeMint>) -> Result<()> {
     let cpi_accounts = SetAuthority {
-        current_authority: ctx.accounts.current_authority.to_account_info().clone(),
-        account_or_mint: ctx.accounts.mint_account.to_account_info().clone(),
+        current_authority: ctx.accounts.current_authority.to_account_info(),
+        account_or_mint: ctx.accounts.mint_account.to_account_info(),
     };
-
     let cpi_program = ctx.accounts.token_program.to_account_info();
     let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
-
     set_authority(cpi_context, AuthorityType::MintTokens, None)?;
-
     Ok(())
 }
 
 #[derive(Accounts)]
-pub struct CloseMint<'info> {
+pub struct RevokeMint<'info> {
     pub current_authority: Signer<'info>,
     #[account(
         mut,
