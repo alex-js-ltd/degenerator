@@ -1,3 +1,4 @@
+use anchor_lang::prelude::*;
 use anchor_lang::system_program;
 use anchor_lang::{
     prelude::Result,
@@ -7,7 +8,6 @@ use anchor_lang::{
     },
     Lamports,
 };
-use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
 use anchor_spl::token_2022;
 use anchor_spl::token_interface::spl_token_2022::{
     extension::{BaseStateWithExtensions, Extension, StateWithExtensions},
@@ -147,11 +147,14 @@ pub fn transfer_sol_to_pool_vault<'a>(
     to: AccountInfo<'a>,
     system_program: AccountInfo<'a>,
     amount: u64,
-) -> ProgramResult {
-    let cpi_accounts = system_program::Transfer { from, to };
-    let cpi_ctx = CpiContext::new(system_program, cpi_accounts);
-    system_program::transfer(cpi_ctx, amount)?;
-    Ok(())
+) -> Result<()> {
+    system_program::transfer(
+        CpiContext::new(
+            system_program.to_account_info(),
+            system_program::Transfer { from, to },
+        ),
+        amount,
+    )
 }
 
 pub fn transfer_sol_to_user<'a>(
@@ -160,9 +163,13 @@ pub fn transfer_sol_to_user<'a>(
     system_program: AccountInfo<'a>,
     amount: u64,
     signer_seeds: &[&[&[u8]]],
-) -> ProgramResult {
-    let cpi_accounts = system_program::Transfer { from, to };
-    let cpi_ctx = CpiContext::new_with_signer(system_program, cpi_accounts, signer_seeds);
-    system_program::transfer(cpi_ctx, amount)?;
-    Ok(())
+) -> Result<()> {
+    system_program::transfer(
+        CpiContext::new_with_signer(
+            system_program.to_account_info(),
+            system_program::Transfer { from, to },
+            signer_seeds,
+        ),
+        amount,
+    )
 }
