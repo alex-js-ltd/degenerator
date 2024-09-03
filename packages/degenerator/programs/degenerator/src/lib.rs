@@ -4,7 +4,7 @@ mod errors;
 mod instructions;
 mod utils;
 
-declare_id!("6n1bo8GjsVogkCPSoKPZ3GhbesJ59CxcKyaNouWF6cP5");
+declare_id!("6KhMSnneYSZPVrcXKHR6F9F38wBn16fobxy79eEtBTMC");
 
 #[program]
 pub mod degenerator {
@@ -35,10 +35,6 @@ pub mod degenerator {
 
     pub fn revoke_freeze_authority(ctx: Context<RevokeFreeze>) -> Result<()> {
         instructions::revoke_freeze(ctx)
-    }
-
-    pub fn transfer_token(ctx: Context<TransferToken>, amount: u64) -> Result<()> {
-        instructions::transfer_token(ctx, amount)
     }
 
     pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {

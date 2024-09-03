@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "6n1bo8GjsVogkCPSoKPZ3GhbesJ59CxcKyaNouWF6cP5",
+  "address": "6KhMSnneYSZPVrcXKHR6F9F38wBn16fobxy79eEtBTMC",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -463,58 +463,6 @@ export type Degenerator = {
         },
         {
           "name": "poolAta",
-          "writable": true
-        },
-        {
-          "name": "mint",
-          "writable": true
-        },
-        {
-          "name": "tokenProgram"
-        },
-        {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
-        },
-        {
-          "name": "associatedTokenProgram",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
-        }
-      ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "transferToken",
-      "discriminator": [
-        219,
-        17,
-        122,
-        53,
-        237,
-        171,
-        232,
-        222
-      ],
-      "accounts": [
-        {
-          "name": "signer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "from",
-          "writable": true
-        },
-        {
-          "name": "to"
-        },
-        {
-          "name": "toAta",
           "writable": true
         },
         {
