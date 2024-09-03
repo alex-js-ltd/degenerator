@@ -3,7 +3,7 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
-    transfer_from_user_to_pool_vault, update_account_lamports_to_minimum_balance, POOL_ACCOUNT_SEED,
+    transfer_from_user_to_pool_vault, update_account_lamports_to_minimum_balance, POOL_VAULT_SEED,
 };
 
 pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
@@ -35,7 +35,7 @@ pub struct CreatePool<'info> {
 
     /// CHECK: pool vault
     #[account(mut,
-        seeds = [POOL_ACCOUNT_SEED, mint.key().as_ref()],
+        seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
     pub pool_authority: AccountInfo<'info>,

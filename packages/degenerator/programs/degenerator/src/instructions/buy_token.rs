@@ -4,8 +4,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
 use crate::utils::{
-    calculate_price, transfer_from_pool_vault_to_user, transfer_sol_to_pool_vault,
-    POOL_ACCOUNT_SEED,
+    calculate_price, transfer_from_pool_vault_to_user, transfer_sol_to_pool_vault, POOL_VAULT_SEED,
 };
 
 #[derive(Accounts)]
@@ -17,7 +16,7 @@ pub struct BuyToken<'info> {
     /// CHECK: Pool authority (used for transfer)
     #[account(
         mut,
-        seeds = [POOL_ACCOUNT_SEED, mint.key().as_ref()],
+        seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
     pub pool_authority: AccountInfo<'info>,
@@ -67,14 +66,6 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
-    let mint_key = ctx.accounts.mint.key();
-    let seeds: &[&[u8]; 3] = &[
-        b"pool".as_ref(),
-        mint_key.as_ref(),
-        &[ctx.bumps.pool_authority],
-    ];
-    let signer_seeds = &[&seeds[..]];
-
     transfer_from_pool_vault_to_user(
         ctx.accounts.pool_authority.to_account_info(),
         ctx.accounts.pool_ata.to_account_info(),
@@ -83,7 +74,11 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ctx.accounts.token_program.to_account_info(),
         amount,
         ctx.accounts.mint.decimals,
-        signer_seeds,
+        &[&[
+            POOL_VAULT_SEED.as_bytes(),
+            ctx.accounts.mint.key().as_ref(),
+            &[ctx.bumps.pool_authority][..],
+        ][..]],
     )?;
 
     transfer_sol_to_pool_vault(
