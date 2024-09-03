@@ -1,10 +1,10 @@
-use anchor_lang::system_program::{transfer, Transfer};
-use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
-use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
-
 use crate::errors::Errors;
 use crate::utils::{calculate_price, get_pool_bump, POOL_ACCOUNT_SEED};
+use anchor_lang::system_program;
+use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
+use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token_2022;
+use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
 
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
@@ -47,36 +47,45 @@ pub struct BuyToken<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-impl<'info> BuyToken<'info> {
-    /// Transfers SOL to the pool authority
-    fn transfer_sol(&self, amount: u64) -> ProgramResult {
-        let cpi_accounts = Transfer {
-            from: self.signer.to_account_info(),
-            to: self.pool_authority.to_account_info(),
-        };
-        let cpi_ctx = CpiContext::new(self.system_program.to_account_info(), cpi_accounts);
-        transfer(cpi_ctx, amount)?;
-        Ok(())
+fn transfer_sol_to_pool_vault<'a>(
+    from: AccountInfo<'a>,
+    to: AccountInfo<'a>,
+    system_program: AccountInfo<'a>,
+    amount: u64,
+) -> ProgramResult {
+    let cpi_accounts = system_program::Transfer { from, to };
+    let cpi_ctx = CpiContext::new(system_program, cpi_accounts);
+    system_program::transfer(cpi_ctx, amount)?;
+    Ok(())
+}
+
+fn transfer_from_pool_vault_to_user<'a>(
+    authority: AccountInfo<'a>,
+    from_vault: AccountInfo<'a>,
+    to: AccountInfo<'a>,
+    mint: AccountInfo<'a>,
+    token_program: AccountInfo<'a>,
+    amount: u64,
+    mint_decimals: u8,
+    signer_seeds: &[&[&[u8]]],
+) -> Result<()> {
+    if amount == 0 {
+        return Ok(());
     }
-
-    fn transfer_token(&self, amount: u64) -> ProgramResult {
-        let mint_key = self.mint.key();
-        let bump = get_pool_bump(mint_key);
-        let seeds: &[&[u8]; 3] = &[b"pool".as_ref(), mint_key.as_ref(), &[bump]];
-        let signer = &[&seeds[..]];
-
-        let cpi_accounts = TransferChecked {
-            from: self.pool_ata.to_account_info(),
-            mint: self.mint.to_account_info(),
-            to: self.payer_ata.to_account_info(),
-            authority: self.pool_authority.to_account_info(),
-        };
-        let cpi_program = self.token_program.to_account_info();
-        let cpi_context = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
-
-        token_interface::transfer_checked(cpi_context, amount, self.mint.decimals)?;
-        Ok(())
-    }
+    token_2022::transfer_checked(
+        CpiContext::new_with_signer(
+            token_program.to_account_info(),
+            token_2022::TransferChecked {
+                from: from_vault,
+                to,
+                authority,
+                mint,
+            },
+            signer_seeds,
+        ),
+        amount,
+        mint_decimals,
+    )
 }
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
@@ -97,8 +106,31 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
-    ctx.accounts.transfer_token(amount)?;
-    ctx.accounts.transfer_sol(price)?;
+    let mint_key = ctx.accounts.mint.key();
+    let seeds: &[&[u8]; 3] = &[
+        b"pool".as_ref(),
+        mint_key.as_ref(),
+        &[ctx.bumps.pool_authority],
+    ];
+    let signer_seeds = &[&seeds[..]];
+
+    transfer_from_pool_vault_to_user(
+        ctx.accounts.pool_authority.to_account_info(),
+        ctx.accounts.pool_ata.to_account_info(),
+        ctx.accounts.payer_ata.to_account_info(),
+        ctx.accounts.mint.to_account_info(),
+        ctx.accounts.token_program.to_account_info(),
+        amount,
+        ctx.accounts.mint.decimals,
+        signer_seeds,
+    )?;
+
+    transfer_sol_to_pool_vault(
+        ctx.accounts.signer.to_account_info(),
+        ctx.accounts.pool_authority.to_account_info(),
+        ctx.accounts.system_program.to_account_info(),
+        price,
+    )?;
 
     Ok(())
 }
