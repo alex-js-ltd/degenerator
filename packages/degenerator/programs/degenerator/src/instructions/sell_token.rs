@@ -1,10 +1,11 @@
-use anchor_lang::system_program;
-use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
+use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
-use crate::utils::{calculate_price, transfer_from_user_to_pool_vault, POOL_ACCOUNT_SEED};
+use crate::utils::{
+    calculate_price, transfer_from_user_to_pool_vault, transfer_sol_to_user, POOL_ACCOUNT_SEED,
+};
 
 #[derive(Accounts)]
 pub struct SellToken<'info> {
@@ -35,19 +36,6 @@ pub struct SellToken<'info> {
     pub token_program: Interface<'info, TokenInterface>,
     pub system_program: Program<'info, System>,
     pub associated_token_program: Program<'info, AssociatedToken>,
-}
-
-fn transfer_sol_to_user<'a>(
-    from: AccountInfo<'a>,
-    to: AccountInfo<'a>,
-    system_program: AccountInfo<'a>,
-    amount: u64,
-    signer_seeds: &[&[&[u8]]],
-) -> ProgramResult {
-    let cpi_accounts = system_program::Transfer { from, to };
-    let cpi_ctx = CpiContext::new_with_signer(system_program, cpi_accounts, signer_seeds);
-    system_program::transfer(cpi_ctx, amount)?;
-    Ok(())
 }
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {

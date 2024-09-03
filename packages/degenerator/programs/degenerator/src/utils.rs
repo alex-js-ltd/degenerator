@@ -2,13 +2,8 @@ use anchor_lang::system_program;
 use anchor_lang::{
     prelude::Result,
     solana_program::{
-        account_info::AccountInfo,
-        instruction::{get_stack_height, TRANSACTION_LEVEL_STACK_HEIGHT},
-        program::invoke,
-        pubkey::Pubkey,
-        rent::Rent,
-        system_instruction::transfer,
-        sysvar::Sysvar,
+        account_info::AccountInfo, program::invoke, pubkey::Pubkey, rent::Rent,
+        system_instruction::transfer, sysvar::Sysvar,
     },
     Lamports,
 };
@@ -23,7 +18,6 @@ use spl_tlv_account_resolution::{account::ExtraAccountMeta, state::ExtraAccountM
 use spl_type_length_value::variable_len_pack::VariableLenPack;
 
 pub const POOL_ACCOUNT_SEED: &[u8] = b"pool";
-pub const APPROVE_ACCOUNT_SEED: &[u8] = b"approve-account";
 pub const META_LIST_ACCOUNT_SEED: &[u8] = b"extra-account-metas";
 
 pub fn update_account_lamports_to_minimum_balance<'info>(
@@ -55,30 +49,6 @@ pub fn get_mint_extension_data<T: Extension + Pod>(account: &mut AccountInfo) ->
     let mint_with_extension = StateWithExtensions::<Mint>::unpack(&mint_data)?;
     let extension_data = *mint_with_extension.get_extension::<T>()?;
     Ok(extension_data)
-}
-
-pub fn get_extra_meta_list_account_pda(mint: Pubkey) -> Pubkey {
-    Pubkey::find_program_address(&[META_LIST_ACCOUNT_SEED, mint.as_ref()], &crate::id()).0
-}
-
-pub fn get_approve_account_pda(mint: Pubkey) -> Pubkey {
-    Pubkey::find_program_address(&[APPROVE_ACCOUNT_SEED, mint.as_ref()], &crate::id()).0
-}
-
-pub fn get_pool_bump(mint: Pubkey) -> u8 {
-    // Find the PDA bump seed
-    let (_, bump) = Pubkey::find_program_address(&[POOL_ACCOUNT_SEED, mint.as_ref()], &crate::id());
-
-    bump
-}
-
-/// Determine if we are in CPI
-pub fn hook_in_cpi() -> bool {
-    let stack_height = get_stack_height();
-    let tx_height = TRANSACTION_LEVEL_STACK_HEIGHT;
-    let hook_height: usize = tx_height + 1;
-
-    stack_height > hook_height
 }
 
 pub fn get_meta_list(approve_account: Option<Pubkey>) -> Vec<ExtraAccountMeta> {
@@ -141,4 +111,58 @@ pub fn transfer_from_user_to_pool_vault<'a>(
         amount,
         mint_decimals,
     )
+}
+
+pub fn transfer_from_pool_vault_to_user<'a>(
+    authority: AccountInfo<'a>,
+    from_vault: AccountInfo<'a>,
+    to: AccountInfo<'a>,
+    mint: AccountInfo<'a>,
+    token_program: AccountInfo<'a>,
+    amount: u64,
+    mint_decimals: u8,
+    signer_seeds: &[&[&[u8]]],
+) -> Result<()> {
+    if amount == 0 {
+        return Ok(());
+    }
+    token_2022::transfer_checked(
+        CpiContext::new_with_signer(
+            token_program.to_account_info(),
+            token_2022::TransferChecked {
+                from: from_vault,
+                to,
+                authority,
+                mint,
+            },
+            signer_seeds,
+        ),
+        amount,
+        mint_decimals,
+    )
+}
+
+pub fn transfer_sol_to_pool_vault<'a>(
+    from: AccountInfo<'a>,
+    to: AccountInfo<'a>,
+    system_program: AccountInfo<'a>,
+    amount: u64,
+) -> ProgramResult {
+    let cpi_accounts = system_program::Transfer { from, to };
+    let cpi_ctx = CpiContext::new(system_program, cpi_accounts);
+    system_program::transfer(cpi_ctx, amount)?;
+    Ok(())
+}
+
+pub fn transfer_sol_to_user<'a>(
+    from: AccountInfo<'a>,
+    to: AccountInfo<'a>,
+    system_program: AccountInfo<'a>,
+    amount: u64,
+    signer_seeds: &[&[&[u8]]],
+) -> ProgramResult {
+    let cpi_accounts = system_program::Transfer { from, to };
+    let cpi_ctx = CpiContext::new_with_signer(system_program, cpi_accounts, signer_seeds);
+    system_program::transfer(cpi_ctx, amount)?;
+    Ok(())
 }

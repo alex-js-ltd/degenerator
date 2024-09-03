@@ -1,11 +1,12 @@
-use anchor_lang::system_program;
-use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
+use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_2022;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
-use crate::utils::{calculate_price, POOL_ACCOUNT_SEED};
+use crate::utils::{
+    calculate_price, transfer_from_pool_vault_to_user, transfer_sol_to_pool_vault,
+    POOL_ACCOUNT_SEED,
+};
 
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
@@ -46,47 +47,6 @@ pub struct BuyToken<'info> {
 
     /// Associated token program
     pub associated_token_program: Program<'info, AssociatedToken>,
-}
-
-fn transfer_sol_to_pool_vault<'a>(
-    from: AccountInfo<'a>,
-    to: AccountInfo<'a>,
-    system_program: AccountInfo<'a>,
-    amount: u64,
-) -> ProgramResult {
-    let cpi_accounts = system_program::Transfer { from, to };
-    let cpi_ctx = CpiContext::new(system_program, cpi_accounts);
-    system_program::transfer(cpi_ctx, amount)?;
-    Ok(())
-}
-
-fn transfer_from_pool_vault_to_user<'a>(
-    authority: AccountInfo<'a>,
-    from_vault: AccountInfo<'a>,
-    to: AccountInfo<'a>,
-    mint: AccountInfo<'a>,
-    token_program: AccountInfo<'a>,
-    amount: u64,
-    mint_decimals: u8,
-    signer_seeds: &[&[&[u8]]],
-) -> Result<()> {
-    if amount == 0 {
-        return Ok(());
-    }
-    token_2022::transfer_checked(
-        CpiContext::new_with_signer(
-            token_program.to_account_info(),
-            token_2022::TransferChecked {
-                from: from_vault,
-                to,
-                authority,
-                mint,
-            },
-            signer_seeds,
-        ),
-        amount,
-        mint_decimals,
-    )
 }
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
