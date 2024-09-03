@@ -18,7 +18,7 @@ use spl_tlv_account_resolution::{account::ExtraAccountMeta, state::ExtraAccountM
 use spl_type_length_value::variable_len_pack::VariableLenPack;
 
 pub const POOL_VAULT_SEED: &str = "pool";
-pub const META_LIST_ACCOUNT_SEED: &[u8] = b"extra-account-metas";
+pub const META_LIST_ACCOUNT_SEED: &str = "extra-account-metas";
 
 pub fn update_account_lamports_to_minimum_balance<'info>(
     account: AccountInfo<'info>,

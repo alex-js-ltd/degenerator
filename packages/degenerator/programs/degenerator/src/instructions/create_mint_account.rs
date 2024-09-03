@@ -59,7 +59,7 @@ pub struct CreateMintAccount<'info> {
     #[account(
         init,
         space = get_meta_list_size(None),
-        seeds = [META_LIST_ACCOUNT_SEED, mint.key().as_ref()],
+        seeds = [META_LIST_ACCOUNT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
         payer = payer,
     )]
