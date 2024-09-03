@@ -1,10 +1,11 @@
-use crate::errors::Errors;
-use crate::utils::{calculate_price, get_pool_bump, POOL_ACCOUNT_SEED};
 use anchor_lang::system_program;
 use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_2022;
-use anchor_spl::token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked};
+use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
+
+use crate::errors::Errors;
+use crate::utils::{calculate_price, POOL_ACCOUNT_SEED};
 
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
