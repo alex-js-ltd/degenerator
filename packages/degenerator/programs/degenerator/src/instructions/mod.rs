@@ -1,5 +1,4 @@
 mod buy_token;
-mod create_ata;
 mod create_pool;
 mod initialize;
 mod mint_token;
@@ -7,7 +6,6 @@ mod sell_token;
 mod set_authority;
 
 pub use buy_token::*;
-pub use create_ata::*;
 pub use create_pool::*;
 pub use initialize::*;
 pub use mint_token::*;

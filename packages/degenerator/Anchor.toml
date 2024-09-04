@@ -5,10 +5,10 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-degenerator = "9UFqJxvAX4Tkk9TgaJTXcnCNLjdZgsb5VBHye1maKUY8"
+degenerator = "E3N2pZzsvNCDioQ6seJjsv4cEjdGU2nqNmCLhcZsSvts"
 
 [programs.localnet]
-degenerator = "9UFqJxvAX4Tkk9TgaJTXcnCNLjdZgsb5VBHye1maKUY8"
+degenerator = "E3N2pZzsvNCDioQ6seJjsv4cEjdGU2nqNmCLhcZsSvts"
 
 [programs.mainnet]
 degenerator = "E3N2pZzsvNCDioQ6seJjsv4cEjdGU2nqNmCLhcZsSvts"
@@ -17,7 +17,7 @@ degenerator = "E3N2pZzsvNCDioQ6seJjsv4cEjdGU2nqNmCLhcZsSvts"
 url = "https://api.mainnet-beta.solana.com"
 
 [provider]
-cluster = "Localnet"
+cluster = "Devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
