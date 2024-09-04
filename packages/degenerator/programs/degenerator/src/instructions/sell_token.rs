@@ -14,7 +14,7 @@ pub struct SellToken<'info> {
 
     #[account(mut)]
     pub payer_ata: InterfaceAccount<'info, TokenAccount>,
-
+    /// CHECK: Pool authority (used for transfer)
     #[account(
         mut,
         seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],

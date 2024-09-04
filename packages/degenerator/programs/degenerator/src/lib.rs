@@ -4,7 +4,7 @@ mod errors;
 mod instructions;
 mod utils;
 
-declare_id!("8Ad2mhQUU1dQvwAbfksCjermBcZ15XjrGDGBQ6LWmrZB");
+declare_id!("4DwsLqEToKjeZoEFgnGAiD48U7smxRmnKryhxQviYgfj");
 
 #[program]
 pub mod degenerator {
@@ -12,29 +12,30 @@ pub mod degenerator {
     pub use super::instructions::*;
     use super::*;
 
-    pub fn create_mint_account(
-        ctx: Context<CreateMintAccount>,
-        args: CreateMintAccountArgs,
+    pub fn initialize(
+        ctx: Context<Initialize>,
+        token_decimals: u8,
+        args: TokenMetadataArgs,
     ) -> Result<()> {
-        instructions::handler(ctx, args)
+        instructions::initialize(ctx, token_decimals, args)
     }
 
-    pub fn check_mint_extensions_constraints(
-        _ctx: Context<CheckMintExtensionConstraints>,
+    pub fn create_associated_token_account(
+        ctx: Context<CreateAssociatedTokenAccount>,
     ) -> Result<()> {
-        Ok(())
+        instructions::create_associated_token_account(ctx)
     }
 
     pub fn mint_token(ctx: Context<MintToken>, amount: u64) -> Result<()> {
         instructions::mint_token(ctx, amount)
     }
 
-    pub fn revoke_mint_authority(ctx: Context<RevokeMint>) -> Result<()> {
-        instructions::revoke_mint(ctx)
+    pub fn revoke_mint_authority(ctx: Context<Authority>) -> Result<()> {
+        instructions::revoke_mint_authority(ctx)
     }
 
-    pub fn revoke_freeze_authority(ctx: Context<RevokeFreeze>) -> Result<()> {
-        instructions::revoke_freeze(ctx)
+    pub fn revoke_freeze_authority(ctx: Context<Authority>) -> Result<()> {
+        instructions::revoke_freeze_authority(ctx)
     }
 
     pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {

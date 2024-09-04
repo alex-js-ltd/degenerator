@@ -1,5 +1,5 @@
 {
-  "address": "8Ad2mhQUU1dQvwAbfksCjermBcZ15XjrGDGBQ6LWmrZB",
+  "address": "4DwsLqEToKjeZoEFgnGAiD48U7smxRmnKryhxQviYgfj",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -99,123 +99,43 @@
       ]
     },
     {
-      "name": "check_mint_extensions_constraints",
+      "name": "create_associated_token_account",
       "discriminator": [
-        116,
-        106,
-        124,
-        163,
-        185,
-        116,
-        224,
-        224
+        112,
+        83,
+        122,
+        159,
+        174,
+        104,
+        244,
+        19
       ],
       "accounts": [
         {
-          "name": "authority",
+          "name": "signer",
           "writable": true,
           "signer": true
         },
         {
           "name": "mint"
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "create_mint_account",
-      "discriminator": [
-        76,
-        184,
-        50,
-        62,
-        162,
-        141,
-        47,
-        103
-      ],
-      "accounts": [
-        {
-          "name": "payer",
-          "writable": true,
-          "signer": true
         },
         {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "receiver"
-        },
-        {
-          "name": "mint",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mint_token_account",
+          "name": "token_account",
           "writable": true
-        },
-        {
-          "name": "extra_metas_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  101,
-                  120,
-                  116,
-                  114,
-                  97,
-                  45,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                  45,
-                  109,
-                  101,
-                  116,
-                  97,
-                  115
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "mint"
-              }
-            ]
-          }
         },
         {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
         },
         {
-          "name": "associated_token_program",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+          "name": "token_program"
         },
         {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "CreateMintAccountArgs"
-            }
-          }
-        }
-      ]
+      "args": []
     },
     {
       "name": "create_pool",
@@ -308,6 +228,53 @@
         {
           "name": "amount",
           "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "initialize",
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint_account",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "token_decimals",
+          "type": "u8"
+        },
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "TokenMetadataArgs"
+            }
+          }
         }
       ]
     },
@@ -492,7 +459,7 @@
   ],
   "types": [
     {
-      "name": "CreateMintAccountArgs",
+      "name": "TokenMetadataArgs",
       "type": {
         "kind": "struct",
         "fields": [

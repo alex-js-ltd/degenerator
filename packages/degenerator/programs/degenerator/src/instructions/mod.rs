@@ -1,15 +1,15 @@
 mod buy_token;
-mod create_mint_account;
+mod create_ata;
 mod create_pool;
+mod initialize;
 mod mint_token;
-mod revoke_freeze;
-mod revoke_mint;
 mod sell_token;
+mod set_authority;
 
 pub use buy_token::*;
-pub use create_mint_account::*;
+pub use create_ata::*;
 pub use create_pool::*;
+pub use initialize::*;
 pub use mint_token::*;
-pub use revoke_freeze::*;
-pub use revoke_mint::*;
 pub use sell_token::*;
+pub use set_authority::*;
