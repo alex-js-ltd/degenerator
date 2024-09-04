@@ -4,7 +4,7 @@ import 'server-only'
 
 async function fetchFeaturedTokens() {
 	const tokens = await prisma.tokenMetadata.findMany({
-		take: 10,
+		take: 4,
 	})
 
 	return { data: tokens }
