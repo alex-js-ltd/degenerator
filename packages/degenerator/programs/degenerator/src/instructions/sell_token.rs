@@ -40,15 +40,16 @@ pub struct SellToken<'info> {
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     // Get the current supply of tokens
-    let supply = ctx.accounts.payer_ata.amount;
+    let user_supply = ctx.accounts.payer_ata.amount;
+    let pool_supply = ctx.accounts.pool_ata.amount;
 
     // Ensure the requested amount does not exceed available supply
-    if amount > supply {
+    if amount > user_supply {
         return Err(Errors::InsufficientTokens.into());
     }
 
     // Calculate the price for the requested amount
-    let price = calculate_price(supply, amount);
+    let price = calculate_price(pool_supply, amount);
 
     // Ensure the pool authority has enough balance to cover the price
     let pool_balance = ctx.accounts.pool_authority.lamports();
