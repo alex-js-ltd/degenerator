@@ -4,7 +4,7 @@ mod errors;
 mod instructions;
 mod utils;
 
-declare_id!("4DwsLqEToKjeZoEFgnGAiD48U7smxRmnKryhxQviYgfj");
+declare_id!("DFMxzshfQmXSY1QT3aQ2eWae738ZFYm6TVyZ4Uqdm5QM");
 
 #[program]
 pub mod degenerator {
@@ -12,18 +12,12 @@ pub mod degenerator {
     pub use super::instructions::*;
     use super::*;
 
-    pub fn initialize(
-        ctx: Context<Initialize>,
+    pub fn create_mint_account(
+        ctx: Context<CreateMintAccount>,
         token_decimals: u8,
-        args: TokenMetadataArgs,
+        args: CreateMintAccountArgs,
     ) -> Result<()> {
-        instructions::initialize(ctx, token_decimals, args)
-    }
-
-    pub fn create_associated_token_account(
-        ctx: Context<CreateAssociatedTokenAccount>,
-    ) -> Result<()> {
-        instructions::create_associated_token_account(ctx)
+        instructions::handler(ctx, token_decimals, args)
     }
 
     pub fn mint_token(ctx: Context<MintToken>, amount: u64) -> Result<()> {

@@ -1,20 +1,19 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{self, Mint, MintTo, TokenAccount, TokenInterface};
+use anchor_spl::token_2022;
+use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 pub fn mint_token(ctx: Context<MintToken>, amount: u64) -> Result<()> {
-    let cpi_accounts = MintTo {
-        mint: ctx.accounts.mint.to_account_info().clone(),
-        to: ctx.accounts.receiver.to_account_info().clone(),
-        authority: ctx.accounts.signer.to_account_info(),
-    };
-    let cpi_program = ctx.accounts.token_program.to_account_info();
-    let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
-    token_interface::mint_to(
-        cpi_context,
-        amount * 10u64.pow(ctx.accounts.mint.decimals as u32),
-    )?;
-    msg!("Mint Token");
-    Ok(())
+    token_2022::mint_to(
+        CpiContext::new(
+            ctx.accounts.token_program.to_account_info(),
+            token_2022::MintTo {
+                to: ctx.accounts.receiver.to_account_info(),
+                authority: ctx.accounts.signer.to_account_info(),
+                mint: ctx.accounts.mint.to_account_info(),
+            },
+        ),
+        amount,
+    )
 }
 
 #[derive(Accounts)]

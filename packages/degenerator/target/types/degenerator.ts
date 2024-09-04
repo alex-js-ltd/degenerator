@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "4DwsLqEToKjeZoEFgnGAiD48U7smxRmnKryhxQviYgfj",
+  "address": "DFMxzshfQmXSY1QT3aQ2eWae738ZFYm6TVyZ4Uqdm5QM",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -105,43 +105,103 @@ export type Degenerator = {
       ]
     },
     {
-      "name": "createAssociatedTokenAccount",
+      "name": "createMintAccount",
       "discriminator": [
-        112,
-        83,
-        122,
-        159,
-        174,
-        104,
-        244,
-        19
+        76,
+        184,
+        50,
+        62,
+        162,
+        141,
+        47,
+        103
       ],
       "accounts": [
         {
-          "name": "signer",
+          "name": "payer",
           "writable": true,
           "signer": true
         },
         {
-          "name": "mint"
+          "name": "authority",
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "tokenAccount",
+          "name": "receiver"
+        },
+        {
+          "name": "mint",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mintTokenAccount",
           "writable": true
+        },
+        {
+          "name": "extraMetasAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  120,
+                  116,
+                  114,
+                  97,
+                  45,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  45,
+                  109,
+                  101,
+                  116,
+                  97,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         },
         {
-          "name": "tokenProgram"
-        },
-        {
           "name": "associatedTokenProgram",
           "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "tokenDecimals",
+          "type": "u8"
+        },
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "createMintAccountArgs"
+            }
+          }
+        }
+      ]
     },
     {
       "name": "createPool",
@@ -234,53 +294,6 @@ export type Degenerator = {
         {
           "name": "amount",
           "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "initialize",
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
-      "accounts": [
-        {
-          "name": "payer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mintAccount",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "tokenProgram",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "tokenDecimals",
-          "type": "u8"
-        },
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "tokenMetadataArgs"
-            }
-          }
         }
       ]
     },
@@ -465,7 +478,7 @@ export type Degenerator = {
   ],
   "types": [
     {
-      "name": "tokenMetadataArgs",
+      "name": "createMintAccountArgs",
       "type": {
         "kind": "struct",
         "fields": [
