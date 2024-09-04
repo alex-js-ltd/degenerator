@@ -12,7 +12,7 @@ pub fn mint_token(ctx: Context<MintToken>, amount: u64) -> Result<()> {
                 mint: ctx.accounts.mint.to_account_info(),
             },
         ),
-        amount,
+        amount * 10u64.pow(ctx.accounts.mint.decimals as u32), // Mint tokens
     )
 }
 

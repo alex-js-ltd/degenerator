@@ -8,7 +8,7 @@ import { PublicKey, Connection, Signer, TransactionInstruction, VersionedTransac
  * IDL can be found at `target/idl/degenerator.json`.
  */
 type Degenerator = {
-    "address": "3tdTZx5nY4wJE5no97p3m8aJiBZYxaxwi7d4eLPvz1ap";
+    "address": "9UFqJxvAX4Tkk9TgaJTXcnCNLjdZgsb5VBHye1maKUY8";
     "metadata": {
         "name": "degenerator";
         "version": "0.1.0";
@@ -503,7 +503,7 @@ type Degenerator = {
     ];
 };
 
-var address = "3tdTZx5nY4wJE5no97p3m8aJiBZYxaxwi7d4eLPvz1ap";
+var address = "9UFqJxvAX4Tkk9TgaJTXcnCNLjdZgsb5VBHye1maKUY8";
 var metadata = {
 	name: "degenerator",
 	version: "0.1.0",

@@ -16,7 +16,7 @@ var NATIVE_MINT_2022 = new PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXe
 
 // target/idl/degenerator.json
 var degenerator_default = {
-  address: "3tdTZx5nY4wJE5no97p3m8aJiBZYxaxwi7d4eLPvz1ap",
+  address: "9UFqJxvAX4Tkk9TgaJTXcnCNLjdZgsb5VBHye1maKUY8",
   metadata: {
     name: "degenerator",
     version: "0.1.0",
