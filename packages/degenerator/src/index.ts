@@ -5,7 +5,6 @@ import {
 	type Signer,
 	type TransactionInstruction,
 	Connection,
-	Keypair,
 	PublicKey,
 	TransactionMessage,
 	VersionedTransaction,
@@ -112,17 +111,6 @@ async function sendAndConfirm({
 	return signature
 }
 
-async function getTokenAmount({
-	connection,
-	address,
-}: {
-	connection: Connection
-	address: PublicKey
-}) {
-	const res = await connection.getTokenAccountBalance(address)
-	return res.value.amount
-}
-
 async function getBalance({
 	connection,
 	address,
@@ -154,8 +142,8 @@ async function getMintInstructions({
 	// Convert supply to BN (BigNumber) instance
 	const supplyBN = new BN(supply)
 
-	// Calculate 90% of the supply
-	const transferAmount = supplyBN.mul(new BN(90)).div(new BN(100))
+	// Calculate 99% of the supply
+	const transferAmount = supplyBN.mul(new BN(99)).div(new BN(100))
 
 	const payerATA = getAssociatedAddress({
 		mint: mint,
@@ -311,7 +299,6 @@ export {
 	buildTransaction,
 	getMintInstructions,
 	sendAndConfirm,
-	getTokenAmount,
 	getBuyTokenInstruction,
 	getSellTokenInstruction,
 	getBalance,

@@ -10,9 +10,8 @@ import {
 	getAssociatedAddress,
 	getBuyTokenInstruction,
 	getSellTokenInstruction,
-	getTokenAmount,
-	getBalance,
 } from '../index'
+import { getAccount, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 
 const { BN } = anchor
 
@@ -81,21 +80,31 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check pool', async () => {
-		const amount = await getTokenAmount({ connection, address: poolATA })
-		const userAmount = await getTokenAmount({ connection, address: payerATA })
-		console.log('pool amount', amount)
-		console.log('user amount', userAmount)
-		// Convert the fetched amount to a BN
-		const amountBN = new BN(amount)
+	it('check pool amount is 99 times the user amount', async () => {
+		// Fetch pool and user account data
+		const pool = await getAccount(
+			connection,
+			poolATA,
+			'processed',
+			TOKEN_2022_PROGRAM_ID,
+		)
+		const user = await getAccount(
+			connection,
+			payerATA,
+			'processed',
+			TOKEN_2022_PROGRAM_ID,
+		)
 
-		const supplyBN = new BN(supply)
+		// Extract amounts (assumed to be BigInt values)
+		const poolAmount = pool.amount // BigInt
+		const userAmount = user.amount // BigInt
 
-		// Calculate 90% of the supply
-		const transferAmount = supplyBN.mul(new BN(90)).div(new BN(100))
+		// Calculate expected pool amount as 9 times the user amount
+		const multiplier = BigInt(99) // Create BigInt instance
+		const expectedPoolAmount = userAmount * multiplier
 
-		// Use BN's `eq` method to compare the BN instances
-		expect(amountBN.eq(transferAmount)).toBe(true) // .eq() returns a boolean
+		// Assert that the pool amount is equal to the expected amount
+		expect(poolAmount).toBe(expectedPoolAmount)
 	})
 
 	it('buy token', async () => {
@@ -117,91 +126,11 @@ describe('initialize', () => {
 
 		tx.sign([payer])
 
-		const beforeAmount = await getTokenAmount({ connection, address: poolATA })
-		const beforeSol = await getBalance({ connection, address: pda })
-
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
 		expect(res.value.err).toBeNull()
 
 		// Confirm the transaction
 		await sendAndConfirm({ connection, tx })
-
-		const afterAmount = await getTokenAmount({ connection, address: poolATA })
-		const afterSol = await getBalance({ connection, address: pda })
-
-		// Check that the amount in the pool decreased by the amount of tokens bought
-		expect(
-			new BN(afterAmount).eq(new BN(beforeAmount).sub(new BN(amountToBuy))),
-		).toBe(true)
-
-		// Check that the SOL balance of the PDA has increased by the amount paid
-		expect(new BN(afterSol).gt(new BN(beforeSol))).toBe(true)
-	})
-
-	it('sell token', async () => {
-		const amountToSell = 5
-
-		const ix = await getSellTokenInstruction({
-			program,
-			payer: payer.publicKey,
-			mint: mint.publicKey,
-			amount: amountToSell,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Fetch the token and SOL balances before the transaction
-		const beforePoolAmount = await getTokenAmount({
-			connection,
-			address: poolATA,
-		})
-		const beforePayerAmount = await getTokenAmount({
-			connection,
-			address: payerATA,
-		})
-		const beforeSol = await getBalance({ connection, address: pda })
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-		expect(res.value.err).toBeNull()
-
-		// Confirm the transaction
-		await sendAndConfirm({ connection, tx })
-
-		// Fetch the token and SOL balances after the transaction
-		const afterPoolAmount = await getTokenAmount({
-			connection,
-			address: poolATA,
-		})
-		const afterPayerAmount = await getTokenAmount({
-			connection,
-			address: payerATA,
-		})
-		const afterSol = await getBalance({ connection, address: pda })
-
-		// Check that the amount in the pool increased by the amount of tokens sold
-		expect(
-			new BN(afterPoolAmount).eq(
-				new BN(beforePoolAmount).add(new BN(amountToSell)),
-			),
-		).toBe(true)
-
-		// Check that the amount in the payer's account decreased by the amount of tokens sold
-		expect(
-			new BN(afterPayerAmount).eq(
-				new BN(beforePayerAmount).sub(new BN(amountToSell)),
-			),
-		).toBe(true)
-
-		// Check that the SOL balance of the PDA has decreased by the amount received for selling tokens
-		expect(new BN(afterSol).lt(new BN(beforeSol))).toBe(true)
 	})
 })

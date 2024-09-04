@@ -5,19 +5,19 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-degenerator = "E2uLXz1ovgb9idrbqADFQeQBiFEjcA7Qs4bVKC381znL"
+degenerator = "HzxAfN9nRKNtRfbU3KNRpcKYBJUKoMpU733Vvsk3kTNh"
 
 [programs.localnet]
-degenerator = "E2uLXz1ovgb9idrbqADFQeQBiFEjcA7Qs4bVKC381znL"
+degenerator = "HzxAfN9nRKNtRfbU3KNRpcKYBJUKoMpU733Vvsk3kTNh"
 
 [programs.mainnet]
-degenerator = "E2uLXz1ovgb9idrbqADFQeQBiFEjcA7Qs4bVKC381znL"
+degenerator = "HzxAfN9nRKNtRfbU3KNRpcKYBJUKoMpU733Vvsk3kTNh"
 
 [registry]
 url = "https://api.mainnet-beta.solana.com"
 
 [provider]
-cluster = "https://divine-ultra-diagram.solana-devnet.quiknode.pro"
+cluster = "localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
