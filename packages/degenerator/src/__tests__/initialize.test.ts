@@ -83,7 +83,9 @@ describe('initialize', () => {
 
 	it('check pool', async () => {
 		const amount = await getTokenAmount({ connection, address: poolATA })
-
+		const userAmount = await getTokenAmount({ connection, address: payerATA })
+		console.log('pool amount', amount)
+		console.log('user amount', userAmount)
 		// Convert the fetched amount to a BN
 		const amountBN = new BN(amount)
 

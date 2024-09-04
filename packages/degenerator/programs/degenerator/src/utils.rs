@@ -108,7 +108,7 @@ pub fn transfer_from_user_to_pool_vault<'a>(
                 mint,
             },
         ),
-        amount,
+        amount * 10u64.pow(mint_decimals as u32),
         mint_decimals,
     )
 }
@@ -137,7 +137,7 @@ pub fn transfer_from_pool_vault_to_user<'a>(
             },
             signer_seeds,
         ),
-        amount,
+        amount * 10u64.pow(mint_decimals as u32),
         mint_decimals,
     )
 }
