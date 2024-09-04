@@ -10,16 +10,32 @@
 
  [37m[1m [22m[39m Creating an optimized production build ...
  [32m[1m✓[22m[39m Compiled successfully
-[?25l [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[31mFailed to compile.
-[39m
-[36m./app/actions/mint_token.ts[39m:[33m64[39m:[33m5[39m
-[31m[1mType error[22m[39m: Object literal may only specify known properties, and 'receiver' does not exist in type 'GetMintInstructionsParams'.
+[?25l [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[?25h [37m[1m [22m[39m Linting and checking validity of types     [32m[1m✓[22m[39m Linting and checking validity of types 
+[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Collecting page data     [32m[1m✓[22m[39m Collecting page data 
+[?25l [37m[1m [22m[39m Generating static pages (0/9)  [36m[    ][39mbigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (9/9)
+[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
+[2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
 
-[0m [90m 62 |[39m 				decimals[33m,[39m[0m
-[0m [90m 63 |[39m 				supply[33m,[39m[0m
-[0m[31m[1m>[22m[39m[90m 64 |[39m 				receiver[33m:[39m receiver[33m.[39mpublicKey[33m,[39m[0m
-[0m [90m    |[39m 				[31m[1m^[22m[39m[0m
-[0m [90m 65 |[39m 			}))[33m,[39m[0m
-[0m [90m 66 |[39m 		][33m,[39m[0m
-[0m [90m 67 |[39m 		signers[33m:[39m [mint][33m,[39m[0m
-[?25h[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m
+[4mRoute (app)[24m                              [4mSize[24m     [4mFirst Load JS[24m
+┌ ○ /                                    152 B          [37m[1m87.3 kB[22m[39m
+├ ○ /_not-found                          876 B            [37m[1m88 kB[22m[39m
+├ ƒ /api/metadata/[id]                   0 B                [37m[1m0 B[22m[39m
+├ ○ /faq                                 151 B          [37m[1m87.3 kB[22m[39m
+├ ƒ /home                                152 B          [37m[1m87.3 kB[22m[39m
+├ ○ /opengraph-image.png                 0 B                [37m[1m0 B[22m[39m
+└ ○ /twitter-image.png                   0 B                [37m[1m0 B[22m[39m
++ First Load JS shared by all            [37m[1m87.2 kB[22m[39m
+  ├ chunks/615-cd835e2e127b5bdc.js       31.5 kB
+  ├ chunks/8ece9acb-1a86f8d28fd7b22b.js  53.7 kB
+  └ other shared chunks (total)          1.99 kB
+
+
+ƒ Middleware                             [37m[1m40.8 kB[22m[39m
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+[?25h

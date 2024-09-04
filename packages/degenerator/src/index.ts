@@ -176,7 +176,7 @@ async function getMintInstructions({
 
 	const init = await program.methods
 
-		.createMintAccount(0, metadata)
+		.createMintAccount(decimals, metadata)
 		.accountsStrict({
 			payer: payer,
 			authority: payer,

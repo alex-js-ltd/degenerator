@@ -8,7 +8,7 @@ import { PublicKey, Connection, Signer, TransactionInstruction, VersionedTransac
  * IDL can be found at `target/idl/degenerator.json`.
  */
 type Degenerator = {
-    "address": "8Ad2mhQUU1dQvwAbfksCjermBcZ15XjrGDGBQ6LWmrZB";
+    "address": "3tdTZx5nY4wJE5no97p3m8aJiBZYxaxwi7d4eLPvz1ap";
     "metadata": {
         "name": "degenerator";
         "version": "0.1.0";
@@ -108,30 +108,6 @@ type Degenerator = {
             ];
         },
         {
-            "name": "checkMintExtensionsConstraints";
-            "discriminator": [
-                116,
-                106,
-                124,
-                163,
-                185,
-                116,
-                224,
-                224
-            ];
-            "accounts": [
-                {
-                    "name": "authority";
-                    "writable": true;
-                    "signer": true;
-                },
-                {
-                    "name": "mint";
-                }
-            ];
-            "args": [];
-        },
-        {
             "name": "createMintAccount";
             "discriminator": [
                 76,
@@ -216,6 +192,10 @@ type Degenerator = {
                 }
             ];
             "args": [
+                {
+                    "name": "tokenDecimals";
+                    "type": "u8";
+                },
                 {
                     "name": "args";
                     "type": {
@@ -523,7 +503,7 @@ type Degenerator = {
     ];
 };
 
-var address = "8Ad2mhQUU1dQvwAbfksCjermBcZ15XjrGDGBQ6LWmrZB";
+var address = "3tdTZx5nY4wJE5no97p3m8aJiBZYxaxwi7d4eLPvz1ap";
 var metadata = {
 	name: "degenerator",
 	version: "0.1.0",
@@ -623,31 +603,6 @@ var instructions = [
 		]
 	},
 	{
-		name: "check_mint_extensions_constraints",
-		discriminator: [
-			116,
-			106,
-			124,
-			163,
-			185,
-			116,
-			224,
-			224
-		],
-		accounts: [
-			{
-				name: "authority",
-				writable: true,
-				signer: true
-			},
-			{
-				name: "mint"
-			}
-		],
-		args: [
-		]
-	},
-	{
 		name: "create_mint_account",
 		discriminator: [
 			76,
@@ -732,6 +687,10 @@ var instructions = [
 			}
 		],
 		args: [
+			{
+				name: "token_decimals",
+				type: "u8"
+			},
 			{
 				name: "args",
 				type: {

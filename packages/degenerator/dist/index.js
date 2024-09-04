@@ -16,7 +16,7 @@ var NATIVE_MINT_2022 = new PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXe
 
 // target/idl/degenerator.json
 var degenerator_default = {
-  address: "8Ad2mhQUU1dQvwAbfksCjermBcZ15XjrGDGBQ6LWmrZB",
+  address: "3tdTZx5nY4wJE5no97p3m8aJiBZYxaxwi7d4eLPvz1ap",
   metadata: {
     name: "degenerator",
     version: "0.1.0",
@@ -116,30 +116,6 @@ var degenerator_default = {
       ]
     },
     {
-      name: "check_mint_extensions_constraints",
-      discriminator: [
-        116,
-        106,
-        124,
-        163,
-        185,
-        116,
-        224,
-        224
-      ],
-      accounts: [
-        {
-          name: "authority",
-          writable: true,
-          signer: true
-        },
-        {
-          name: "mint"
-        }
-      ],
-      args: []
-    },
-    {
       name: "create_mint_account",
       discriminator: [
         76,
@@ -224,6 +200,10 @@ var degenerator_default = {
         }
       ],
       args: [
+        {
+          name: "token_decimals",
+          type: "u8"
+        },
         {
           name: "args",
           type: {
@@ -556,15 +536,6 @@ function getAssociatedAddress({
     ASSOCIATED_TOKEN_PROGRAM_ID
   )[0];
 }
-function getMetadataPda({
-  program,
-  mint
-}) {
-  return PublicKey2.findProgramAddressSync(
-    [utils.bytes.utf8.encode("extra-account-metas"), mint.toBuffer()],
-    program.programId
-  )[0];
-}
 function getPoolPda({
   program,
   mint
@@ -639,8 +610,11 @@ async function getMintInstructions({
     mint,
     owner: pda
   });
-  const extraMetasAccount = getMetadataPda({ program, mint });
-  const init = await program.methods.createMintAccount(metadata).accountsStrict({
+  const [extraMetasAccount] = PublicKey2.findProgramAddressSync(
+    [utils.bytes.utf8.encode("extra-account-metas"), mint.toBuffer()],
+    program.programId
+  );
+  const init = await program.methods.createMintAccount(decimals, metadata).accountsStrict({
     payer,
     authority: payer,
     receiver: payer,
