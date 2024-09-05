@@ -80,7 +80,23 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check pool amount is 99 times the user amount', async () => {
+	it('check pool vault is rent exempt', async () => {
+		const accountInfo = await connection.getAccountInfo(pda)
+
+		if (accountInfo === null) {
+			throw new Error('Account not found')
+		}
+
+		const minRent = await connection.getMinimumBalanceForRentExemption(
+			accountInfo.data.length,
+		)
+		const isRentExempt = accountInfo.lamports >= minRent
+
+		// Assert that the PDA is rent-exempt
+		expect(isRentExempt).toBe(true)
+	})
+
+	it('check pool token amount is 99 times the user amount', async () => {
 		// Fetch pool and user account data
 		const pool = await getAccount(
 			connection,
@@ -88,6 +104,7 @@ describe('initialize', () => {
 			'processed',
 			TOKEN_2022_PROGRAM_ID,
 		)
+
 		const user = await getAccount(
 			connection,
 			payerATA,
@@ -107,8 +124,22 @@ describe('initialize', () => {
 		expect(poolAmount).toBe(expectedPoolAmount)
 	})
 
+	it('check pool sol amount', async () => {
+		// Fetch pool and user account data
+		const pool = await connection.getBalance(poolATA)
+
+		console.log(pool)
+	})
+
+	it('check user sol amount', async () => {
+		// Fetch pool and user account data
+		const user = await connection.getBalance(payer.publicKey)
+
+		console.log('payer sol', user)
+	})
+
 	it('buy token', async () => {
-		const amountToBuy = 10
+		const amountToBuy = 1
 
 		const ix = await getBuyTokenInstruction({
 			program,

@@ -8,6 +8,7 @@ import {
 	PublicKey,
 	TransactionMessage,
 	VersionedTransaction,
+	LAMPORTS_PER_SOL,
 } from '@solana/web3.js'
 
 import {
@@ -22,8 +23,9 @@ async function airDrop({
 	account: PublicKey
 	connection: Connection
 }) {
+	const amount = 2 * LAMPORTS_PER_SOL
 	const blocks = connection.getLatestBlockhash()
-	const airDrop = connection.requestAirdrop(account, 10000000000)
+	const airDrop = connection.requestAirdrop(account, amount)
 
 	const [latestBlockhash, signature] = await Promise.all([blocks, airDrop])
 

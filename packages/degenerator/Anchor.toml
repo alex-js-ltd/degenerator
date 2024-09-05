@@ -11,13 +11,13 @@ degenerator = "HzxAfN9nRKNtRfbU3KNRpcKYBJUKoMpU733Vvsk3kTNh"
 degenerator = "HzxAfN9nRKNtRfbU3KNRpcKYBJUKoMpU733Vvsk3kTNh"
 
 [programs.mainnet]
-degenerator = "HzxAfN9nRKNtRfbU3KNRpcKYBJUKoMpU733Vvsk3kTNh"
+degenerator = "DcaruPGvtCf1vVk3MpmLvjx3KG7vjXDuxhZ9Y9dgrA5Z"
 
 [registry]
 url = "https://api.mainnet-beta.solana.com"
 
 [provider]
-cluster = "localnet"
+cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
