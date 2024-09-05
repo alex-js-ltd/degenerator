@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React from 'react'
 import * as PopoverPrimitive from '@radix-ui/react-popover'
 
 const Popover = PopoverPrimitive.Root
@@ -9,14 +9,14 @@ interface PopoverContentProps
 	children: React.ReactNode
 }
 
-const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
-	({ children, ...props }, forwardedRef) => (
+function PopoverContent({ children, ref, ...props }: PopoverContentProps) {
+	return (
 		<PopoverPrimitive.Portal>
-			<PopoverPrimitive.Content {...props} ref={forwardedRef}>
+			<PopoverPrimitive.Content {...props} ref={ref}>
 				{children}
 			</PopoverPrimitive.Content>
 		</PopoverPrimitive.Portal>
-	),
-)
+	)
+}
 
 export { Popover, PopoverTrigger, PopoverContent }

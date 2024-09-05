@@ -1,5 +1,5 @@
 'use client'
-import React, { forwardRef } from 'react'
+import React from 'react'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 
 function Tooltip({ children, ...props }: TooltipPrimitive.TooltipProps) {
@@ -19,14 +19,14 @@ interface TooltipContentProps
 	children: React.ReactNode
 }
 
-const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
-	({ children, ...props }, forwardedRef) => (
+function TooltipContent({ children, ref, ...props }: TooltipContentProps) {
+	return (
 		<TooltipPrimitive.Portal>
-			<TooltipPrimitive.Content {...props} ref={forwardedRef}>
+			<TooltipPrimitive.Content ref={ref} {...props}>
 				{children}
 			</TooltipPrimitive.Content>
 		</TooltipPrimitive.Portal>
-	),
-)
+	)
+}
 
 export { Tooltip, TooltipTrigger, TooltipContent }

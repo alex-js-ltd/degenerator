@@ -1,6 +1,6 @@
 'use client'
 
-import { useFormState } from 'react-dom'
+import { useActionState } from 'react'
 
 import {
 	useForm,
@@ -28,7 +28,10 @@ const initialState = {
 }
 
 export function TokenForm() {
-	const [lastResult, action] = useFormState(mintToken, initialState)
+	const [lastResult, formAction, isPending] = useActionState(
+		mintToken,
+		initialState,
+	)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -108,7 +111,7 @@ export function TokenForm() {
 
 							<SubmitButton
 								form={form.id}
-								formAction={action}
+								formAction={formAction}
 								content="Submit"
 							/>
 						</div>

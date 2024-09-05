@@ -69,14 +69,10 @@ function Error({ error, label }: { error: unknown; label: string }) {
 
 function useToastTxs() {
 	const [open, setOpen] = useState(false)
-	const [mintTx, poolTx, depositTx] = useTx()
+	const [mintTx] = useTx()
 
 	const toastDescriptions = useMemo(() => {
-		const transactions = [
-			{ label: 'Mint transaction', ...mintTx },
-			{ label: 'Pool transaction', ...poolTx },
-			{ label: 'Deposit transaction', ...depositTx },
-		]
+		const transactions = [{ label: 'Mint transaction', ...mintTx }]
 
 		return transactions.reduce<ReactElement[]>((acc, tx) => {
 			const { isLoading, data, error, label } = tx
@@ -95,7 +91,7 @@ function useToastTxs() {
 
 			return acc
 		}, [])
-	}, [mintTx, poolTx, depositTx])
+	}, [mintTx])
 
 	const onOpenChange = useCallback((open: boolean) => setOpen(open), [])
 

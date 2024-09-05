@@ -25,7 +25,7 @@ interface SelectFieldProps {
 }
 
 interface SelectItemProps
-	extends React.ComponentPropsWithoutRef<typeof RadixSelect.Item> {
+	extends React.ComponentProps<typeof RadixSelect.Item> {
 	fieldName: FieldName<string>
 	title?: string
 	image?: ImageProps
@@ -107,31 +107,33 @@ function Select({
 	)
 }
 
-const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
-	({ children, className, fieldName, ...props }, forwardedRef) => {
-		const [meta] = useField(fieldName)
-		const selected = meta.value === props.value
-		const variant = selected ? 'checked' : 'unchecked'
+function SelectItem({
+	children,
+	className,
+	fieldName,
+	ref,
+	...props
+}: SelectItemProps) {
+	const [meta] = useField(fieldName)
+	const selected = meta.value === props.value
+	const variant = selected ? 'checked' : 'unchecked'
 
-		return (
-			<RadixSelect.Item
-				className={cn(
-					'data-[state=checked]:bg-gray-800 relative select-none outline-none group flex w-full cursor-pointer items-center gap-1.5 rounded p-1 pl-2 text-sm text-gray-50 bg-gray-900 hover:bg-gray-800',
-					className,
-				)}
-				{...props}
-				ref={forwardedRef}
-			>
-				<div className="flex size-4 shrink-0 items-center justify-center rounded-full border border-gray-500 group">
-					<Option variant={variant} />
-				</div>
-				<div className="flex w-full items-center justify-between">
-					{children}
-				</div>
-			</RadixSelect.Item>
-		)
-	},
-)
+	return (
+		<RadixSelect.Item
+			className={cn(
+				'data-[state=checked]:bg-gray-800 relative select-none outline-none group flex w-full cursor-pointer items-center gap-1.5 rounded p-1 pl-2 text-sm text-gray-50 bg-gray-900 hover:bg-gray-800',
+				className,
+			)}
+			ref={ref}
+			{...props}
+		>
+			<div className="flex size-4 shrink-0 items-center justify-center rounded-full border border-gray-500 group">
+				<Option variant={variant} />
+			</div>
+			<div className="flex w-full items-center justify-between">{children}</div>
+		</RadixSelect.Item>
+	)
+}
 
 function MintList({ name = 'mintB' }: { name?: 'mintB' }) {
 	const { items, selected } = usePool()

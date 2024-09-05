@@ -13,20 +13,18 @@ const optionVariants = cva(undefined, {
 })
 
 export interface OptionProps
-	extends React.ButtonHTMLAttributes<HTMLDivElement>,
+	extends React.ComponentProps<'div'>,
 		VariantProps<typeof optionVariants> {}
 
-const Option = React.forwardRef<HTMLDivElement, OptionProps>(
-	({ className, variant, ...props }, ref) => {
-		return (
-			<div
-				className={cn(optionVariants({ variant, className }))}
-				ref={ref}
-				{...props}
-			/>
-		)
-	},
-)
+function Option({ className, variant, ref, ...props }: OptionProps) {
+	return (
+		<div
+			className={cn(optionVariants({ variant, className }))}
+			ref={ref}
+			{...props}
+		/>
+	)
+}
 
 Option.displayName = 'Option'
 
