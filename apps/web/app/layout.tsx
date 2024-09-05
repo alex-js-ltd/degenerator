@@ -3,6 +3,7 @@ import { type ReactNode } from 'react'
 import { AppProviders } from '@/app/context'
 import { Header } from '@/app/comps/header'
 import { ToastTxs } from '@/app/comps/toast'
+import { AuthForm } from '@/app/comps/auth_form'
 import { Footer } from '@/app/comps/footer'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
@@ -31,6 +32,7 @@ export default function RootLayout({
 						{children}
 						<ToastTxs />
 						<Footer />
+						<AuthForm />
 					</AppProviders>
 				</div>
 			</body>

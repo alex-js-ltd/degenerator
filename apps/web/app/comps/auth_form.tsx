@@ -15,7 +15,7 @@ import { authenticate } from '@/app/actions/authenticate'
 import { usePayer } from '@/app/hooks/use_payer'
 import { useServerAction } from '@/app/hooks/use_server_action'
 
-const initialState = ''
+const initialState = {}
 
 export function AuthForm() {
 	const [lastResult, formAction, isPending] = useActionState(
@@ -24,11 +24,12 @@ export function AuthForm() {
 	)
 
 	const payer = usePayer()
+	const trigger = payer ? true : false
 
-	const getButtonProps = useServerAction(formAction, payer)
+	const getButtonProps = useServerAction(formAction, trigger)
 
 	return (
-		<form>
+		<form className="sr-only">
 			<input name="publicKey" defaultValue={payer} type="hidden" />
 
 			<button {...getButtonProps()} />

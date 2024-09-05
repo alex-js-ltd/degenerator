@@ -41,7 +41,6 @@
     "geist": "^1.3.1",
     "iron-session": "^8.0.3",
     "next": "15.0.0-rc.0",
-    "next-auth": "5.0.0-beta.19",
     "react": "19.0.0-rc-d1afcb43-20240903",
     "react-dom": "19.0.0-rc-d1afcb43-20240903",
     "tailwind-merge": "^2.3.0",
