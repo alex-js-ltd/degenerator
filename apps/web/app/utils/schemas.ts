@@ -32,5 +32,5 @@ export const MintSchema = z.object({
 })
 
 export const AuthSchema = z.object({
-	publicKey: PublicKey.optional(),
+	publicKey: PublicKey,
 })

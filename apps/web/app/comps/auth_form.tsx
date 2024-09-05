@@ -1,21 +1,11 @@
 'use client'
 
 import { useActionState } from 'react'
-
-import {
-	useForm,
-	getFormProps,
-	getInputProps,
-	FormProvider,
-} from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod'
-
-import { AuthSchema } from '@/app/utils/schemas'
 import { authenticate } from '@/app/actions/authenticate'
 import { usePayer } from '@/app/hooks/use_payer'
 import { useServerAction } from '@/app/hooks/use_server_action'
 
-const initialState = {}
+const initialState = ''
 
 export function AuthForm() {
 	const [lastResult, formAction, isPending] = useActionState(
@@ -24,9 +14,8 @@ export function AuthForm() {
 	)
 
 	const payer = usePayer()
-	const trigger = payer ? true : false
 
-	const getButtonProps = useServerAction(formAction, trigger)
+	const getButtonProps = useServerAction(formAction, payer)
 
 	return (
 		<form className="sr-only">
