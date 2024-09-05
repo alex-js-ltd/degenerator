@@ -30,3 +30,7 @@ export const MintSchema = z.object({
 		return !file || file.size <= MAX_UPLOAD_SIZE
 	}, 'File size must be less than 4.5MB'),
 })
+
+export const AuthSchema = z.object({
+	publicKey: PublicKey,
+})
