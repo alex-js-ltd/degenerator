@@ -10,7 +10,7 @@ export async function GET(
 
 	const token = await prisma.tokenMetadata.findUnique({
 		where: {
-			id: params.id,
+			mint: params.id,
 		},
 	})
 

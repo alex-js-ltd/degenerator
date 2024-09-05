@@ -20,7 +20,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		...submission.reply(),
 		serializedTransaction: undefined,
 	}
-	console.log(submission)
+
 	if (submission.status !== 'success') {
 		return error
 	}
@@ -45,7 +45,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	const metadata = {
 		name,
 		symbol,
-		uri: `https://degenerator-tawny.vercel.app/api/metadata/${upload.id}`,
+		uri: `https://degenerator-tawny.vercel.app/api/metadata/${mint.publicKey.toBase58()}`,
 	}
 
 	const transaction = await buildTransaction({
