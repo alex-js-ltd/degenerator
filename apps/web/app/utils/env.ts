@@ -6,6 +6,8 @@ const schema = z.object({
 		'https://divine-ultra-diagram.solana-devnet.quiknode.pro',
 		'https://intensive-autumn-snowflake.solana-mainnet.quiknode.pro',
 	] as const),
+
+	AUTH_SECRET: z.string(),
 })
 
 declare global {
@@ -29,6 +31,7 @@ export function init() {
 	console.log(`✅ correct environemnt variables:`)
 	console.log(`CLUSTER: ${parsed.data.NEXT_PUBLIC_CLUSTER}`)
 	console.log(`ENDPOINT: ${parsed.data.NEXT_PUBLIC_ENDPOINT}`)
+	console.log(`AUTH_SECRET: ${parsed.data.AUTH_SECRET}`)
 }
 
 /**
@@ -41,6 +44,7 @@ export function getEnv() {
 	return {
 		CLUSTER: process.env.NEXT_PUBLIC_CLUSTER,
 		ENDPOINT: process.env.NEXT_PUBLIC_ENDPOINT,
+		AUTH_SECRET: process.env.AUTH_SECRET,
 	}
 }
 

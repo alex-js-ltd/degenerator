@@ -3,7 +3,8 @@ import { BN, web3, utils } from "@coral-xyz/anchor";
 import {
   PublicKey as PublicKey2,
   TransactionMessage,
-  VersionedTransaction
+  VersionedTransaction,
+  LAMPORTS_PER_SOL
 } from "@solana/web3.js";
 
 // ../../node_modules/.pnpm/@solana+spl-token@0.4.8_@solana+web3.js@1.95.3_fastestsmallesttextencoderdecoder@1.0.22_typescript@5.5.4/node_modules/@solana/spl-token/lib/esm/constants.js
@@ -16,7 +17,7 @@ var NATIVE_MINT_2022 = new PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXe
 
 // target/idl/degenerator.json
 var degenerator_default = {
-  address: "HzxAfN9nRKNtRfbU3KNRpcKYBJUKoMpU733Vvsk3kTNh",
+  address: "DcaruPGvtCf1vVk3MpmLvjx3KG7vjXDuxhZ9Y9dgrA5Z",
   metadata: {
     name: "degenerator",
     version: "0.1.0",
@@ -516,8 +517,9 @@ async function airDrop({
   account,
   connection
 }) {
+  const amount = 2 * LAMPORTS_PER_SOL;
   const blocks = connection.getLatestBlockhash();
-  const airDrop2 = connection.requestAirdrop(account, 1e10);
+  const airDrop2 = connection.requestAirdrop(account, amount);
   const [latestBlockhash, signature] = await Promise.all([blocks, airDrop2]);
   await connection.confirmTransaction(
     {
@@ -577,13 +579,6 @@ async function sendAndConfirm({
   );
   return signature;
 }
-async function getTokenAmount({
-  connection,
-  address
-}) {
-  const res = await connection.getTokenAccountBalance(address);
-  return res.value.amount;
-}
 async function getBalance({
   connection,
   address
@@ -600,7 +595,7 @@ async function getMintInstructions({
   supply
 }) {
   const supplyBN = new BN(supply);
-  const transferAmount = supplyBN.mul(new BN(90)).div(new BN(100));
+  const transferAmount = supplyBN.mul(new BN(99)).div(new BN(100));
   const payerATA = getAssociatedAddress({
     mint,
     owner: payer
@@ -708,6 +703,5 @@ export {
   getMintInstructions,
   getPoolPda,
   getSellTokenInstruction,
-  getTokenAmount,
   sendAndConfirm
 };

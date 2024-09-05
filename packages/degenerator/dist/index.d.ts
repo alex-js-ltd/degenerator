@@ -8,7 +8,7 @@ import { PublicKey, Connection, Signer, TransactionInstruction, VersionedTransac
  * IDL can be found at `target/idl/degenerator.json`.
  */
 type Degenerator = {
-    "address": "HzxAfN9nRKNtRfbU3KNRpcKYBJUKoMpU733Vvsk3kTNh";
+    "address": "DcaruPGvtCf1vVk3MpmLvjx3KG7vjXDuxhZ9Y9dgrA5Z";
     "metadata": {
         "name": "degenerator";
         "version": "0.1.0";
@@ -503,7 +503,7 @@ type Degenerator = {
     ];
 };
 
-var address = "HzxAfN9nRKNtRfbU3KNRpcKYBJUKoMpU733Vvsk3kTNh";
+var address = "DcaruPGvtCf1vVk3MpmLvjx3KG7vjXDuxhZ9Y9dgrA5Z";
 var metadata = {
 	name: "degenerator",
 	version: "0.1.0",
@@ -1028,10 +1028,6 @@ declare function sendAndConfirm({ connection, tx, }: {
     connection: Connection;
     tx: VersionedTransaction;
 }): Promise<string>;
-declare function getTokenAmount({ connection, address, }: {
-    connection: Connection;
-    address: PublicKey;
-}): Promise<string>;
 declare function getBalance({ connection, address, }: {
     connection: Connection;
     address: PublicKey;
@@ -1058,4 +1054,4 @@ interface SwapTokenInstructionParams {
 declare function getBuyTokenInstruction({ program, payer, mint, amount, }: SwapTokenInstructionParams): Promise<web3.TransactionInstruction>;
 declare function getSellTokenInstruction({ program, payer, mint, amount, }: SwapTokenInstructionParams): Promise<web3.TransactionInstruction>;
 
-export { type Degenerator, degenerator as IDL, airDrop, buildTransaction, getAssociatedAddress, getBalance, getBuyTokenInstruction, getMintInstructions, getPoolPda, getSellTokenInstruction, getTokenAmount, sendAndConfirm };
+export { type Degenerator, degenerator as IDL, airDrop, buildTransaction, getAssociatedAddress, getBalance, getBuyTokenInstruction, getMintInstructions, getPoolPda, getSellTokenInstruction, sendAndConfirm };

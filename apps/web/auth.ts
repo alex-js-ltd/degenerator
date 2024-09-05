@@ -16,7 +16,7 @@ export const { auth, signIn, signOut } = NextAuth({
 
 					const user = await getUser(publicKey)
 					if (!user) return null
-					console.log(user)
+
 					return user
 				}
 

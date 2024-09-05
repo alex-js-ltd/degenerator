@@ -2,21 +2,19 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/app/utils/db'
 import { invariantResponse } from '@/app/utils/misc'
 
-export async function GET(
+export async function DELETE(
 	_request: NextRequest,
 	{ params }: { params: { id: string } },
 ) {
 	invariantResponse(params.id, 'missing id', { status: 404 })
 
-	const token = await prisma.tokenMetadata.findUnique({
+	const token = await prisma.user.findUnique({
 		where: {
-			mint: params.id,
+			id: params.id,
 		},
 	})
 
 	invariantResponse(token, 'failed to retrieve token metadata', { status: 500 })
 
-	const { id, mint, createdAt, updatedAt, ownerId, ...meta } = token
-
-	return NextResponse.json({ ...meta })
+	return NextResponse.json({})
 }
