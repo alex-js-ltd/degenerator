@@ -16,8 +16,6 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		schema: MintSchema,
 	})
 
-	const submissionResult = submission.reply()
-
 	if (submission.status !== 'success') {
 		return {
 			...submission.reply(),

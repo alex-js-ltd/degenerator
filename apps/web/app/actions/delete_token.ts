@@ -16,17 +16,17 @@ export async function deleteToken(
 
 	const session = await auth()
 
-	if (submission.status !== 'success' || !session) {
-		return 'unauthorised'
-	}
+	if (submission.status !== 'success') return 'invalid form'
 
-	const { mint, ownerId } = submission.value
+	if (!session) return '🤡 unauthorised'
+
+	const { mint } = submission.value
 
 	const token = await prisma.tokenMetadata
 		.deleteMany({
 			where: {
 				id: mint,
-				ownerId: ownerId,
+				ownerId: session.user?.id,
 			},
 		})
 		.catch(catchError)

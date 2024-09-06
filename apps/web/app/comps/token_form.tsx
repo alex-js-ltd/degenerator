@@ -46,7 +46,7 @@ export function TokenForm() {
 
 	const { serializedTransaction, mint } = lastResult
 
-	const { isError } = useMintTx(serializedTransaction)
+	const { isError, data } = useMintTx(serializedTransaction)
 
 	const payer = usePayer()
 
@@ -118,7 +118,7 @@ export function TokenForm() {
 					</form>
 				</div>
 			</FormProvider>
-			{isError && mint && <DeleteForm mint={mint} />}
+			{data && mint && <DeleteForm mint={mint} />}
 		</>
 	)
 }

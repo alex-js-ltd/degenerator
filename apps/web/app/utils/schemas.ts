@@ -37,5 +37,4 @@ export const AuthSchema = z.object({
 
 export const DeleteSchema = z.object({
 	mint: z.string(),
-	ownerId: z.string(),
 })
