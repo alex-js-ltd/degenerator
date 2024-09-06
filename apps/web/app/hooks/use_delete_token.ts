@@ -1,39 +1,17 @@
 import { useEffect } from 'react'
 import { useAsync } from '@/app/hooks/use_async'
+import { deleteToken } from '../actions/delete_token'
 
-interface DeleteTokenResponse {
-	message: string
-}
-
-async function deleteToken(mint: string): Promise<DeleteTokenResponse> {
-	try {
-		const response = await fetch(`/api/user?mint=${encodeURIComponent(mint)}`, {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		})
-
-		if (!response.ok) {
-			const error = await response.json()
-			throw new Error(error.message || 'Failed to delete token')
-		}
-
-		const result: DeleteTokenResponse = await response.json()
-		console.log('Success:', result.message)
-		return result
-	} catch (error) {
-		console.error('Error:', (error as Error).message)
-		throw error
-	}
-}
-
-export function useDeleteToken(mint?: string) {
-	const { run, ...rest } = useAsync<DeleteTokenResponse>()
+export function useDeleteToken(isError: boolean, mint?: string) {
+	const { run, ...rest } = useAsync<string>()
 
 	useEffect(() => {
-		if (mint) run(deleteToken(mint))
-	}, [mint])
+		if (isError && mint) {
+			run(deleteToken(mint))
+		}
+	}, [mint, isError])
 
-	return { ...rest }
+	return {
+		...rest,
+	}
 }

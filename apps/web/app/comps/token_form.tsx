@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 
 import {
 	useForm,
@@ -23,7 +23,8 @@ import { Input } from '@/app/comps/input'
 import { SubmitButton } from '@/app/comps/submit_button'
 import { ResetButton } from '@/app/comps/reset_button'
 
-import { DeleteForm } from '@/app/comps/delete_form'
+import { useAsync } from '@/app/hooks/use_async'
+import { deleteToken } from '@/app/actions/delete_token'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -46,79 +47,82 @@ export function TokenForm() {
 
 	const { serializedTransaction, mint } = lastResult
 
-	const { isError, data } = useMintTx(serializedTransaction)
+	const { isError } = useMintTx(serializedTransaction)
 
 	const payer = usePayer()
 
+	const { run } = useAsync<string>()
+
+	useEffect(() => {
+		if (mint && isError) run(deleteToken(mint))
+	}, [mint, isError])
+
 	return (
-		<>
-			<FormProvider context={form.context}>
-				<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
-					<PreviewImage />
+		<FormProvider context={form.context}>
+			<div className="relative z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
+				<PreviewImage />
 
-					<form
-						className="z-10 h-full w-full min-w-0 bg-gray-900"
-						{...getFormProps(form)}
-						action={formAction}
-						noValidate
-					>
-						<div className="absolute right-3.5 top-2.5 z-10 p-1 w-5 h-5">
-							<ResetButton />
+				<form
+					className="z-10 h-full w-full min-w-0 bg-gray-900"
+					{...getFormProps(form)}
+					action={formAction}
+					noValidate
+				>
+					<div className="absolute right-3.5 top-2.5 z-10 p-1 w-5 h-5">
+						<ResetButton />
+					</div>
+					<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
+						<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
+							<Field
+								inputProps={{
+									...getInputProps(fields.name, { type: 'text' }),
+									placeholder: 'Name',
+								}}
+								errors={fields.name.errors}
+							/>
+							<Field
+								inputProps={{
+									...getInputProps(fields.symbol, { type: 'text' }),
+									placeholder: 'Symbol',
+								}}
+								errors={fields.symbol.errors}
+							/>
+							<Field
+								inputProps={{
+									...getInputProps(fields.decimals, { type: 'text' }),
+									placeholder: 'Decimals',
+								}}
+								errors={fields.decimals.errors}
+							/>
+							<Field
+								inputProps={{
+									...getInputProps(fields.supply, { type: 'text' }),
+									placeholder: 'Supply',
+								}}
+								errors={fields.supply.errors}
+							/>
+							<Field
+								inputProps={{
+									...getInputProps(fields.description, { type: 'text' }),
+									placeholder: 'Description',
+									className: 'sm:col-span-4 w-full',
+								}}
+								errors={fields.description.errors}
+							/>
+							{/* hidden inputs */}
+							<Input name="payer" defaultValue={payer} type="hidden" />
 						</div>
-						<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
-							<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
-								<Field
-									inputProps={{
-										...getInputProps(fields.name, { type: 'text' }),
-										placeholder: 'Name',
-									}}
-									errors={fields.name.errors}
-								/>
-								<Field
-									inputProps={{
-										...getInputProps(fields.symbol, { type: 'text' }),
-										placeholder: 'Symbol',
-									}}
-									errors={fields.symbol.errors}
-								/>
-								<Field
-									inputProps={{
-										...getInputProps(fields.decimals, { type: 'text' }),
-										placeholder: 'Decimals',
-									}}
-									errors={fields.decimals.errors}
-								/>
-								<Field
-									inputProps={{
-										...getInputProps(fields.supply, { type: 'text' }),
-										placeholder: 'Supply',
-									}}
-									errors={fields.supply.errors}
-								/>
-								<Field
-									inputProps={{
-										...getInputProps(fields.description, { type: 'text' }),
-										placeholder: 'Description',
-										className: 'sm:col-span-4 w-full',
-									}}
-									errors={fields.description.errors}
-								/>
-								{/* hidden inputs */}
-								<Input name="payer" defaultValue={payer} type="hidden" />
+
+						<div className="flex items-end w-full gap-2 p-3 h-[69px]">
+							<div className="flex flex-1 gap-2">
+								<ImageChooser />
 							</div>
 
-							<div className="flex items-end w-full gap-2 p-3 h-[69px]">
-								<div className="flex flex-1 gap-2">
-									<ImageChooser />
-								</div>
-
-								<SubmitButton content="Submit" />
-							</div>
-						</fieldset>
-					</form>
-				</div>
-			</FormProvider>
-			{data && mint && <DeleteForm mint={mint} />}
-		</>
+							<SubmitButton content="Submit" />
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</FormProvider>
 	)
 }
