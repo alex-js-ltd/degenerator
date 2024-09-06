@@ -4,6 +4,7 @@ import * as auth from '@/auth'
 import { AuthError } from 'next-auth'
 
 export async function signIn(formData: FormData) {
+	console.log(formData)
 	try {
 		await auth.signIn('credentials', formData)
 	} catch (error) {

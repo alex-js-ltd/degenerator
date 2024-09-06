@@ -46,7 +46,7 @@ export function TokenForm() {
 	})
 
 	const { serializedTransaction, mint } = lastResult
-
+	console.log(lastResult)
 	const { isError } = useMintTx(serializedTransaction)
 
 	const payer = usePayer()
