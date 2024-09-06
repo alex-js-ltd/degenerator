@@ -1,20 +1,25 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/app/utils/db'
 import { invariantResponse } from '@/app/utils/misc'
+import { auth } from '@/auth'
 
-export async function DELETE(
-	_request: NextRequest,
-	{ params }: { params: { id: string } },
-) {
-	invariantResponse(params.id, 'missing id', { status: 404 })
+export async function DELETE(req: NextApiRequest, res: NextApiResponse) {
+	const session = await auth(req, res) // assuming auth handles request object and provides session
 
-	const token = await prisma.user.findUnique({
+	invariantResponse(session, 'unauthorized 🤡', { status: 500 })
+
+	const { id: mint } = req.query
+
+	invariantResponse(typeof mint === 'string', 'invalid mint query', {
+		status: 500,
+	})
+
+	const token = await prisma.tokenMetadata.delete({
 		where: {
-			id: params.id,
+			mint: mint,
 		},
 	})
 
-	invariantResponse(token, 'failed to retrieve token metadata', { status: 500 })
-
-	return NextResponse.json({})
+	return NextResponse.json({ message: `token ${token.mint} deleted` })
 }
