@@ -25,13 +25,11 @@ import { ResetButton } from '@/app/comps/reset_button'
 
 const initialState = {
 	serializedTransaction: undefined,
+	mint: undefined,
 }
 
 export function TokenForm() {
-	const [lastResult, formAction, isPending] = useActionState(
-		mintToken,
-		initialState,
-	)
+	const [lastResult, formAction] = useActionState(mintToken, initialState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client

@@ -19,6 +19,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	const error = {
 		...submission.reply(),
 		serializedTransaction: undefined,
+		mint: undefined,
 	}
 
 	if (submission.status !== 'success') {
@@ -69,6 +70,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	return {
 		...submission.reply(),
 		serializedTransaction: transaction.serialize(),
+		mint: mint.publicKey.toBase58(),
 	}
 }
 
