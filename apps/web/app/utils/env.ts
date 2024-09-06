@@ -3,6 +3,7 @@ import { z } from 'zod'
 const schema = z.object({
 	NEXT_PUBLIC_CLUSTER: z.enum(['devnet', 'mainnet-beta'] as const),
 	NEXT_PUBLIC_ENDPOINT: z.enum([
+		'https://api.devnet.solana.com',
 		'https://divine-ultra-diagram.solana-devnet.quiknode.pro',
 		'https://intensive-autumn-snowflake.solana-mainnet.quiknode.pro',
 	] as const),
