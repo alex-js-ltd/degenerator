@@ -20,7 +20,7 @@ function TokenCard({ image, name, createdAt, id }: TokenMetadata) {
 				aria-label="View template"
 				className="flex h-full items-center"
 				draggable="false"
-				href={`mint/${id}`}
+				href={`token/${id}`}
 			>
 				<img
 					aria-hidden="true"
