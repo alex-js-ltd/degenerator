@@ -1,7 +1,5 @@
 'use server'
 
-'use server'
-
 import { prisma } from '@/app/utils/db'
 import { cache } from 'react'
 import { connection } from '@/app/utils/setup'
@@ -24,17 +22,6 @@ export const preload = (mint: string) => {
 
 export const getToken = cache(async (mint: string) => {
 	const token = await fetchToken(mint)
-	try {
-		const account = await getMint(
-			connection,
-			new PublicKey(mint),
-			'confirmed',
-			TOKEN_2022_PROGRAM_ID,
-		)
-		console.log('Mint Account:', account)
-	} catch (error) {
-		console.error('Error fetching mint account:', error)
-	}
 
 	return token
 })

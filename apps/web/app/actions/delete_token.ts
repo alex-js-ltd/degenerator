@@ -2,7 +2,8 @@
 
 import { auth } from '@/auth'
 import { prisma } from '@/app/utils/db'
-import { catchError, isError } from '../utils/misc'
+import { catchError, isError } from '@/app/utils/misc'
+import { revalidatePath } from 'next/cache'
 
 export async function deleteToken(mint: string) {
 	const session = await auth()
@@ -20,5 +21,6 @@ export async function deleteToken(mint: string) {
 
 	if (isError(token)) return token.message
 
-	return `deleted ${mint}`
+	revalidatePath('/')
+	return `${mint} deleted`
 }

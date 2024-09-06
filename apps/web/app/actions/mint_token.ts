@@ -15,7 +15,7 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
 		schema: MintSchema,
 	})
-	console.log(submission)
+
 	if (submission.status !== 'success') {
 		return {
 			...submission.reply(),
@@ -43,8 +43,6 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 	const upload = await uploadMetadata({
 		...getMetadataParams({ payer, mint, name, symbol, blob, description }),
 	}).catch(catchError)
-
-	console.log(upload)
 
 	if (isError(upload))
 		return {
@@ -74,8 +72,6 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		],
 		signers: [mint],
 	}).catch(catchError)
-
-	console.log(transaction)
 
 	if (isError(transaction))
 		return {
