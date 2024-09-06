@@ -1,7 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "publicKey" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -11,7 +10,6 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "TokenMetadata" (
     "id" TEXT NOT NULL,
-    "mint" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "symbol" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -24,10 +22,10 @@ CREATE TABLE "TokenMetadata" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_publicKey_key" ON "User"("publicKey");
+CREATE INDEX "TokenMetadata_ownerId_idx" ON "TokenMetadata"("ownerId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "TokenMetadata_mint_key" ON "TokenMetadata"("mint");
+CREATE INDEX "TokenMetadata_ownerId_updatedAt_idx" ON "TokenMetadata"("ownerId", "updatedAt");
 
 -- AddForeignKey
 ALTER TABLE "TokenMetadata" ADD CONSTRAINT "TokenMetadata_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

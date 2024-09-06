@@ -10,13 +10,13 @@ export async function GET(
 
 	const token = await prisma.tokenMetadata.findUnique({
 		where: {
-			mint: params.id,
+			id: params.id,
 		},
 	})
 
 	invariantResponse(token, 'failed to retrieve token metadata', { status: 500 })
 
-	const { id, mint, createdAt, updatedAt, ownerId, ...meta } = token
+	const { id, createdAt, updatedAt, ownerId, ...meta } = token
 
 	return NextResponse.json({ ...meta })
 }

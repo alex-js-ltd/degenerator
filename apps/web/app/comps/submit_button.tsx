@@ -23,8 +23,8 @@ export function SubmitButton({ content, ...rest }: SubmitButtonProps) {
 	const cursor = isLoading
 		? 'cursor-default'
 		: !publicKey
-		? 'cursor-not-allowed'
-		: 'cursor-pointer'
+			? 'cursor-not-allowed'
+			: 'cursor-pointer'
 
 	return (
 		<Tooltip open={publicKey ? undefined : false}>

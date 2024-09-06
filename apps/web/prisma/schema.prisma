@@ -16,7 +16,6 @@ datasource db {
 
 model User {
   id        String   @id @default(cuid())
-  publicKey String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tokenMetadata TokenMetadata[]
@@ -24,7 +23,6 @@ model User {
 
 model TokenMetadata {
   id          String   @id @default(cuid())
-  mint        String   @unique
   name        String
   symbol      String
   description String
@@ -33,4 +31,9 @@ model TokenMetadata {
   updatedAt   DateTime @updatedAt
   owner       User   @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   ownerId     String
+
+    // non-unique foreign key
+  @@index([ownerId])
+  // This helps our order by in the user search a LOT
+  @@index([ownerId, updatedAt])
 }

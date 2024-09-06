@@ -16,14 +16,14 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		schema: MintSchema,
 	})
 
-	const error = {
-		...submission.reply(),
-		serializedTransaction: undefined,
-		mint: undefined,
-	}
+	const submissionResult = submission.reply()
 
 	if (submission.status !== 'success') {
-		return error
+		return {
+			...submission.reply(),
+			serializedTransaction: undefined,
+			mint: undefined,
+		}
 	}
 
 	const { image, name, symbol, description, decimals, supply, payer } =
@@ -33,7 +33,12 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		catchError,
 	)
 
-	if (isError(blob)) return { ...error, message: blob.message }
+	if (isError(blob))
+		return {
+			...submission.reply(),
+			serializedTransaction: undefined,
+			mint: undefined,
+		}
 
 	const mint = web3.Keypair.generate()
 
@@ -41,7 +46,12 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		...getMetadataParams({ payer, mint, name, symbol, blob, description }),
 	}).catch(catchError)
 
-	if (isError(upload)) return { ...error, message: upload.message }
+	if (isError(upload))
+		return {
+			...submission.reply(),
+			serializedTransaction: undefined,
+			mint: undefined,
+		}
 
 	const metadata = {
 		name,
@@ -65,7 +75,12 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		signers: [mint],
 	}).catch(catchError)
 
-	if (isError(transaction)) return { ...error, message: transaction.message }
+	if (isError(transaction))
+		return {
+			...submission.reply(),
+			serializedTransaction: undefined,
+			mint: undefined,
+		}
 
 	return {
 		...submission.reply(),
@@ -91,21 +106,15 @@ async function uploadMetadata({
 	image,
 	description,
 }: UploadMetadataParams) {
-	const existingUser = await prisma.user.findUnique({
-		where: { publicKey },
-	})
-
 	// Create TokenMetadata with User
 	const upload = await prisma.tokenMetadata.create({
 		data: {
-			mint,
+			id: mint,
 			name,
 			symbol,
 			image,
 			description,
-			owner: existingUser
-				? { connect: { publicKey: publicKey } }
-				: { create: { publicKey: publicKey } },
+			owner: { connect: { id: publicKey } },
 		},
 	})
 

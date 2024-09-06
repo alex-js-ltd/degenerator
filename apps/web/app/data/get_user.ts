@@ -12,15 +12,17 @@ export async function getUser(pk: PublicKey) {
 
 	const publicKey = pk.toBase58()
 
-	const user = await prisma.user.upsert({
-		where: {
-			publicKey,
-		},
-		update: {},
-		create: {
-			publicKey,
+	const existingUser = await prisma.user.findUnique({
+		where: { id: publicKey },
+	})
+
+	if (existingUser) return existingUser
+
+	const newUser = await prisma.user.create({
+		data: {
+			id: publicKey,
 		},
 	})
 
-	return user
+	return newUser
 }

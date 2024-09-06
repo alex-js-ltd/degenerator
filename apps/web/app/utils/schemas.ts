@@ -34,3 +34,8 @@ export const MintSchema = z.object({
 export const AuthSchema = z.object({
 	publicKey: PublicKey,
 })
+
+export const DeleteSchema = z.object({
+	mint: z.string(),
+	ownerId: z.string(),
+})
