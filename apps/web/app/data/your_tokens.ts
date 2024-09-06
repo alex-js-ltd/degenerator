@@ -6,7 +6,7 @@ import { cache } from 'react'
 async function fetchYourTokens(pk: string) {
 	const user = await prisma.user.findUnique({
 		where: {
-			publicKey: pk,
+			id: pk,
 		},
 
 		include: {
