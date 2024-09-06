@@ -11,8 +11,7 @@ export const authConfig = {
 	callbacks: {
 		authorized({ auth, request: { nextUrl } }) {
 			const isLoggedIn = !!auth?.user
-			console.log('authorized', auth?.user)
-			return true
+			return isLoggedIn
 		},
 
 		jwt: async ({ token, user }) => {
@@ -20,8 +19,7 @@ export const authConfig = {
 			return token
 		},
 		session: async ({ session, token }) => {
-			session.user = token.user
-			return session
+			return { ...session, ...token }
 		},
 	},
 } satisfies NextAuthConfig
