@@ -11,7 +11,7 @@ import {
 import { parseWithZod } from '@conform-to/zod'
 
 import { MintSchema } from '@/app/utils/schemas'
-import { mintToken } from '@/app/actions/mint_token'
+import { mintAction } from '@/app/actions/mint_action'
 
 import { usePayer } from '@/app/hooks/use_payer'
 import { useMintTx } from '@/app/context/tx_context'
@@ -32,7 +32,7 @@ const initialState = {
 }
 
 export function TokenForm() {
-	const [lastResult, formAction] = useActionState(mintToken, initialState)
+	const [lastResult, formAction] = useActionState(mintAction, initialState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -42,7 +42,7 @@ export function TokenForm() {
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
 		shouldRevalidate: 'onInput',
-		lastResult: lastResult,
+		lastResult,
 	})
 
 	const { serializedTransaction, mint } = lastResult

@@ -11,7 +11,65 @@ import { getMintInstructions, buildTransaction } from '@repo/degenerator'
 import { isError, catchError } from '@/app/utils/misc'
 import { Keypair, PublicKey } from '@solana/web3.js'
 
-export async function mintToken(_prevState: unknown, formData: FormData) {
+interface UploadMetadataParams {
+	publicKey: string
+	mint: string
+	name: string
+	symbol: string
+	image: string
+	description: string
+}
+
+async function uploadMetadata({
+	publicKey,
+	mint,
+	name,
+	symbol,
+	image,
+	description,
+}: UploadMetadataParams) {
+	const upload = await prisma.tokenMetadata.create({
+		data: {
+			id: mint,
+			name,
+			symbol,
+			image,
+			description,
+			owner: { connect: { id: publicKey } },
+		},
+	})
+
+	return upload
+}
+
+interface GetMetadataParams {
+	payer: PublicKey
+	mint: Keypair
+	name: string
+	symbol: string
+	blob: PutBlobResult
+	description: string
+}
+
+function getMetadataParams({
+	payer,
+	mint,
+	name,
+	symbol,
+	blob,
+	description,
+}: GetMetadataParams) {
+	return {
+		publicKey: payer.toBase58(),
+		mint: mint.publicKey.toBase58(),
+		name,
+		symbol,
+		image: blob.url,
+		description,
+	}
+}
+
+export async function mintAction(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
 		schema: MintSchema,
 	})
@@ -84,64 +142,5 @@ export async function mintToken(_prevState: unknown, formData: FormData) {
 		...submission.reply(),
 		serializedTransaction: transaction.serialize(),
 		mint: mint.publicKey.toBase58(),
-	}
-}
-
-interface UploadMetadataParams {
-	publicKey: string
-	mint: string
-	name: string
-	symbol: string
-	image: string
-	description: string
-}
-
-async function uploadMetadata({
-	publicKey,
-	mint,
-	name,
-	symbol,
-	image,
-	description,
-}: UploadMetadataParams) {
-	// Create TokenMetadata with User
-	const upload = await prisma.tokenMetadata.create({
-		data: {
-			id: mint,
-			name,
-			symbol,
-			image,
-			description,
-			owner: { connect: { id: publicKey } },
-		},
-	})
-
-	return upload
-}
-
-interface GetMetadataParams {
-	payer: PublicKey
-	mint: Keypair
-	name: string
-	symbol: string
-	blob: PutBlobResult
-	description: string
-}
-
-function getMetadataParams({
-	payer,
-	mint,
-	name,
-	symbol,
-	blob,
-	description,
-}: GetMetadataParams) {
-	return {
-		publicKey: payer.toBase58(),
-		mint: mint.publicKey.toBase58(),
-		name,
-		symbol,
-		image: blob.url,
-		description,
 	}
 }
