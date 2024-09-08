@@ -1,5 +1,5 @@
 import { Background } from '@/app/comps/background'
-import { TokenForm } from '@/app/comps/token_form'
+import { MintForm } from '@/app/comps/mint_form'
 
 import { auth } from '@/auth'
 
@@ -9,7 +9,7 @@ export default async function Page() {
 	console.log('res', res)
 	return (
 		<Background>
-			<TokenForm />
+			<MintForm />
 		</Background>
 	)
 }
