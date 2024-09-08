@@ -71,7 +71,7 @@ function getMetadataParams({
 }
 
 export type State = {
-	submission?: SubmissionResult<string[]>
+	lastResult?: SubmissionResult<string[]>
 	data?: {
 		serializedTransaction: Uint8Array
 		mint: string
@@ -85,7 +85,7 @@ export async function mintAction(_prevState: State, formData: FormData) {
 
 	if (submission.status !== 'success') {
 		return {
-			submission: submission.reply(),
+			lastResult: submission.reply(),
 		}
 	}
 
@@ -123,7 +123,7 @@ export async function mintAction(_prevState: State, formData: FormData) {
 	})
 
 	return {
-		submission: submission.reply(),
+		lastResult: submission.reply(),
 		data: {
 			serializedTransaction: transaction.serialize(),
 			mint: mint.publicKey.toBase58(),

@@ -27,14 +27,14 @@ import { useAsync } from '@/app/hooks/use_async'
 import { deleteToken } from '@/app/actions/delete_token'
 
 const initialState: State = {
-	submission: undefined,
+	lastResult: undefined,
 	data: undefined,
 }
 
 export function TokenForm() {
 	const [state, formAction] = useActionState(mintAction, initialState)
 
-	const { data, submission } = state
+	const { lastResult, data } = state
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -44,18 +44,20 @@ export function TokenForm() {
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
 		shouldRevalidate: 'onInput',
-		lastResult: submission,
+		lastResult,
 	})
 
-	const { isError } = useMintTx(data?.serializedTransaction)
+	const { serializedTransaction, mint } = data || {}
+
+	const { isError } = useMintTx(serializedTransaction)
 
 	const payer = usePayer()
 
 	const { run } = useAsync<string>()
 
 	useEffect(() => {
-		if (data?.mint && isError) run(deleteToken(data?.mint))
-	}, [data?.mint, isError])
+		if (mint && isError) run(deleteToken(mint))
+	}, [mint, isError])
 
 	return (
 		<FormProvider context={form.context}>
@@ -66,7 +68,6 @@ export function TokenForm() {
 					className="z-10 h-full w-full min-w-0 bg-gray-900"
 					{...getFormProps(form)}
 					action={formAction}
-					noValidate
 				>
 					<div className="absolute right-3.5 top-2.5 z-10 p-1 w-5 h-5">
 						<ResetButton />
