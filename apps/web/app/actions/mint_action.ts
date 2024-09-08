@@ -1,5 +1,6 @@
 'use server'
 
+import { SubmissionResult } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { MintSchema } from '@/app/utils/schemas'
 import { type PutBlobResult, put } from '@vercel/blob'
@@ -69,50 +70,40 @@ function getMetadataParams({
 	}
 }
 
-export async function mintAction(_prevState: unknown, formData: FormData) {
+export type State = {
+	submission?: SubmissionResult<string[]>
+	data?: {
+		serializedTransaction: Uint8Array
+		mint: string
+	}
+}
+
+export async function mintAction(_prevState: State, formData: FormData) {
 	const submission = parseWithZod(formData, {
 		schema: MintSchema,
 	})
 
 	if (submission.status !== 'success') {
 		return {
-			...submission.reply(),
-			serializedTransaction: undefined,
-			mint: undefined,
+			submission: submission.reply(),
 		}
 	}
 
 	const { image, name, symbol, description, decimals, supply, payer } =
 		submission.value
 
-	const blob = await put(image.name, image, { access: 'public' }).catch(
-		catchError,
-	)
-
-	if (isError(blob))
-		return {
-			...submission.reply(),
-			serializedTransaction: undefined,
-			mint: undefined,
-		}
+	const blob = await put(image.name, image, { access: 'public' })
 
 	const mint = web3.Keypair.generate()
 
 	const upload = await uploadMetadata({
 		...getMetadataParams({ payer, mint, name, symbol, blob, description }),
-	}).catch(catchError)
-
-	if (isError(upload))
-		return {
-			...submission.reply(),
-			serializedTransaction: undefined,
-			mint: undefined,
-		}
+	})
 
 	const metadata = {
 		name,
 		symbol,
-		uri: `https://degenerator-tawny.vercel.app/api/metadata/${mint.publicKey.toBase58()}`,
+		uri: `https://degenerator-tawny.vercel.app/api/metadata/${upload.id}`,
 	}
 
 	const transaction = await buildTransaction({
@@ -129,18 +120,13 @@ export async function mintAction(_prevState: unknown, formData: FormData) {
 			})),
 		],
 		signers: [mint],
-	}).catch(catchError)
-
-	if (isError(transaction))
-		return {
-			...submission.reply(),
-			serializedTransaction: undefined,
-			mint: undefined,
-		}
+	})
 
 	return {
-		...submission.reply(),
-		serializedTransaction: transaction.serialize(),
-		mint: mint.publicKey.toBase58(),
+		submission: submission.reply(),
+		data: {
+			serializedTransaction: transaction.serialize(),
+			mint: mint.publicKey.toBase58(),
+		},
 	}
 }

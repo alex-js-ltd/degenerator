@@ -11,7 +11,7 @@ import {
 import { parseWithZod } from '@conform-to/zod'
 
 import { MintSchema } from '@/app/utils/schemas'
-import { mintAction } from '@/app/actions/mint_action'
+import { type State, mintAction } from '@/app/actions/mint_action'
 
 import { usePayer } from '@/app/hooks/use_payer'
 import { useMintTx } from '@/app/context/tx_context'
@@ -26,13 +26,15 @@ import { ResetButton } from '@/app/comps/reset_button'
 import { useAsync } from '@/app/hooks/use_async'
 import { deleteToken } from '@/app/actions/delete_token'
 
-const initialState = {
-	serializedTransaction: undefined,
-	mint: undefined,
+const initialState: State = {
+	submission: undefined,
+	data: undefined,
 }
 
 export function TokenForm() {
-	const [lastResult, formAction] = useActionState(mintAction, initialState)
+	const [state, formAction] = useActionState(mintAction, initialState)
+
+	const { data, submission } = state
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -42,20 +44,18 @@ export function TokenForm() {
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
 		shouldRevalidate: 'onInput',
-		lastResult,
+		lastResult: submission,
 	})
 
-	const { serializedTransaction, mint } = lastResult
-
-	const { isError } = useMintTx(serializedTransaction)
+	const { isError } = useMintTx(data?.serializedTransaction)
 
 	const payer = usePayer()
 
 	const { run } = useAsync<string>()
 
 	useEffect(() => {
-		if (mint && isError) run(deleteToken(mint))
-	}, [mint, isError])
+		if (data?.mint && isError) run(deleteToken(data?.mint))
+	}, [data?.mint, isError])
 
 	return (
 		<FormProvider context={form.context}>
