@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect } from 'react'
+import { useActionState } from 'react'
 
 import {
 	useForm,
@@ -21,10 +21,9 @@ import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { Input } from '@/app/comps/input'
 import { SubmitButton } from '@/app/comps/submit_button'
-import { ResetButton } from '@/app/comps/reset_button'
 
-import { useAsync } from '@/app/hooks/use_async'
-import { deleteToken } from '@/app/actions/delete_token'
+import { useImage } from '@/app/context/image_context'
+import { useCleanUp } from '@/app/hooks/use_clean_up'
 
 const initialState: State = {
 	lastResult: undefined,
@@ -49,15 +48,13 @@ export function TokenForm() {
 
 	const { serializedTransaction, mint } = data || {}
 
-	const { isError } = useMintTx(serializedTransaction)
+	useMintTx(serializedTransaction)
+
+	useCleanUp(mint)
 
 	const payer = usePayer()
 
-	const { run } = useAsync<string>()
-
-	useEffect(() => {
-		if (mint && isError) run(deleteToken(mint))
-	}, [mint, isError])
+	const { clearImage } = useImage()
 
 	return (
 		<FormProvider context={form.context}>
@@ -67,11 +64,11 @@ export function TokenForm() {
 				<form
 					className="z-10 h-full w-full min-w-0 bg-gray-900"
 					{...getFormProps(form)}
-					action={formAction}
+					action={(formData: FormData) => {
+						formAction(formData)
+						clearImage()
+					}}
 				>
-					<div className="absolute right-3.5 top-2.5 z-10 p-1 w-5 h-5">
-						<ResetButton />
-					</div>
 					<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
 						<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
 							<Field

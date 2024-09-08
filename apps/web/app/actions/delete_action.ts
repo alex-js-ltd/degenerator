@@ -5,7 +5,7 @@ import { prisma } from '@/app/utils/db'
 import { catchError, isError } from '@/app/utils/misc'
 import { revalidatePath } from 'next/cache'
 
-export async function deleteToken(mint: string) {
+export async function deleteAction(mint: string) {
 	const session = await auth()
 
 	if (!session?.user) return '🤡 unauthorised'
