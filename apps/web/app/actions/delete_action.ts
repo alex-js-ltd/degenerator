@@ -11,7 +11,7 @@ export async function deleteAction(mint: string) {
 	if (!session?.user) return '🤡 unauthorised'
 
 	const token = await prisma.tokenMetadata
-		.deleteMany({
+		.delete({
 			where: {
 				id: mint,
 				ownerId: session.user?.id,
@@ -22,5 +22,5 @@ export async function deleteAction(mint: string) {
 	if (isError(token)) return token.message
 
 	revalidatePath('/')
-	return `${mint} deleted`
+	return `${token.id} deleted`
 }
