@@ -2,9 +2,7 @@
 
 import { prisma } from '@/app/utils/db'
 import { cache } from 'react'
-import { connection } from '@/app/utils/setup'
-import { PublicKey } from '@solana/web3.js'
-import { getMint, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import invariant from 'tiny-invariant'
 
 async function fetchToken(mint: string) {
 	const token = await prisma.tokenMetadata.findUnique({
@@ -12,6 +10,8 @@ async function fetchToken(mint: string) {
 			id: mint,
 		},
 	})
+
+	invariant(token, '🤔')
 
 	return { data: token }
 }
