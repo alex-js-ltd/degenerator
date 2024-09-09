@@ -15,10 +15,8 @@ export function AuthForm() {
 	return (
 		<form className="sr-only">
 			<input name="publicKey" defaultValue={payer} type="hidden" />
-
-			<button {...getSignInButton()} />
-
-			<button {...getSignOutButton()} />
+			{connected && <button {...getSignInButton()} />}
+			{disconnected && <button {...getSignOutButton()} />}
 		</form>
 	)
 }
