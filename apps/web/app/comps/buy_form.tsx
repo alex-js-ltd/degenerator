@@ -42,10 +42,6 @@ export function BuyForm({ mint }: { mint: string }) {
 		},
 	})
 
-	useLayoutEffect(() => {
-		form.validate()
-	}, []) // Add form as a dependency
-
 	const { serializedTransaction } = data || {}
 
 	useBuyTx(serializedTransaction)
@@ -69,7 +65,7 @@ export function BuyForm({ mint }: { mint: string }) {
 							Buy input
 						</label>
 						<input
-							placeholder="Ask v0 a question…"
+							placeholder="Amount…"
 							className="resize-none overflow-auto w-full flex-1 bg-transparent p-3 pb-1.5 text-sm outline-none ring-0"
 							style={{ minHeight: '42px', maxHeight: '384px', height: '42px' }}
 							{...getControlProps(control)}

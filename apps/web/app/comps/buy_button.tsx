@@ -1,10 +1,9 @@
 'use client'
-import { useEffect, useRef } from 'react'
+
 import { useField } from '@conform-to/react'
 import { useFormStatus } from 'react-dom'
 import { Button, type ButtonProps } from '@/app/comps/button'
 import { useResetTx } from '@/app/context/tx_context'
-import { useIsFirstRender } from '@/app/hooks/use_is_first_render'
 
 export function BuyButton({ ...rest }: ButtonProps) {
 	const { pending } = useFormStatus()
@@ -13,16 +12,14 @@ export function BuyButton({ ...rest }: ButtonProps) {
 
 	const [{ errors }] = useField<string>('amount')
 
-	const isFirstRender = useIsFirstRender()
-
-	const disabled = errors?.length || isFirstRender || pending ? true : false
+	const disabled = pending ? true : false
 
 	return (
 		<Button
-			className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap text-nowrap border font-medium outline-none ring-blue-600 transition-all focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-white disabled:pointer-events-none disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-100 disabled:text-gray-400 disabled:ring-0 has-[:focus-visible]:ring-2 [&>svg]:pointer-events-none [&>svg]:size-4 [&_svg]:shrink-0  border-gray-900 bg-gray-900 text-white hover:border-gray-700 hover:bg-gray-700  h-8 px-3 text-sm has-[>kbd]:gap-2 has-[>svg]:px-2 has-[>kbd]:pr-[6px] rounded-lg"
+			className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap text-nowrap border font-medium outline-none ring-blue-600 transition-all focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-white disabled:pointer-events-none disabled:cursor-not-allowed bg-gray-100 text-gray-400 ring-0 has-[:focus-visible]:ring-2 [&>svg]:pointer-events-none [&>svg]:size-4 [&_svg]:shrink-0 border-gray-200   hover:bg-gray-100  h-8 px-3 text-sm has-[>kbd]:gap-2 has-[>svg]:px-2 has-[>kbd]:pr-[6px] rounded-lg"
 			type="submit"
-			disabled={disabled}
 			onClick={reset}
+			disabled={pending}
 		>
 			<svg
 				data-testid="geist-icon"
