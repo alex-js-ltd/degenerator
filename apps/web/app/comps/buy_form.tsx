@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect, useLayoutEffect } from 'react'
+import { ReactNode, useActionState, useEffect, useLayoutEffect } from 'react'
 
 import {
 	useForm,
@@ -16,13 +16,14 @@ import { useBuyTx } from '@/app/context/tx_context'
 import { BuyButton } from '@/app/comps/buy_button'
 import { type FieldName, useField, useInputControl } from '@conform-to/react'
 import { getControlProps } from '@/app/utils/misc'
+import { TokenLogo } from './token_logo'
 
 const initialState: State = {
 	lastResult: undefined,
 	data: undefined,
 }
 
-export function BuyForm({ mint }: { mint: string }) {
+export function BuyForm({ mint, token }: { mint: string; token: ReactNode }) {
 	const [state, formAction] = useActionState(buyAction, initialState)
 
 	const { lastResult, data } = state
@@ -71,6 +72,7 @@ export function BuyForm({ mint }: { mint: string }) {
 							{...getControlProps(control)}
 						/>
 						<div className="flex items-center gap-2 p-3">
+							<>{token}</>
 							<div className="ml-auto flex items-center gap-2">
 								<BuyButton />
 							</div>

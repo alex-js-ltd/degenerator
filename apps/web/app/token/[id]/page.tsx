@@ -1,9 +1,8 @@
 import { getToken } from '@/app/data/get_token'
-import { TokenMetadata } from '@prisma/client'
 import { use } from 'react'
-import Image from 'next/image'
-
 import { BuyForm } from '@/app/comps/buy_form'
+import { Button } from '@/app/comps/button'
+import { TokenLogo } from '@/app/comps/token_logo'
 
 export default function Page({ params }: { params: { id: string } }) {
 	const promise = getToken(params.id)
@@ -15,37 +14,23 @@ export default function Page({ params }: { params: { id: string } }) {
 			<div className="mx-auto flex max-w-7xl flex-col px-6 pb-20">
 				<section className="grid gap-4">
 					<div className="relative z-10 m-auto flex w-full flex-col gap-2 sm:max-w-xl">
-						<Avatar {...res} />
-						<BuyForm mint={mint} />
+						<BuyForm
+							mint={mint}
+							token={
+								<Button
+									className="inline-flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap text-nowrap border font-medium outline-none ring-blue-600 transition-all focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-white disabled:pointer-events-none disabled:cursor-not-allowed bg-gray-100 text-gray-400 ring-0 has-[:focus-visible]:ring-2 [&>svg]:pointer-events-none [&>svg]:size-4 [&_svg]:shrink-0 border-gray-200   hover:bg-gray-100  h-8 px-3 text-sm has-[>kbd]:gap-2 has-[>svg]:px-2 has-[>kbd]:pr-[6px] rounded-lg max-w-fit"
+									asChild
+								>
+									<div className="flex w-full items-center justify-between">
+										<TokenLogo src={res.data.image} alt={res.data.name} />
+										<div className="w-fit">{res.data.symbol}</div>
+									</div>
+								</Button>
+							}
+						/>
 					</div>
 				</section>
 			</div>
 		</main>
-	)
-}
-
-function Avatar({ data }: { data: TokenMetadata }) {
-	return (
-		<div className="flex flex-1 items-center gap-2 overflow-hidden">
-			<div className="relative flex-none size-8 shrink-0 rounded-full overflow-hidden">
-				<Image
-					src={data.image}
-					alt={data.description}
-					className="relative aspect-[48/44] object-cover object-center rounded-lg"
-					fill={true}
-				/>
-			</div>
-
-			<button
-				className="relative max-w-full overflow-hidden"
-				title={data.description}
-			>
-				<div className="relative flex-1 overflow-hidden text-ellipsis rounded-2xl bg-[#ebebeb] px-3 py-1">
-					<span className="text-left text-sm line-clamp-1 break-all">
-						{data.symbol}
-					</span>
-				</div>
-			</button>
-		</div>
 	)
 }
