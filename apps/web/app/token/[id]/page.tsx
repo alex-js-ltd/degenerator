@@ -15,6 +15,7 @@ export default function Page({ params }: { params: { id: string } }) {
 			<div className="mx-auto flex max-w-7xl flex-col px-6 pb-20">
 				<section className="grid gap-4">
 					<div className="relative z-10 m-auto flex w-full flex-col gap-2 sm:max-w-xl">
+						<Avatar {...res} />
 						<BuyForm mint={mint} />
 					</div>
 				</section>
@@ -41,7 +42,7 @@ function Avatar({ data }: { data: TokenMetadata }) {
 			>
 				<div className="relative flex-1 overflow-hidden text-ellipsis rounded-2xl bg-[#ebebeb] px-3 py-1">
 					<span className="text-left text-sm line-clamp-1 break-all">
-						{data.name}
+						{data.symbol}
 					</span>
 				</div>
 			</button>

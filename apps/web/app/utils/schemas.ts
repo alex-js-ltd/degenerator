@@ -48,3 +48,4 @@ export const BuySchema = z.object({
 		})
 		.min(0, { message: 'Amount is too low' }),
 })
+export const SellSchema = BuySchema
