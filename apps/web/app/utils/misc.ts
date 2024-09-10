@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { useInputControl } from '@conform-to/react'
+import { type InputProps } from '@/app/comps/input'
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -47,7 +49,7 @@ export function invariantResponse(
 			typeof message === 'function'
 				? message()
 				: message ||
-				  'An invariant failed, please provide a message to explain why.',
+					'An invariant failed, please provide a message to explain why.',
 			{ status: 400, ...responseInit },
 		)
 	}
@@ -77,4 +79,15 @@ export function isError(error: unknown): error is Error {
 
 export function catchError(error: unknown): Error {
 	return { message: getErrorMessage(error) }
+}
+
+export type Control = ReturnType<typeof useInputControl<string>>
+
+export function getControlProps(control: Control): InputProps {
+	return {
+		value: control.value || '',
+		onChange: e => control.change(e.target.value),
+		onFocus: control.focus,
+		onBlur: control.blur,
+	}
 }
