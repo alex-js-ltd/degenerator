@@ -7,7 +7,7 @@ import {
   LAMPORTS_PER_SOL
 } from "@solana/web3.js";
 
-// ../../node_modules/.pnpm/@solana+spl-token@0.4.8_@solana+web3.js@1.95.3_fastestsmallesttextencoderdecoder@1.0.22_typescript@5.5.2/node_modules/@solana/spl-token/lib/esm/constants.js
+// ../../node_modules/.pnpm/@solana+spl-token@0.4.8_@solana+web3.js@1.95.3_fastestsmallesttextencoderdecoder@1.0.22_typescript@5.5.4/node_modules/@solana/spl-token/lib/esm/constants.js
 import { PublicKey } from "@solana/web3.js";
 var TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 var TOKEN_2022_PROGRAM_ID = new PublicKey("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");

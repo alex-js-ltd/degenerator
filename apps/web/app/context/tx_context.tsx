@@ -20,9 +20,10 @@ TxContext.displayName = 'TxContext'
 
 function TxProvider({ children }: { children: ReactNode }) {
 	const mintTx = useAsync<string | undefined>()
+	const buyTx = useAsync<string | undefined>()
 
 	const value = useMemo(() => {
-		return [mintTx]
+		return [mintTx, buyTx]
 	}, [mintTx])
 
 	return <TxContext.Provider value={value}>{children}</TxContext.Provider>
@@ -47,6 +48,19 @@ function useMintTx(tx?: Uint8Array) {
 	return { ...rest }
 }
 
+function useBuyTx(tx?: Uint8Array) {
+	const [, buyTx] = useTx()
+	const { run, ...rest } = buyTx
+
+	const sign = useSignAndSendTx()
+
+	useEffect(() => {
+		if (tx) run(sign(tx))
+	}, [run, sign, tx])
+
+	return { ...rest }
+}
+
 function useTxStatus() {
 	const txs = useTx()
 	const { pending } = useFormStatus()
@@ -61,4 +75,4 @@ function useResetTx() {
 	}, [txs])
 }
 
-export { TxProvider, useTx, useMintTx, useTxStatus, useResetTx }
+export { TxProvider, useTx, useMintTx, useBuyTx, useTxStatus, useResetTx }
