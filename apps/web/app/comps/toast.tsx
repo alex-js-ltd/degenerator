@@ -69,10 +69,13 @@ function Error({ error, label }: { error: unknown; label: string }) {
 
 function useToastTxs() {
 	const [open, setOpen] = useState(false)
-	const [mintTx] = useTx()
+	const [mintTx, buyTx] = useTx()
 
 	const toastDescriptions = useMemo(() => {
-		const transactions = [{ label: 'Mint transaction', ...mintTx }]
+		const transactions = [
+			{ label: 'Mint transaction', ...mintTx },
+			{ label: 'Buy transaction', ...buyTx },
+		]
 
 		return transactions.reduce<ReactElement[]>((acc, tx) => {
 			const { isLoading, data, error, label } = tx
