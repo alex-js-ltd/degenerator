@@ -5,7 +5,8 @@ import { Icon } from '@/app/comps/_icon'
 import { Spinner } from '@/app/comps/spinner'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/app/comps/tooltip'
-import { useTxStatus, useResetTx } from '@/app/context/tx_context'
+import { useResetTx } from '@/app/context/tx_context'
+import { useFormStatus } from 'react-dom'
 
 type SubmitButtonProps = ButtonProps & {
 	content?: string
@@ -15,12 +16,12 @@ export function SubmitButton({ content, ...rest }: SubmitButtonProps) {
 	const wallet = useAnchorWallet()
 	const { publicKey } = wallet || {}
 
-	const { isLoading } = useTxStatus()
-	const disabled = !publicKey || isLoading ? true : false
+	const { pending } = useFormStatus()
+	const disabled = !publicKey || pending ? true : false
 
 	const reset = useResetTx()
 
-	const cursor = isLoading
+	const cursor = pending
 		? 'cursor-default'
 		: !publicKey
 			? 'cursor-not-allowed'
@@ -48,7 +49,7 @@ export function SubmitButton({ content, ...rest }: SubmitButtonProps) {
 						onClick={reset}
 						aria-label={`Submit ${content}`}
 					>
-						{isLoading ? (
+						{pending ? (
 							<Spinner />
 						) : (
 							<Icon name="arrow-up" className="w-6 h-6" />
