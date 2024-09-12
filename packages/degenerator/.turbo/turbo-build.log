@@ -8,18 +8,10 @@
 [34mCLI[39m tsup v8.2.4
 [34mCLI[39m Using tsup config: /Users/alexandergilbert/Desktop/degenerator/packages/degenerator/tsup.config.ts
 [34mCLI[39m Target: node16
-[31m[31mError: ENOENT: no such file or directory, unlink '/Users/alexandergilbert/Desktop/degenerator/packages/degenerator/dist/index.js'
-    at Object.unlinkSync (node:fs:1884:11)
-    at /Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/tsup@8.2.4_typescript@5.5.4/node_modules/tsup/dist/chunk-2UJCKEAF.js:143:73
-    at Array.forEach (<anonymous>)
-    at removeFiles (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/tsup@8.2.4_typescript@5.5.4/node_modules/tsup/dist/chunk-2UJCKEAF.js:143:9)
-    at async buildAll (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/tsup@8.2.4_typescript@5.5.4/node_modules/tsup/dist/index.js:1589:17)
-    at async mainTasks (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/tsup@8.2.4_typescript@5.5.4/node_modules/tsup/dist/index.js:1695:13)
-    at async Promise.all (index 1)
-    at async /Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/tsup@8.2.4_typescript@5.5.4/node_modules/tsup/dist/index.js:1700:9
-    at async Promise.all (index 0)
-    at async build (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/tsup@8.2.4_typescript@5.5.4/node_modules/tsup/dist/index.js:1492:3)[39m[39m
+[34mCLI[39m Cleaning output folder
+[34mESM[39m Build start
+[32mESM[39m [1mdist/index.js [22m[32m14.93 KB[39m
+[32mESM[39m ⚡️ Build success in 99ms
 [34mDTS[39m Build start
-[32mDTS[39m ⚡️ Build success in 723ms
+[32mDTS[39m ⚡️ Build success in 740ms
 [32mDTS[39m [1mdist/index.d.ts [22m[32m23.57 KB[39m
-[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m

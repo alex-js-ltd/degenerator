@@ -1,7 +1,8 @@
 import { getToken } from '@/app/data/get_token'
 import { use } from 'react'
 import { BuyForm } from '@/app/comps/buy_form'
-import { Button } from '@/app/comps/button'
+
+import { Pill } from '@/app/comps/pill'
 import { TokenLogo } from '@/app/comps/token_logo'
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -17,15 +18,10 @@ export default function Page({ params }: { params: { id: string } }) {
 						<BuyForm
 							mint={mint}
 							token={
-								<Button
-									className="inline-flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap text-nowrap border font-medium outline-none ring-blue-600 transition-all focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-white disabled:pointer-events-none disabled:cursor-not-allowed bg-gray-100 text-gray-400 ring-0 has-[:focus-visible]:ring-2 [&>svg]:pointer-events-none [&>svg]:size-4 [&_svg]:shrink-0 border-gray-200   hover:bg-gray-100  h-8 px-3 text-sm has-[>kbd]:gap-2 has-[>svg]:px-2 has-[>kbd]:pr-[6px] rounded-lg max-w-fit"
-									asChild
-								>
-									<div className="flex w-full items-center justify-between">
-										<TokenLogo src={res.data.image} alt={res.data.name} />
-										<div className="w-fit">{res.data.symbol}</div>
-									</div>
-								</Button>
+								<Pill variant="swap">
+									<TokenLogo src={res.data.image} alt={res.data.name} />
+									<div className="w-fit">{res.data.symbol}</div>
+								</Pill>
 							}
 						/>
 					</div>
