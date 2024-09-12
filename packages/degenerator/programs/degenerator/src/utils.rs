@@ -68,23 +68,19 @@ pub fn get_meta_list_size(approve_account: Option<Pubkey>) -> usize {
     ExtraAccountMetaList::size_of(get_meta_list(approve_account).len()).unwrap()
 }
 
-const BASE_PRICE: u64 = 1; // 0.00001 SOL in lamports
+const BASE_PRICE: u128 = 1;
 
-pub fn calculate_price(supply: u64, amount: u64, max_supply: u64) -> u64 {
-    let supply_u128 = supply as u128;
-    let max_supply_u128 = max_supply as u128;
-    let base_price_u128 = BASE_PRICE as u128;
-
+pub fn calculate_price(current_supply: u128, total_supply: u128, amount: u128) -> u64 {
     // Calculate the price per token using an inverse relationship
     // Price per token decreases as the supply approaches max_supply
-    let price_per_token = base_price_u128
-        .saturating_mul(max_supply_u128) // Ensures that when all tokens are in the pool, price equals BASE_PRICE
-        .saturating_div(supply_u128.saturating_add(1)); // Prevent division by zero and ensure smooth decrease
+    let price_per_token = BASE_PRICE
+        .saturating_mul(total_supply) // Ensures that when all tokens are in the pool, price equals BASE_PRICE
+        .saturating_div(current_supply.saturating_add(1)); // Prevent division by zero and ensure smooth decrease
 
     // Calculate total price for the requested amount of tokens
-    let total_price = price_per_token.saturating_mul(amount as u128);
+    let total_price = price_per_token.saturating_mul(amount);
 
-    msg!("Supply: {}", supply);
+    msg!("Current Supply: {}", current_supply);
     msg!("Amount: {}", amount);
     msg!("Price per token: {}", price_per_token);
     msg!("Total price: {}", total_price);

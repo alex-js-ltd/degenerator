@@ -50,16 +50,16 @@ pub struct BuyToken<'info> {
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     // Get the current supply of tokens
-    let supply = ctx.accounts.pool_ata.amount;
+    let current_supply = ctx.accounts.pool_ata.amount;
+    let total_supply = ctx.accounts.mint.supply;
 
     // Ensure the requested amount does not exceed available supply
-    if amount > supply {
+    if amount > total_supply {
         return Err(Errors::InsufficientTokens.into());
     }
 
-    let max_supply = ctx.accounts.mint.supply;
     // Calculate the price for the requested amount
-    let price = calculate_price(supply, amount, max_supply);
+    let price = calculate_price(current_supply as u128, total_supply as u128, amount as u128);
 
     // Check if the signer has enough lamports to cover the price
     let signer_balance = ctx.accounts.signer.lamports();
