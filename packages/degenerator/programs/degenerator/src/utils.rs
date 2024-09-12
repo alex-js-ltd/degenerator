@@ -68,7 +68,7 @@ pub fn get_meta_list_size(approve_account: Option<Pubkey>) -> usize {
     ExtraAccountMetaList::size_of(get_meta_list(approve_account).len()).unwrap()
 }
 
-const BASE_PRICE: u128 = 1;
+const BASE_PRICE: u128 = 15_020; // 0.01502 SOL in lamports
 
 pub fn calculate_price(current_supply: u128, total_supply: u128, amount: u128) -> u64 {
     // Calculate the price per token using an inverse relationship
