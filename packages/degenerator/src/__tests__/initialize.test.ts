@@ -116,6 +116,8 @@ describe('initialize', () => {
 		const poolAmount = pool.amount // BigInt
 		const userAmount = user.amount // BigInt
 
+		console.log('userAmount before', userAmount.toString())
+
 		// Calculate expected pool amount as 9 times the user amount
 		const multiplier = BigInt(99) // Create BigInt instance
 		const expectedPoolAmount = userAmount * multiplier
@@ -139,7 +141,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 1
+		const amountToBuy = 1000
 
 		const ix = await getBuyTokenInstruction({
 			program,
@@ -159,9 +161,33 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
+		console.log(res)
 		expect(res.value.err).toBeNull()
 
 		// Confirm the transaction
 		await sendAndConfirm({ connection, tx })
+	})
+
+	it('check pool token ', async () => {
+		// Fetch pool and user account data
+		const pool = await getAccount(
+			connection,
+			poolATA,
+			'processed',
+			TOKEN_2022_PROGRAM_ID,
+		)
+
+		const user = await getAccount(
+			connection,
+			payerATA,
+			'processed',
+			TOKEN_2022_PROGRAM_ID,
+		)
+
+		// Extract amounts (assumed to be BigInt values)
+		const poolAmount = pool.amount // BigInt
+		const userAmount = user.amount // BigInt
+
+		console.log('userAmount after', userAmount.toString())
 	})
 })

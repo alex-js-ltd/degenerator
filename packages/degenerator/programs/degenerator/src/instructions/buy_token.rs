@@ -57,8 +57,9 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         return Err(Errors::InsufficientTokens.into());
     }
 
+    let max_supply = ctx.accounts.mint.supply;
     // Calculate the price for the requested amount
-    let price = calculate_price(supply, amount);
+    let price = calculate_price(supply, amount, max_supply);
 
     // Check if the signer has enough lamports to cover the price
     let signer_balance = ctx.accounts.signer.lamports();

@@ -48,8 +48,9 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         return Err(Errors::InsufficientTokens.into());
     }
 
+    let max_supply = ctx.accounts.mint.supply;
     // Calculate the price for the requested amount
-    let price = calculate_price(pool_supply, amount);
+    let price = calculate_price(pool_supply, amount, max_supply);
 
     // Ensure the pool authority has enough balance to cover the price
     let pool_balance = ctx.accounts.pool_authority.lamports();
