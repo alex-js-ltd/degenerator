@@ -1,22 +1,17 @@
 'use client'
 
-import { ReactNode, useActionState, useEffect, useLayoutEffect } from 'react'
+import { ReactNode, useActionState } from 'react'
 
-import {
-	useForm,
-	getFormProps,
-	getInputProps,
-	FormProvider,
-} from '@conform-to/react'
+import { useForm, getFormProps, FormProvider } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { SwapSchema } from '@/app/utils/schemas'
 import { type State, swapAction } from '@/app/actions/swap_action'
 import { usePayer } from '@/app/hooks/use_payer'
 import { useSwapTx } from '@/app/context/tx_context'
 import { SwapButton } from '@/app/comps/swap_button'
-import { type FieldName, useField, useInputControl } from '@conform-to/react'
+import { useInputControl } from '@conform-to/react'
 import { getControlProps } from '@/app/utils/misc'
-import { Switch } from './switch'
+import { SwapSwitch } from '@/app/comps/swap_switch'
 
 const initialState: State = {
 	lastResult: undefined,
@@ -37,11 +32,6 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 		shouldValidate: 'onBlur',
 		shouldRevalidate: 'onInput',
 		lastResult,
-
-		defaultValue: {
-			amount: '',
-			buy: 'on',
-		},
 	})
 
 	const { serializedTransaction } = data || {}
@@ -58,9 +48,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 				<form
 					className="has-[:focus-visible]:border-alpha-600 relative rounded-xl border bg-white shadow transition-colors"
 					{...getFormProps(form)}
-					action={(formData: FormData) => {
-						formAction(formData)
-					}}
+					action={formAction}
 				>
 					<input name="payer" defaultValue={payer} type="hidden" />
 					<input name="mint" defaultValue={mint} type="hidden" />
@@ -77,7 +65,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 						<div className="flex items-center gap-2 p-3">
 							{token}
 
-							<Switch />
+							<SwapSwitch />
 							<div className="ml-auto flex items-center gap-2">
 								<SwapButton />
 							</div>
