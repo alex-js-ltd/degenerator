@@ -13,7 +13,7 @@ const PublicKey = z
 export const MintSchema = z.object({
 	payer: PublicKey,
 	name: z.string(),
-	symbol: z.string(),
+	symbol: z.string().transform(s => s.toUpperCase()),
 	decimals: z
 		.number({
 			invalid_type_error: 'Expected Number',

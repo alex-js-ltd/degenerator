@@ -5,7 +5,7 @@ import { getEnv } from './env'
 
 const { ENDPOINT } = getEnv()
 
-export const connection = new Connection(ENDPOINT, 'confirmed')
+export const connection = new Connection(ENDPOINT, 'finalized')
 
 // Initialize the program interface with the IDL, program ID, and connection.
 // This setup allows us to interact with the on-chain program using the defined interface.
