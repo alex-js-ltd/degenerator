@@ -49,3 +49,14 @@ export const BuySchema = z.object({
 		.min(0, { message: 'Amount is too low' }),
 })
 export const SellSchema = BuySchema
+
+export const SwapSchema = z.object({
+	payer: PublicKey,
+	mint: PublicKey,
+	amount: z
+		.number({
+			invalid_type_error: 'Expected Number',
+		})
+		.min(0, { message: 'Amount is too low' }),
+	buy: z.string().transform(value => value === 'on'),
+})

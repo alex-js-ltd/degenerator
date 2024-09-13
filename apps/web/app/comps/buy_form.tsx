@@ -9,7 +9,7 @@ import {
 	FormProvider,
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
-import { BuySchema } from '@/app/utils/schemas'
+import { SwapSchema } from '@/app/utils/schemas'
 import { type State, buyAction } from '@/app/actions/buy_action'
 import { usePayer } from '@/app/hooks/use_payer'
 import { useBuyTx } from '@/app/context/tx_context'
@@ -30,7 +30,8 @@ export function BuyForm({ mint, token }: { mint: string; token: ReactNode }) {
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
-		onValidate: ({ formData }) => parseWithZod(formData, { schema: BuySchema }),
+		onValidate: ({ formData }) =>
+			parseWithZod(formData, { schema: SwapSchema }),
 
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
@@ -40,6 +41,7 @@ export function BuyForm({ mint, token }: { mint: string; token: ReactNode }) {
 		defaultNoValidate: true,
 		defaultValue: {
 			amount: '',
+			buy: 'on',
 		},
 	})
 
@@ -61,7 +63,7 @@ export function BuyForm({ mint, token }: { mint: string; token: ReactNode }) {
 				>
 					<input name="payer" defaultValue={payer} type="hidden" />
 					<input name="mint" defaultValue={mint} type="hidden" />
-					<div className="@container/textarea relative z-10 grid rounded-xl bg-white">
+					<div className="relative z-10 grid rounded-xl bg-white">
 						<label className="sr-only" htmlFor="chat-main-textarea">
 							Buy input
 						</label>
