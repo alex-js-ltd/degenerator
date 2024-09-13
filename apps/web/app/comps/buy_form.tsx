@@ -16,7 +16,7 @@ import { useBuyTx } from '@/app/context/tx_context'
 import { BuyButton } from '@/app/comps/buy_button'
 import { type FieldName, useField, useInputControl } from '@conform-to/react'
 import { getControlProps } from '@/app/utils/misc'
-import { TokenLogo } from './token_logo'
+import { Switch } from './switch'
 
 const initialState: State = {
 	lastResult: undefined,
@@ -72,7 +72,9 @@ export function BuyForm({ mint, token }: { mint: string; token: ReactNode }) {
 							{...getControlProps(control)}
 						/>
 						<div className="flex items-center gap-2 p-3">
-							<>{token}</>
+							{token}
+
+							<Switch />
 							<div className="ml-auto flex items-center gap-2">
 								<BuyButton />
 							</div>
