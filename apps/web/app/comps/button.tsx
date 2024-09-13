@@ -16,7 +16,7 @@ const buttonVariants = cva(undefined, {
 			reset:
 				'rounded-full border border-gray-200 w-5 h-5 opacity-50 transition-opacity hover:opacity-80 flex items-center justify-center',
 			tab: 'inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full px-3 text-sm font-medium text-gray-500 ring-offset-white transition-all hover:text-[#171717] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-100 data-[state=active]:text-[#171717]',
-			buy: 'inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap text-nowrap border font-medium outline-none ring-blue-600 transition-all focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-white disabled:pointer-events-none disabled:cursor-not-allowed bg-gray-100 text-gray-400 disabled:ring-0 has-[:focus-visible]:ring-2 [&>svg]:pointer-events-none [&>svg]:size-4 [&_svg]:shrink-0 disabled:border-alpha-400 border-alpha-600 hover:bg-gray-200  h-8 px-3 text-sm has-[>kbd]:gap-2 has-[>svg]:px-2 has-[>kbd]:pr-[6px] rounded-lg ml-auto',
+			swap: 'inline-flex relative shrink-0 cursor-pointer items-center justify-center whitespace-nowrap text-nowrap border font-medium outline-none ring-blue-600 transition-all focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-white disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400 disabled:ring-0 has-[:focus-visible]:ring-2 [&>svg]:pointer-events-none disabled:border-gray-200 border-gray-900 bg-gray-900 text-white hover:border-gray-700 hover:bg-gray-700 h-8 w-8 text-sm rounded-lg',
 		},
 	},
 })
