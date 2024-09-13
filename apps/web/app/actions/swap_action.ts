@@ -28,8 +28,6 @@ export async function swapAction(_prevState: State, formData: FormData) {
 
 	const { buy, payer, mint, amount } = submission.value
 
-	console.log(submission)
-
 	const ix = buy
 		? await getBuyTokenInstruction({ program, payer, mint, amount })
 		: await getSellTokenInstruction({ program, payer, mint, amount })

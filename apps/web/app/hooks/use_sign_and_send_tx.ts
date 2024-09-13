@@ -25,7 +25,7 @@ export function useSignAndSendTx() {
 					...latestBlockhash,
 					signature,
 				},
-				'finalized',
+				'confirmed',
 			)
 
 			invariant(confirm.value.err === null, '💩')

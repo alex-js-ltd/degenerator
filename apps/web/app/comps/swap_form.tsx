@@ -58,7 +58,9 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 				<form
 					className="has-[:focus-visible]:border-alpha-600 relative rounded-xl border bg-white shadow transition-colors"
 					{...getFormProps(form)}
-					action={formAction}
+					action={(formData: FormData) => {
+						formAction(formData)
+					}}
 				>
 					<input name="payer" defaultValue={payer} type="hidden" />
 					<input name="mint" defaultValue={mint} type="hidden" />

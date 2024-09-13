@@ -39,17 +39,6 @@ export const DeleteSchema = z.object({
 	mint: z.string(),
 })
 
-export const BuySchema = z.object({
-	payer: PublicKey,
-	mint: PublicKey,
-	amount: z
-		.number({
-			invalid_type_error: 'Expected Number',
-		})
-		.min(0, { message: 'Amount is too low' }),
-})
-export const SellSchema = BuySchema
-
 export const SwapSchema = z.object({
 	payer: PublicKey,
 	mint: PublicKey,
