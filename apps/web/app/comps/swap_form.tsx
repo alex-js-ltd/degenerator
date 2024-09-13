@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useActionState } from 'react'
+import { ReactNode, useActionState, useEffect } from 'react'
 
 import { useForm, getFormProps, FormProvider } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
@@ -29,7 +29,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 			parseWithZod(formData, { schema: SwapSchema }),
 
 		// Validate the form on blur event triggered
-		shouldValidate: 'onBlur',
+		shouldValidate: 'onInput',
 		shouldRevalidate: 'onInput',
 		lastResult,
 
@@ -52,7 +52,9 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 				<form
 					className="has-[:focus-visible]:border-alpha-600 relative rounded-xl border bg-white shadow transition-colors"
 					{...getFormProps(form)}
-					action={formAction}
+					action={(formData: FormData) => {
+						formAction(formData)
+					}}
 				>
 					<input name="payer" defaultValue={payer} type="hidden" />
 					<input name="mint" defaultValue={mint} type="hidden" />
