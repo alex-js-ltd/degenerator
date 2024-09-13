@@ -5,7 +5,7 @@ import { useFormStatus } from 'react-dom'
 import { Button, type ButtonProps } from '@/app/comps/button'
 import { useResetTx } from '@/app/context/tx_context'
 
-export function BuyButton({ ...rest }: ButtonProps) {
+export function SwapButton({ ...rest }: ButtonProps) {
 	const { pending } = useFormStatus()
 
 	const reset = useResetTx()

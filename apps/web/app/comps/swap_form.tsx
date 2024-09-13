@@ -13,7 +13,7 @@ import { SwapSchema } from '@/app/utils/schemas'
 import { type State, buyAction } from '@/app/actions/buy_action'
 import { usePayer } from '@/app/hooks/use_payer'
 import { useBuyTx } from '@/app/context/tx_context'
-import { BuyButton } from '@/app/comps/buy_button'
+import { SwapButton } from '@/app/comps/swap_button'
 import { type FieldName, useField, useInputControl } from '@conform-to/react'
 import { getControlProps } from '@/app/utils/misc'
 import { Switch } from './switch'
@@ -23,7 +23,7 @@ const initialState: State = {
 	data: undefined,
 }
 
-export function BuyForm({ mint, token }: { mint: string; token: ReactNode }) {
+export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 	const [state, formAction] = useActionState(buyAction, initialState)
 
 	const { lastResult, data } = state
@@ -38,7 +38,6 @@ export function BuyForm({ mint, token }: { mint: string; token: ReactNode }) {
 		shouldRevalidate: 'onInput',
 		lastResult,
 
-		defaultNoValidate: true,
 		defaultValue: {
 			amount: '',
 			buy: 'on',
@@ -78,7 +77,7 @@ export function BuyForm({ mint, token }: { mint: string; token: ReactNode }) {
 
 							<Switch />
 							<div className="ml-auto flex items-center gap-2">
-								<BuyButton />
+								<SwapButton />
 							</div>
 						</div>
 					</div>
