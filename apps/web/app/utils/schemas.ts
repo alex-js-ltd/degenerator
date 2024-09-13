@@ -58,5 +58,8 @@ export const SwapSchema = z.object({
 			invalid_type_error: 'Expected Number',
 		})
 		.min(0, { message: 'Amount is too low' }),
-	buy: z.string().transform(value => value === 'on'),
+	buy: z
+		.string()
+		.transform(value => value === 'on')
+		.optional(),
 })

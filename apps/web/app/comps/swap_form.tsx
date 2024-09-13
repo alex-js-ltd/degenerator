@@ -10,9 +10,9 @@ import {
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { SwapSchema } from '@/app/utils/schemas'
-import { type State, buyAction } from '@/app/actions/buy_action'
+import { type State, swapAction } from '@/app/actions/swap_action'
 import { usePayer } from '@/app/hooks/use_payer'
-import { useBuyTx } from '@/app/context/tx_context'
+import { useSwapTx } from '@/app/context/tx_context'
 import { SwapButton } from '@/app/comps/swap_button'
 import { type FieldName, useField, useInputControl } from '@conform-to/react'
 import { getControlProps } from '@/app/utils/misc'
@@ -24,7 +24,7 @@ const initialState: State = {
 }
 
 export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
-	const [state, formAction] = useActionState(buyAction, initialState)
+	const [state, formAction] = useActionState(swapAction, initialState)
 
 	const { lastResult, data } = state
 
@@ -46,7 +46,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 
 	const { serializedTransaction } = data || {}
 
-	useBuyTx(serializedTransaction)
+	useSwapTx(serializedTransaction)
 
 	const payer = usePayer()
 
@@ -64,7 +64,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 					<input name="mint" defaultValue={mint} type="hidden" />
 					<div className="relative z-10 grid rounded-xl bg-white">
 						<label className="sr-only" htmlFor="chat-main-textarea">
-							Buy input
+							Swap input
 						</label>
 						<input
 							placeholder="Amount…"

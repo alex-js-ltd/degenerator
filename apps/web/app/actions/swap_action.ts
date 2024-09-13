@@ -2,18 +2,22 @@
 
 import { SubmissionResult } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
-import { SellSchema } from '@/app/utils/schemas'
+import { SwapSchema } from '@/app/utils/schemas'
 import { program, connection } from '@/app/utils/setup'
-import { getSellTokenInstruction, buildTransaction } from '@repo/degenerator'
+import {
+	getBuyTokenInstruction,
+	getSellTokenInstruction,
+	buildTransaction,
+} from '@repo/degenerator'
 
-export type State = {
+export interface State {
 	lastResult?: SubmissionResult<string[]>
 	data?: { serializedTransaction: Uint8Array }
 }
 
-export async function sellAction(_prevState: State, formData: FormData) {
+export async function swapAction(_prevState: State, formData: FormData) {
 	const submission = parseWithZod(formData, {
-		schema: SellSchema,
+		schema: SwapSchema,
 	})
 
 	if (submission.status !== 'success') {
@@ -22,9 +26,13 @@ export async function sellAction(_prevState: State, formData: FormData) {
 		}
 	}
 
-	const { payer, mint, amount } = submission.value
+	const { buy, payer, mint, amount } = submission.value
 
-	const ix = await getSellTokenInstruction({ program, payer, mint, amount })
+	console.log(submission)
+
+	const ix = buy
+		? await getBuyTokenInstruction({ program, payer, mint, amount })
+		: await getSellTokenInstruction({ program, payer, mint, amount })
 
 	const transaction = await buildTransaction({
 		connection,
