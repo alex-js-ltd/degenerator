@@ -13,9 +13,10 @@ export function SwapButton({ ...rest }: ButtonProps) {
 
 	const reset = useResetTx()
 
-	const [{ errors }] = useField<number>('amount')
+	const [{ valid, value }] = useField<number>('amount')
 
-	const disabled = errors && errors?.length > 0 ? true : false
+	const disabled =
+		typeof value === 'undefined' ? true : valid && !pending ? false : true
 
 	return (
 		<button
