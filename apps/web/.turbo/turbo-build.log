@@ -10,56 +10,33 @@
 
  [37m[1m [22m[39m Creating an optimized production build ...
  [32m[1m✓[22m[39m Compiled successfully
-[?25l [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[?25h [37m[1m [22m[39m Linting and checking validity of types     [32m[1m✓[22m[39m Linting and checking validity of types 
-[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39mbigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
-[2K[1G[?25h [37m[1m [22m[39m Collecting page data     [32m[1m✓[22m[39m Collecting page data 
-[?25l [37m[1m [22m[39m Generating static pages (0/10)  [36m[    ][39mbigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+[?25l [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Linting and checking validity of types     [32m[1m✓[22m[39m Linting and checking validity of types 
+[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Collecting page data     [32m[1m✓[22m[39m Collecting page data 
+[?25l [37m[1m [22m[39m Generating static pages (0/9)  [36m[    ][39mbigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
 bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
 bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
-bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
-bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
-bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
-TypeError: Cannot read properties of undefined (reading '_bn')
-    at new a_ (/Users/alexandergilbert/Desktop/degenerator/apps/web/.next/server/chunks/834.js:1:69497)
-    at K (/Users/alexandergilbert/Desktop/degenerator/apps/web/.next/server/app/mint/page.js:1:31173)
-    at H (/Users/alexandergilbert/Desktop/degenerator/apps/web/.next/server/app/mint/page.js:1:31261)
-    at ey (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:11982)
-    at e (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:15521)
-    at eP (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:16004)
-    at Array.toJSON (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:13431)
-    at stringify (<anonymous>)
-    at eI (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:23817)
-    at eN (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:24035) {
-  digest: '394574173'
-}
-TypeError: Cannot read properties of undefined (reading '_bn')
-    at new a_ (/Users/alexandergilbert/Desktop/degenerator/apps/web/.next/server/chunks/834.js:1:69497)
-    at K (/Users/alexandergilbert/Desktop/degenerator/apps/web/.next/server/app/mint/page.js:1:31173)
-    at H (/Users/alexandergilbert/Desktop/degenerator/apps/web/.next/server/app/mint/page.js:1:31261)
-    at ey (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:11982)
-    at e (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:15521)
-    at eP (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:16004)
-    at Array.toJSON (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:13431)
-    at stringify (<anonymous>)
-    at eI (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:23817)
-    at eN (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:24035) {
-  digest: '394574173'
-}
+[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (9/9)
+[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
+[2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
 
-Error occurred prerendering page "/mint". Read more: https://nextjs.org/docs/messages/prerender-error
+[4mRoute (app)[24m                              [4mSize[24m     [4mFirst Load JS[24m
+┌ ○ /                                    148 B          [37m[1m89.9 kB[22m[39m
+├ ○ /_not-found                          898 B          [37m[1m90.6 kB[22m[39m
+├ ƒ /api/metadata/[id]                   0 B                [37m[1m0 B[22m[39m
+├ ○ /faq                                 148 B          [37m[1m89.9 kB[22m[39m
+├ ƒ /home                                148 B          [37m[1m89.9 kB[22m[39m
+├ ○ /opengraph-image.png                 0 B                [37m[1m0 B[22m[39m
+├ ƒ /token/[id]                          3.84 kB         [37m[1m254 kB[22m[39m
+└ ○ /twitter-image.png                   0 B                [37m[1m0 B[22m[39m
++ First Load JS shared by all            [37m[1m89.7 kB[22m[39m
+  ├ chunks/28e0bf4d-8ebb0ca206dcf8f6.js  51.7 kB
+  ├ chunks/505-4b0c15b8c3c94dd8.js       36.1 kB
+  └ other shared chunks (total)          1.94 kB
 
-TypeError: Cannot read properties of undefined (reading '_bn')
-    at new a_ (/Users/alexandergilbert/Desktop/degenerator/apps/web/.next/server/chunks/834.js:1:69497)
-    at K (/Users/alexandergilbert/Desktop/degenerator/apps/web/.next/server/app/mint/page.js:1:31173)
-    at H (/Users/alexandergilbert/Desktop/degenerator/apps/web/.next/server/app/mint/page.js:1:31261)
-    at ey (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:11982)
-    at e (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:15521)
-    at eP (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:16004)
-    at Array.toJSON (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:13431)
-    at stringify (<anonymous>)
-    at eI (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:23817)
-    at eN (/Users/alexandergilbert/Desktop/degenerator/node_modules/.pnpm/next@15.0.0-canary.56_@babel+core@7.25.2_react-dom@19.0.0-rc-f38c22b244-20240704_react@19.0.0-rc-f38c22b244-20240704/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:84:24035)
-[2K[1G[?25h [37m[1m [22m[39m Failed to build /mint/page: /mint after 1 attempts.
-[?25l [37m[1m [22m[39m Generating static pages (9/10)  [36m[    ][39m[2K[1G[?25h[31m[39m
-[?25l [37m[1m [22m[39m Generating static pages (9/10)  [36m[    ][39m[2K[1G[?25h[31m> Export encountered an error on /mint/page: /mint, exiting the build.[39m
-[?25l [37m[1m [22m[39m Generating static pages (9/10)  [36m[    ][39m[?25h[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m
+
+ƒ Middleware                             [37m[1m89.9 kB[22m[39m
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+[?25h

@@ -208,12 +208,16 @@ async function getMintInstructions({
 
 	const createPool = await program.methods
 		.createPool(transferAmount)
-		.accounts({
+		.accountsStrict({
 			payer: payer,
 			poolAta: poolATA,
 			mint: mint,
-			tokenProgram: TOKEN_2022_PROGRAM_ID,
+			poolAuthority: pda,
 			payerAta: payerATA,
+			systemProgram: web3.SystemProgram.programId,
+			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+			tokenProgram: TOKEN_2022_PROGRAM_ID,
+			rent: web3.SYSVAR_RENT_PUBKEY,
 		})
 		.instruction()
 
@@ -248,12 +252,15 @@ async function getBuyTokenInstruction({
 	const amountBN = new BN(amount)
 	const buy = await program.methods
 		.buyToken(amountBN)
-		.accounts({
+		.accountsStrict({
 			mint: mint,
 			signer: payer,
 			poolAta: poolATA,
-			tokenProgram: TOKEN_2022_PROGRAM_ID,
 			payerAta: payerATA,
+			poolAuthority: pda,
+			systemProgram: web3.SystemProgram.programId,
+			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
 		.instruction()
 
@@ -281,12 +288,15 @@ async function getSellTokenInstruction({
 	const amountBN = new BN(amount)
 	const sell = await program.methods
 		.sellToken(amountBN)
-		.accounts({
+		.accountsStrict({
 			mint: mint,
 			signer: payer,
 			payerAta: payerATA,
-			tokenProgram: TOKEN_2022_PROGRAM_ID,
 			poolAta: poolATA,
+			poolAuthority: pda,
+			systemProgram: web3.SystemProgram.programId,
+			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
 		.instruction()
 

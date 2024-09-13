@@ -1,23 +1,25 @@
 [toolchain]
+anchor_version = "0.30.1"
+solana_version = "1.18.17"
 
 [features]
 resolution = true
 skip-lint = false
 
 [programs.devnet]
-degenerator = "6vSnb1s6HpMXdgjBP4M925iQ5YBj8FKTwPzqAJs8FQUc"
+degenerator = "CpYcwymmJ6H7iP4r7N9Cy4npwWpDYy2vBjkdvGgZeHfP"
 
 [programs.localnet]
-degenerator = "9ToTPWXwvxdgQWofwWvviG2kTH8GkDKJoqJVoGNy8w8n"
+degenerator = "CpYcwymmJ6H7iP4r7N9Cy4npwWpDYy2vBjkdvGgZeHfP"
 
 [programs.mainnet]
-degenerator = "EvyXTZ2uK2dAW4Vpqd2zWbPzyp9TYLZe4iuAwbTSM27f"
+degenerator = "CpYcwymmJ6H7iP4r7N9Cy4npwWpDYy2vBjkdvGgZeHfP"
 
 [registry]
-url = "https://api.mainnet-beta.solana.com"
+url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "https://divine-ultra-diagram.solana-devnet.quiknode.pro"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

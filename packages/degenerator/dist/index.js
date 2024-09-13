@@ -17,7 +17,7 @@ var NATIVE_MINT_2022 = new PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXe
 
 // target/idl/degenerator.json
 var degenerator_default = {
-  address: "4mjjK8dxPPEGUTxGFcvfyNY5rWntuaZJ9i6Diy6HwsZN",
+  address: "CpYcwymmJ6H7iP4r7N9Cy4npwWpDYy2vBjkdvGgZeHfP",
   metadata: {
     name: "degenerator",
     version: "0.1.0",
@@ -79,7 +79,93 @@ var degenerator_default = {
           docs: [
             "Token account to which the tokens will be transferred (created if needed)"
           ],
-          writable: true
+          writable: true,
+          pda: {
+            seeds: [
+              {
+                kind: "account",
+                path: "signer"
+              },
+              {
+                kind: "const",
+                value: [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                kind: "account",
+                path: "mint"
+              }
+            ],
+            program: {
+              kind: "const",
+              value: [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
           name: "mint",
@@ -149,7 +235,60 @@ var degenerator_default = {
         },
         {
           name: "mint_token_account",
-          writable: true
+          writable: true,
+          pda: {
+            seeds: [
+              {
+                kind: "account",
+                path: "receiver"
+              },
+              {
+                kind: "account",
+                path: "token_program"
+              },
+              {
+                kind: "account",
+                path: "mint"
+              }
+            ],
+            program: {
+              kind: "const",
+              value: [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
           name: "extra_metas_account",
@@ -268,7 +407,93 @@ var degenerator_default = {
           docs: [
             "The ATA that will be created"
           ],
-          writable: true
+          writable: true,
+          pda: {
+            seeds: [
+              {
+                kind: "account",
+                path: "pool_authority"
+              },
+              {
+                kind: "const",
+                value: [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                kind: "account",
+                path: "mint"
+              }
+            ],
+            program: {
+              kind: "const",
+              value: [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
           name: "payer_ata",
@@ -455,7 +680,93 @@ var degenerator_default = {
         },
         {
           name: "pool_ata",
-          writable: true
+          writable: true,
+          pda: {
+            seeds: [
+              {
+                kind: "account",
+                path: "pool_authority"
+              },
+              {
+                kind: "const",
+                value: [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                kind: "account",
+                path: "mint"
+              }
+            ],
+            program: {
+              kind: "const",
+              value: [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
           name: "mint",
@@ -634,12 +945,16 @@ async function getMintInstructions({
     currentAuthority: payer,
     mintAccount: mint
   }).instruction();
-  const createPool = await program.methods.createPool(transferAmount).accounts({
+  const createPool = await program.methods.createPool(transferAmount).accountsStrict({
     payer,
     poolAta: poolATA,
     mint,
+    poolAuthority: pda,
+    payerAta: payerATA,
+    systemProgram: web3.SystemProgram.programId,
+    associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
     tokenProgram: TOKEN_2022_PROGRAM_ID,
-    payerAta: payerATA
+    rent: web3.SYSVAR_RENT_PUBKEY
   }).instruction();
   return [init, mintToken, revokeMint, revokeFreeze, createPool];
 }
@@ -659,12 +974,15 @@ async function getBuyTokenInstruction({
     owner: pda
   });
   const amountBN = new BN(amount);
-  const buy = await program.methods.buyToken(amountBN).accounts({
+  const buy = await program.methods.buyToken(amountBN).accountsStrict({
     mint,
     signer: payer,
     poolAta: poolATA,
-    tokenProgram: TOKEN_2022_PROGRAM_ID,
-    payerAta: payerATA
+    payerAta: payerATA,
+    poolAuthority: pda,
+    systemProgram: web3.SystemProgram.programId,
+    associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+    tokenProgram: TOKEN_2022_PROGRAM_ID
   }).instruction();
   return buy;
 }
@@ -684,12 +1002,15 @@ async function getSellTokenInstruction({
     owner: pda
   });
   const amountBN = new BN(amount);
-  const sell = await program.methods.sellToken(amountBN).accounts({
+  const sell = await program.methods.sellToken(amountBN).accountsStrict({
     mint,
     signer: payer,
     payerAta: payerATA,
-    tokenProgram: TOKEN_2022_PROGRAM_ID,
-    poolAta: poolATA
+    poolAta: poolATA,
+    poolAuthority: pda,
+    systemProgram: web3.SystemProgram.programId,
+    associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+    tokenProgram: TOKEN_2022_PROGRAM_ID
   }).instruction();
   return sell;
 }

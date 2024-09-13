@@ -75,7 +75,7 @@ pub fn calculate_price(current_supply: u128, total_supply: u128, amount: u128) -
     // Price per token decreases as the supply approaches max_supply
     let price_per_token = BASE_PRICE
         .saturating_mul(total_supply) // Ensures that when all tokens are in the pool, price equals BASE_PRICE
-        .saturating_div(current_supply.saturating_add(1)); // Prevent division by zero and ensure smooth decrease
+        .saturating_div(current_supply + 1); // Prevent division by zero and ensure smooth decrease
 
     // Calculate total price for the requested amount of tokens
     let total_price = price_per_token.saturating_mul(amount);
