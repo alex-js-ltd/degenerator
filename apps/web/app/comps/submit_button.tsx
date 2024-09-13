@@ -49,11 +49,7 @@ export function SubmitButton({ content, ...rest }: SubmitButtonProps) {
 						onClick={reset}
 						aria-label={`Submit ${content}`}
 					>
-						{pending ? (
-							<Spinner />
-						) : (
-							<Icon name="arrow-up" className="w-6 h-6" />
-						)}
+						{pending ? <Spinner /> : <Icon name="submit" className="w-6 h-6" />}
 					</Button>
 				</span>
 			</TooltipTrigger>

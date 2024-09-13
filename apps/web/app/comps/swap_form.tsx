@@ -32,6 +32,10 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 		shouldValidate: 'onBlur',
 		shouldRevalidate: 'onInput',
 		lastResult,
+
+		defaultValue: {
+			amount: '',
+		},
 	})
 
 	const { serializedTransaction } = data || {}
