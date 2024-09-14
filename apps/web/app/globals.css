@@ -47,6 +47,18 @@ input[type=file]::-webkit-file-upload-button {
 	cursor: pointer;
 }
 
+/* Chrome, Safari, Edge, Opera */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+	-moz-appearance: textfield;
+}
+
 .button {
 	background: linear-gradient(45deg, #06b0f9, #f906b0) !important;
 }
