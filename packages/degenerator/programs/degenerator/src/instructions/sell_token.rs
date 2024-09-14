@@ -4,7 +4,8 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
 use crate::utils::{
-    calculate_price, transfer_from_user_to_pool_vault, transfer_sol_to_user, POOL_VAULT_SEED,
+    get_price_per_token, get_total_price, set_price_per_token, transfer_from_user_to_pool_vault,
+    transfer_sol_to_user, Pool, POOL_VAULT_SEED,
 };
 
 #[derive(Accounts)]
@@ -20,7 +21,7 @@ pub struct SellToken<'info> {
         seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub pool_authority: AccountInfo<'info>,
+    pub pool_authority: Account<'info, Pool>,
 
     #[account(
         init_if_needed,
@@ -41,8 +42,6 @@ pub struct SellToken<'info> {
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     // Get the current supply of tokens
     let user_supply = ctx.accounts.payer_ata.amount;
-    let pool_supply = ctx.accounts.pool_ata.amount;
-    let total_supply = ctx.accounts.mint.supply;
 
     // Ensure the requested amount does not exceed available supply
     if amount > user_supply {
@@ -50,11 +49,13 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     }
 
     // Calculate the price for the requested amount
-    let price = calculate_price(pool_supply as u128, total_supply as u128, amount as u128);
+    let price_per_token = ctx.accounts.pool_authority.price_per_token;
+    let total_price = get_total_price(price_per_token as u128, amount as u128);
 
-    // Ensure the pool authority has enough balance to cover the price
-    let pool_balance = ctx.accounts.pool_authority.lamports();
-    if pool_balance < price {
+    let pool_account = ctx.accounts.pool_authority.to_account_info();
+    let pool_balance = pool_account.lamports(); // Access lamports in pool authority
+
+    if pool_balance < total_price {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -73,13 +74,20 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.pool_authority.to_account_info(),
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        price,
+        total_price,
         &[&[
             POOL_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
             &[ctx.bumps.pool_authority][..],
         ][..]],
     )?;
+
+    let new_price_per_token = get_price_per_token(
+        ctx.accounts.payer_ata.amount as u128,
+        ctx.accounts.mint.supply as u128,
+    );
+
+    set_price_per_token(&mut ctx.accounts.pool_authority, new_price_per_token);
 
     Ok(())
 }

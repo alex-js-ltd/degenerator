@@ -70,6 +70,25 @@ pub fn get_meta_list_size(approve_account: Option<Pubkey>) -> usize {
 
 const BASE_PRICE: u128 = 15_020; // 0.01502 SOL in lamports
 
+/// Calculates the price per token based on current and total supply.
+pub fn get_price_per_token(current_supply: u128, total_supply: u128) -> u64 {
+    let price_per_token = BASE_PRICE
+        .saturating_mul(total_supply)
+        .saturating_div(current_supply + 1);
+
+    price_per_token.try_into().unwrap_or(u64::MAX)
+}
+
+/// Sets the price per token in the Pool account.
+pub fn set_price_per_token(pool_authority: &mut Account<Pool>, price_per_token: u64) {
+    pool_authority.price_per_token = price_per_token;
+}
+
+pub fn get_total_price(price_per_token: u128, amount: u128) -> u64 {
+    let total_price = price_per_token.saturating_mul(amount);
+    total_price.try_into().unwrap_or(u64::MAX)
+}
+
 pub fn calculate_price(current_supply: u128, total_supply: u128, amount: u128) -> u64 {
     // Calculate the price per token using an inverse relationship
     // Price per token decreases as the supply approaches max_supply
@@ -176,3 +195,11 @@ pub fn transfer_sol_to_user<'a>(
         amount,
     )
 }
+
+#[account]
+#[derive(InitSpace)]
+pub struct Pool {
+    pub price_per_token: u64,
+}
+
+pub const DISCRIMINATOR: usize = 8;

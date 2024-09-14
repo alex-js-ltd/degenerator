@@ -4,7 +4,8 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
 use crate::utils::{
-    calculate_price, transfer_from_pool_vault_to_user, transfer_sol_to_pool_vault, POOL_VAULT_SEED,
+    get_price_per_token, get_total_price, set_price_per_token, transfer_from_pool_vault_to_user,
+    transfer_sol_to_pool_vault, Pool, POOL_VAULT_SEED,
 };
 
 #[derive(Accounts)]
@@ -19,7 +20,7 @@ pub struct BuyToken<'info> {
         seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub pool_authority: AccountInfo<'info>,
+    pub pool_authority: Account<'info, Pool>,
 
     /// Token account from which the tokens will be transferred
     #[account(mut)]
@@ -50,20 +51,20 @@ pub struct BuyToken<'info> {
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     // Get the current supply of tokens
-    let current_supply = ctx.accounts.pool_ata.amount;
-    let total_supply = ctx.accounts.mint.supply;
+    let supply = ctx.accounts.pool_ata.amount;
 
     // Ensure the requested amount does not exceed available supply
-    if amount > total_supply {
+    if amount > supply {
         return Err(Errors::InsufficientTokens.into());
     }
 
     // Calculate the price for the requested amount
-    let price = calculate_price(current_supply as u128, total_supply as u128, amount as u128);
+    let price_per_token = ctx.accounts.pool_authority.price_per_token;
+    let total_price = get_total_price(price_per_token as u128, amount as u128);
 
     // Check if the signer has enough lamports to cover the price
     let signer_balance = ctx.accounts.signer.lamports();
-    if signer_balance < price {
+    if signer_balance < total_price {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -86,8 +87,15 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.pool_authority.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        price,
+        total_price,
     )?;
+
+    let new_price_per_token = get_price_per_token(
+        ctx.accounts.payer_ata.amount as u128,
+        ctx.accounts.mint.supply as u128,
+    );
+
+    set_price_per_token(&mut ctx.accounts.pool_authority, new_price_per_token);
 
     Ok(())
 }

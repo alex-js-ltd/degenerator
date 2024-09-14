@@ -13,13 +13,13 @@ degenerator = "CpYcwymmJ6H7iP4r7N9Cy4npwWpDYy2vBjkdvGgZeHfP"
 degenerator = "CpYcwymmJ6H7iP4r7N9Cy4npwWpDYy2vBjkdvGgZeHfP"
 
 [programs.mainnet]
-degenerator = "CpYcwymmJ6H7iP4r7N9Cy4npwWpDYy2vBjkdvGgZeHfP"
+degenerator = "3UqTvNCQrsycmRASXdax79ekxftZ8zzGrFc8MVPcPsAf"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "https://divine-ultra-diagram.solana-devnet.quiknode.pro"
+cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
