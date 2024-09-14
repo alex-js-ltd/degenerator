@@ -17,8 +17,8 @@ use anchor_spl::token_interface::spl_token_2022::{
 use spl_tlv_account_resolution::{account::ExtraAccountMeta, state::ExtraAccountMetaList};
 use spl_type_length_value::variable_len_pack::VariableLenPack;
 
-pub const POOL_VAULT_SEED: &str = "pool";
-pub const POOL_PRICE_SEED: &str = "price";
+pub const POOL_VAULT_SEED: &str = "pool_vault";
+pub const POOL_STATE_SEED: &str = "pool_state";
 pub const META_LIST_ACCOUNT_SEED: &str = "extra-account-metas";
 
 pub fn update_account_lamports_to_minimum_balance<'info>(
@@ -69,25 +69,46 @@ pub fn get_meta_list_size(approve_account: Option<Pubkey>) -> usize {
     ExtraAccountMetaList::size_of(get_meta_list(approve_account).len()).unwrap()
 }
 
-const BASE_PRICE: u128 = 15_020; // 0.01502 SOL in lamports
+const BASE_PRICE: u128 = 10_000; // Base price per token
+const PRICE_INCREMENT: u128 = 1_000; // Linear increment per unit of supply
 
-/// Calculates the price per token based on current and total supply.
-pub fn get_price_per_token(current_supply: u128, total_supply: u128) -> u64 {
-    let price_per_token = BASE_PRICE
-        .saturating_mul(total_supply)
-        .saturating_div(current_supply + 1);
+pub fn calculate_buy_price(current_supply: u128, total_supply: u128, amount: u128) -> u64 {
+    // Inverse component: Price increases as the remaining supply decreases
+    let remaining_supply = total_supply.saturating_sub(current_supply);
 
-    price_per_token.try_into().unwrap_or(u64::MAX)
+    // Linear price increase component
+    let linear_component =
+        PRICE_INCREMENT.saturating_mul((total_supply - remaining_supply) / total_supply);
+
+    // Total price per token including both components
+    let price_per_token = BASE_PRICE.saturating_add(linear_component);
+
+    // Total price for the amount of tokens requested
+    let total_price = price_per_token.saturating_mul(amount as u128);
+
+    // Convert to u64, with a maximum cap to avoid overflow
+    total_price.try_into().unwrap_or(u64::MAX)
+}
+
+pub fn calculate_sell_price(current_supply: u128, total_supply: u128, amount: u128) -> u64 {
+    let linear_component = PRICE_INCREMENT.saturating_mul(current_supply / total_supply);
+
+    // Total price per token including both components
+    let price_per_token = BASE_PRICE.saturating_sub(linear_component);
+
+    // Ensure that price does not drop below zero
+    let price_per_token = price_per_token.max(0);
+
+    // Total price for the amount of tokens being sold
+    let total_price = price_per_token.saturating_mul(amount as u128);
+
+    // Convert to u64, with a maximum cap to avoid overflow
+    total_price.try_into().unwrap_or(u64::MAX)
 }
 
 /// Sets the price per token in the Pool account.
-pub fn set_price_per_token(pool_authority: &mut Account<Price>, price_per_token: u64) {
-    pool_authority.price_per_token = price_per_token;
-}
-
-pub fn get_total_price(price_per_token: u128, amount: u128) -> u64 {
-    let total_price = price_per_token.saturating_mul(amount);
-    total_price.try_into().unwrap_or(u64::MAX)
+pub fn set_price_per_token(pool_state: &mut Account<Pool>, price_per_token: u64) {
+    pool_state.price_per_token = price_per_token;
 }
 
 pub fn transfer_from_user_to_pool_vault<'a>(
@@ -180,7 +201,7 @@ pub fn transfer_sol_to_user<'a>(
 
 #[account]
 #[derive(InitSpace)]
-pub struct Price {
+pub struct Pool {
     pub price_per_token: u64,
 }
 

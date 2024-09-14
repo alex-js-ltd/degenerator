@@ -59,7 +59,7 @@ function getPoolPda({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('pool'), mint.toBuffer()],
+		[Buffer.from('pool_vault'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }
@@ -72,7 +72,7 @@ function getPricePda({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('price'), mint.toBuffer()],
+		[Buffer.from('pool_state'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }
@@ -228,7 +228,7 @@ async function getMintInstructions({
 			poolAta: poolATA,
 			mint: mint,
 			poolAuthority: pda,
-			currentPrice: currentPrice,
+			poolState: currentPrice,
 			payerAta: payerATA,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -276,7 +276,7 @@ async function getBuyTokenInstruction({
 			poolAta: poolATA,
 			payerAta: payerATA,
 			poolAuthority: pda,
-			currentPrice: currentPrice,
+			poolState: currentPrice,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -315,7 +315,7 @@ async function getSellTokenInstruction({
 			payerAta: payerATA,
 			poolAta: poolATA,
 			poolAuthority: pda,
-			currentPrice: currentPrice,
+			poolState: currentPrice,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -333,7 +333,7 @@ interface GetPricePerTokenParams {
 async function getPricePerToken({ program, mint }: GetPricePerTokenParams) {
 	const pda = getPricePda({ program, mint })
 
-	const data = await program.account.price.fetch(pda)
+	const data = await program.account.pool.fetch(pda)
 
 	return data
 }

@@ -17,7 +17,7 @@ var NATIVE_MINT_2022 = new PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXe
 
 // target/idl/degenerator.json
 var degenerator_default = {
-  address: "6v1d6gShsbYiTrpeVL3MsgaGs79pRyu2DaZiRndD9eAc",
+  address: "En9S82DuDk6hm6hBrwAF4jQsz9h9uN7YmSnTwHm3gmNd",
   metadata: {
     name: "degenerator",
     version: "0.1.0",
@@ -57,7 +57,13 @@ var degenerator_default = {
                   112,
                   111,
                   111,
-                  108
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
                 ]
               },
               {
@@ -68,7 +74,7 @@ var degenerator_default = {
           }
         },
         {
-          name: "current_price",
+          name: "pool_state",
           writable: true,
           pda: {
             seeds: [
@@ -76,9 +82,14 @@ var degenerator_default = {
                 kind: "const",
                 value: [
                   112,
-                  114,
-                  105,
-                  99,
+                  111,
+                  111,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
                   101
                 ]
               },
@@ -408,7 +419,13 @@ var degenerator_default = {
                   112,
                   111,
                   111,
-                  108
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
                 ]
               },
               {
@@ -419,7 +436,7 @@ var degenerator_default = {
           }
         },
         {
-          name: "current_price",
+          name: "pool_state",
           writable: true,
           pda: {
             seeds: [
@@ -427,9 +444,14 @@ var degenerator_default = {
                 kind: "const",
                 value: [
                   112,
-                  114,
-                  105,
-                  99,
+                  111,
+                  111,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
                   101
                 ]
               },
@@ -712,7 +734,13 @@ var degenerator_default = {
                   112,
                   111,
                   111,
-                  108
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
                 ]
               },
               {
@@ -723,7 +751,7 @@ var degenerator_default = {
           }
         },
         {
-          name: "current_price",
+          name: "pool_state",
           writable: true,
           pda: {
             seeds: [
@@ -731,9 +759,14 @@ var degenerator_default = {
                 kind: "const",
                 value: [
                   112,
-                  114,
-                  105,
-                  99,
+                  111,
+                  111,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
                   101
                 ]
               },
@@ -860,16 +893,16 @@ var degenerator_default = {
   ],
   accounts: [
     {
-      name: "Price",
+      name: "Pool",
       discriminator: [
-        50,
-        107,
-        127,
-        61,
-        83,
-        36,
-        39,
-        75
+        241,
+        154,
+        109,
+        4,
+        17,
+        177,
+        109,
+        188
       ]
     }
   ],
@@ -902,7 +935,7 @@ var degenerator_default = {
       }
     },
     {
-      name: "Price",
+      name: "Pool",
       type: {
         kind: "struct",
         fields: [
@@ -947,7 +980,7 @@ function getPoolPda({
   mint
 }) {
   return PublicKey2.findProgramAddressSync(
-    [Buffer.from("pool"), mint.toBuffer()],
+    [Buffer.from("pool_vault"), mint.toBuffer()],
     program.programId
   )[0];
 }
@@ -956,7 +989,7 @@ function getPricePda({
   mint
 }) {
   return PublicKey2.findProgramAddressSync(
-    [Buffer.from("price"), mint.toBuffer()],
+    [Buffer.from("pool_state"), mint.toBuffer()],
     program.programId
   )[0];
 }
@@ -1053,7 +1086,7 @@ async function getMintInstructions({
     poolAta: poolATA,
     mint,
     poolAuthority: pda,
-    currentPrice,
+    poolState: currentPrice,
     payerAta: payerATA,
     systemProgram: web3.SystemProgram.programId,
     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -1085,7 +1118,7 @@ async function getBuyTokenInstruction({
     poolAta: poolATA,
     payerAta: payerATA,
     poolAuthority: pda,
-    currentPrice,
+    poolState: currentPrice,
     systemProgram: web3.SystemProgram.programId,
     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
     tokenProgram: TOKEN_2022_PROGRAM_ID
@@ -1115,7 +1148,7 @@ async function getSellTokenInstruction({
     payerAta: payerATA,
     poolAta: poolATA,
     poolAuthority: pda,
-    currentPrice,
+    poolState: currentPrice,
     systemProgram: web3.SystemProgram.programId,
     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
     tokenProgram: TOKEN_2022_PROGRAM_ID
@@ -1124,7 +1157,7 @@ async function getSellTokenInstruction({
 }
 async function getPricePerToken({ program, mint }) {
   const pda = getPricePda({ program, mint });
-  const data = await program.account.price.fetch(pda);
+  const data = await program.account.pool.fetch(pda);
   return data;
 }
 export {

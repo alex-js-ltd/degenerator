@@ -8,7 +8,7 @@ import { PublicKey, Connection, Signer, TransactionInstruction, VersionedTransac
  * IDL can be found at `target/idl/degenerator.json`.
  */
 type Degenerator = {
-    "address": "6v1d6gShsbYiTrpeVL3MsgaGs79pRyu2DaZiRndD9eAc";
+    "address": "En9S82DuDk6hm6hBrwAF4jQsz9h9uN7YmSnTwHm3gmNd";
     "metadata": {
         "name": "degenerator";
         "version": "0.1.0";
@@ -48,7 +48,13 @@ type Degenerator = {
                                     112,
                                     111,
                                     111,
-                                    108
+                                    108,
+                                    95,
+                                    118,
+                                    97,
+                                    117,
+                                    108,
+                                    116
                                 ];
                             },
                             {
@@ -59,7 +65,7 @@ type Degenerator = {
                     };
                 },
                 {
-                    "name": "currentPrice";
+                    "name": "poolState";
                     "writable": true;
                     "pda": {
                         "seeds": [
@@ -67,9 +73,14 @@ type Degenerator = {
                                 "kind": "const";
                                 "value": [
                                     112,
-                                    114,
-                                    105,
-                                    99,
+                                    111,
+                                    111,
+                                    108,
+                                    95,
+                                    115,
+                                    116,
+                                    97,
+                                    116,
                                     101
                                 ];
                             },
@@ -399,7 +410,13 @@ type Degenerator = {
                                     112,
                                     111,
                                     111,
-                                    108
+                                    108,
+                                    95,
+                                    118,
+                                    97,
+                                    117,
+                                    108,
+                                    116
                                 ];
                             },
                             {
@@ -410,7 +427,7 @@ type Degenerator = {
                     };
                 },
                 {
-                    "name": "currentPrice";
+                    "name": "poolState";
                     "writable": true;
                     "pda": {
                         "seeds": [
@@ -418,9 +435,14 @@ type Degenerator = {
                                 "kind": "const";
                                 "value": [
                                     112,
-                                    114,
-                                    105,
-                                    99,
+                                    111,
+                                    111,
+                                    108,
+                                    95,
+                                    115,
+                                    116,
+                                    97,
+                                    116,
                                     101
                                 ];
                             },
@@ -703,7 +725,13 @@ type Degenerator = {
                                     112,
                                     111,
                                     111,
-                                    108
+                                    108,
+                                    95,
+                                    118,
+                                    97,
+                                    117,
+                                    108,
+                                    116
                                 ];
                             },
                             {
@@ -714,7 +742,7 @@ type Degenerator = {
                     };
                 },
                 {
-                    "name": "currentPrice";
+                    "name": "poolState";
                     "writable": true;
                     "pda": {
                         "seeds": [
@@ -722,9 +750,14 @@ type Degenerator = {
                                 "kind": "const";
                                 "value": [
                                     112,
-                                    114,
-                                    105,
-                                    99,
+                                    111,
+                                    111,
+                                    108,
+                                    95,
+                                    115,
+                                    116,
+                                    97,
+                                    116,
                                     101
                                 ];
                             },
@@ -851,16 +884,16 @@ type Degenerator = {
     ];
     "accounts": [
         {
-            "name": "price";
+            "name": "pool";
             "discriminator": [
-                50,
-                107,
-                127,
-                61,
-                83,
-                36,
-                39,
-                75
+                241,
+                154,
+                109,
+                4,
+                17,
+                177,
+                109,
+                188
             ];
         }
     ];
@@ -893,7 +926,7 @@ type Degenerator = {
             };
         },
         {
-            "name": "price";
+            "name": "pool";
             "type": {
                 "kind": "struct";
                 "fields": [
@@ -907,7 +940,7 @@ type Degenerator = {
     ];
 };
 
-var address = "6v1d6gShsbYiTrpeVL3MsgaGs79pRyu2DaZiRndD9eAc";
+var address = "En9S82DuDk6hm6hBrwAF4jQsz9h9uN7YmSnTwHm3gmNd";
 var metadata = {
 	name: "degenerator",
 	version: "0.1.0",
@@ -947,7 +980,13 @@ var instructions = [
 								112,
 								111,
 								111,
-								108
+								108,
+								95,
+								118,
+								97,
+								117,
+								108,
+								116
 							]
 						},
 						{
@@ -958,7 +997,7 @@ var instructions = [
 				}
 			},
 			{
-				name: "current_price",
+				name: "pool_state",
 				writable: true,
 				pda: {
 					seeds: [
@@ -966,9 +1005,14 @@ var instructions = [
 							kind: "const",
 							value: [
 								112,
-								114,
-								105,
-								99,
+								111,
+								111,
+								108,
+								95,
+								115,
+								116,
+								97,
+								116,
 								101
 							]
 						},
@@ -1298,7 +1342,13 @@ var instructions = [
 								112,
 								111,
 								111,
-								108
+								108,
+								95,
+								118,
+								97,
+								117,
+								108,
+								116
 							]
 						},
 						{
@@ -1309,7 +1359,7 @@ var instructions = [
 				}
 			},
 			{
-				name: "current_price",
+				name: "pool_state",
 				writable: true,
 				pda: {
 					seeds: [
@@ -1317,9 +1367,14 @@ var instructions = [
 							kind: "const",
 							value: [
 								112,
-								114,
-								105,
-								99,
+								111,
+								111,
+								108,
+								95,
+								115,
+								116,
+								97,
+								116,
 								101
 							]
 						},
@@ -1604,7 +1659,13 @@ var instructions = [
 								112,
 								111,
 								111,
-								108
+								108,
+								95,
+								118,
+								97,
+								117,
+								108,
+								116
 							]
 						},
 						{
@@ -1615,7 +1676,7 @@ var instructions = [
 				}
 			},
 			{
-				name: "current_price",
+				name: "pool_state",
 				writable: true,
 				pda: {
 					seeds: [
@@ -1623,9 +1684,14 @@ var instructions = [
 							kind: "const",
 							value: [
 								112,
-								114,
-								105,
-								99,
+								111,
+								111,
+								108,
+								95,
+								115,
+								116,
+								97,
+								116,
 								101
 							]
 						},
@@ -1752,16 +1818,16 @@ var instructions = [
 ];
 var accounts = [
 	{
-		name: "Price",
+		name: "Pool",
 		discriminator: [
-			50,
-			107,
-			127,
-			61,
-			83,
-			36,
-			39,
-			75
+			241,
+			154,
+			109,
+			4,
+			17,
+			177,
+			109,
+			188
 		]
 	}
 ];
@@ -1794,7 +1860,7 @@ var types = [
 		}
 	},
 	{
-		name: "Price",
+		name: "Pool",
 		type: {
 			kind: "struct",
 			fields: [

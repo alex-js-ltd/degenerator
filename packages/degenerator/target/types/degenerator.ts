@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "6v1d6gShsbYiTrpeVL3MsgaGs79pRyu2DaZiRndD9eAc",
+  "address": "En9S82DuDk6hm6hBrwAF4jQsz9h9uN7YmSnTwHm3gmNd",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -45,7 +45,13 @@ export type Degenerator = {
                   112,
                   111,
                   111,
-                  108
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
                 ]
               },
               {
@@ -56,7 +62,7 @@ export type Degenerator = {
           }
         },
         {
-          "name": "currentPrice",
+          "name": "poolState",
           "writable": true,
           "pda": {
             "seeds": [
@@ -64,9 +70,14 @@ export type Degenerator = {
                 "kind": "const",
                 "value": [
                   112,
-                  114,
-                  105,
-                  99,
+                  111,
+                  111,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
                   101
                 ]
               },
@@ -396,7 +407,13 @@ export type Degenerator = {
                   112,
                   111,
                   111,
-                  108
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
                 ]
               },
               {
@@ -407,7 +424,7 @@ export type Degenerator = {
           }
         },
         {
-          "name": "currentPrice",
+          "name": "poolState",
           "writable": true,
           "pda": {
             "seeds": [
@@ -415,9 +432,14 @@ export type Degenerator = {
                 "kind": "const",
                 "value": [
                   112,
-                  114,
-                  105,
-                  99,
+                  111,
+                  111,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
                   101
                 ]
               },
@@ -700,7 +722,13 @@ export type Degenerator = {
                   112,
                   111,
                   111,
-                  108
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
                 ]
               },
               {
@@ -711,7 +739,7 @@ export type Degenerator = {
           }
         },
         {
-          "name": "currentPrice",
+          "name": "poolState",
           "writable": true,
           "pda": {
             "seeds": [
@@ -719,9 +747,14 @@ export type Degenerator = {
                 "kind": "const",
                 "value": [
                   112,
-                  114,
-                  105,
-                  99,
+                  111,
+                  111,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
                   101
                 ]
               },
@@ -848,16 +881,16 @@ export type Degenerator = {
   ],
   "accounts": [
     {
-      "name": "price",
+      "name": "pool",
       "discriminator": [
-        50,
-        107,
-        127,
-        61,
-        83,
-        36,
-        39,
-        75
+        241,
+        154,
+        109,
+        4,
+        17,
+        177,
+        109,
+        188
       ]
     }
   ],
@@ -890,7 +923,7 @@ export type Degenerator = {
       }
     },
     {
-      "name": "price",
+      "name": "pool",
       "type": {
         "kind": "struct",
         "fields": [
