@@ -18,6 +18,7 @@ use spl_tlv_account_resolution::{account::ExtraAccountMeta, state::ExtraAccountM
 use spl_type_length_value::variable_len_pack::VariableLenPack;
 
 pub const POOL_VAULT_SEED: &str = "pool";
+pub const POOL_PRICE_SEED: &str = "price";
 pub const META_LIST_ACCOUNT_SEED: &str = "extra-account-metas";
 
 pub fn update_account_lamports_to_minimum_balance<'info>(
@@ -80,7 +81,7 @@ pub fn get_price_per_token(current_supply: u128, total_supply: u128) -> u64 {
 }
 
 /// Sets the price per token in the Pool account.
-pub fn set_price_per_token(pool_authority: &mut Account<Pool>, price_per_token: u64) {
+pub fn set_price_per_token(pool_authority: &mut Account<Price>, price_per_token: u64) {
     pool_authority.price_per_token = price_per_token;
 }
 
@@ -179,7 +180,7 @@ pub fn transfer_sol_to_user<'a>(
 
 #[account]
 #[derive(InitSpace)]
-pub struct Pool {
+pub struct Price {
     pub price_per_token: u64,
 }
 

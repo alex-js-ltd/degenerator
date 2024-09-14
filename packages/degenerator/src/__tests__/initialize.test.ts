@@ -10,6 +10,7 @@ import {
 	getAssociatedAddress,
 	getBuyTokenInstruction,
 	getSellTokenInstruction,
+	getPricePerToken,
 } from '../index'
 import { getAccount, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 
@@ -96,6 +97,12 @@ describe('initialize', () => {
 		expect(isRentExempt).toBe(true)
 	})
 
+	it('check price per token', async () => {
+		const data = await getPricePerToken({ program, mint: mint.publicKey })
+
+		console.log('price before', data.pricePerToken.toString())
+	})
+
 	it('check pool token amount is 99 times the user amount', async () => {
 		// Fetch pool and user account data
 		const pool = await getAccount(
@@ -141,7 +148,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 1000
+		const amountToBuy = 10000
 
 		const ix = await getBuyTokenInstruction({
 			program,
@@ -189,5 +196,39 @@ describe('initialize', () => {
 		const userAmount = user.amount // BigInt
 
 		console.log('userAmount after', userAmount.toString())
+	})
+
+	it('sell token', async () => {
+		const amountToSell = 2
+
+		const ix = await getSellTokenInstruction({
+			program,
+			payer: payer.publicKey,
+			mint: mint.publicKey,
+			amount: amountToSell,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+		console.log(res)
+		expect(res.value.err).toBeNull()
+
+		// Confirm the transaction
+		await sendAndConfirm({ connection, tx })
+	})
+
+	it('check price per token', async () => {
+		const data = await getPricePerToken({ program, mint: mint.publicKey })
+
+		console.log('price after', data.pricePerToken.toString())
 	})
 })

@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::errors::Errors;
 use crate::utils::{
     get_price_per_token, get_total_price, set_price_per_token, transfer_from_pool_vault_to_user,
-    transfer_sol_to_pool_vault, Pool, POOL_VAULT_SEED,
+    transfer_sol_to_pool_vault, Price, POOL_PRICE_SEED, POOL_VAULT_SEED,
 };
 
 #[derive(Accounts)]
@@ -20,7 +20,15 @@ pub struct BuyToken<'info> {
         seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub pool_authority: Account<'info, Pool>,
+    pub pool_authority: AccountInfo<'info>,
+
+    /// CHECK: Pool current price (used for transfer)
+    #[account(
+            mut,
+            seeds = [POOL_PRICE_SEED.as_bytes(), mint.key().as_ref()],
+            bump,
+        )]
+    pub current_price: Account<'info, Price>,
 
     /// Token account from which the tokens will be transferred
     #[account(mut)]
@@ -59,7 +67,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     }
 
     // Calculate the price for the requested amount
-    let price_per_token = ctx.accounts.pool_authority.price_per_token;
+    let price_per_token = ctx.accounts.current_price.price_per_token;
     let total_price = get_total_price(price_per_token as u128, amount as u128);
 
     // Check if the signer has enough lamports to cover the price
@@ -95,7 +103,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ctx.accounts.mint.supply as u128,
     );
 
-    set_price_per_token(&mut ctx.accounts.pool_authority, new_price_per_token);
+    set_price_per_token(&mut ctx.accounts.current_price, new_price_per_token);
 
     Ok(())
 }

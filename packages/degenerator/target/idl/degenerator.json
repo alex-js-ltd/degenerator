@@ -1,5 +1,5 @@
 {
-  "address": "27QL3zAe7aQnhBskpRPPt6uTVUum9bmVvJKnYbdxnKN2",
+  "address": "DnFuBsqhyyZUw29Ue22QTUUvZnEHeiHYJmeVVqksW8zT",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -40,6 +40,28 @@
                   111,
                   111,
                   108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "current_price",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  105,
+                  99,
+                  101
                 ]
               },
               {
@@ -379,6 +401,28 @@
           }
         },
         {
+          "name": "current_price",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  105,
+                  99,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
           "name": "mint",
           "docs": [
             "The Mint for which the ATA is being created"
@@ -661,6 +705,28 @@
           }
         },
         {
+          "name": "current_price",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  105,
+                  99,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
           "name": "pool_ata",
           "writable": true,
           "pda": {
@@ -776,16 +842,16 @@
   ],
   "accounts": [
     {
-      "name": "Pool",
+      "name": "Price",
       "discriminator": [
-        241,
-        154,
-        109,
-        4,
-        17,
-        177,
-        109,
-        188
+        50,
+        107,
+        127,
+        61,
+        83,
+        36,
+        39,
+        75
       ]
     }
   ],
@@ -818,7 +884,7 @@
       }
     },
     {
-      "name": "Pool",
+      "name": "Price",
       "type": {
         "kind": "struct",
         "fields": [

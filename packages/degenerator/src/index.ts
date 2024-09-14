@@ -64,6 +64,19 @@ function getPoolPda({
 	)[0]
 }
 
+function getPricePda({
+	program,
+	mint,
+}: {
+	program: Program<Degenerator>
+	mint: PublicKey
+}): PublicKey {
+	return PublicKey.findProgramAddressSync(
+		[Buffer.from('price'), mint.toBuffer()],
+		program.programId,
+	)[0]
+}
+
 async function buildTransaction({
 	connection,
 	payer,
@@ -164,6 +177,8 @@ async function getMintInstructions({
 		program.programId,
 	)
 
+	const currentPrice = getPricePda({ program, mint })
+
 	const init = await program.methods
 
 		.createMintAccount(decimals, metadata)
@@ -213,6 +228,7 @@ async function getMintInstructions({
 			poolAta: poolATA,
 			mint: mint,
 			poolAuthority: pda,
+			currentPrice: currentPrice,
 			payerAta: payerATA,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -249,6 +265,8 @@ async function getBuyTokenInstruction({
 		owner: pda,
 	})
 
+	const currentPrice = getPricePda({ program, mint })
+
 	const amountBN = new BN(amount)
 	const buy = await program.methods
 		.buyToken(amountBN)
@@ -258,6 +276,7 @@ async function getBuyTokenInstruction({
 			poolAta: poolATA,
 			payerAta: payerATA,
 			poolAuthority: pda,
+			currentPrice: currentPrice,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -285,6 +304,8 @@ async function getSellTokenInstruction({
 		owner: pda,
 	})
 
+	const currentPrice = getPricePda({ program, mint })
+
 	const amountBN = new BN(amount)
 	const sell = await program.methods
 		.sellToken(amountBN)
@@ -294,6 +315,7 @@ async function getSellTokenInstruction({
 			payerAta: payerATA,
 			poolAta: poolATA,
 			poolAuthority: pda,
+			currentPrice: currentPrice,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -309,9 +331,9 @@ interface GetPricePerTokenParams {
 }
 
 async function getPricePerToken({ program, mint }: GetPricePerTokenParams) {
-	const pda = getPoolPda({ program, mint })
+	const pda = getPricePda({ program, mint })
 
-	const data = await program.account.pool.fetch(pda)
+	const data = await program.account.price.fetch(pda)
 
 	return data
 }
@@ -328,5 +350,6 @@ export {
 	getSellTokenInstruction,
 	getBalance,
 	getPricePerToken,
+	getPricePda,
 }
 export { default as IDL } from '../target/idl/degenerator.json'

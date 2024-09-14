@@ -17,7 +17,7 @@ var NATIVE_MINT_2022 = new PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXe
 
 // target/idl/degenerator.json
 var degenerator_default = {
-  address: "CpYcwymmJ6H7iP4r7N9Cy4npwWpDYy2vBjkdvGgZeHfP",
+  address: "27QL3zAe7aQnhBskpRPPt6uTVUum9bmVvJKnYbdxnKN2",
   metadata: {
     name: "degenerator",
     version: "0.1.0",
@@ -792,6 +792,21 @@ var degenerator_default = {
       ]
     }
   ],
+  accounts: [
+    {
+      name: "Pool",
+      discriminator: [
+        241,
+        154,
+        109,
+        4,
+        17,
+        177,
+        109,
+        188
+      ]
+    }
+  ],
   errors: [
     {
       code: 6e3,
@@ -816,6 +831,18 @@ var degenerator_default = {
           {
             name: "uri",
             type: "string"
+          }
+        ]
+      }
+    },
+    {
+      name: "Pool",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "price_per_token",
+            type: "u64"
           }
         ]
       }
@@ -1014,6 +1041,11 @@ async function getSellTokenInstruction({
   }).instruction();
   return sell;
 }
+async function getPricePerToken({ program, mint }) {
+  const pda = getPoolPda({ program, mint });
+  const data = await program.account.pool.fetch(pda);
+  return data;
+}
 export {
   degenerator_default as IDL,
   airDrop,
@@ -1023,6 +1055,7 @@ export {
   getBuyTokenInstruction,
   getMintInstructions,
   getPoolPda,
+  getPricePerToken,
   getSellTokenInstruction,
   sendAndConfirm
 };

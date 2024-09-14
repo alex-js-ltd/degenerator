@@ -1,4 +1,4 @@
-import { Program, web3 } from '@coral-xyz/anchor';
+import { Program, web3, BN } from '@coral-xyz/anchor';
 import { PublicKey, Connection, Signer, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
 
 /**
@@ -8,7 +8,7 @@ import { PublicKey, Connection, Signer, TransactionInstruction, VersionedTransac
  * IDL can be found at `target/idl/degenerator.json`.
  */
 type Degenerator = {
-    "address": "CpYcwymmJ6H7iP4r7N9Cy4npwWpDYy2vBjkdvGgZeHfP";
+    "address": "27QL3zAe7aQnhBskpRPPt6uTVUum9bmVvJKnYbdxnKN2";
     "metadata": {
         "name": "degenerator";
         "version": "0.1.0";
@@ -783,6 +783,21 @@ type Degenerator = {
             ];
         }
     ];
+    "accounts": [
+        {
+            "name": "pool";
+            "discriminator": [
+                241,
+                154,
+                109,
+                4,
+                17,
+                177,
+                109,
+                188
+            ];
+        }
+    ];
     "errors": [
         {
             "code": 6000;
@@ -810,11 +825,23 @@ type Degenerator = {
                     }
                 ];
             };
+        },
+        {
+            "name": "pool";
+            "type": {
+                "kind": "struct";
+                "fields": [
+                    {
+                        "name": "pricePerToken";
+                        "type": "u64";
+                    }
+                ];
+            };
         }
     ];
 };
 
-var address = "CpYcwymmJ6H7iP4r7N9Cy4npwWpDYy2vBjkdvGgZeHfP";
+var address = "27QL3zAe7aQnhBskpRPPt6uTVUum9bmVvJKnYbdxnKN2";
 var metadata = {
 	name: "degenerator",
 	version: "0.1.0",
@@ -1591,6 +1618,21 @@ var instructions = [
 		]
 	}
 ];
+var accounts = [
+	{
+		name: "Pool",
+		discriminator: [
+			241,
+			154,
+			109,
+			4,
+			17,
+			177,
+			109,
+			188
+		]
+	}
+];
 var errors = [
 	{
 		code: 6000,
@@ -1618,12 +1660,25 @@ var types = [
 				}
 			]
 		}
+	},
+	{
+		name: "Pool",
+		type: {
+			kind: "struct",
+			fields: [
+				{
+					name: "price_per_token",
+					type: "u64"
+				}
+			]
+		}
 	}
 ];
 var degenerator = {
 	address: address,
 	metadata: metadata,
 	instructions: instructions,
+	accounts: accounts,
 	errors: errors,
 	types: types
 };
@@ -1675,5 +1730,12 @@ interface SwapTokenInstructionParams {
 }
 declare function getBuyTokenInstruction({ program, payer, mint, amount, }: SwapTokenInstructionParams): Promise<web3.TransactionInstruction>;
 declare function getSellTokenInstruction({ program, payer, mint, amount, }: SwapTokenInstructionParams): Promise<web3.TransactionInstruction>;
+interface GetPricePerTokenParams {
+    program: Program<Degenerator>;
+    mint: PublicKey;
+}
+declare function getPricePerToken({ program, mint }: GetPricePerTokenParams): Promise<{
+    pricePerToken: BN;
+}>;
 
-export { type Degenerator, degenerator as IDL, airDrop, buildTransaction, getAssociatedAddress, getBalance, getBuyTokenInstruction, getMintInstructions, getPoolPda, getSellTokenInstruction, sendAndConfirm };
+export { type Degenerator, degenerator as IDL, airDrop, buildTransaction, getAssociatedAddress, getBalance, getBuyTokenInstruction, getMintInstructions, getPoolPda, getPricePerToken, getSellTokenInstruction, sendAndConfirm };

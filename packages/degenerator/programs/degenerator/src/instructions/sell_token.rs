@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::errors::Errors;
 use crate::utils::{
     get_price_per_token, get_total_price, set_price_per_token, transfer_from_user_to_pool_vault,
-    transfer_sol_to_user, Pool, POOL_VAULT_SEED,
+    transfer_sol_to_user, Price, POOL_PRICE_SEED, POOL_VAULT_SEED,
 };
 
 #[derive(Accounts)]
@@ -21,7 +21,15 @@ pub struct SellToken<'info> {
         seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub pool_authority: Account<'info, Pool>,
+    pub pool_authority: AccountInfo<'info>,
+
+    /// CHECK: Pool current price (used for transfer)
+    #[account(
+            mut,
+            seeds = [POOL_PRICE_SEED.as_bytes(), mint.key().as_ref()],
+            bump,
+        )]
+    pub current_price: Account<'info, Price>,
 
     #[account(
         init_if_needed,
@@ -49,11 +57,10 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     }
 
     // Calculate the price for the requested amount
-    let price_per_token = ctx.accounts.pool_authority.price_per_token;
+    let price_per_token = ctx.accounts.current_price.price_per_token;
     let total_price = get_total_price(price_per_token as u128, amount as u128);
 
-    let pool_account = ctx.accounts.pool_authority.to_account_info();
-    let pool_balance = pool_account.lamports(); // Access lamports in pool authority
+    let pool_balance = ctx.accounts.pool_authority.lamports(); // Access lamports in pool authority
 
     if pool_balance < total_price {
         return Err(ProgramError::InsufficientFunds.into());
@@ -87,7 +94,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.mint.supply as u128,
     );
 
-    set_price_per_token(&mut ctx.accounts.pool_authority, new_price_per_token);
+    set_price_per_token(&mut ctx.accounts.current_price, new_price_per_token);
 
     Ok(())
 }

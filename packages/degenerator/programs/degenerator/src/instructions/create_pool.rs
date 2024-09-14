@@ -4,7 +4,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
     get_price_per_token, set_price_per_token, transfer_from_user_to_pool_vault,
-    update_account_lamports_to_minimum_balance, Pool, DISCRIMINATOR, POOL_VAULT_SEED,
+    update_account_lamports_to_minimum_balance, Price, DISCRIMINATOR, POOL_VAULT_SEED, POOL_PRICE_SEED
 };
 
 pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
@@ -30,7 +30,7 @@ pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
         ctx.accounts.mint.supply as u128,
     );
 
-    set_price_per_token(&mut ctx.accounts.pool_authority, price_per_token);
+    set_price_per_token(&mut ctx.accounts.current_price, price_per_token);
 
     Ok(())
 }
@@ -42,13 +42,21 @@ pub struct CreatePool<'info> {
     pub payer: Signer<'info>,
 
     /// CHECK: pool vault
-    #[account(init,
+    #[account(mut,
         seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
-        payer = payer,
-        space = DISCRIMINATOR + Pool::INIT_SPACE
+   
+  
     )]
-    pub pool_authority: Account<'info, Pool>,
+    pub pool_authority: AccountInfo<'info>,
+
+    #[account(init,
+        seeds = [POOL_PRICE_SEED.as_bytes(), mint.key().as_ref()],
+        bump,
+        payer = payer,
+        space = DISCRIMINATOR + Price::INIT_SPACE
+    )]
+    pub current_price: Account<'info, Price>,
 
     /// The Mint for which the ATA is being created
     pub mint: Box<InterfaceAccount<'info, Mint>>,

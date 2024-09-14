@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "27QL3zAe7aQnhBskpRPPt6uTVUum9bmVvJKnYbdxnKN2",
+  "address": "DnFuBsqhyyZUw29Ue22QTUUvZnEHeiHYJmeVVqksW8zT",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -46,6 +46,28 @@ export type Degenerator = {
                   111,
                   111,
                   108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "currentPrice",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  105,
+                  99,
+                  101
                 ]
               },
               {
@@ -385,6 +407,28 @@ export type Degenerator = {
           }
         },
         {
+          "name": "currentPrice",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  105,
+                  99,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
           "name": "mint",
           "docs": [
             "The Mint for which the ATA is being created"
@@ -667,6 +711,28 @@ export type Degenerator = {
           }
         },
         {
+          "name": "currentPrice",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  105,
+                  99,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
           "name": "poolAta",
           "writable": true,
           "pda": {
@@ -782,16 +848,16 @@ export type Degenerator = {
   ],
   "accounts": [
     {
-      "name": "pool",
+      "name": "price",
       "discriminator": [
-        241,
-        154,
-        109,
-        4,
-        17,
-        177,
-        109,
-        188
+        50,
+        107,
+        127,
+        61,
+        83,
+        36,
+        39,
+        75
       ]
     }
   ],
@@ -824,7 +890,7 @@ export type Degenerator = {
       }
     },
     {
-      "name": "pool",
+      "name": "price",
       "type": {
         "kind": "struct",
         "fields": [
