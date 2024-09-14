@@ -303,6 +303,19 @@ async function getSellTokenInstruction({
 	return sell
 }
 
+interface GetPricePerTokenParams {
+	program: Program<Degenerator>
+	mint: PublicKey
+}
+
+async function getPricePerToken({ program, mint }: GetPricePerTokenParams) {
+	const pda = getPoolPda({ program, mint })
+
+	const data = await program.account.pool.fetch(pda)
+
+	return data
+}
+
 export {
 	type Degenerator,
 	airDrop,
@@ -314,5 +327,6 @@ export {
 	getBuyTokenInstruction,
 	getSellTokenInstruction,
 	getBalance,
+	getPricePerToken,
 }
 export { default as IDL } from '../target/idl/degenerator.json'

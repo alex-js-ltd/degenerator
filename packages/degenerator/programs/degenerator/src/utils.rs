@@ -89,25 +89,6 @@ pub fn get_total_price(price_per_token: u128, amount: u128) -> u64 {
     total_price.try_into().unwrap_or(u64::MAX)
 }
 
-pub fn calculate_price(current_supply: u128, total_supply: u128, amount: u128) -> u64 {
-    // Calculate the price per token using an inverse relationship
-    // Price per token decreases as the supply approaches max_supply
-    let price_per_token = BASE_PRICE
-        .saturating_mul(total_supply) // Ensures that when all tokens are in the pool, price equals BASE_PRICE
-        .saturating_div(current_supply + 1); // Prevent division by zero and ensure smooth decrease
-
-    // Calculate total price for the requested amount of tokens
-    let total_price = price_per_token.saturating_mul(amount);
-
-    msg!("Current Supply: {}", current_supply);
-    msg!("Amount: {}", amount);
-    msg!("Price per token: {}", price_per_token);
-    msg!("Total price: {}", total_price);
-
-    // Ensure the total price fits within the range of u64
-    total_price.try_into().unwrap_or(u64::MAX)
-}
-
 pub fn transfer_from_user_to_pool_vault<'a>(
     authority: AccountInfo<'a>,
     from: AccountInfo<'a>,
