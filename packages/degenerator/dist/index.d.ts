@@ -8,7 +8,7 @@ import { PublicKey, Connection, Signer, TransactionInstruction, VersionedTransac
  * IDL can be found at `target/idl/degenerator.json`.
  */
 type Degenerator = {
-    "address": "27QL3zAe7aQnhBskpRPPt6uTVUum9bmVvJKnYbdxnKN2";
+    "address": "6v1d6gShsbYiTrpeVL3MsgaGs79pRyu2DaZiRndD9eAc";
     "metadata": {
         "name": "degenerator";
         "version": "0.1.0";
@@ -49,6 +49,28 @@ type Degenerator = {
                                     111,
                                     111,
                                     108
+                                ];
+                            },
+                            {
+                                "kind": "account";
+                                "path": "mint";
+                            }
+                        ];
+                    };
+                },
+                {
+                    "name": "currentPrice";
+                    "writable": true;
+                    "pda": {
+                        "seeds": [
+                            {
+                                "kind": "const";
+                                "value": [
+                                    112,
+                                    114,
+                                    105,
+                                    99,
+                                    101
                                 ];
                             },
                             {
@@ -388,6 +410,28 @@ type Degenerator = {
                     };
                 },
                 {
+                    "name": "currentPrice";
+                    "writable": true;
+                    "pda": {
+                        "seeds": [
+                            {
+                                "kind": "const";
+                                "value": [
+                                    112,
+                                    114,
+                                    105,
+                                    99,
+                                    101
+                                ];
+                            },
+                            {
+                                "kind": "account";
+                                "path": "mint";
+                            }
+                        ];
+                    };
+                },
+                {
                     "name": "mint";
                     "docs": [
                         "The Mint for which the ATA is being created"
@@ -670,6 +714,28 @@ type Degenerator = {
                     };
                 },
                 {
+                    "name": "currentPrice";
+                    "writable": true;
+                    "pda": {
+                        "seeds": [
+                            {
+                                "kind": "const";
+                                "value": [
+                                    112,
+                                    114,
+                                    105,
+                                    99,
+                                    101
+                                ];
+                            },
+                            {
+                                "kind": "account";
+                                "path": "mint";
+                            }
+                        ];
+                    };
+                },
+                {
                     "name": "poolAta";
                     "writable": true;
                     "pda": {
@@ -785,16 +851,16 @@ type Degenerator = {
     ];
     "accounts": [
         {
-            "name": "pool";
+            "name": "price";
             "discriminator": [
-                241,
-                154,
-                109,
-                4,
-                17,
-                177,
-                109,
-                188
+                50,
+                107,
+                127,
+                61,
+                83,
+                36,
+                39,
+                75
             ];
         }
     ];
@@ -827,7 +893,7 @@ type Degenerator = {
             };
         },
         {
-            "name": "pool";
+            "name": "price";
             "type": {
                 "kind": "struct";
                 "fields": [
@@ -841,7 +907,7 @@ type Degenerator = {
     ];
 };
 
-var address = "27QL3zAe7aQnhBskpRPPt6uTVUum9bmVvJKnYbdxnKN2";
+var address = "6v1d6gShsbYiTrpeVL3MsgaGs79pRyu2DaZiRndD9eAc";
 var metadata = {
 	name: "degenerator",
 	version: "0.1.0",
@@ -882,6 +948,28 @@ var instructions = [
 								111,
 								111,
 								108
+							]
+						},
+						{
+							kind: "account",
+							path: "mint"
+						}
+					]
+				}
+			},
+			{
+				name: "current_price",
+				writable: true,
+				pda: {
+					seeds: [
+						{
+							kind: "const",
+							value: [
+								112,
+								114,
+								105,
+								99,
+								101
 							]
 						},
 						{
@@ -1221,6 +1309,28 @@ var instructions = [
 				}
 			},
 			{
+				name: "current_price",
+				writable: true,
+				pda: {
+					seeds: [
+						{
+							kind: "const",
+							value: [
+								112,
+								114,
+								105,
+								99,
+								101
+							]
+						},
+						{
+							kind: "account",
+							path: "mint"
+						}
+					]
+				}
+			},
+			{
 				name: "mint",
 				docs: [
 					"The Mint for which the ATA is being created"
@@ -1505,6 +1615,28 @@ var instructions = [
 				}
 			},
 			{
+				name: "current_price",
+				writable: true,
+				pda: {
+					seeds: [
+						{
+							kind: "const",
+							value: [
+								112,
+								114,
+								105,
+								99,
+								101
+							]
+						},
+						{
+							kind: "account",
+							path: "mint"
+						}
+					]
+				}
+			},
+			{
 				name: "pool_ata",
 				writable: true,
 				pda: {
@@ -1620,16 +1752,16 @@ var instructions = [
 ];
 var accounts = [
 	{
-		name: "Pool",
+		name: "Price",
 		discriminator: [
-			241,
-			154,
-			109,
-			4,
-			17,
-			177,
-			109,
-			188
+			50,
+			107,
+			127,
+			61,
+			83,
+			36,
+			39,
+			75
 		]
 	}
 ];
@@ -1662,7 +1794,7 @@ var types = [
 		}
 	},
 	{
-		name: "Pool",
+		name: "Price",
 		type: {
 			kind: "struct",
 			fields: [
@@ -1692,6 +1824,10 @@ declare function getAssociatedAddress({ mint, owner, }: {
     owner: PublicKey;
 }): PublicKey;
 declare function getPoolPda({ program, mint, }: {
+    program: Program<Degenerator>;
+    mint: PublicKey;
+}): PublicKey;
+declare function getPricePda({ program, mint, }: {
     program: Program<Degenerator>;
     mint: PublicKey;
 }): PublicKey;
@@ -1738,4 +1874,4 @@ declare function getPricePerToken({ program, mint }: GetPricePerTokenParams): Pr
     pricePerToken: BN;
 }>;
 
-export { type Degenerator, degenerator as IDL, airDrop, buildTransaction, getAssociatedAddress, getBalance, getBuyTokenInstruction, getMintInstructions, getPoolPda, getPricePerToken, getSellTokenInstruction, sendAndConfirm };
+export { type Degenerator, degenerator as IDL, airDrop, buildTransaction, getAssociatedAddress, getBalance, getBuyTokenInstruction, getMintInstructions, getPoolPda, getPricePda, getPricePerToken, getSellTokenInstruction, sendAndConfirm };

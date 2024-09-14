@@ -17,7 +17,7 @@ var NATIVE_MINT_2022 = new PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXe
 
 // target/idl/degenerator.json
 var degenerator_default = {
-  address: "27QL3zAe7aQnhBskpRPPt6uTVUum9bmVvJKnYbdxnKN2",
+  address: "6v1d6gShsbYiTrpeVL3MsgaGs79pRyu2DaZiRndD9eAc",
   metadata: {
     name: "degenerator",
     version: "0.1.0",
@@ -58,6 +58,28 @@ var degenerator_default = {
                   111,
                   111,
                   108
+                ]
+              },
+              {
+                kind: "account",
+                path: "mint"
+              }
+            ]
+          }
+        },
+        {
+          name: "current_price",
+          writable: true,
+          pda: {
+            seeds: [
+              {
+                kind: "const",
+                value: [
+                  112,
+                  114,
+                  105,
+                  99,
+                  101
                 ]
               },
               {
@@ -397,6 +419,28 @@ var degenerator_default = {
           }
         },
         {
+          name: "current_price",
+          writable: true,
+          pda: {
+            seeds: [
+              {
+                kind: "const",
+                value: [
+                  112,
+                  114,
+                  105,
+                  99,
+                  101
+                ]
+              },
+              {
+                kind: "account",
+                path: "mint"
+              }
+            ]
+          }
+        },
+        {
           name: "mint",
           docs: [
             "The Mint for which the ATA is being created"
@@ -679,6 +723,28 @@ var degenerator_default = {
           }
         },
         {
+          name: "current_price",
+          writable: true,
+          pda: {
+            seeds: [
+              {
+                kind: "const",
+                value: [
+                  112,
+                  114,
+                  105,
+                  99,
+                  101
+                ]
+              },
+              {
+                kind: "account",
+                path: "mint"
+              }
+            ]
+          }
+        },
+        {
           name: "pool_ata",
           writable: true,
           pda: {
@@ -794,16 +860,16 @@ var degenerator_default = {
   ],
   accounts: [
     {
-      name: "Pool",
+      name: "Price",
       discriminator: [
-        241,
-        154,
-        109,
-        4,
-        17,
-        177,
-        109,
-        188
+        50,
+        107,
+        127,
+        61,
+        83,
+        36,
+        39,
+        75
       ]
     }
   ],
@@ -836,7 +902,7 @@ var degenerator_default = {
       }
     },
     {
-      name: "Pool",
+      name: "Price",
       type: {
         kind: "struct",
         fields: [
@@ -882,6 +948,15 @@ function getPoolPda({
 }) {
   return PublicKey2.findProgramAddressSync(
     [Buffer.from("pool"), mint.toBuffer()],
+    program.programId
+  )[0];
+}
+function getPricePda({
+  program,
+  mint
+}) {
+  return PublicKey2.findProgramAddressSync(
+    [Buffer.from("price"), mint.toBuffer()],
     program.programId
   )[0];
 }
@@ -947,6 +1022,7 @@ async function getMintInstructions({
     [utils.bytes.utf8.encode("extra-account-metas"), mint.toBuffer()],
     program.programId
   );
+  const currentPrice = getPricePda({ program, mint });
   const init = await program.methods.createMintAccount(decimals, metadata).accountsStrict({
     payer,
     authority: payer,
@@ -977,6 +1053,7 @@ async function getMintInstructions({
     poolAta: poolATA,
     mint,
     poolAuthority: pda,
+    currentPrice,
     payerAta: payerATA,
     systemProgram: web3.SystemProgram.programId,
     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -1000,6 +1077,7 @@ async function getBuyTokenInstruction({
     mint,
     owner: pda
   });
+  const currentPrice = getPricePda({ program, mint });
   const amountBN = new BN(amount);
   const buy = await program.methods.buyToken(amountBN).accountsStrict({
     mint,
@@ -1007,6 +1085,7 @@ async function getBuyTokenInstruction({
     poolAta: poolATA,
     payerAta: payerATA,
     poolAuthority: pda,
+    currentPrice,
     systemProgram: web3.SystemProgram.programId,
     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
     tokenProgram: TOKEN_2022_PROGRAM_ID
@@ -1028,6 +1107,7 @@ async function getSellTokenInstruction({
     mint,
     owner: pda
   });
+  const currentPrice = getPricePda({ program, mint });
   const amountBN = new BN(amount);
   const sell = await program.methods.sellToken(amountBN).accountsStrict({
     mint,
@@ -1035,6 +1115,7 @@ async function getSellTokenInstruction({
     payerAta: payerATA,
     poolAta: poolATA,
     poolAuthority: pda,
+    currentPrice,
     systemProgram: web3.SystemProgram.programId,
     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
     tokenProgram: TOKEN_2022_PROGRAM_ID
@@ -1042,8 +1123,8 @@ async function getSellTokenInstruction({
   return sell;
 }
 async function getPricePerToken({ program, mint }) {
-  const pda = getPoolPda({ program, mint });
-  const data = await program.account.pool.fetch(pda);
+  const pda = getPricePda({ program, mint });
+  const data = await program.account.price.fetch(pda);
   return data;
 }
 export {
@@ -1055,6 +1136,7 @@ export {
   getBuyTokenInstruction,
   getMintInstructions,
   getPoolPda,
+  getPricePda,
   getPricePerToken,
   getSellTokenInstruction,
   sendAndConfirm

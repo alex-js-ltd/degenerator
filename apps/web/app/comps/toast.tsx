@@ -23,7 +23,7 @@ export interface ToastProps extends RadixToast.ToastProps {
 
 function Toast({ children, ...props }: ToastProps) {
 	return (
-		<RadixToast.Provider swipeDirection="left" duration={60000}>
+		<RadixToast.Provider swipeDirection="left" duration={60000 * 2}>
 			<RadixToast.Root
 				className="data-[state=open]:animate-scale-in-50 data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipe-out relative flex flex-col gap-1 items-start border border-toast-border rounded-[8px] w-fit h-auto p-4"
 				{...props}
