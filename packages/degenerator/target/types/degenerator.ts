@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "BmkaA8vZy22CNc4B9G7DsaSbVrFbu2FQnZphUZ7k1ZnK",
+  "address": "2qN85xftPvMY8Skz3m9PRdBFbFABEb1rcSsWXr4SnTGP",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -47,11 +47,10 @@ export type Degenerator = {
                   111,
                   108,
                   95,
-                  118,
                   97,
                   117,
-                  108,
-                  116
+                  116,
+                  104
                 ]
               },
               {
@@ -409,38 +408,10 @@ export type Degenerator = {
                   111,
                   108,
                   95,
-                  118,
                   97,
                   117,
-                  108,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "poolState",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112,
-                  111,
-                  111,
-                  108,
-                  95,
-                  115,
                   116,
-                  97,
-                  116,
-                  101
+                  104
                 ]
               },
               {
@@ -547,6 +518,36 @@ export type Degenerator = {
                 89
               ]
             }
+          }
+        },
+        {
+          "name": "poolState",
+          "docs": [
+            "pda to store current price"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
           }
         },
         {
@@ -724,11 +725,10 @@ export type Degenerator = {
                   111,
                   108,
                   95,
-                  118,
                   97,
                   117,
-                  108,
-                  116
+                  116,
+                  104
                 ]
               },
               {
@@ -881,16 +881,16 @@ export type Degenerator = {
   ],
   "accounts": [
     {
-      "name": "pool",
+      "name": "poolState",
       "discriminator": [
-        241,
-        154,
-        109,
-        4,
-        17,
-        177,
-        109,
-        188
+        247,
+        237,
+        227,
+        245,
+        215,
+        195,
+        222,
+        70
       ]
     }
   ],
@@ -923,7 +923,7 @@ export type Degenerator = {
       }
     },
     {
-      "name": "pool",
+      "name": "poolState",
       "type": {
         "kind": "struct",
         "fields": [

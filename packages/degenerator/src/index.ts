@@ -51,7 +51,7 @@ function getAssociatedAddress({
 	)[0]
 }
 
-function getPoolPda({
+function getPoolAuth({
 	program,
 	mint,
 }: {
@@ -59,12 +59,12 @@ function getPoolPda({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('pool_vault'), mint.toBuffer()],
+		[Buffer.from('pool_auth'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }
 
-function getPricePda({
+function getPoolState({
 	program,
 	mint,
 }: {
@@ -165,11 +165,11 @@ async function getMintInstructions({
 		owner: payer,
 	})
 
-	const pda = getPoolPda({ program, mint })
+	const poolAuth = getPoolAuth({ program, mint })
 
 	const poolATA = getAssociatedAddress({
 		mint: mint,
-		owner: pda,
+		owner: poolAuth,
 	})
 
 	const [extraMetasAccount] = PublicKey.findProgramAddressSync(
@@ -177,7 +177,7 @@ async function getMintInstructions({
 		program.programId,
 	)
 
-	const currentPrice = getPricePda({ program, mint })
+	const poolState = getPoolState({ program, mint })
 
 	const init = await program.methods
 
@@ -227,8 +227,8 @@ async function getMintInstructions({
 			payer: payer,
 			poolAta: poolATA,
 			mint: mint,
-			poolAuthority: pda,
-			poolState: currentPrice,
+			poolAuthority: poolAuth,
+			poolState: poolState,
 			payerAta: payerATA,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -258,14 +258,14 @@ async function getBuyTokenInstruction({
 		owner: payer,
 	})
 
-	const pda = getPoolPda({ program, mint })
+	const poolAuth = getPoolAuth({ program, mint })
 
 	const poolATA = getAssociatedAddress({
 		mint: mint,
-		owner: pda,
+		owner: poolAuth,
 	})
 
-	const currentPrice = getPricePda({ program, mint })
+	const poolState = getPoolState({ program, mint })
 
 	const amountBN = new BN(amount)
 	const buy = await program.methods
@@ -275,8 +275,8 @@ async function getBuyTokenInstruction({
 			signer: payer,
 			poolAta: poolATA,
 			payerAta: payerATA,
-			poolAuthority: pda,
-			poolState: currentPrice,
+			poolAuthority: poolAuth,
+			poolState: poolState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -297,14 +297,14 @@ async function getSellTokenInstruction({
 		owner: payer,
 	})
 
-	const pda = getPoolPda({ program, mint })
+	const poolAuth = getPoolAuth({ program, mint })
 
 	const poolATA = getAssociatedAddress({
 		mint: mint,
-		owner: pda,
+		owner: poolAuth,
 	})
 
-	const currentPrice = getPricePda({ program, mint })
+	const poolState = getPoolState({ program, mint })
 
 	const amountBN = new BN(amount)
 	const sell = await program.methods
@@ -314,8 +314,8 @@ async function getSellTokenInstruction({
 			signer: payer,
 			payerAta: payerATA,
 			poolAta: poolATA,
-			poolAuthority: pda,
-			poolState: currentPrice,
+			poolAuthority: poolAuth,
+			poolState: poolState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -331,9 +331,9 @@ interface GetPricePerTokenParams {
 }
 
 async function getPricePerToken({ program, mint }: GetPricePerTokenParams) {
-	const pda = getPricePda({ program, mint })
+	const pda = getPoolState({ program, mint })
 
-	const data = await program.account.pool.fetch(pda)
+	const data = await program.account.poolState.fetch(pda)
 
 	return data
 }
@@ -342,7 +342,8 @@ export {
 	type Degenerator,
 	airDrop,
 	getAssociatedAddress,
-	getPoolPda,
+	getPoolAuth,
+	getPoolState,
 	buildTransaction,
 	getMintInstructions,
 	sendAndConfirm,
@@ -350,6 +351,5 @@ export {
 	getSellTokenInstruction,
 	getBalance,
 	getPricePerToken,
-	getPricePda,
 }
 export { default as IDL } from '../target/idl/degenerator.json'

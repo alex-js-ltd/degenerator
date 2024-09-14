@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::errors::Errors;
 use crate::utils::{
     calculate_sell_price, set_price_per_token, transfer_from_user_to_pool_vault,
-    transfer_sol_to_user, Pool, POOL_STATE_SEED, POOL_VAULT_SEED,
+    transfer_sol_to_user, PoolState, POOL_AUTH_SEED, POOL_STATE_SEED,
 };
 
 #[derive(Accounts)]
@@ -15,21 +15,21 @@ pub struct SellToken<'info> {
 
     #[account(mut)]
     pub payer_ata: InterfaceAccount<'info, TokenAccount>,
-    /// CHECK: Pool authority (used for transfer)
+    /// CHECK: pda to control pool_ata & store lamports
     #[account(
         mut,
-        seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [POOL_AUTH_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
     pub pool_authority: AccountInfo<'info>,
 
-    /// CHECK: Pool current price (used for transfer)
+    /// CHECK: pda to store current price
     #[account(
             mut,
             seeds = [POOL_STATE_SEED.as_bytes(), mint.key().as_ref()],
             bump,
         )]
-    pub pool_state: Account<'info, Pool>,
+    pub pool_state: Account<'info, PoolState>,
 
     #[account(
         init_if_needed,
@@ -84,7 +84,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.system_program.to_account_info(),
         price,
         &[&[
-            POOL_VAULT_SEED.as_bytes(),
+            POOL_AUTH_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
             &[ctx.bumps.pool_authority][..],
         ][..]],

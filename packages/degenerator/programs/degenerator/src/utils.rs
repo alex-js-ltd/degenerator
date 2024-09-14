@@ -17,7 +17,7 @@ use anchor_spl::token_interface::spl_token_2022::{
 use spl_tlv_account_resolution::{account::ExtraAccountMeta, state::ExtraAccountMetaList};
 use spl_type_length_value::variable_len_pack::VariableLenPack;
 
-pub const POOL_VAULT_SEED: &str = "pool_vault";
+pub const POOL_AUTH_SEED: &str = "pool_auth";
 pub const POOL_STATE_SEED: &str = "pool_state";
 pub const META_LIST_ACCOUNT_SEED: &str = "extra-account-metas";
 
@@ -105,7 +105,7 @@ pub fn calculate_sell_price(current_supply: u128, total_supply: u128, amount: u1
 }
 
 /// Sets the price per token in the Pool account.
-pub fn set_price_per_token(pool_state: &mut Account<Pool>, price_per_token: u64) {
+pub fn set_price_per_token(pool_state: &mut Account<PoolState>, price_per_token: u64) {
     pool_state.price_per_token = price_per_token;
 }
 
@@ -199,8 +199,11 @@ pub fn transfer_sol_to_user<'a>(
 
 #[account]
 #[derive(InitSpace)]
-pub struct Pool {
+pub struct PoolState {
     pub price_per_token: u64,
 }
 
-pub const DISCRIMINATOR: usize = 8;
+impl PoolState {
+    // Discriminator (8 bytes) + price_per_token (u64 = 8 bytes)
+    pub const LEN: usize = 8 + 8;
+}

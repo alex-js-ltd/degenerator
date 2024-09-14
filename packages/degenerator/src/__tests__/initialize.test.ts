@@ -6,7 +6,7 @@ import {
 	getMintInstructions,
 	buildTransaction,
 	sendAndConfirm,
-	getPoolPda,
+	getPoolAuth,
 	getAssociatedAddress,
 	getBuyTokenInstruction,
 	getSellTokenInstruction,
@@ -28,11 +28,11 @@ describe('initialize', () => {
 
 	const mint = Keypair.generate()
 
-	const pda = getPoolPda({ program, mint: mint.publicKey })
+	const poolAuth = getPoolAuth({ program, mint: mint.publicKey })
 
 	const poolATA = getAssociatedAddress({
 		mint: mint.publicKey,
-		owner: pda,
+		owner: poolAuth,
 	})
 
 	const payerATA = getAssociatedAddress({
@@ -81,8 +81,8 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check pool vault is rent exempt', async () => {
-		const accountInfo = await connection.getAccountInfo(pda)
+	it('check pool auth is rent exempt', async () => {
+		const accountInfo = await connection.getAccountInfo(poolAuth)
 
 		if (accountInfo === null) {
 			throw new Error('Account not found')

@@ -7,19 +7,19 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-degenerator = "BmkaA8vZy22CNc4B9G7DsaSbVrFbu2FQnZphUZ7k1ZnK"
+degenerator = "2qN85xftPvMY8Skz3m9PRdBFbFABEb1rcSsWXr4SnTGP"
 
 [programs.localnet]
-degenerator = "BmkaA8vZy22CNc4B9G7DsaSbVrFbu2FQnZphUZ7k1ZnK"
+degenerator = "2qN85xftPvMY8Skz3m9PRdBFbFABEb1rcSsWXr4SnTGP"
 
 [programs.mainnet]
-degenerator = "BmkaA8vZy22CNc4B9G7DsaSbVrFbu2FQnZphUZ7k1ZnK"
+degenerator = "2qN85xftPvMY8Skz3m9PRdBFbFABEb1rcSsWXr4SnTGP"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "https://divine-ultra-diagram.solana-devnet.quiknode.pro"
+cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

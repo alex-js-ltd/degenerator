@@ -1,5 +1,5 @@
 {
-  "address": "BmkaA8vZy22CNc4B9G7DsaSbVrFbu2FQnZphUZ7k1ZnK",
+  "address": "2qN85xftPvMY8Skz3m9PRdBFbFABEb1rcSsWXr4SnTGP",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -41,11 +41,10 @@
                   111,
                   108,
                   95,
-                  118,
                   97,
                   117,
-                  108,
-                  116
+                  116,
+                  104
                 ]
               },
               {
@@ -403,38 +402,10 @@
                   111,
                   108,
                   95,
-                  118,
                   97,
                   117,
-                  108,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "pool_state",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112,
-                  111,
-                  111,
-                  108,
-                  95,
-                  115,
                   116,
-                  97,
-                  116,
-                  101
+                  104
                 ]
               },
               {
@@ -541,6 +512,36 @@
                 89
               ]
             }
+          }
+        },
+        {
+          "name": "pool_state",
+          "docs": [
+            "pda to store current price"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
           }
         },
         {
@@ -718,11 +719,10 @@
                   111,
                   108,
                   95,
-                  118,
                   97,
                   117,
-                  108,
-                  116
+                  116,
+                  104
                 ]
               },
               {
@@ -875,16 +875,16 @@
   ],
   "accounts": [
     {
-      "name": "Pool",
+      "name": "PoolState",
       "discriminator": [
-        241,
-        154,
-        109,
-        4,
-        17,
-        177,
-        109,
-        188
+        247,
+        237,
+        227,
+        245,
+        215,
+        195,
+        222,
+        70
       ]
     }
   ],
@@ -917,7 +917,7 @@
       }
     },
     {
-      "name": "Pool",
+      "name": "PoolState",
       "type": {
         "kind": "struct",
         "fields": [
