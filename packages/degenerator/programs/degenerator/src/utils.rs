@@ -69,19 +69,16 @@ pub fn get_meta_list_size(approve_account: Option<Pubkey>) -> usize {
     ExtraAccountMetaList::size_of(get_meta_list(approve_account).len()).unwrap()
 }
 
-const BASE_PRICE: u128 = 10_000; // Base price per token
+const BASE_PRICE: u128 = 10_000; // Base price per token (0.00001 SOL)
 const PRICE_INCREMENT: u128 = 1_000; // Linear increment per unit of supply
 
 pub fn calculate_buy_price(current_supply: u128, total_supply: u128, amount: u128) -> u64 {
-    // Inverse component: Price increases as the remaining supply decreases
+    // Calculate the price increase component based on the remaining supply
     let remaining_supply = total_supply.saturating_sub(current_supply);
+    let price_increase = PRICE_INCREMENT * remaining_supply / total_supply;
 
-    // Linear price increase component
-    let linear_component =
-        PRICE_INCREMENT.saturating_mul((total_supply - remaining_supply) / total_supply);
-
-    // Total price per token including both components
-    let price_per_token = BASE_PRICE.saturating_add(linear_component);
+    // Total price per token including the increase
+    let price_per_token = BASE_PRICE.saturating_add(price_increase);
 
     // Total price for the amount of tokens requested
     let total_price = price_per_token.saturating_mul(amount as u128);
@@ -91,10 +88,11 @@ pub fn calculate_buy_price(current_supply: u128, total_supply: u128, amount: u12
 }
 
 pub fn calculate_sell_price(current_supply: u128, total_supply: u128, amount: u128) -> u64 {
-    let linear_component = PRICE_INCREMENT.saturating_mul(current_supply / total_supply);
+    // Calculate the price decrease component based on the current supply
+    let price_decrease = PRICE_INCREMENT * current_supply / total_supply;
 
-    // Total price per token including both components
-    let price_per_token = BASE_PRICE.saturating_sub(linear_component);
+    // Total price per token including the decrease
+    let price_per_token = BASE_PRICE.saturating_sub(price_decrease);
 
     // Ensure that price does not drop below zero
     let price_per_token = price_per_token.max(0);
