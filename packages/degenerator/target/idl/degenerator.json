@@ -1,5 +1,5 @@
 {
-  "address": "2qN85xftPvMY8Skz3m9PRdBFbFABEb1rcSsWXr4SnTGP",
+  "address": "FLz7pvm7VoyNAVDfxH3uWCMVWWqEDamVDynBmY89GYbC",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -29,7 +29,7 @@
           "signer": true
         },
         {
-          "name": "pool_authority",
+          "name": "pool_vault",
           "writable": true,
           "pda": {
             "seeds": [
@@ -41,10 +41,11 @@
                   111,
                   108,
                   95,
+                  118,
                   97,
                   117,
-                  116,
-                  104
+                  108,
+                  116
                 ]
               },
               {
@@ -390,7 +391,7 @@
           "signer": true
         },
         {
-          "name": "pool_authority",
+          "name": "pool_vault",
           "writable": true,
           "pda": {
             "seeds": [
@@ -402,10 +403,11 @@
                   111,
                   108,
                   95,
+                  118,
                   97,
                   117,
-                  116,
-                  104
+                  108,
+                  116
                 ]
               },
               {
@@ -431,7 +433,7 @@
             "seeds": [
               {
                 "kind": "account",
-                "path": "pool_authority"
+                "path": "pool_vault"
               },
               {
                 "kind": "const",
@@ -707,7 +709,7 @@
           "writable": true
         },
         {
-          "name": "pool_authority",
+          "name": "pool_vault",
           "writable": true,
           "pda": {
             "seeds": [
@@ -719,10 +721,11 @@
                   111,
                   108,
                   95,
+                  118,
                   97,
                   117,
-                  116,
-                  104
+                  108,
+                  116
                 ]
               },
               {
@@ -766,7 +769,7 @@
             "seeds": [
               {
                 "kind": "account",
-                "path": "pool_authority"
+                "path": "pool_vault"
               },
               {
                 "kind": "const",

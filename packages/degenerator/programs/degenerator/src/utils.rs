@@ -17,7 +17,7 @@ use anchor_spl::token_interface::spl_token_2022::{
 use spl_tlv_account_resolution::{account::ExtraAccountMeta, state::ExtraAccountMetaList};
 use spl_type_length_value::variable_len_pack::VariableLenPack;
 
-pub const POOL_AUTH_SEED: &str = "pool_auth";
+pub const POOL_VAULT_SEED: &str = "pool_vault";
 pub const POOL_STATE_SEED: &str = "pool_state";
 pub const META_LIST_ACCOUNT_SEED: &str = "extra-account-metas";
 

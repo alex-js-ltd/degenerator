@@ -51,7 +51,7 @@ function getAssociatedAddress({
 	)[0]
 }
 
-function getPoolAuth({
+function getPoolVault({
 	program,
 	mint,
 }: {
@@ -59,7 +59,7 @@ function getPoolAuth({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('pool_auth'), mint.toBuffer()],
+		[Buffer.from('pool_vault'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }
@@ -165,11 +165,11 @@ async function getMintInstructions({
 		owner: payer,
 	})
 
-	const poolAuth = getPoolAuth({ program, mint })
+	const poolVault = getPoolVault({ program, mint })
 
 	const poolATA = getAssociatedAddress({
 		mint: mint,
-		owner: poolAuth,
+		owner: poolVault,
 	})
 
 	const [extraMetasAccount] = PublicKey.findProgramAddressSync(
@@ -227,7 +227,7 @@ async function getMintInstructions({
 			payer: payer,
 			poolAta: poolATA,
 			mint: mint,
-			poolAuthority: poolAuth,
+			poolVault: poolVault,
 			poolState: poolState,
 			payerAta: payerATA,
 			systemProgram: web3.SystemProgram.programId,
@@ -258,11 +258,11 @@ async function getBuyTokenInstruction({
 		owner: payer,
 	})
 
-	const poolAuth = getPoolAuth({ program, mint })
+	const poolVault = getPoolVault({ program, mint })
 
 	const poolATA = getAssociatedAddress({
 		mint: mint,
-		owner: poolAuth,
+		owner: poolVault,
 	})
 
 	const poolState = getPoolState({ program, mint })
@@ -275,7 +275,7 @@ async function getBuyTokenInstruction({
 			signer: payer,
 			poolAta: poolATA,
 			payerAta: payerATA,
-			poolAuthority: poolAuth,
+			poolVault: poolVault,
 			poolState: poolState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -297,11 +297,11 @@ async function getSellTokenInstruction({
 		owner: payer,
 	})
 
-	const poolAuth = getPoolAuth({ program, mint })
+	const poolVault = getPoolVault({ program, mint })
 
 	const poolATA = getAssociatedAddress({
 		mint: mint,
-		owner: poolAuth,
+		owner: poolVault,
 	})
 
 	const poolState = getPoolState({ program, mint })
@@ -314,7 +314,7 @@ async function getSellTokenInstruction({
 			signer: payer,
 			payerAta: payerATA,
 			poolAta: poolATA,
-			poolAuthority: poolAuth,
+			poolVault: poolVault,
 			poolState: poolState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -342,7 +342,7 @@ export {
 	type Degenerator,
 	airDrop,
 	getAssociatedAddress,
-	getPoolAuth,
+	getPoolVault,
 	getPoolState,
 	buildTransaction,
 	getMintInstructions,

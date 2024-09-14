@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::errors::Errors;
 use crate::utils::{
     calculate_sell_price, set_price_per_token, transfer_from_user_to_pool_vault,
-    transfer_sol_to_user, PoolState, POOL_AUTH_SEED, POOL_STATE_SEED,
+    transfer_sol_to_user, PoolState, POOL_STATE_SEED, POOL_VAULT_SEED,
 };
 
 #[derive(Accounts)]
@@ -18,10 +18,10 @@ pub struct SellToken<'info> {
     /// CHECK: pda to control pool_ata & store lamports
     #[account(
         mut,
-        seeds = [POOL_AUTH_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub pool_authority: AccountInfo<'info>,
+    pub pool_vault: AccountInfo<'info>,
 
     /// CHECK: pda to store current price
     #[account(
@@ -35,7 +35,7 @@ pub struct SellToken<'info> {
         init_if_needed,
         associated_token::mint = mint,
         payer = signer,
-        associated_token::authority = pool_authority
+        associated_token::authority = pool_vault
     )]
     pub pool_ata: InterfaceAccount<'info, TokenAccount>,
 
@@ -61,7 +61,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         return Err(Errors::InsufficientTokens.into());
     }
 
-    let pool_balance = ctx.accounts.pool_authority.lamports(); // Access lamports in pool authority
+    let pool_balance = ctx.accounts.pool_vault.lamports(); // Access lamports in pool vault
 
     if pool_balance < price {
         return Err(ProgramError::InsufficientFunds.into());
@@ -79,14 +79,14 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     )?;
 
     transfer_sol_to_user(
-        ctx.accounts.pool_authority.to_account_info(),
+        ctx.accounts.pool_vault.to_account_info(),
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
         price,
         &[&[
-            POOL_AUTH_SEED.as_bytes(),
+            POOL_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.pool_authority][..],
+            &[ctx.bumps.pool_vault][..],
         ][..]],
     )?;
 

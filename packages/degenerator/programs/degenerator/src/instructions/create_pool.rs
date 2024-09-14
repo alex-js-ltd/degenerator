@@ -4,13 +4,13 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
     calculate_buy_price, set_price_per_token, transfer_from_user_to_pool_vault,
-    update_account_lamports_to_minimum_balance, PoolState, POOL_AUTH_SEED, POOL_STATE_SEED,
+    update_account_lamports_to_minimum_balance, PoolState, POOL_STATE_SEED, POOL_VAULT_SEED,
 };
 
 pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
     // transfer minimum rent to pool account
     update_account_lamports_to_minimum_balance(
-        ctx.accounts.pool_authority.to_account_info(),
+        ctx.accounts.pool_vault.to_account_info(),
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
     )?;
@@ -44,10 +44,10 @@ pub struct CreatePool<'info> {
 
     /// CHECK: pda to control pool_ata & store lamports
     #[account(mut,
-        seeds = [POOL_AUTH_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub pool_authority: AccountInfo<'info>,
+    pub pool_vault: AccountInfo<'info>,
 
     /// The Mint for which the ATA is being created
     pub mint: Box<InterfaceAccount<'info, Mint>>,
@@ -57,7 +57,7 @@ pub struct CreatePool<'info> {
         init,
         payer = payer,
         associated_token::mint = mint,
-        associated_token::authority = pool_authority,
+        associated_token::authority = pool_vault,
     )]
     pub pool_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 

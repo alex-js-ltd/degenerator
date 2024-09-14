@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::errors::Errors;
 use crate::utils::{
     calculate_buy_price, set_price_per_token, transfer_from_pool_vault_to_user,
-    transfer_sol_to_pool_vault, PoolState, POOL_AUTH_SEED, POOL_STATE_SEED,
+    transfer_sol_to_pool_vault, PoolState, POOL_STATE_SEED, POOL_VAULT_SEED,
 };
 
 #[derive(Accounts)]
@@ -17,10 +17,10 @@ pub struct BuyToken<'info> {
     /// CHECK: pda to control pool_ata & store lamports
     #[account(
         mut,
-        seeds = [POOL_AUTH_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub pool_authority: AccountInfo<'info>,
+    pub pool_vault: AccountInfo<'info>,
 
     /// CHECK: pda to store current price
     #[account(
@@ -76,7 +76,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     }
 
     transfer_from_pool_vault_to_user(
-        ctx.accounts.pool_authority.to_account_info(),
+        ctx.accounts.pool_vault.to_account_info(),
         ctx.accounts.pool_ata.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         ctx.accounts.mint.to_account_info(),
@@ -84,15 +84,15 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         amount,
         ctx.accounts.mint.decimals,
         &[&[
-            POOL_AUTH_SEED.as_bytes(),
+            POOL_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.pool_authority][..],
+            &[ctx.bumps.pool_vault][..],
         ][..]],
     )?;
 
     transfer_sol_to_pool_vault(
         ctx.accounts.signer.to_account_info(),
-        ctx.accounts.pool_authority.to_account_info(),
+        ctx.accounts.pool_vault.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
         price,
     )?;

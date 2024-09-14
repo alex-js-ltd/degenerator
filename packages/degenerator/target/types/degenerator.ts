@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "2qN85xftPvMY8Skz3m9PRdBFbFABEb1rcSsWXr4SnTGP",
+  "address": "FLz7pvm7VoyNAVDfxH3uWCMVWWqEDamVDynBmY89GYbC",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -35,7 +35,7 @@ export type Degenerator = {
           "signer": true
         },
         {
-          "name": "poolAuthority",
+          "name": "poolVault",
           "writable": true,
           "pda": {
             "seeds": [
@@ -47,10 +47,11 @@ export type Degenerator = {
                   111,
                   108,
                   95,
+                  118,
                   97,
                   117,
-                  116,
-                  104
+                  108,
+                  116
                 ]
               },
               {
@@ -396,7 +397,7 @@ export type Degenerator = {
           "signer": true
         },
         {
-          "name": "poolAuthority",
+          "name": "poolVault",
           "writable": true,
           "pda": {
             "seeds": [
@@ -408,10 +409,11 @@ export type Degenerator = {
                   111,
                   108,
                   95,
+                  118,
                   97,
                   117,
-                  116,
-                  104
+                  108,
+                  116
                 ]
               },
               {
@@ -437,7 +439,7 @@ export type Degenerator = {
             "seeds": [
               {
                 "kind": "account",
-                "path": "poolAuthority"
+                "path": "poolVault"
               },
               {
                 "kind": "const",
@@ -713,7 +715,7 @@ export type Degenerator = {
           "writable": true
         },
         {
-          "name": "poolAuthority",
+          "name": "poolVault",
           "writable": true,
           "pda": {
             "seeds": [
@@ -725,10 +727,11 @@ export type Degenerator = {
                   111,
                   108,
                   95,
+                  118,
                   97,
                   117,
-                  116,
-                  104
+                  108,
+                  116
                 ]
               },
               {
@@ -772,7 +775,7 @@ export type Degenerator = {
             "seeds": [
               {
                 "kind": "account",
-                "path": "poolAuthority"
+                "path": "poolVault"
               },
               {
                 "kind": "const",
