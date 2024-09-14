@@ -4,7 +4,6 @@ import { SwapForm } from '@/app/comps/swap_form'
 
 import { Pill } from '@/app/comps/pill'
 import { TokenLogo } from '@/app/comps/token_logo'
-import { Background } from '@/app/comps/background'
 
 export default function Page({ params }: { params: { id: string } }) {
 	const promise = getToken(params.id)
