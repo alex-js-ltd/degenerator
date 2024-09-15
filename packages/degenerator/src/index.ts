@@ -325,12 +325,12 @@ async function getSellTokenInstruction({
 	return sell
 }
 
-interface GetPricePerTokenParams {
+interface FetchPoolStateParams {
 	program: Program<Degenerator>
 	mint: PublicKey
 }
 
-async function getPricePerToken({ program, mint }: GetPricePerTokenParams) {
+async function fetchPoolState({ program, mint }: FetchPoolStateParams) {
 	const pda = getPoolState({ program, mint })
 
 	const data = await program.account.poolState.fetch(pda)
@@ -350,6 +350,6 @@ export {
 	getBuyTokenInstruction,
 	getSellTokenInstruction,
 	getBalance,
-	getPricePerToken,
+	fetchPoolState,
 }
 export { default as IDL } from '../target/idl/degenerator.json'

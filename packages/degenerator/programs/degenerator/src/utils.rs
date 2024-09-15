@@ -105,8 +105,17 @@ pub fn calculate_sell_price(current_supply: u128, total_supply: u128, amount: u1
 }
 
 /// Sets the price per token in the Pool account.
-pub fn set_price_per_token(pool_state: &mut Account<PoolState>, price_per_token: u64) {
-    pool_state.price_per_token = price_per_token;
+pub fn set_pool_state(
+    pool_state: &mut Account<PoolState>,
+    buy_price: u64,
+    sell_price: u64,
+    current_supply: u64,
+    total_supply: u64,
+) {
+    pool_state.buy_price = buy_price;
+    pool_state.sell_price = sell_price;
+    pool_state.current_supply = current_supply;
+    pool_state.total_supply = total_supply;
 }
 
 pub fn transfer_from_user_to_pool_vault<'a>(
@@ -200,10 +209,13 @@ pub fn transfer_sol_to_user<'a>(
 #[account]
 #[derive(InitSpace)]
 pub struct PoolState {
-    pub price_per_token: u64,
+    pub buy_price: u64,
+    pub sell_price: u64,
+    pub current_supply: u64,
+    pub total_supply: u64,
 }
 
 impl PoolState {
     // Discriminator (8 bytes) + price_per_token (u64 = 8 bytes)
-    pub const LEN: usize = 8 + 8;
+    pub const LEN: usize = 8 + 8 + 8 + 8 + 8;
 }

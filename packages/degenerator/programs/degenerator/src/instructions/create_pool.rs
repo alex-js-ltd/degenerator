@@ -3,7 +3,7 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
-    calculate_buy_price, set_price_per_token, transfer_from_user_to_pool_vault,
+    calculate_buy_price, calculate_sell_price, set_pool_state, transfer_from_user_to_pool_vault,
     update_account_lamports_to_minimum_balance, PoolState, POOL_STATE_SEED, POOL_VAULT_SEED,
 };
 
@@ -25,13 +25,27 @@ pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
         ctx.accounts.mint.decimals,
     )?;
 
-    let price_per_token = calculate_buy_price(
+    ctx.accounts.pool_ata.reload()?;
+
+    let buy_price = calculate_buy_price(
         ctx.accounts.pool_ata.amount as u128,
         ctx.accounts.mint.supply as u128,
         1 as u128,
     );
 
-    set_price_per_token(&mut ctx.accounts.pool_state, price_per_token);
+    let sell_price = calculate_sell_price(
+        ctx.accounts.pool_ata.amount as u128,
+        ctx.accounts.mint.supply as u128,
+        1 as u128,
+    );
+
+    set_pool_state(
+        &mut ctx.accounts.pool_state,
+        buy_price,
+        sell_price,
+        ctx.accounts.pool_ata.amount,
+        ctx.accounts.mint.supply,
+    );
 
     Ok(())
 }

@@ -1,5 +1,5 @@
 {
-  "address": "9LC9Az1pJkgxcLSRnq522VSnjLfCNxs3qyzW5yTij37T",
+  "address": "7yV76G3Wz1E2oUitNqSiFRKhaVs34LvPUTLZNS1ZbgGW",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -925,7 +925,19 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "price_per_token",
+            "name": "buy_price",
+            "type": "u64"
+          },
+          {
+            "name": "sell_price",
+            "type": "u64"
+          },
+          {
+            "name": "current_supply",
+            "type": "u64"
+          },
+          {
+            "name": "total_supply",
             "type": "u64"
           }
         ]

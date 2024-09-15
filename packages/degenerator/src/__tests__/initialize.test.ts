@@ -10,7 +10,7 @@ import {
 	getAssociatedAddress,
 	getBuyTokenInstruction,
 	getSellTokenInstruction,
-	getPricePerToken,
+	fetchPoolState,
 } from '../index'
 import { getAccount, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 
@@ -97,10 +97,18 @@ describe('initialize', () => {
 		expect(isRentExempt).toBe(true)
 	})
 
-	it('check price per token', async () => {
-		const data = await getPricePerToken({ program, mint: mint.publicKey })
+	it('check pool state', async () => {
+		const data = await fetchPoolState({ program, mint: mint.publicKey })
 
-		console.log('price before', data.pricePerToken.toString())
+		const stringifiedData = Object.entries(data).reduce(
+			(acc, [key, value]) => {
+				acc[key] = value.toString()
+				return acc
+			},
+			{} as Record<string, string>,
+		)
+
+		console.log('pool state', stringifiedData)
 	})
 
 	it('check pool token amount is 99 times the user amount', async () => {
@@ -226,9 +234,17 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check price per token', async () => {
-		const data = await getPricePerToken({ program, mint: mint.publicKey })
+	it('check pool state', async () => {
+		const data = await fetchPoolState({ program, mint: mint.publicKey })
 
-		console.log('price after', data.pricePerToken.toString())
+		const stringifiedData = Object.entries(data).reduce(
+			(acc, [key, value]) => {
+				acc[key] = value.toString()
+				return acc
+			},
+			{} as Record<string, string>,
+		)
+
+		console.log('pool state', stringifiedData)
 	})
 })
