@@ -9,6 +9,9 @@ import { getPoolState } from '@/app/data/get_pool_state'
 import { type PoolState } from '@repo/degenerator'
 import { BN } from '@coral-xyz/anchor'
 
+export const revalidate = 10
+export const dynamic = 'force-dynamic'
+
 export default function Page({ params }: { params: { id: string } }) {
 	const tokenPromise = getToken(params.id)
 	const res = use(tokenPromise)
