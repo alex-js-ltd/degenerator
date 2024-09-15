@@ -3,8 +3,9 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
-    calculate_buy_price, calculate_sell_price, set_pool_state, transfer_from_user_to_pool_vault,
-    update_account_lamports_to_minimum_balance, PoolState, POOL_STATE_SEED, POOL_VAULT_SEED,
+    calculate_buy_price, calculate_progress, calculate_sell_price, set_pool_state,
+    transfer_from_user_to_pool_vault, update_account_lamports_to_minimum_balance, PoolState,
+    POOL_STATE_SEED, POOL_VAULT_SEED,
 };
 
 pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
@@ -39,12 +40,18 @@ pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
         1 as u128,
     );
 
+    let progress = calculate_progress(
+        ctx.accounts.pool_ata.amount as u128,
+        ctx.accounts.mint.supply as u128,
+    );
+
     set_pool_state(
         &mut ctx.accounts.pool_state,
         buy_price,
         sell_price,
         ctx.accounts.pool_ata.amount,
         ctx.accounts.mint.supply,
+        progress,
     );
 
     Ok(())

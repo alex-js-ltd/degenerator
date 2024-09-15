@@ -4,8 +4,9 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
 use crate::utils::{
-    calculate_buy_price, calculate_sell_price, set_pool_state, transfer_from_pool_vault_to_user,
-    transfer_sol_to_pool_vault, PoolState, POOL_STATE_SEED, POOL_VAULT_SEED,
+    calculate_buy_price, calculate_progress, calculate_sell_price, set_pool_state,
+    transfer_from_pool_vault_to_user, transfer_sol_to_pool_vault, PoolState, POOL_STATE_SEED,
+    POOL_VAULT_SEED,
 };
 
 #[derive(Accounts)]
@@ -111,12 +112,18 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         1 as u128,
     );
 
+    let progress = calculate_progress(
+        ctx.accounts.pool_ata.amount as u128,
+        ctx.accounts.mint.supply as u128,
+    );
+
     set_pool_state(
         &mut ctx.accounts.pool_state,
         buy_price,
         sell_price,
         ctx.accounts.pool_ata.amount,
         ctx.accounts.mint.supply,
+        progress,
     );
 
     Ok(())

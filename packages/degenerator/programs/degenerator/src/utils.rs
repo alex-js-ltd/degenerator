@@ -104,6 +104,23 @@ pub fn calculate_sell_price(current_supply: u128, total_supply: u128, amount: u1
     total_price.try_into().unwrap_or(u64::MAX)
 }
 
+pub fn calculate_progress(current_supply: u128, total_supply: u128) -> u64 {
+    // Handle edge case where currentSupply is zero
+    if current_supply == 0 {
+        return 100; // Progress is 100% if current supply is zero
+    }
+
+    // Handle edge case where currentSupply equals totalSupply
+    if current_supply == total_supply {
+        return 0; // Progress is 0% if current supply is equal to total supply
+    }
+
+    // Calculate progress as inverse percentage using saturating_sub
+    let progress = (total_supply.saturating_sub(current_supply)) * 100 / total_supply;
+
+    progress.try_into().unwrap_or(u64::MAX)
+}
+
 /// Sets the price per token in the Pool account.
 pub fn set_pool_state(
     pool_state: &mut Account<PoolState>,
@@ -111,11 +128,13 @@ pub fn set_pool_state(
     sell_price: u64,
     current_supply: u64,
     total_supply: u64,
+    progress: u64,
 ) {
     pool_state.buy_price = buy_price;
     pool_state.sell_price = sell_price;
     pool_state.current_supply = current_supply;
     pool_state.total_supply = total_supply;
+    pool_state.progress = progress;
 }
 
 pub fn transfer_from_user_to_pool_vault<'a>(
@@ -213,9 +232,9 @@ pub struct PoolState {
     pub sell_price: u64,
     pub current_supply: u64,
     pub total_supply: u64,
+    pub progress: u64,
 }
 
 impl PoolState {
-    // Discriminator (8 bytes) + price_per_token (u64 = 8 bytes)
-    pub const LEN: usize = 8 + 8 + 8 + 8 + 8;
+    pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8;
 }
