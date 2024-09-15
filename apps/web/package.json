@@ -65,5 +65,8 @@
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
+  },
+  "resolutions": {
+    "@solana/wallet-standard-wallet-adapter-base": "1.0.1"
   }
 }
