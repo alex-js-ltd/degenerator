@@ -40,7 +40,7 @@ describe('initialize', () => {
 		owner: payer.publicKey,
 	})
 
-	const supply = 1000000000
+	const supply = 100
 
 	const metadata = {
 		name: 'OPOS',
@@ -148,7 +148,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 100000
+		const amountToBuy = 99
 
 		const ix = await getBuyTokenInstruction({
 			program,
@@ -199,7 +199,7 @@ describe('initialize', () => {
 	})
 
 	it('sell token', async () => {
-		const amountToSell = 50000
+		const amountToSell = 99
 
 		const ix = await getSellTokenInstruction({
 			program,
