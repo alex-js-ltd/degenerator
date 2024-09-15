@@ -330,6 +330,13 @@ interface FetchPoolStateParams {
 	mint: PublicKey
 }
 
+interface PoolState {
+	buyPrice: BN
+	sellPrice: BN
+	currentSupply: BN
+	totalSupply: BN
+}
+
 async function fetchPoolState({ program, mint }: FetchPoolStateParams) {
 	const pda = getPoolState({ program, mint })
 
@@ -340,6 +347,7 @@ async function fetchPoolState({ program, mint }: FetchPoolStateParams) {
 
 export {
 	type Degenerator,
+	type PoolState,
 	airDrop,
 	getAssociatedAddress,
 	getPoolVault,

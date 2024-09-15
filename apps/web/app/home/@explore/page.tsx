@@ -6,8 +6,8 @@ import { TokenGrid, Fallback } from '@/app/comps/token_grid'
 import { YourTokens } from '@/app/comps/your_tokens'
 import { use } from 'react'
 
+export const revalidate = 60
 export const dynamic = 'force-dynamic'
-export const revalidate = 360
 
 function FeaturedTokens() {
 	const promise = fetchFeaturedTokens()

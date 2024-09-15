@@ -53,7 +53,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 
 	return (
 		<FormProvider context={form.context}>
-			<div className="rounded-b-xl w-full sm:max-w-xl">
+			<div className="rounded-b-xl w-full">
 				<form
 					className="has-[:focus-visible]:border-alpha-600 relative rounded-xl border bg-white shadow transition-colors"
 					{...getFormProps(form)}
