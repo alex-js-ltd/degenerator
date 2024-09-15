@@ -1,8 +1,8 @@
 'use client'
 
-import { ReactNode, useActionState, useEffect } from 'react'
+import { ReactNode, useActionState } from 'react'
 
-import { useForm, getFormProps, FormProvider } from '@conform-to/react'
+import { useForm, FormProvider } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { SwapSchema } from '@/app/utils/schemas'
 import { type State, swapAction } from '@/app/actions/swap_action'
@@ -25,10 +25,18 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 
 	const { lastResult, data } = state
 
-	const [form, fields] = useForm({
+	const [form, { amount, buy }] = useForm({
 		// Reuse the validation logic on the client
 		onValidate: ({ formData }) =>
 			parseWithZod(formData, { schema: SwapSchema }),
+
+		onSubmit(e) {
+			e.preventDefault()
+			const form = e.currentTarget
+			const formData = new FormData(form)
+
+			formAction(formData)
+		},
 
 		// Validate the form on blur event triggered
 		shouldValidate: 'onInput',
@@ -37,6 +45,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 
 		defaultValue: {
 			amount: '',
+			buy: true,
 		},
 	})
 
@@ -46,24 +55,24 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 
 	const payer = usePayer()
 
-	const control = useInputControl(fields.amount)
+	const control = useInputControl(amount)
 
 	const { data: poolState } = usePoolState(mint)
 
 	const { buyPrice, sellPrice } = poolState || {}
+
+	let price = buy.value === 'on' ? buyPrice : sellPrice
 
 	return (
 		<FormProvider context={form.context}>
 			<div className="rounded-b-xl w-full">
 				<form
 					className="has-[:focus-visible]:border-alpha-600 relative rounded-xl border bg-white shadow transition-colors"
-					{...getFormProps(form)}
-					action={(formData: FormData) => {
-						formAction(formData)
-					}}
+					id={form.id}
+					onSubmit={form.onSubmit}
 				>
 					<span className="absolute top-3 right-3 z-50 text-teal-300 text-xs">
-						{`${calculateSolPrice(buyPrice, control.value)} SOL`}
+						{`${calculateSolPrice(price, control.value)} SOL`}
 					</span>
 					<input name="payer" defaultValue={payer} type="hidden" />
 					<input name="mint" defaultValue={mint} type="hidden" />
@@ -81,7 +90,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 						<div className="flex items-center gap-2 p-3">
 							{token}
 
-							<SwapSwitch />
+							<SwapSwitch meta={buy} />
 							<div className="ml-auto flex items-center gap-2">
 								<SwapButton />
 							</div>
