@@ -12,29 +12,9 @@ import { SwapButton } from '@/app/comps/swap_button'
 import { useInputControl } from '@conform-to/react'
 import { getControlProps } from '@/app/utils/misc'
 import { SwapSwitch } from '@/app/comps/swap_switch'
-import { usePricePerToken } from '@/app/hooks/use_price_per_token'
+import { usePoolState } from '@/app/hooks/use_pool_state'
 import { BN } from '@coral-xyz/anchor'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js'
-
-function getTotalPrice(pricePerToken?: BN, amount?: string): string {
-	if (!pricePerToken || !amount) return '0'
-
-	const amountBN = new BN(amount || 0)
-	const totalPriceInLamports = pricePerToken.mul(amountBN) // Total price in lamports
-
-	// Divide the total lamports by LAMPORTS_PER_SOL (BN) to get the price in SOL (as BN with integer precision)
-	const LAMPORTS_PER_SOL_BN = new BN(LAMPORTS_PER_SOL)
-	const totalPriceInSOLBN = totalPriceInLamports.div(LAMPORTS_PER_SOL_BN)
-
-	// Get the remainder (for fractional SOL) and divide to add decimal precision
-	const remainder = totalPriceInLamports.mod(LAMPORTS_PER_SOL_BN)
-	const fractionalSOL = remainder.toNumber() / LAMPORTS_PER_SOL
-
-	// Return the total price in SOL, combining the integer part and fractional part
-	return (
-		totalPriceInSOLBN.toString() + '.' + fractionalSOL.toFixed(9).split('.')[1]
-	)
-}
 
 const initialState: State = {
 	lastResult: undefined,
@@ -69,7 +49,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 
 	const control = useInputControl(fields.amount)
 
-	const res = usePricePerToken(mint)
+	const { data: poolState } = usePoolState(mint)
 
 	return (
 		<FormProvider context={form.context}>
@@ -82,7 +62,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 					}}
 				>
 					<span className="absolute top-3 right-3 z-50 text-teal-300 text-xs">
-						{`${getTotalPrice(res.data?.pricePerToken, control.value)} SOL`}
+						{`${undefined} SOL`}
 					</span>
 					<input name="payer" defaultValue={payer} type="hidden" />
 					<input name="mint" defaultValue={mint} type="hidden" />
