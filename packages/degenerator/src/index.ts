@@ -335,6 +335,7 @@ interface PoolState {
 	sellPrice: BN
 	currentSupply: BN
 	totalSupply: BN
+	progress: BN
 }
 
 async function fetchPoolState({ program, mint }: FetchPoolStateParams) {

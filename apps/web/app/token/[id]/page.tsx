@@ -20,9 +20,7 @@ export default function Page({ params }: { params: { id: string } }) {
 	const poolPromise = getPoolState(mint)
 	const poolState = use(poolPromise)
 
-	const { currentSupply, totalSupply } = poolState
-
-	const progress = getProgressProps({ currentSupply, totalSupply })
+	const { progress } = poolState
 
 	console.log('progress', progress.toString())
 
@@ -41,32 +39,4 @@ export default function Page({ params }: { params: { id: string } }) {
 			<Progress progress={progress.toNumber()} />
 		</div>
 	)
-}
-
-function getProgressProps({
-	currentSupply,
-	totalSupply,
-}: Pick<PoolState, 'currentSupply' | 'totalSupply'>): BN {
-	// Handle edge case where totalSupply is zero
-	if (totalSupply.isZero()) {
-		return new BN(100) // Progress is 100% if no total supply
-	}
-
-	// Handle edge case where currentSupply is zero
-	if (currentSupply.isZero()) {
-		return new BN(100) // Progress is 100% if current supply is zero
-	}
-
-	// Handle edge case where currentSupply equals totalSupply
-	if (currentSupply.eq(totalSupply)) {
-		return new BN(0) // Progress is 0% if current supply is equal to total supply
-	}
-
-	// Calculate progress as inverse percentage
-	const progress = totalSupply
-		.sub(currentSupply)
-		.mul(new BN(100))
-		.div(totalSupply)
-
-	return progress
 }
