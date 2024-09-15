@@ -10,8 +10,6 @@ import {
 	buildTransaction,
 } from '@repo/degenerator'
 
-import { revalidatePath } from 'next/cache'
-
 export interface State {
 	lastResult?: SubmissionResult<string[]>
 	data?: { serializedTransaction: Uint8Array }
@@ -40,8 +38,6 @@ export async function swapAction(_prevState: State, formData: FormData) {
 		instructions: [ix],
 		signers: [],
 	})
-
-	revalidatePath('/')
 
 	return {
 		lastResult: submission.reply(),

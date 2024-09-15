@@ -12,6 +12,7 @@ import { useAsync } from '@/app/hooks/use_async'
 import { useSignAndSendTx } from '@/app/hooks/use_sign_and_send_tx'
 import { useFormStatus } from 'react-dom'
 import invariant from 'tiny-invariant'
+import { useRouter } from 'next/navigation'
 
 type Async<DataType> = ReturnType<typeof useAsync<DataType>>
 type Context = Array<Async<string | undefined>>
@@ -53,10 +54,18 @@ function useSwapTx(tx?: Uint8Array) {
 	const { run, ...rest } = swapTx
 
 	const sign = useSignAndSendTx()
+	const router = useRouter()
 
 	useEffect(() => {
-		if (tx) run(sign(tx))
-	}, [run, sign, tx])
+		if (!tx) return
+
+		const swap = sign(tx).then(res => {
+			router.refresh()
+			return res
+		})
+
+		run(swap)
+	}, [run, sign, tx, router])
 
 	return { ...rest }
 }
