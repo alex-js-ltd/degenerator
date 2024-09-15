@@ -78,8 +78,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 							type="number"
 							max={1000000000}
 							placeholder="Amount…"
-							className="resize-none overflow-auto w-full flex-1 bg-transparent p-3 pb-1.5 text-sm outline-none ring-0"
-							style={{ minHeight: '42px', maxHeight: '384px', height: '42px' }}
+							className="h-[42px] resize-none overflow-auto w-full flex-1 bg-transparent p-3 pb-1.5 text-sm outline-none ring-0"
 							{...getControlProps(control)}
 						/>
 						<div className="flex items-center gap-2 p-3">
