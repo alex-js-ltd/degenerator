@@ -19,7 +19,7 @@ degenerator = "7yV76G3Wz1E2oUitNqSiFRKhaVs34LvPUTLZNS1ZbgGW"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "https://divine-ultra-diagram.solana-devnet.quiknode.pro"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
