@@ -71,7 +71,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 					<input name="payer" defaultValue={payer} type="hidden" />
 					<input name="mint" defaultValue={mint} type="hidden" />
 					<div className="relative z-10 grid rounded-xl bg-white">
-						<label className="sr-only" htmlFor="chat-main-textarea">
+						<label className="sr-only" htmlFor="swap-input">
 							Swap input
 						</label>
 						<input
