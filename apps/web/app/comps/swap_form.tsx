@@ -13,8 +13,7 @@ import { useInputControl } from '@conform-to/react'
 import { getControlProps } from '@/app/utils/misc'
 import { SwapSwitch } from '@/app/comps/swap_switch'
 import { usePoolState } from '@/app/hooks/use_pool_state'
-import { BN } from '@coral-xyz/anchor'
-import { LAMPORTS_PER_SOL } from '@solana/web3.js'
+import { calculateSolPrice } from '@/app/utils/misc'
 
 const initialState: State = {
 	lastResult: undefined,
@@ -51,6 +50,8 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 
 	const { data: poolState } = usePoolState(mint)
 
+	const { buyPrice, sellPrice } = poolState || {}
+
 	return (
 		<FormProvider context={form.context}>
 			<div className="rounded-b-xl w-full">
@@ -62,7 +63,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 					}}
 				>
 					<span className="absolute top-3 right-3 z-50 text-teal-300 text-xs">
-						{`SOL`}
+						{`${calculateSolPrice(buyPrice, control.value)} SOL`}
 					</span>
 					<input name="payer" defaultValue={payer} type="hidden" />
 					<input name="mint" defaultValue={mint} type="hidden" />

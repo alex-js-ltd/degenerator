@@ -2,6 +2,8 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { useInputControl } from '@conform-to/react'
 import { type InputProps } from '@/app/comps/input'
+import { BN } from '@coral-xyz/anchor'
+import Decimal from 'decimal.js'
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -90,4 +92,35 @@ export function getControlProps(control: Control): InputProps {
 		onFocus: control.focus,
 		onBlur: control.blur,
 	}
+}
+
+export function fromLamports(
+	lamportsAmount: BN | number | bigint,
+	decimals: number,
+): number {
+	return new Decimal(lamportsAmount.toString())
+		.div(10 ** decimals)
+		.toDP(decimals, Decimal.ROUND_DOWN)
+		.toNumber()
+}
+
+export function toLamports(
+	lamportsAmount: BN | number,
+	decimals: number,
+): number {
+	return new Decimal(lamportsAmount.toString())
+		.mul(10 ** decimals)
+		.floor()
+		.toNumber()
+}
+
+export function calculateSolPrice(price?: BN, amount?: string) {
+	if (!amount || !price) return 0
+	const amountBN = new BN(amount)
+
+	const lamportsAmount = price.mul(amountBN)
+
+	const sol = fromLamports(lamportsAmount, 9)
+
+	return sol
 }
