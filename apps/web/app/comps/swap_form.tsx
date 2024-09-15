@@ -2,7 +2,7 @@
 
 import { ReactNode, useActionState } from 'react'
 
-import { useForm, FormProvider } from '@conform-to/react'
+import { useForm, FormProvider, getFormProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { SwapSchema } from '@/app/utils/schemas'
 import { type State, swapAction } from '@/app/actions/swap_action'
@@ -30,13 +30,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 		onValidate: ({ formData }) =>
 			parseWithZod(formData, { schema: SwapSchema }),
 
-		onSubmit(e) {
-			e.preventDefault()
-			const form = e.currentTarget
-			const formData = new FormData(form)
-
-			formAction(formData)
-		},
+		onSubmit(e, { formData }) {},
 
 		// Validate the form on blur event triggered
 		shouldValidate: 'onInput',
@@ -68,8 +62,8 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 			<div className="rounded-b-xl w-full">
 				<form
 					className="has-[:focus-visible]:border-alpha-600 relative rounded-xl border bg-white shadow transition-colors"
-					id={form.id}
-					onSubmit={form.onSubmit}
+					action={formAction}
+					{...getFormProps(form)}
 				>
 					<span className="absolute top-3 right-3 z-50 text-teal-300 text-xs">
 						{`${calculateSolPrice(price, control.value)} SOL`}
@@ -82,6 +76,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 						</label>
 						<input
 							type="number"
+							max={1000000000}
 							placeholder="Amount…"
 							className="resize-none overflow-auto w-full flex-1 bg-transparent p-3 pb-1.5 text-sm outline-none ring-0"
 							style={{ minHeight: '42px', maxHeight: '384px', height: '42px' }}
