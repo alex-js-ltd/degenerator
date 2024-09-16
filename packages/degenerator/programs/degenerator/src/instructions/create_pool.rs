@@ -4,8 +4,8 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
     calculate_buy_price, calculate_progress, calculate_sell_price, set_pool_state, token_mint_to,
-    transfer_from_user_to_pool_vault, update_account_lamports_to_minimum_balance, PoolState,
-    POOL_STATE_SEED, POOL_VAULT_SEED, RAYDIUM_VAULT_SEED,
+    update_account_lamports_to_minimum_balance, PoolState, POOL_STATE_SEED, POOL_VAULT_SEED,
+    RAYDIUM_VAULT_SEED,
 };
 
 pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
@@ -22,41 +22,53 @@ pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
         ctx.accounts.system_program.to_account_info(),
     )?;
 
+    let eighty_percent = amount.saturating_mul(80).saturating_div(100);
+    let twenty_percent = amount.saturating_mul(20).saturating_div(100);
+
+    msg!("Pool amount (80%): {}", eighty_percent);
+    msg!("Raydium amount (20%): {}", twenty_percent);
+
     token_mint_to(
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.pool_ata.to_account_info(),
-        amount,
+        eighty_percent,
+        ctx.accounts.mint.decimals,
+    )?;
+
+    token_mint_to(
+        ctx.accounts.payer.to_account_info(),
+        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.mint.to_account_info(),
+        ctx.accounts.raydium_ata.to_account_info(),
+        twenty_percent,
         ctx.accounts.mint.decimals,
     )?;
 
     ctx.accounts.pool_ata.reload()?;
-    ctx.accounts.raydiumn_ata.reload()?;
+    ctx.accounts.raydium_ata.reload()?;
 
     let buy_price = calculate_buy_price(
         ctx.accounts.pool_ata.amount as u128,
-        ctx.accounts.mint.supply as u128,
+        eighty_percent as u128,
         1 as u128,
     );
 
     let sell_price = calculate_sell_price(
         ctx.accounts.pool_ata.amount as u128,
-        ctx.accounts.mint.supply as u128,
+        eighty_percent as u128,
         1 as u128,
     );
 
-    let progress = calculate_progress(
-        ctx.accounts.pool_ata.amount as u128,
-        ctx.accounts.mint.supply as u128,
-    );
+    let progress = calculate_progress(ctx.accounts.pool_ata.amount as u128, eighty_percent as u128);
 
     set_pool_state(
         &mut ctx.accounts.pool_state,
         buy_price,
         sell_price,
         ctx.accounts.pool_ata.amount,
-        ctx.accounts.mint.supply,
+        ctx.accounts.pool_ata.amount,
         progress,
     );
 
@@ -102,7 +114,7 @@ pub struct CreatePool<'info> {
             associated_token::mint = mint,
             associated_token::authority = raydium_vault,
         )]
-    pub raydiumn_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub raydium_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// pda to store current price
     #[account(init,

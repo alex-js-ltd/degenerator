@@ -84,6 +84,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
         price,
+        ctx.accounts.mint.decimals,
         &[&[
             POOL_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),

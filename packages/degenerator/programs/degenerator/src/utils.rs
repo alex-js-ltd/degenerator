@@ -245,7 +245,7 @@ pub fn token_mint_to<'a>(
                 mint,
             },
         ),
-        amount * 10u64.pow(mint_decimals as u32),
+        amount * 10u64.pow(mint_decimals as u32), // Mint tokens
     )
 }
 

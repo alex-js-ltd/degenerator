@@ -64,6 +64,19 @@ function getPoolVault({
 	)[0]
 }
 
+function getRaydiumVault({
+	program,
+	mint,
+}: {
+	program: Program<Degenerator>
+	mint: PublicKey
+}): PublicKey {
+	return PublicKey.findProgramAddressSync(
+		[Buffer.from('raydium_vault'), mint.toBuffer()],
+		program.programId,
+	)[0]
+}
+
 function getPoolState({
 	program,
 	mint,
@@ -157,9 +170,6 @@ async function getMintInstructions({
 	// Convert supply to BN (BigNumber) instance
 	const supplyBN = new BN(supply)
 
-	// Calculate 99% of the supply
-	const transferAmount = supplyBN.mul(new BN(99)).div(new BN(100))
-
 	const payerATA = getAssociatedAddress({
 		mint: mint,
 		owner: payer,
@@ -170,6 +180,13 @@ async function getMintInstructions({
 	const poolATA = getAssociatedAddress({
 		mint: mint,
 		owner: poolVault,
+	})
+
+	const raydiumVault = getRaydiumVault({ program, mint })
+
+	const raydiumATA = getAssociatedAddress({
+		mint: mint,
+		owner: raydiumVault,
 	})
 
 	const [extraMetasAccount] = PublicKey.findProgramAddressSync(
@@ -195,13 +212,21 @@ async function getMintInstructions({
 		})
 		.instruction()
 
-	const mintToken = await program.methods
-		.mintToken(supplyBN)
-		.accounts({
+	const createPool = await program.methods
+		.createPool(supplyBN)
+		.accountsStrict({
+			payer: payer,
+			poolAta: poolATA,
 			mint: mint,
-			signer: payer,
-			receiver: payerATA,
+			poolVault: poolVault,
+			raydiumVault: raydiumVault,
+			raydiumAta: raydiumATA,
+			poolState: poolState,
+			payerAta: payerATA,
+			systemProgram: web3.SystemProgram.programId,
+			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
+			rent: web3.SYSVAR_RENT_PUBKEY,
 		})
 		.instruction()
 
@@ -221,23 +246,7 @@ async function getMintInstructions({
 		})
 		.instruction()
 
-	const createPool = await program.methods
-		.createPool(transferAmount)
-		.accountsStrict({
-			payer: payer,
-			poolAta: poolATA,
-			mint: mint,
-			poolVault: poolVault,
-			poolState: poolState,
-			payerAta: payerATA,
-			systemProgram: web3.SystemProgram.programId,
-			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-			tokenProgram: TOKEN_2022_PROGRAM_ID,
-			rent: web3.SYSVAR_RENT_PUBKEY,
-		})
-		.instruction()
-
-	return [init, mintToken, revokeMint, revokeFreeze, createPool]
+	return [init, createPool, revokeFreeze, revokeMint]
 }
 
 interface SwapTokenInstructionParams {
@@ -352,6 +361,7 @@ export {
 	airDrop,
 	getAssociatedAddress,
 	getPoolVault,
+	getRaydiumVault,
 	getPoolState,
 	buildTransaction,
 	getMintInstructions,

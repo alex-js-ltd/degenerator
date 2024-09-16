@@ -7,6 +7,7 @@ import {
 	buildTransaction,
 	sendAndConfirm,
 	getPoolVault,
+	getRaydiumVault,
 	getAssociatedAddress,
 	getBuyTokenInstruction,
 	getSellTokenInstruction,
@@ -30,6 +31,8 @@ describe('initialize', () => {
 
 	const poolVault = getPoolVault({ program, mint: mint.publicKey })
 
+	const raydiumVault = getRaydiumVault({ program, mint: mint.publicKey })
+
 	const poolATA = getAssociatedAddress({
 		mint: mint.publicKey,
 		owner: poolVault,
@@ -40,7 +43,14 @@ describe('initialize', () => {
 		owner: payer.publicKey,
 	})
 
+	const raydiumATA = getAssociatedAddress({
+		mint: mint.publicKey,
+		owner: raydiumVault,
+	})
+
 	const supply = 100
+
+	const decimals = 9
 
 	const metadata = {
 		name: 'OPOS',
@@ -65,7 +75,7 @@ describe('initialize', () => {
 					payer: payer.publicKey,
 					mint: mint.publicKey,
 					metadata,
-					decimals: 9,
+					decimals,
 					supply,
 				})),
 			],
@@ -111,7 +121,7 @@ describe('initialize', () => {
 		console.log('pool state', stringifiedData)
 	})
 
-	it('check pool token amount is 99 times the user amount', async () => {
+	it('check pool token amount ', async () => {
 		// Fetch pool and user account data
 		const pool = await getAccount(
 			connection,
@@ -120,22 +130,24 @@ describe('initialize', () => {
 			TOKEN_2022_PROGRAM_ID,
 		)
 
-		const user = await getAccount(
+		const raydium = await getAccount(
 			connection,
-			payerATA,
+			raydiumATA,
 			'processed',
 			TOKEN_2022_PROGRAM_ID,
 		)
 
 		// Extract amounts (assumed to be BigInt values)
 		const poolAmount = pool.amount // BigInt
-		const userAmount = user.amount // BigInt
+		const raydiumAmount = raydium.amount // BigInt
 
-		console.log('userAmount before', userAmount.toString())
+		console.log('pool amount', poolAmount.toString())
 
-		// Calculate expected pool amount as 9 times the user amount
-		const multiplier = BigInt(99) // Create BigInt instance
-		const expectedPoolAmount = userAmount * multiplier
+		console.log('raydium amount', raydiumAmount.toString())
+
+		// supply is 100 tokens with 9 decimals, so multiply by 10^9
+		const _supply = BigInt(supply * 10 ** decimals) // total supply in smallest unit
+		const expectedPoolAmount = (_supply * BigInt(80)) / BigInt(100) // calculate 80% of supply in smallest unit
 
 		// Assert that the pool amount is equal to the expected amount
 		expect(poolAmount).toBe(expectedPoolAmount)
@@ -156,7 +168,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 99
+		const amountToBuy = 80
 
 		const ix = await getBuyTokenInstruction({
 			program,
@@ -207,7 +219,7 @@ describe('initialize', () => {
 	})
 
 	it('sell token', async () => {
-		const amountToSell = 99
+		const amountToSell = 80
 
 		const ix = await getSellTokenInstruction({
 			program,
