@@ -18,6 +18,7 @@ use spl_tlv_account_resolution::{account::ExtraAccountMeta, state::ExtraAccountM
 use spl_type_length_value::variable_len_pack::VariableLenPack;
 
 pub const POOL_VAULT_SEED: &str = "pool_vault";
+pub const RAYDIUM_VAULT_SEED: &str = "raydium_vault";
 pub const POOL_STATE_SEED: &str = "pool_state";
 pub const META_LIST_ACCOUNT_SEED: &str = "extra-account-metas";
 
@@ -213,6 +214,7 @@ pub fn transfer_sol_to_user<'a>(
     to: AccountInfo<'a>,
     system_program: AccountInfo<'a>,
     amount: u64,
+    mint_decimals: u8,
     signer_seeds: &[&[&[u8]]],
 ) -> Result<()> {
     system_program::transfer(
@@ -221,7 +223,29 @@ pub fn transfer_sol_to_user<'a>(
             system_program::Transfer { from, to },
             signer_seeds,
         ),
-        amount,
+        amount * 10u64.pow(mint_decimals as u32),
+    )
+}
+
+/// Issue a spl_token `MintTo` instruction.
+pub fn token_mint_to<'a>(
+    authority: AccountInfo<'a>,
+    token_program: AccountInfo<'a>,
+    mint: AccountInfo<'a>,
+    destination: AccountInfo<'a>,
+    amount: u64,
+    mint_decimals: u8,
+) -> Result<()> {
+    token_2022::mint_to(
+        CpiContext::new(
+            token_program,
+            token_2022::MintTo {
+                to: destination,
+                authority,
+                mint,
+            },
+        ),
+        amount * 10u64.pow(mint_decimals as u32),
     )
 }
 
