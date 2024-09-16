@@ -13,3 +13,5 @@ export const connection = new Connection(ENDPOINT, 'confirmed')
 export const program = new Program<Degenerator>(IDL as Degenerator, {
 	connection,
 })
+
+console.log('programId', program.programId.toBase58())

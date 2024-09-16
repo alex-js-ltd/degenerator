@@ -9,11 +9,14 @@ skip-lint = false
 [programs.localnet]
 degenerator = "4Eb6sPNPp8GfRZ6YGXkHAzU3VRQ1tsT5g13cHALMQ7Y7"
 
+[programs.devnet]
+degenerator = "4Eb6sPNPp8GfRZ6YGXkHAzU3VRQ1tsT5g13cHALMQ7Y7"
+
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "https://divine-ultra-diagram.solana-devnet.quiknode.pro"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
