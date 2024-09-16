@@ -25,9 +25,7 @@ pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
     let eighty_percent = amount.saturating_mul(80).saturating_div(100);
     let twenty_percent = amount.saturating_mul(20).saturating_div(100);
 
-    msg!("Pool amount (80%): {}", eighty_percent);
-    msg!("Raydium amount (20%): {}", twenty_percent);
-
+    // mint 80% to pool vault
     token_mint_to(
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
@@ -37,6 +35,7 @@ pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
         ctx.accounts.mint.decimals,
     )?;
 
+    // mint 20% to raydium vault
     token_mint_to(
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
