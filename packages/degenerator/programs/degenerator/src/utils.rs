@@ -214,7 +214,6 @@ pub fn transfer_sol_to_user<'a>(
     to: AccountInfo<'a>,
     system_program: AccountInfo<'a>,
     amount: u64,
-    mint_decimals: u8,
     signer_seeds: &[&[&[u8]]],
 ) -> Result<()> {
     system_program::transfer(
@@ -223,7 +222,7 @@ pub fn transfer_sol_to_user<'a>(
             system_program::Transfer { from, to },
             signer_seeds,
         ),
-        amount * 10u64.pow(mint_decimals as u32),
+        amount,
     )
 }
 
@@ -260,5 +259,5 @@ pub struct PoolState {
 }
 
 impl PoolState {
-    pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8;
+    pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8;
 }

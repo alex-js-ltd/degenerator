@@ -49,9 +49,11 @@ pub struct SellToken<'info> {
 }
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
+    let total_supply = ctx.accounts.pool_state.total_supply;
+
     let price = calculate_sell_price(
         ctx.accounts.pool_ata.amount as u128,
-        ctx.accounts.mint.supply as u128,
+        total_supply as u128,
         amount as u128,
     );
     // Get the current supply of tokens
@@ -84,7 +86,6 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
         price,
-        ctx.accounts.mint.decimals,
         &[&[
             POOL_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
@@ -96,27 +97,24 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     let buy_price = calculate_buy_price(
         ctx.accounts.pool_ata.amount as u128,
-        ctx.accounts.mint.supply as u128,
+        total_supply as u128,
         1 as u128,
     );
 
     let sell_price = calculate_sell_price(
         ctx.accounts.pool_ata.amount as u128,
-        ctx.accounts.mint.supply as u128,
+        total_supply as u128,
         1 as u128,
     );
 
-    let progress = calculate_progress(
-        ctx.accounts.pool_ata.amount as u128,
-        ctx.accounts.mint.supply as u128,
-    );
+    let progress = calculate_progress(ctx.accounts.pool_ata.amount as u128, total_supply as u128);
 
     set_pool_state(
         &mut ctx.accounts.pool_state,
         buy_price,
         sell_price,
         ctx.accounts.pool_ata.amount,
-        ctx.accounts.mint.supply,
+        total_supply,
         progress,
     );
 

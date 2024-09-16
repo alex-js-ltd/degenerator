@@ -6,14 +6,8 @@ solana_version = "1.18.17"
 resolution = true
 skip-lint = false
 
-[programs.devnet]
-degenerator = "xkcspDFJpxFbbPvGYDkAJbSKJEU6X2vbv3ouJ4QcKeN"
-
 [programs.localnet]
-degenerator = "xkcspDFJpxFbbPvGYDkAJbSKJEU6X2vbv3ouJ4QcKeN"
-
-[programs.mainnet]
-degenerator = "xkcspDFJpxFbbPvGYDkAJbSKJEU6X2vbv3ouJ4QcKeN"
+degenerator = "4Eb6sPNPp8GfRZ6YGXkHAzU3VRQ1tsT5g13cHALMQ7Y7"
 
 [registry]
 url = "https://api.apr.dev"

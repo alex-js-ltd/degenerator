@@ -218,6 +218,20 @@ describe('initialize', () => {
 		console.log('userAmount after', userAmount.toString())
 	})
 
+	it('check pool state', async () => {
+		const data = await fetchPoolState({ program, mint: mint.publicKey })
+
+		const stringifiedData = Object.entries(data).reduce(
+			(acc, [key, value]) => {
+				acc[key] = value.toString()
+				return acc
+			},
+			{} as Record<string, string>,
+		)
+
+		console.log('pool state', stringifiedData)
+	})
+
 	it('sell token', async () => {
 		const amountToSell = 80
 

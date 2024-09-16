@@ -46,29 +46,25 @@ pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
         ctx.accounts.mint.decimals,
     )?;
 
+    ctx.accounts.mint.reload()?;
     ctx.accounts.pool_ata.reload()?;
     ctx.accounts.raydium_ata.reload()?;
 
-    let buy_price = calculate_buy_price(
-        ctx.accounts.pool_ata.amount as u128,
-        eighty_percent as u128,
-        1 as u128,
-    );
+    let current_supply = ctx.accounts.pool_ata.amount;
+    let total_supply = ctx.accounts.pool_ata.amount;
 
-    let sell_price = calculate_sell_price(
-        ctx.accounts.pool_ata.amount as u128,
-        eighty_percent as u128,
-        1 as u128,
-    );
+    let buy_price = calculate_buy_price(current_supply as u128, total_supply as u128, 1 as u128);
 
-    let progress = calculate_progress(ctx.accounts.pool_ata.amount as u128, eighty_percent as u128);
+    let sell_price = calculate_sell_price(current_supply as u128, total_supply as u128, 1 as u128);
+
+    let progress = calculate_progress(current_supply as u128, total_supply as u128);
 
     set_pool_state(
         &mut ctx.accounts.pool_state,
         buy_price,
         sell_price,
-        ctx.accounts.pool_ata.amount,
-        ctx.accounts.pool_ata.amount,
+        current_supply,
+        total_supply,
         progress,
     );
 
