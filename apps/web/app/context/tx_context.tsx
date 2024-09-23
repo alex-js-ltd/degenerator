@@ -41,10 +41,18 @@ function useMintTx(tx?: Uint8Array) {
 	const { run, ...rest } = mintTx
 
 	const sign = useSignAndSendTx()
+	const router = useRouter()
 
 	useEffect(() => {
-		if (tx) run(sign(tx))
-	}, [run, sign, tx])
+		if (!tx) return
+
+		const mint = sign(tx).then(res => {
+			router.refresh()
+			return res
+		})
+
+		run(mint)
+	}, [run, sign, tx, router])
 
 	return { ...rest }
 }

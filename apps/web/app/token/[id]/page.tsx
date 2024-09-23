@@ -6,8 +6,6 @@ import { Pill } from '@/app/comps/pill'
 import { TokenLogo } from '@/app/comps/token_logo'
 import { Progress } from '@/app/comps/progress'
 import { getPoolState } from '@/app/data/get_pool_state'
-import { type PoolState } from '@repo/degenerator'
-import { BN } from '@coral-xyz/anchor'
 
 export const revalidate = 10
 export const dynamic = 'force-dynamic'
@@ -18,11 +16,9 @@ export default function Page({ params }: { params: { id: string } }) {
 	const mint = res.data.id
 
 	const poolPromise = getPoolState(mint)
-	const poolState = use(poolPromise)
+	const pool = use(poolPromise)
 
-	const { progress } = poolState
-
-	console.log('progress', progress.toString())
+	const { progress } = pool
 
 	return (
 		<div className="w-full sm:max-w-xl flex flex-col gap-6">
