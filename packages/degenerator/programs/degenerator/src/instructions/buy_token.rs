@@ -4,9 +4,8 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
 use crate::utils::{
-    calculate_buy_price, calculate_progress, calculate_sell_price, set_pool_state,
-    transfer_from_pool_vault_to_user, transfer_sol_to_pool_vault, PoolState, POOL_STATE_SEED,
-    POOL_VAULT_SEED,
+    calculate_buy_price, set_pool_state, transfer_from_pool_vault_to_user,
+    transfer_sol_to_pool_vault, PoolState, POOL_STATE_SEED, POOL_VAULT_SEED,
 };
 
 #[derive(Accounts)]
@@ -102,23 +101,10 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
 
     ctx.accounts.pool_ata.reload()?;
 
-    let current_supply = ctx.accounts.pool_ata.amount;
-    let total_supply = ctx.accounts.pool_state.total_supply;
+    let current_supply = ctx.accounts.pool_ata.amount as u128;
+    let total_supply = ctx.accounts.pool_state.total_supply as u128;
 
-    let buy_price = calculate_buy_price(current_supply as u128, total_supply as u128, 1 as u128);
-
-    let sell_price = calculate_sell_price(current_supply as u128, total_supply as u128, 1 as u128);
-
-    let progress = calculate_progress(current_supply as u128, total_supply as u128);
-
-    set_pool_state(
-        &mut ctx.accounts.pool_state,
-        buy_price,
-        sell_price,
-        current_supply,
-        total_supply,
-        progress,
-    );
+    set_pool_state(&mut ctx.accounts.pool_state, current_supply, total_supply);
 
     Ok(())
 }

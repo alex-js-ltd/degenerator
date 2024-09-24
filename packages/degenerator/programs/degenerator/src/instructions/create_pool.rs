@@ -3,9 +3,8 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
-    calculate_buy_price, calculate_progress, calculate_sell_price, set_pool_state, token_mint_to,
-    update_account_lamports_to_minimum_balance, PoolState, POOL_STATE_SEED, POOL_VAULT_SEED,
-    RAYDIUM_VAULT_SEED,
+    set_pool_state, token_mint_to, update_account_lamports_to_minimum_balance, PoolState,
+    POOL_STATE_SEED, POOL_VAULT_SEED, RAYDIUM_VAULT_SEED,
 };
 
 pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
@@ -49,23 +48,10 @@ pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
     ctx.accounts.pool_ata.reload()?;
     ctx.accounts.raydium_ata.reload()?;
 
-    let current_supply = ctx.accounts.pool_ata.amount;
-    let total_supply = ctx.accounts.pool_ata.amount;
+    let current_supply = ctx.accounts.pool_ata.amount as u128;
+    let total_supply = ctx.accounts.pool_ata.amount as u128;
 
-    let buy_price = calculate_buy_price(current_supply as u128, total_supply as u128, 1 as u128);
-
-    let sell_price = calculate_sell_price(current_supply as u128, total_supply as u128, 1 as u128);
-
-    let progress = calculate_progress(current_supply as u128, total_supply as u128);
-
-    set_pool_state(
-        &mut ctx.accounts.pool_state,
-        buy_price,
-        sell_price,
-        current_supply,
-        total_supply,
-        progress,
-    );
+    set_pool_state(&mut ctx.accounts.pool_state, current_supply, total_supply);
 
     Ok(())
 }

@@ -125,17 +125,14 @@ pub fn calculate_progress(current_supply: u128, total_supply: u128) -> u64 {
 /// Sets the price per token in the Pool account.
 pub fn set_pool_state(
     pool_state: &mut Account<PoolState>,
-    buy_price: u64,
-    sell_price: u64,
-    current_supply: u64,
-    total_supply: u64,
-    progress: u64,
+    current_supply: u128,
+    total_supply: u128,
 ) {
-    pool_state.buy_price = buy_price;
-    pool_state.sell_price = sell_price;
-    pool_state.current_supply = current_supply;
-    pool_state.total_supply = total_supply;
-    pool_state.progress = progress;
+    pool_state.current_supply = current_supply as u64;
+    pool_state.total_supply = total_supply as u64;
+    pool_state.buy_price = calculate_buy_price(current_supply, total_supply, 1);
+    pool_state.sell_price = calculate_sell_price(current_supply, total_supply, 1);
+    pool_state.progress = calculate_progress(current_supply, total_supply);
 }
 
 pub fn transfer_from_user_to_pool_vault<'a>(
