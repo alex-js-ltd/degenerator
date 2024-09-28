@@ -19,6 +19,31 @@ import {
 	NATIVE_MINT,
 } from '@solana/spl-token'
 
+// Orca SDK may use older Anchor client internally
+import {
+	ORCA_WHIRLPOOL_PROGRAM_ID,
+	ORCA_WHIRLPOOLS_CONFIG,
+	PDAUtil,
+	PriceMath,
+	SwapUtils,
+	swapQuoteByInputToken,
+	WhirlpoolContext,
+	buildWhirlpoolClient,
+	increaseLiquidityQuoteByInputToken,
+	decreaseLiquidityQuoteByLiquidity,
+	PoolUtil,
+	IGNORE_CACHE,
+	TickUtil,
+} from '@orca-so/whirlpools-sdk'
+import {
+	TransactionBuilder,
+	resolveOrCreateATA,
+	DecimalUtil,
+	Percentage,
+	Wallet,
+	TransactionBuilderOptions,
+} from '@orca-so/common-sdk'
+
 const { BN } = anchor
 
 describe('initialize', () => {
