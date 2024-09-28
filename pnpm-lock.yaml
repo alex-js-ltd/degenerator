@@ -194,6 +194,12 @@ importers:
       '@coral-xyz/anchor':
         specifier: ^0.30.1
         version: 0.30.1
+      '@orca-so/common-sdk':
+        specifier: ^0.6.3
+        version: 0.6.3(@solana/spl-token@0.4.8)(@solana/web3.js@1.95.3)(decimal.js@10.4.3)
+      '@orca-so/whirlpools-sdk':
+        specifier: ^0.13.5
+        version: 0.13.5(@coral-xyz/anchor@0.30.1)(@orca-so/common-sdk@0.6.3)(@solana/spl-token@0.4.8)(@solana/web3.js@1.95.3)(decimal.js@10.4.3)
       '@solana/web3.js':
         specifier: ^1.95.3
         version: 1.95.3
@@ -3016,6 +3022,36 @@ packages:
       which: 4.0.0
     dev: true
 
+  /@orca-so/common-sdk@0.6.3(@solana/spl-token@0.4.8)(@solana/web3.js@1.95.3)(decimal.js@10.4.3):
+    resolution: {integrity: sha512-jeLAjQfr3R1Mg72+hlu5tPih0qY2o9WV00o/nSIR/GtpIWsRPb4Ep0FzYQSI1XH7s+XfSXNuhEWFGsFA/qPMLQ==}
+    peerDependencies:
+      '@solana/spl-token': ^0.4.1
+      '@solana/web3.js': ^1.90.0
+      decimal.js: ^10.4.3
+    dependencies:
+      '@solana/spl-token': 0.4.8(@solana/web3.js@1.95.3)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
+      '@solana/web3.js': 1.95.3
+      decimal.js: 10.4.3
+      tiny-invariant: 1.3.3
+    dev: false
+
+  /@orca-so/whirlpools-sdk@0.13.5(@coral-xyz/anchor@0.30.1)(@orca-so/common-sdk@0.6.3)(@solana/spl-token@0.4.8)(@solana/web3.js@1.95.3)(decimal.js@10.4.3):
+    resolution: {integrity: sha512-QX7tJwyIo9enktAwbQkw0A79VJCV4PL7uDGR52eVAfw1QS0JygPx+NI3dxFPaDtCe4QlDQS4lngbSFyDrRC1eA==}
+    peerDependencies:
+      '@coral-xyz/anchor': ~0.29.0
+      '@orca-so/common-sdk': 0.6.2
+      '@solana/spl-token': ^0.4.8
+      '@solana/web3.js': ^1.90.0
+      decimal.js: ^10.4.3
+    dependencies:
+      '@coral-xyz/anchor': 0.30.1
+      '@orca-so/common-sdk': 0.6.3(@solana/spl-token@0.4.8)(@solana/web3.js@1.95.3)(decimal.js@10.4.3)
+      '@solana/spl-token': 0.4.8(@solana/web3.js@1.95.3)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
+      '@solana/web3.js': 1.95.3
+      decimal.js: 10.4.3
+      tiny-invariant: 1.3.3
+    dev: false
+
   /@panva/hkdf@1.2.1:
     resolution: {integrity: sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw==}
     dev: false
@@ -4444,7 +4480,6 @@ packages:
     dependencies:
       '@solana/errors': 2.0.0-preview.4(typescript@5.5.4)
       typescript: 5.5.4
-    dev: true
 
   /@solana/codecs-data-structures@2.0.0-preview.2:
     resolution: {integrity: sha512-Xf5vIfromOZo94Q8HbR04TbgTwzigqrKII0GjYr21K7rb3nba4hUW2ir8kguY7HWFBcjHGlU5x3MevKBOLp3Zg==}
@@ -4473,7 +4508,6 @@ packages:
       '@solana/codecs-numbers': 2.0.0-preview.4(typescript@5.5.4)
       '@solana/errors': 2.0.0-preview.4(typescript@5.5.4)
       typescript: 5.5.4
-    dev: true
 
   /@solana/codecs-numbers@2.0.0-preview.2:
     resolution: {integrity: sha512-aLZnDTf43z4qOnpTcDsUVy1Ci9im1Md8thWipSWbE+WM9ojZAx528oAql+Cv8M8N+6ALKwgVRhPZkto6E59ARw==}
@@ -4499,7 +4533,6 @@ packages:
       '@solana/codecs-core': 2.0.0-preview.4(typescript@5.5.4)
       '@solana/errors': 2.0.0-preview.4(typescript@5.5.4)
       typescript: 5.5.4
-    dev: true
 
   /@solana/codecs-strings@2.0.0-preview.2(fastestsmallesttextencoderdecoder@1.0.22):
     resolution: {integrity: sha512-EgBwY+lIaHHgMJIqVOGHfIfpdmmUDNoNO/GAUGeFPf+q0dF+DtwhJPEMShhzh64X2MeCZcmSO6Kinx0Bvmmz2g==}
@@ -4535,7 +4568,6 @@ packages:
       '@solana/errors': 2.0.0-preview.4(typescript@5.5.4)
       fastestsmallesttextencoderdecoder: 1.0.22
       typescript: 5.5.4
-    dev: true
 
   /@solana/codecs@2.0.0-preview.2(fastestsmallesttextencoderdecoder@1.0.22):
     resolution: {integrity: sha512-4HHzCD5+pOSmSB71X6w9ptweV48Zj1Vqhe732+pcAQ2cMNnN0gMPMdDq7j3YwaZDZ7yrILVV/3+HTnfT77t2yA==}
@@ -4576,7 +4608,6 @@ packages:
       typescript: 5.5.4
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
-    dev: true
 
   /@solana/errors@2.0.0-preview.2:
     resolution: {integrity: sha512-H2DZ1l3iYF5Rp5pPbJpmmtCauWeQXRJapkDg8epQ8BJ7cA2Ut/QEtC3CMmw/iMTcuS6uemFNLcWvlOfoQhvQuA==}
@@ -4605,7 +4636,6 @@ packages:
       chalk: 5.3.0
       commander: 12.1.0
       typescript: 5.5.4
-    dev: true
 
   /@solana/options@2.0.0-preview.2:
     resolution: {integrity: sha512-FAHqEeH0cVsUOTzjl5OfUBw2cyT8d5Oekx4xcn5hn+NyPAfQJgM3CEThzgRD6Q/4mM5pVUnND3oK/Mt1RzSE/w==}
@@ -4641,7 +4671,6 @@ packages:
       typescript: 5.5.4
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
-    dev: true
 
   /@solana/spl-token-group@0.0.5(@solana/web3.js@1.95.3)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.2):
     resolution: {integrity: sha512-CLJnWEcdoUBpQJfx9WEbX3h6nTdNiUzswfFdkABUik7HVwSNA98u5AYvBVK2H93d9PGMOHAak2lHW9xr+zAJGQ==}
@@ -4669,7 +4698,6 @@ packages:
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
       - typescript
-    dev: true
 
   /@solana/spl-token-metadata@0.1.4(@solana/web3.js@1.95.3)(fastestsmallesttextencoderdecoder@1.0.22):
     resolution: {integrity: sha512-N3gZ8DlW6NWDV28+vCCDJoTqaCZiF/jDUnk3o8GRkAFzHObiR60Bs1gXHBa8zCPdvOwiG6Z3dg5pg7+RW6XNsQ==}
@@ -4737,7 +4765,6 @@ packages:
       - fastestsmallesttextencoderdecoder
       - typescript
       - utf-8-validate
-    dev: true
 
   /@solana/spl-type-length-value@0.1.0:
     resolution: {integrity: sha512-JBMGB0oR4lPttOZ5XiUGyvylwLQjt1CPJa6qQ5oM+MBCndfjz2TKKkw0eATlLLcYmq1jBVsNlJ2cD6ns2GR7lA==}
