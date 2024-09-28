@@ -1,5 +1,5 @@
 {
-  "address": "NJYCgVSessH8DP19GPntbku2ruCjoATL58yrkFzfC8j",
+  "address": "D9xHaxTcxQKRQxTyhyFsPQ1nMGXGfjQ2rVKZ6PmTAEck",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -818,6 +818,47 @@
       ]
     },
     {
+      "name": "proxy_initialize_tick_array",
+      "discriminator": [
+        37,
+        104,
+        240,
+        164,
+        91,
+        224,
+        116,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "whirlpool_program",
+          "address": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc"
+        },
+        {
+          "name": "whirlpool"
+        },
+        {
+          "name": "funder",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "tick_array",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "start_tick_index",
+          "type": "i32"
+        }
+      ]
+    },
+    {
       "name": "revoke_freeze_authority",
       "discriminator": [
         84,
@@ -1099,6 +1140,19 @@
       ]
     },
     {
+      "name": "Whirlpool",
+      "discriminator": [
+        63,
+        149,
+        209,
+        12,
+        225,
+        128,
+        99,
+        9
+      ]
+    },
+    {
       "name": "WhirlpoolsConfig",
       "discriminator": [
         157,
@@ -1184,6 +1238,137 @@
           {
             "name": "progress",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Whirlpool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "whirlpools_config",
+            "type": "pubkey"
+          },
+          {
+            "name": "whirlpool_bump",
+            "type": {
+              "array": [
+                "u8",
+                1
+              ]
+            }
+          },
+          {
+            "name": "tick_spacing",
+            "type": "u16"
+          },
+          {
+            "name": "tick_spacing_seed",
+            "type": {
+              "array": [
+                "u8",
+                2
+              ]
+            }
+          },
+          {
+            "name": "fee_rate",
+            "type": "u16"
+          },
+          {
+            "name": "protocol_fee_rate",
+            "type": "u16"
+          },
+          {
+            "name": "liquidity",
+            "type": "u128"
+          },
+          {
+            "name": "sqrt_price",
+            "type": "u128"
+          },
+          {
+            "name": "tick_current_index",
+            "type": "i32"
+          },
+          {
+            "name": "protocol_fee_owed_a",
+            "type": "u64"
+          },
+          {
+            "name": "protocol_fee_owed_b",
+            "type": "u64"
+          },
+          {
+            "name": "token_mint_a",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_vault_a",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_growth_global_a",
+            "type": "u128"
+          },
+          {
+            "name": "token_mint_b",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_vault_b",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_growth_global_b",
+            "type": "u128"
+          },
+          {
+            "name": "reward_last_updated_timestamp",
+            "type": "u64"
+          },
+          {
+            "name": "reward_infos",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "WhirlpoolRewardInfo"
+                  }
+                },
+                3
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "WhirlpoolRewardInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "emissions_per_second_x64",
+            "type": "u128"
+          },
+          {
+            "name": "growth_global_x64",
+            "type": "u128"
           }
         ]
       }

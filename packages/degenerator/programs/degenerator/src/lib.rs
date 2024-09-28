@@ -4,7 +4,7 @@ mod errors;
 mod instructions;
 mod utils;
 
-declare_id!("NJYCgVSessH8DP19GPntbku2ruCjoATL58yrkFzfC8j");
+declare_id!("D9xHaxTcxQKRQxTyhyFsPQ1nMGXGfjQ2rVKZ6PmTAEck");
 
 #[program]
 pub mod degenerator {
@@ -50,5 +50,12 @@ pub mod degenerator {
         initial_sqrt_price: u128,
     ) -> Result<()> {
         return instructions::proxy_initialize_pool(ctx, tick_spacing, initial_sqrt_price);
+    }
+
+    pub fn proxy_initialize_tick_array(
+        ctx: Context<ProxyInitializeTickArray>,
+        start_tick_index: i32,
+    ) -> Result<()> {
+        return instructions::proxy_initialize_tick_array(ctx, start_tick_index);
     }
 }

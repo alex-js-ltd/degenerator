@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "NJYCgVSessH8DP19GPntbku2ruCjoATL58yrkFzfC8j",
+  "address": "D9xHaxTcxQKRQxTyhyFsPQ1nMGXGfjQ2rVKZ6PmTAEck",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -824,6 +824,47 @@ export type Degenerator = {
       ]
     },
     {
+      "name": "proxyInitializeTickArray",
+      "discriminator": [
+        37,
+        104,
+        240,
+        164,
+        91,
+        224,
+        116,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "whirlpoolProgram",
+          "address": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc"
+        },
+        {
+          "name": "whirlpool"
+        },
+        {
+          "name": "funder",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "tickArray",
+          "writable": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "startTickIndex",
+          "type": "i32"
+        }
+      ]
+    },
+    {
       "name": "revokeFreezeAuthority",
       "discriminator": [
         84,
@@ -1105,6 +1146,19 @@ export type Degenerator = {
       ]
     },
     {
+      "name": "whirlpool",
+      "discriminator": [
+        63,
+        149,
+        209,
+        12,
+        225,
+        128,
+        99,
+        9
+      ]
+    },
+    {
       "name": "whirlpoolsConfig",
       "discriminator": [
         157,
@@ -1190,6 +1244,137 @@ export type Degenerator = {
           {
             "name": "progress",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "whirlpool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "whirlpoolsConfig",
+            "type": "pubkey"
+          },
+          {
+            "name": "whirlpoolBump",
+            "type": {
+              "array": [
+                "u8",
+                1
+              ]
+            }
+          },
+          {
+            "name": "tickSpacing",
+            "type": "u16"
+          },
+          {
+            "name": "tickSpacingSeed",
+            "type": {
+              "array": [
+                "u8",
+                2
+              ]
+            }
+          },
+          {
+            "name": "feeRate",
+            "type": "u16"
+          },
+          {
+            "name": "protocolFeeRate",
+            "type": "u16"
+          },
+          {
+            "name": "liquidity",
+            "type": "u128"
+          },
+          {
+            "name": "sqrtPrice",
+            "type": "u128"
+          },
+          {
+            "name": "tickCurrentIndex",
+            "type": "i32"
+          },
+          {
+            "name": "protocolFeeOwedA",
+            "type": "u64"
+          },
+          {
+            "name": "protocolFeeOwedB",
+            "type": "u64"
+          },
+          {
+            "name": "tokenMintA",
+            "type": "pubkey"
+          },
+          {
+            "name": "tokenVaultA",
+            "type": "pubkey"
+          },
+          {
+            "name": "feeGrowthGlobalA",
+            "type": "u128"
+          },
+          {
+            "name": "tokenMintB",
+            "type": "pubkey"
+          },
+          {
+            "name": "tokenVaultB",
+            "type": "pubkey"
+          },
+          {
+            "name": "feeGrowthGlobalB",
+            "type": "u128"
+          },
+          {
+            "name": "rewardLastUpdatedTimestamp",
+            "type": "u64"
+          },
+          {
+            "name": "rewardInfos",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "whirlpoolRewardInfo"
+                  }
+                },
+                3
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "whirlpoolRewardInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "emissionsPerSecondX64",
+            "type": "u128"
+          },
+          {
+            "name": "growthGlobalX64",
+            "type": "u128"
           }
         ]
       }
