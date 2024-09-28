@@ -107,64 +107,24 @@ describe('initialize', () => {
 		expect(isRentExempt).toBe(true)
 	})
 
-	it('check pool state', async () => {
-		const data = await fetchPoolState({ program, mint: mint.publicKey })
+	it('current supply should be 80% of supply', async () => {
+		const { currentSupply } = await fetchPoolState({
+			program,
+			mint: mint.publicKey,
+		})
 
-		const stringifiedData = Object.entries(data).reduce(
-			(acc, [key, value]) => {
-				acc[key] = value.toString()
-				return acc
-			},
-			{} as Record<string, string>,
+		// Convert the supply into the smallest unit considering the decimals
+		const supplyBN = new anchor.BN(supply).mul(
+			new anchor.BN(10).pow(new anchor.BN(decimals)),
 		)
 
-		console.log('pool state', stringifiedData)
-	})
+		// Correctly calculate 80% of the total supply
+		const expectedSupply = supplyBN
+			.mul(new anchor.BN(80))
+			.div(new anchor.BN(100))
 
-	it('check pool token amount ', async () => {
-		// Fetch pool and user account data
-		const pool = await getAccount(
-			connection,
-			poolATA,
-			'processed',
-			TOKEN_2022_PROGRAM_ID,
-		)
-
-		const raydium = await getAccount(
-			connection,
-			raydiumATA,
-			'processed',
-			TOKEN_2022_PROGRAM_ID,
-		)
-
-		// Extract amounts (assumed to be BigInt values)
-		const poolAmount = pool.amount // BigInt
-		const raydiumAmount = raydium.amount // BigInt
-
-		console.log('pool amount', poolAmount.toString())
-
-		console.log('raydium amount', raydiumAmount.toString())
-
-		// supply is 100 tokens with 9 decimals, so multiply by 10^9
-		const _supply = BigInt(supply * 10 ** decimals) // total supply in smallest unit
-		const expectedPoolAmount = (_supply * BigInt(80)) / BigInt(100) // calculate 80% of supply in smallest unit
-
-		// Assert that the pool amount is equal to the expected amount
-		expect(poolAmount).toBe(expectedPoolAmount)
-	})
-
-	it('check pool sol amount', async () => {
-		// Fetch pool and user account data
-		const pool = await connection.getBalance(poolATA)
-
-		console.log(pool)
-	})
-
-	it('check user sol amount', async () => {
-		// Fetch pool and user account data
-		const user = await connection.getBalance(payer.publicKey)
-
-		console.log('payer sol', user)
+		// Ensure that currentSupply equals expectedSupply
+		expect(currentSupply.eq(expectedSupply)).toBe(true)
 	})
 
 	it('buy token', async () => {
@@ -188,48 +148,34 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
-		console.log(res)
 		expect(res.value.err).toBeNull()
 
 		// Confirm the transaction
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check pool token ', async () => {
-		// Fetch pool and user account data
-		const pool = await getAccount(
-			connection,
-			poolATA,
-			'processed',
-			TOKEN_2022_PROGRAM_ID,
-		)
+	it('progess should be 100%', async () => {
+		const { progress } = await fetchPoolState({
+			program,
+			mint: mint.publicKey,
+		})
 
-		const user = await getAccount(
-			connection,
-			payerATA,
-			'processed',
-			TOKEN_2022_PROGRAM_ID,
-		)
+		const expectedProgress = new BN(100)
 
-		// Extract amounts (assumed to be BigInt values)
-		const poolAmount = pool.amount // BigInt
-		const userAmount = user.amount // BigInt
-
-		console.log('userAmount after', userAmount.toString())
+		// Ensure that currentSupply equals expectedSupply
+		expect(progress.eq(expectedProgress)).toBe(true)
 	})
 
-	it('check pool state', async () => {
-		const data = await fetchPoolState({ program, mint: mint.publicKey })
+	it('current supply should be 0', async () => {
+		const { currentSupply } = await fetchPoolState({
+			program,
+			mint: mint.publicKey,
+		})
 
-		const stringifiedData = Object.entries(data).reduce(
-			(acc, [key, value]) => {
-				acc[key] = value.toString()
-				return acc
-			},
-			{} as Record<string, string>,
-		)
+		const expectedCurrentSupply = new BN(0)
 
-		console.log('pool state', stringifiedData)
+		// Ensure that currentSupply equals expectedSupply
+		expect(currentSupply.eq(expectedCurrentSupply)).toBe(true)
 	})
 
 	it('sell token', async () => {
@@ -253,24 +199,19 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
-		console.log(res)
 		expect(res.value.err).toBeNull()
 
 		// Confirm the transaction
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check pool state', async () => {
-		const data = await fetchPoolState({ program, mint: mint.publicKey })
+	it('progess should be 0%', async () => {
+		const { progress } = await fetchPoolState({
+			program,
+			mint: mint.publicKey,
+		})
 
-		const stringifiedData = Object.entries(data).reduce(
-			(acc, [key, value]) => {
-				acc[key] = value.toString()
-				return acc
-			},
-			{} as Record<string, string>,
-		)
-
-		console.log('pool state', stringifiedData)
+		const expectedProgress = new BN(0)
+		expect(progress.eq(expectedProgress)).toBe(true)
 	})
 })

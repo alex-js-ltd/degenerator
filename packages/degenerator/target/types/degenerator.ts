@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "EfyhXWTvBiEBiJPzvSiyvjNFykLBXwPoHFKRUBFp7fkL",
+  "address": "3q6L4y1CCrrrL6DFBPuC1YfNCL4FpUWLrHNviKC5E5MX",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -752,6 +752,81 @@ export type Degenerator = {
       ]
     },
     {
+      "name": "proxyInitializePool",
+      "discriminator": [
+        173,
+        5,
+        238,
+        44,
+        102,
+        188,
+        177,
+        139
+      ],
+      "accounts": [
+        {
+          "name": "whirlpoolProgram",
+          "address": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc"
+        },
+        {
+          "name": "whirlpoolsConfig",
+          "relations": [
+            "feeTier"
+          ]
+        },
+        {
+          "name": "tokenMintA"
+        },
+        {
+          "name": "tokenMintB"
+        },
+        {
+          "name": "funder",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "whirlpool",
+          "writable": true
+        },
+        {
+          "name": "tokenVaultA",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "tokenVaultB",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "feeTier"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "tickSpacing",
+          "type": "u16"
+        },
+        {
+          "name": "initialSqrtPrice",
+          "type": "u128"
+        }
+      ]
+    },
+    {
       "name": "revokeFreezeAuthority",
       "discriminator": [
         84,
@@ -1007,6 +1082,19 @@ export type Degenerator = {
   ],
   "accounts": [
     {
+      "name": "feeTier",
+      "discriminator": [
+        56,
+        75,
+        159,
+        76,
+        142,
+        68,
+        190,
+        105
+      ]
+    },
+    {
       "name": "poolState",
       "discriminator": [
         247,
@@ -1017,6 +1105,19 @@ export type Degenerator = {
         195,
         222,
         70
+      ]
+    },
+    {
+      "name": "whirlpoolsConfig",
+      "discriminator": [
+        157,
+        20,
+        49,
+        224,
+        217,
+        87,
+        193,
+        254
       ]
     }
   ],
@@ -1049,6 +1150,26 @@ export type Degenerator = {
       }
     },
     {
+      "name": "feeTier",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "whirlpoolsConfig",
+            "type": "pubkey"
+          },
+          {
+            "name": "tickSpacing",
+            "type": "u16"
+          },
+          {
+            "name": "defaultFeeRate",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
       "name": "poolState",
       "type": {
         "kind": "struct",
@@ -1072,6 +1193,30 @@ export type Degenerator = {
           {
             "name": "progress",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "whirlpoolsConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "feeAuthority",
+            "type": "pubkey"
+          },
+          {
+            "name": "collectProtocolFeesAuthority",
+            "type": "pubkey"
+          },
+          {
+            "name": "rewardEmissionsSuperAuthority",
+            "type": "pubkey"
+          },
+          {
+            "name": "defaultProtocolFeeRate",
+            "type": "u16"
           }
         ]
       }

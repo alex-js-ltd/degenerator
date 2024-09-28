@@ -1,5 +1,5 @@
 {
-  "address": "EfyhXWTvBiEBiJPzvSiyvjNFykLBXwPoHFKRUBFp7fkL",
+  "address": "3q6L4y1CCrrrL6DFBPuC1YfNCL4FpUWLrHNviKC5E5MX",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -746,6 +746,81 @@
       ]
     },
     {
+      "name": "proxy_initialize_pool",
+      "discriminator": [
+        173,
+        5,
+        238,
+        44,
+        102,
+        188,
+        177,
+        139
+      ],
+      "accounts": [
+        {
+          "name": "whirlpool_program",
+          "address": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc"
+        },
+        {
+          "name": "whirlpools_config",
+          "relations": [
+            "fee_tier"
+          ]
+        },
+        {
+          "name": "token_mint_a"
+        },
+        {
+          "name": "token_mint_b"
+        },
+        {
+          "name": "funder",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "whirlpool",
+          "writable": true
+        },
+        {
+          "name": "token_vault_a",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_vault_b",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "fee_tier"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "tick_spacing",
+          "type": "u16"
+        },
+        {
+          "name": "initial_sqrt_price",
+          "type": "u128"
+        }
+      ]
+    },
+    {
       "name": "revoke_freeze_authority",
       "discriminator": [
         84,
@@ -1001,6 +1076,19 @@
   ],
   "accounts": [
     {
+      "name": "FeeTier",
+      "discriminator": [
+        56,
+        75,
+        159,
+        76,
+        142,
+        68,
+        190,
+        105
+      ]
+    },
+    {
       "name": "PoolState",
       "discriminator": [
         247,
@@ -1011,6 +1099,19 @@
         195,
         222,
         70
+      ]
+    },
+    {
+      "name": "WhirlpoolsConfig",
+      "discriminator": [
+        157,
+        20,
+        49,
+        224,
+        217,
+        87,
+        193,
+        254
       ]
     }
   ],
@@ -1043,6 +1144,26 @@
       }
     },
     {
+      "name": "FeeTier",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "whirlpools_config",
+            "type": "pubkey"
+          },
+          {
+            "name": "tick_spacing",
+            "type": "u16"
+          },
+          {
+            "name": "default_fee_rate",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
       "name": "PoolState",
       "type": {
         "kind": "struct",
@@ -1066,6 +1187,30 @@
           {
             "name": "progress",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WhirlpoolsConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "fee_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "collect_protocol_fees_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "reward_emissions_super_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "default_protocol_fee_rate",
+            "type": "u16"
           }
         ]
       }
