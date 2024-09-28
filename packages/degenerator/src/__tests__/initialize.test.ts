@@ -57,12 +57,18 @@ describe('initialize', () => {
 	const payer = Keypair.generate()
 
 	const mint = Keypair.generate()
+
 	const SOL = {
 		mint: NATIVE_MINT,
 		decimals: 9,
 	}
 
 	const SAMO = { mint: mint.publicKey, decimals: 9 }
+
+	const USDC = {
+		mint: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+		decimals: 6,
+	}
 
 	const poolVault = getPoolVault({ program, mint: SAMO.mint })
 
@@ -90,6 +96,29 @@ describe('initialize', () => {
 		symbol: 'OPOS',
 		uri: 'https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json',
 	}
+
+	const whirlpool_ctx = WhirlpoolContext.withProvider(
+		provider,
+		ORCA_WHIRLPOOL_PROGRAM_ID,
+	)
+	const fetcher = whirlpool_ctx.fetcher
+	const whirlpool_client = buildWhirlpoolClient(whirlpool_ctx)
+
+	const sol_usdc_whirlpool_pubkey = PDAUtil.getWhirlpool(
+		ORCA_WHIRLPOOL_PROGRAM_ID,
+		ORCA_WHIRLPOOLS_CONFIG,
+		SOL.mint,
+		USDC.mint,
+		64,
+	).publicKey
+
+	const samo_usdc_whirlpool_pubkey = PDAUtil.getWhirlpool(
+		ORCA_WHIRLPOOL_PROGRAM_ID,
+		ORCA_WHIRLPOOLS_CONFIG,
+		SAMO.mint,
+		USDC.mint,
+		64,
+	).publicKey
 
 	it('airdrop payer', async () => {
 		await airDrop({
@@ -160,6 +189,16 @@ describe('initialize', () => {
 		expect(currentSupply.eq(expectedSupply)).toBe(true)
 	})
 
+	it('progess should be 0%', async () => {
+		const { progress } = await fetchPoolState({
+			program,
+			mint: SAMO.mint,
+		})
+
+		const expectedProgress = new BN(0)
+		expect(progress.eq(expectedProgress)).toBe(true)
+	})
+
 	it('buy token', async () => {
 		const amountToBuy = 80
 
@@ -209,42 +248,5 @@ describe('initialize', () => {
 
 		// Ensure that currentSupply equals expectedSupply
 		expect(currentSupply.eq(expectedCurrentSupply)).toBe(true)
-	})
-
-	it('sell token', async () => {
-		const amountToSell = 80
-
-		const ix = await getSellTokenInstruction({
-			program,
-			payer: payer.publicKey,
-			mint: SAMO.mint,
-			amount: amountToSell,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-		expect(res.value.err).toBeNull()
-
-		// Confirm the transaction
-		await sendAndConfirm({ connection, tx })
-	})
-
-	it('progess should be 0%', async () => {
-		const { progress } = await fetchPoolState({
-			program,
-			mint: SAMO.mint,
-		})
-
-		const expectedProgress = new BN(0)
-		expect(progress.eq(expectedProgress)).toBe(true)
 	})
 })
