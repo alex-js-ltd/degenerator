@@ -13,7 +13,11 @@ import {
 	getSellTokenInstruction,
 	fetchPoolState,
 } from '../index'
-import { getAccount, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import {
+	getAccount,
+	TOKEN_2022_PROGRAM_ID,
+	NATIVE_MINT,
+} from '@solana/spl-token'
 
 const { BN } = anchor
 
@@ -28,7 +32,7 @@ describe('initialize', () => {
 	const payer = Keypair.generate()
 
 	const SOL = {
-		mint: new PublicKey('So11111111111111111111111111111111111111112'),
+		mint: NATIVE_MINT,
 		decimals: 9,
 	}
 	const WIF = { mint: Keypair.generate(), decimals: 9 }
@@ -54,8 +58,6 @@ describe('initialize', () => {
 
 	const supply = 100
 
-	const decimals = 9
-
 	const metadata = {
 		name: 'OPOS',
 		symbol: 'OPOS',
@@ -79,7 +81,7 @@ describe('initialize', () => {
 					payer: payer.publicKey,
 					mint: WIF.mint.publicKey,
 					metadata,
-					decimals,
+					decimals: WIF.decimals,
 					supply,
 				})),
 			],
@@ -119,7 +121,7 @@ describe('initialize', () => {
 
 		// Convert the supply into the smallest unit considering the decimals
 		const supplyBN = new anchor.BN(supply).mul(
-			new anchor.BN(10).pow(new anchor.BN(decimals)),
+			new anchor.BN(10).pow(new anchor.BN(WIF.decimals)),
 		)
 
 		// Correctly calculate 80% of the total supply
