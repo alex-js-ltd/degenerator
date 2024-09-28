@@ -1,5 +1,5 @@
 import * as anchor from '@coral-xyz/anchor'
-import { Keypair } from '@solana/web3.js'
+import { PublicKey, Keypair } from '@solana/web3.js'
 import {
 	type Degenerator,
 	airDrop,
@@ -27,24 +27,28 @@ describe('initialize', () => {
 
 	const payer = Keypair.generate()
 
-	const mint = Keypair.generate()
+	const SOL = {
+		mint: new PublicKey('So11111111111111111111111111111111111111112'),
+		decimals: 9,
+	}
+	const WIF = { mint: Keypair.generate(), decimals: 9 }
 
-	const poolVault = getPoolVault({ program, mint: mint.publicKey })
+	const poolVault = getPoolVault({ program, mint: WIF.mint.publicKey })
 
-	const orcaVault = getOrcaVault({ program, mint: mint.publicKey })
+	const orcaVault = getOrcaVault({ program, mint: WIF.mint.publicKey })
 
 	const poolATA = getAssociatedAddress({
-		mint: mint.publicKey,
+		mint: WIF.mint.publicKey,
 		owner: poolVault,
 	})
 
 	const payerATA = getAssociatedAddress({
-		mint: mint.publicKey,
+		mint: WIF.mint.publicKey,
 		owner: payer.publicKey,
 	})
 
 	const orcaATA = getAssociatedAddress({
-		mint: mint.publicKey,
+		mint: WIF.mint.publicKey,
 		owner: orcaVault,
 	})
 
@@ -73,13 +77,13 @@ describe('initialize', () => {
 				...(await getMintInstructions({
 					program,
 					payer: payer.publicKey,
-					mint: mint.publicKey,
+					mint: WIF.mint.publicKey,
 					metadata,
 					decimals,
 					supply,
 				})),
 			],
-			signers: [mint],
+			signers: [WIF.mint],
 		})
 
 		tx.sign([payer])
@@ -110,7 +114,7 @@ describe('initialize', () => {
 	it('current supply should be 80% of supply', async () => {
 		const { currentSupply } = await fetchPoolState({
 			program,
-			mint: mint.publicKey,
+			mint: WIF.mint.publicKey,
 		})
 
 		// Convert the supply into the smallest unit considering the decimals
@@ -133,7 +137,7 @@ describe('initialize', () => {
 		const ix = await getBuyTokenInstruction({
 			program,
 			payer: payer.publicKey,
-			mint: mint.publicKey,
+			mint: WIF.mint.publicKey,
 			amount: amountToBuy,
 		})
 
@@ -157,7 +161,7 @@ describe('initialize', () => {
 	it('progess should be 100%', async () => {
 		const { progress } = await fetchPoolState({
 			program,
-			mint: mint.publicKey,
+			mint: WIF.mint.publicKey,
 		})
 
 		const expectedProgress = new BN(100)
@@ -169,7 +173,7 @@ describe('initialize', () => {
 	it('current supply should be 0', async () => {
 		const { currentSupply } = await fetchPoolState({
 			program,
-			mint: mint.publicKey,
+			mint: WIF.mint.publicKey,
 		})
 
 		const expectedCurrentSupply = new BN(0)
@@ -184,7 +188,7 @@ describe('initialize', () => {
 		const ix = await getSellTokenInstruction({
 			program,
 			payer: payer.publicKey,
-			mint: mint.publicKey,
+			mint: WIF.mint.publicKey,
 			amount: amountToSell,
 		})
 
@@ -208,7 +212,7 @@ describe('initialize', () => {
 	it('progess should be 0%', async () => {
 		const { progress } = await fetchPoolState({
 			program,
-			mint: mint.publicKey,
+			mint: WIF.mint.publicKey,
 		})
 
 		const expectedProgress = new BN(0)
