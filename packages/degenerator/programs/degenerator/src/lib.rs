@@ -43,4 +43,12 @@ pub mod degenerator {
     pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         instructions::sell_token(ctx, amount)
     }
+
+    pub fn proxy_initialize_pool(
+        ctx: Context<ProxyInitializePool>,
+        tick_spacing: u16,
+        initial_sqrt_price: u128,
+    ) -> Result<()> {
+        return instructions::proxy_initialize_pool(ctx, tick_spacing, initial_sqrt_price);
+    }
 }
