@@ -4,7 +4,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
     set_pool_state, token_mint_to, update_account_lamports_to_minimum_balance, PoolState,
-    POOL_STATE_SEED, POOL_VAULT_SEED, RAYDIUM_VAULT_SEED,
+    ORCA_VAULT_SEED, POOL_STATE_SEED, POOL_VAULT_SEED,
 };
 
 pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
@@ -16,7 +16,7 @@ pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
     )?;
 
     update_account_lamports_to_minimum_balance(
-        ctx.accounts.raydium_vault.to_account_info(),
+        ctx.accounts.orca_vault.to_account_info(),
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
     )?;
@@ -39,14 +39,14 @@ pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
-        ctx.accounts.raydium_ata.to_account_info(),
+        ctx.accounts.orca_ata.to_account_info(),
         twenty_percent,
         ctx.accounts.mint.decimals,
     )?;
 
     ctx.accounts.mint.reload()?;
     ctx.accounts.pool_ata.reload()?;
-    ctx.accounts.raydium_ata.reload()?;
+    ctx.accounts.orca_ata.reload()?;
 
     let current_supply = ctx.accounts.pool_ata.amount as u128;
     let total_supply = ctx.accounts.pool_ata.amount as u128;
@@ -71,10 +71,10 @@ pub struct CreatePool<'info> {
 
     /// CHECK: pda to control pool_ata & store lamports
     #[account(mut,
-            seeds = [RAYDIUM_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+            seeds = [ORCA_VAULT_SEED.as_bytes(), mint.key().as_ref()],
             bump,
         )]
-    pub raydium_vault: AccountInfo<'info>,
+    pub orca_vault: AccountInfo<'info>,
 
     /// The Mint for which the ATA is being created
     pub mint: Box<InterfaceAccount<'info, Mint>>,
@@ -93,9 +93,9 @@ pub struct CreatePool<'info> {
             init,
             payer = payer,
             associated_token::mint = mint,
-            associated_token::authority = raydium_vault,
+            associated_token::authority = orca_vault,
         )]
-    pub raydium_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub orca_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// pda to store current price
     #[account(init,

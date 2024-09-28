@@ -64,7 +64,7 @@ function getPoolVault({
 	)[0]
 }
 
-function getRaydiumVault({
+function getOrcaVault({
 	program,
 	mint,
 }: {
@@ -72,7 +72,7 @@ function getRaydiumVault({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('raydium_vault'), mint.toBuffer()],
+		[Buffer.from('orca_vault'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }
@@ -182,11 +182,11 @@ async function getMintInstructions({
 		owner: poolVault,
 	})
 
-	const raydiumVault = getRaydiumVault({ program, mint })
+	const orcaVault = getOrcaVault({ program, mint })
 
-	const raydiumATA = getAssociatedAddress({
+	const orcaATA = getAssociatedAddress({
 		mint: mint,
-		owner: raydiumVault,
+		owner: orcaVault,
 	})
 
 	const [extraMetasAccount] = PublicKey.findProgramAddressSync(
@@ -219,8 +219,8 @@ async function getMintInstructions({
 			poolAta: poolATA,
 			mint: mint,
 			poolVault: poolVault,
-			raydiumVault: raydiumVault,
-			raydiumAta: raydiumATA,
+			orcaVault: orcaVault,
+			orcaAta: orcaATA,
 			poolState: poolState,
 			payerAta: payerATA,
 			systemProgram: web3.SystemProgram.programId,
@@ -361,7 +361,7 @@ export {
 	airDrop,
 	getAssociatedAddress,
 	getPoolVault,
-	getRaydiumVault,
+	getOrcaVault,
 	getPoolState,
 	buildTransaction,
 	getMintInstructions,

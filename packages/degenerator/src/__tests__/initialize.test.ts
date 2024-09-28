@@ -7,7 +7,7 @@ import {
 	buildTransaction,
 	sendAndConfirm,
 	getPoolVault,
-	getRaydiumVault,
+	getOrcaVault,
 	getAssociatedAddress,
 	getBuyTokenInstruction,
 	getSellTokenInstruction,
@@ -31,7 +31,7 @@ describe('initialize', () => {
 
 	const poolVault = getPoolVault({ program, mint: mint.publicKey })
 
-	const raydiumVault = getRaydiumVault({ program, mint: mint.publicKey })
+	const orcaVault = getOrcaVault({ program, mint: mint.publicKey })
 
 	const poolATA = getAssociatedAddress({
 		mint: mint.publicKey,
@@ -43,9 +43,9 @@ describe('initialize', () => {
 		owner: payer.publicKey,
 	})
 
-	const raydiumATA = getAssociatedAddress({
+	const orcaATA = getAssociatedAddress({
 		mint: mint.publicKey,
-		owner: raydiumVault,
+		owner: orcaVault,
 	})
 
 	const supply = 100

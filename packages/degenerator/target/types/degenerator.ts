@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "3q6L4y1CCrrrL6DFBPuC1YfNCL4FpUWLrHNviKC5E5MX",
+  "address": "NJYCgVSessH8DP19GPntbku2ruCjoATL58yrkFzfC8j",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -424,20 +424,17 @@ export type Degenerator = {
           }
         },
         {
-          "name": "raydiumVault",
+          "name": "orcaVault",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
+                  111,
                   114,
+                  99,
                   97,
-                  121,
-                  100,
-                  105,
-                  117,
-                  109,
                   95,
                   118,
                   97,
@@ -553,7 +550,7 @@ export type Degenerator = {
           }
         },
         {
-          "name": "raydiumAta",
+          "name": "orcaAta",
           "docs": [
             "The ATA that will be created"
           ],
@@ -562,7 +559,7 @@ export type Degenerator = {
             "seeds": [
               {
                 "kind": "account",
-                "path": "raydiumVault"
+                "path": "orcaVault"
               },
               {
                 "kind": "const",

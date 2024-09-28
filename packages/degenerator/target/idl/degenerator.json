@@ -1,5 +1,5 @@
 {
-  "address": "3q6L4y1CCrrrL6DFBPuC1YfNCL4FpUWLrHNviKC5E5MX",
+  "address": "NJYCgVSessH8DP19GPntbku2ruCjoATL58yrkFzfC8j",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -418,20 +418,17 @@
           }
         },
         {
-          "name": "raydium_vault",
+          "name": "orca_vault",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
+                  111,
                   114,
+                  99,
                   97,
-                  121,
-                  100,
-                  105,
-                  117,
-                  109,
                   95,
                   118,
                   97,
@@ -547,7 +544,7 @@
           }
         },
         {
-          "name": "raydium_ata",
+          "name": "orca_ata",
           "docs": [
             "The ATA that will be created"
           ],
@@ -556,7 +553,7 @@
             "seeds": [
               {
                 "kind": "account",
-                "path": "raydium_vault"
+                "path": "orca_vault"
               },
               {
                 "kind": "const",
