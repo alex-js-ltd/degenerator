@@ -3,9 +3,11 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
-    set_pool_state, token_mint_to, update_account_lamports_to_minimum_balance, PoolState,
-    ORCA_VAULT_SEED, POOL_STATE_SEED, POOL_VAULT_SEED,
+    set_pool_state, token_mint_to, update_account_lamports_to_minimum_balance, ORCA_VAULT_SEED,
+    POOL_STATE_SEED, POOL_VAULT_SEED,
 };
+
+use crate::state::PoolState;
 
 pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
     // transfer minimum rent to pool account

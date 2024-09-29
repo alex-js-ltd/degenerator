@@ -2,9 +2,10 @@ use anchor_lang::prelude::*;
 
 mod errors;
 mod instructions;
+mod state;
 mod utils;
 
-declare_id!("3FVzJvAAU1WJEk6SeS44SJtSUmzGdk4pemwEb2bW2mx6");
+declare_id!("EAcDKrHzsqQbfH7tAz11534NAkzhuJRfBrgRriYrP1jw");
 
 #[program]
 pub mod degenerator {

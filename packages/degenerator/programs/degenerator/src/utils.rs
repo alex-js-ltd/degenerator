@@ -17,6 +17,8 @@ use anchor_spl::token_interface::spl_token_2022::{
 use spl_tlv_account_resolution::{account::ExtraAccountMeta, state::ExtraAccountMetaList};
 use spl_type_length_value::variable_len_pack::VariableLenPack;
 
+use crate::state::PoolState;
+
 pub const POOL_VAULT_SEED: &str = "pool_vault";
 pub const ORCA_VAULT_SEED: &str = "orca_vault";
 pub const POOL_STATE_SEED: &str = "pool_state";
@@ -243,18 +245,4 @@ pub fn token_mint_to<'a>(
         ),
         amount * 10u64.pow(mint_decimals as u32), // Mint tokens
     )
-}
-
-#[account]
-#[derive(InitSpace)]
-pub struct PoolState {
-    pub buy_price: u64,
-    pub sell_price: u64,
-    pub current_supply: u64,
-    pub total_supply: u64,
-    pub progress: u64,
-}
-
-impl PoolState {
-    pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8;
 }
