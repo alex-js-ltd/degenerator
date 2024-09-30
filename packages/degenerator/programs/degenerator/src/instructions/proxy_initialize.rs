@@ -4,49 +4,27 @@ use anchor_spl::{
     token::Token,
     token_interface::{Mint, TokenAccount, TokenInterface},
 };
-use raydium_cp_swap::{
-    cpi,
-    program::RaydiumCpSwap,
-    states::{AmmConfig, OBSERVATION_SEED, POOL_LP_MINT_SEED, POOL_SEED, POOL_VAULT_SEED},
-};
+
 use solana_program::{
     instruction::{AccountMeta, Instruction}, // For handling Solana instructions
     program::invoke,
-    system_program, // Solana's system program
 };
 
 #[derive(Accounts)]
 pub struct ProxyInitialize<'info> {
+    /// CHECK: cp_swap_program
     pub cp_swap_program: UncheckedAccount<'info>,
     /// Address paying to create the pool. Can be anyone
     #[account(mut)]
     pub creator: Signer<'info>,
 
-    /// Which config the pool belongs to.
+    /// CHECK: amm_config
     pub amm_config: UncheckedAccount<'info>,
 
     /// CHECK: pool vault and lp mint authority
-    #[account(
-        seeds = [
-            raydium_cp_swap::AUTH_SEED.as_bytes(),
-        ],
-        seeds::program = cp_swap_program,
-        bump,
-    )]
     pub authority: UncheckedAccount<'info>,
 
     /// CHECK: Initialize an account to store the pool state, init by cp-swap
-    #[account(
-        mut,
-        seeds = [
-            POOL_SEED.as_bytes(),
-            amm_config.key().as_ref(),
-            token_0_mint.key().as_ref(),
-            token_1_mint.key().as_ref(),
-        ],
-        seeds::program = cp_swap_program,
-        bump,
-    )]
     pub pool_state: UncheckedAccount<'info>,
 
     /// Token_0 mint, the key must smaller then token_1 mint.
@@ -63,15 +41,6 @@ pub struct ProxyInitialize<'info> {
     pub token_1_mint: Box<InterfaceAccount<'info, Mint>>,
 
     /// CHECK: pool lp mint, init by cp-swap
-    #[account(
-        mut,
-        seeds = [
-            POOL_LP_MINT_SEED.as_bytes(),
-            pool_state.key().as_ref(),
-        ],
-        seeds::program = cp_swap_program,
-        bump,
-    )]
     pub lp_mint: UncheckedAccount<'info>,
 
     /// payer token0 account
@@ -95,29 +64,9 @@ pub struct ProxyInitialize<'info> {
     pub creator_lp_token: UncheckedAccount<'info>,
 
     /// CHECK: Token_0 vault for the pool, init by cp-swap
-    #[account(
-        mut,
-        seeds = [
-            POOL_VAULT_SEED.as_bytes(),
-            pool_state.key().as_ref(),
-            token_0_mint.key().as_ref()
-        ],
-        seeds::program = cp_swap_program,
-        bump,
-    )]
     pub token_0_vault: UncheckedAccount<'info>,
 
     /// CHECK: Token_1 vault for the pool, init by cp-swap
-    #[account(
-        mut,
-        seeds = [
-            POOL_VAULT_SEED.as_bytes(),
-            pool_state.key().as_ref(),
-            token_1_mint.key().as_ref()
-        ],
-        seeds::program = cp_swap_program,
-        bump,
-    )]
     pub token_1_vault: UncheckedAccount<'info>,
 
     /// create pool fee account
@@ -128,15 +77,6 @@ pub struct ProxyInitialize<'info> {
     pub create_pool_fee: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// CHECK: an account to store oracle observations, init by cp-swap
-    #[account(
-        mut,
-        seeds = [
-            OBSERVATION_SEED.as_bytes(),
-            pool_state.key().as_ref(),
-        ],
-        seeds::program = cp_swap_program,
-        bump,
-    )]
     pub observation_state: UncheckedAccount<'info>,
 
     /// Program to create mint account and mint tokens

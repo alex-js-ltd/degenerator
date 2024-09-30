@@ -20,7 +20,7 @@ use spl_type_length_value::variable_len_pack::VariableLenPack;
 use crate::state::PoolState;
 
 pub const POOL_VAULT_SEED: &str = "pool_vault";
-pub const ORCA_VAULT_SEED: &str = "orca_vault";
+pub const RAYDIUM_VAULT_SEED: &str = "raydium_vault";
 pub const POOL_STATE_SEED: &str = "pool_state";
 pub const META_LIST_ACCOUNT_SEED: &str = "extra-account-metas";
 

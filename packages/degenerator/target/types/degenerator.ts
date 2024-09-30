@@ -752,6 +752,145 @@ export type Degenerator = {
       ]
     },
     {
+      "name": "proxyInitialize",
+      "discriminator": [
+        185,
+        41,
+        170,
+        16,
+        237,
+        245,
+        76,
+        134
+      ],
+      "accounts": [
+        {
+          "name": "cpSwapProgram"
+        },
+        {
+          "name": "creator",
+          "docs": [
+            "Address paying to create the pool. Can be anyone"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "ammConfig"
+        },
+        {
+          "name": "authority"
+        },
+        {
+          "name": "poolState"
+        },
+        {
+          "name": "token0Mint",
+          "docs": [
+            "Token_0 mint, the key must smaller then token_1 mint."
+          ]
+        },
+        {
+          "name": "token1Mint",
+          "docs": [
+            "Token_1 mint, the key must grater then token_0 mint."
+          ]
+        },
+        {
+          "name": "lpMint"
+        },
+        {
+          "name": "creatorToken0",
+          "docs": [
+            "payer token0 account"
+          ],
+          "writable": true
+        },
+        {
+          "name": "creatorToken1",
+          "docs": [
+            "creator token1 account"
+          ],
+          "writable": true
+        },
+        {
+          "name": "creatorLpToken",
+          "writable": true
+        },
+        {
+          "name": "token0Vault"
+        },
+        {
+          "name": "token1Vault"
+        },
+        {
+          "name": "createPoolFee",
+          "docs": [
+            "create pool fee account"
+          ],
+          "writable": true,
+          "address": "DNXgeM9EiiaAbaWvwjHj9fQQLAX5ZsfHyvmYUNRAdNC8"
+        },
+        {
+          "name": "observationState"
+        },
+        {
+          "name": "tokenProgram",
+          "docs": [
+            "Program to create mint account and mint tokens"
+          ],
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "token0Program",
+          "docs": [
+            "Spl token program or token program 2022"
+          ]
+        },
+        {
+          "name": "token1Program",
+          "docs": [
+            "Spl token program or token program 2022"
+          ]
+        },
+        {
+          "name": "associatedTokenProgram",
+          "docs": [
+            "Program to create an ATA for receiving position NFT"
+          ],
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "systemProgram",
+          "docs": [
+            "To create a new program account"
+          ],
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "docs": [
+            "Sysvar for program account"
+          ],
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "initAmount0",
+          "type": "u64"
+        },
+        {
+          "name": "initAmount1",
+          "type": "u64"
+        },
+        {
+          "name": "openTime",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "revokeFreezeAuthority",
       "discriminator": [
         84,
