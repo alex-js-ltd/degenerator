@@ -7,10 +7,10 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-degenerator = "4PrrcfhkCqz8JF8wLHEzp5RcbNcYdAgode5hmhqfFf5y"
+degenerator = "AdPLcfPcPWzsRLxDA4No63hZE1EbG8pWVMWP7gcNZDLC"
 
 [programs.localnet]
-degenerator = "4PrrcfhkCqz8JF8wLHEzp5RcbNcYdAgode5hmhqfFf5y"
+degenerator = "AdPLcfPcPWzsRLxDA4No63hZE1EbG8pWVMWP7gcNZDLC"
 
 [registry]
 url = "https://api.apr.dev"
