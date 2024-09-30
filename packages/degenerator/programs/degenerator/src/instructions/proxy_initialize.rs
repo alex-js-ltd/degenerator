@@ -15,8 +15,6 @@ use solana_program::{
     system_program, // Solana's system program
 };
 
-use sha2::{Digest, Sha256};
-
 #[derive(Accounts)]
 pub struct ProxyInitialize<'info> {
     pub cp_swap_program: UncheckedAccount<'info>,
@@ -155,20 +153,6 @@ pub struct ProxyInitialize<'info> {
     pub rent: Sysvar<'info, Rent>,
 }
 
-fn get_instruction_discriminator(instruction_name: &str) -> [u8; 8] {
-    let mut hasher = Sha256::new();
-    // Prefix the instruction name with "global:"
-    let instruction_full_name = format!("global:{}", instruction_name);
-    hasher.update(instruction_full_name.as_bytes());
-
-    // Finalize the hash and take the first 8 bytes
-    let hash = hasher.finalize();
-    let mut discriminator = [0u8; 8];
-    discriminator.copy_from_slice(&hash[..8]);
-
-    discriminator
-}
-
 pub fn proxy_initialize(
     ctx: Context<ProxyInitialize>,
     init_amount_0: u64,
@@ -176,7 +160,7 @@ pub fn proxy_initialize(
     open_time: u64,
 ) -> Result<()> {
     // Calculate the instruction discriminator for "initialize" instruction
-    let instruction_discriminator = get_instruction_discriminator("proxy_initialize");
+    let instruction_discriminator: u32 = 2;
 
     // Convert accounts into a vector of `AccountMeta`
     let account_metas = vec![
@@ -204,7 +188,7 @@ pub fn proxy_initialize(
 
     // Allocate enough capacity for the instruction data
     let mut instruction_data = Vec::with_capacity(32);
-    instruction_data.extend_from_slice(instruction_discriminator); // 8 bytes
+    instruction_data.extend_from_slice(&instruction_discriminator.to_le_bytes());
     instruction_data.extend_from_slice(&init_amount_0.to_le_bytes()); // 8 bytes
     instruction_data.extend_from_slice(&init_amount_1.to_le_bytes()); // 8 bytes
     instruction_data.extend_from_slice(&open_time.to_le_bytes()); // 8 bytes
