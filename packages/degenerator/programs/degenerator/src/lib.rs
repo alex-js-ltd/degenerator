@@ -46,11 +46,10 @@ pub mod degenerator {
     }
 
     pub fn proxy_initialize(
-        ctx: Context<ProxyInitialize>,
-        init_amount_0: u64,
-        init_amount_1: u64,
-        open_time: u64,
+        program_id: &Pubkey,
+        accounts: &[AccountInfo],
+        instruction_data: &[u8],
     ) -> Result<()> {
-        instructions::proxy_initialize(ctx, init_amount_0, init_amount_1, open_time)
+        instructions::proxy_initialize(program_id, accounts, instruction_data)
     }
 }
