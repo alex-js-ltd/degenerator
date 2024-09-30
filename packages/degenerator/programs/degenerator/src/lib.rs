@@ -2,6 +2,7 @@ use anchor_lang::prelude::*;
 
 mod errors;
 mod instructions;
+mod state;
 mod utils;
 
 declare_id!("4PrrcfhkCqz8JF8wLHEzp5RcbNcYdAgode5hmhqfFf5y");
@@ -42,5 +43,14 @@ pub mod degenerator {
 
     pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         instructions::sell_token(ctx, amount)
+    }
+
+    pub fn proxy_initialize(
+        ctx: Context<ProxyInitialize>,
+        init_amount_0: u64,
+        init_amount_1: u64,
+        open_time: u64,
+    ) -> Result<()> {
+        instructions::proxy_initialize(ctx, init_amount_0, init_amount_1, open_time)
     }
 }

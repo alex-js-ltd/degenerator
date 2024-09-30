@@ -22,3 +22,7 @@ spl-tlv-account-resolution = "0.6.3"
 spl-transfer-hook-interface = "0.6.3"
 spl-type-length-value = "0.4.3"
 spl-pod = "0.2.2"
+raydium-cp-swap = { git = "https://github.com/raydium-io/raydium-cp-swap", features = [
+    "no-entrypoint",
+    "cpi",
+] }

@@ -5,8 +5,10 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::errors::Errors;
 use crate::utils::{
     calculate_buy_price, set_pool_state, transfer_from_pool_vault_to_user,
-    transfer_sol_to_pool_vault, PoolState, POOL_STATE_SEED, POOL_VAULT_SEED,
+    transfer_sol_to_pool_vault, POOL_STATE_SEED, POOL_VAULT_SEED,
 };
+
+use crate::state::PoolState;
 
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
