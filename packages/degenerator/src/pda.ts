@@ -1,5 +1,5 @@
 import { Degenerator } from '../target/types/degenerator'
-import { Program, BN } from '@coral-xyz/anchor'
+import { Program, BN, utils } from '@coral-xyz/anchor'
 import { PublicKey } from '@solana/web3.js'
 import {
 	TOKEN_2022_PROGRAM_ID,
@@ -16,6 +16,19 @@ export function getAssociatedAddress({
 	return PublicKey.findProgramAddressSync(
 		[owner.toBuffer(), TOKEN_2022_PROGRAM_ID.toBuffer(), mint.toBuffer()],
 		ASSOCIATED_TOKEN_PROGRAM_ID,
+	)[0]
+}
+
+export function getExtraMetas({
+	program,
+	mint,
+}: {
+	program: Program<Degenerator>
+	mint: PublicKey
+}): PublicKey {
+	return PublicKey.findProgramAddressSync(
+		[utils.bytes.utf8.encode('extra-account-metas'), mint.toBuffer()],
+		program.programId,
 	)[0]
 }
 

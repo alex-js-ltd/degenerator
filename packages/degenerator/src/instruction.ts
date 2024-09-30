@@ -1,18 +1,16 @@
 import { Degenerator } from '../target/types/degenerator'
-import { Program, BN, web3, utils } from '@coral-xyz/anchor'
-
+import { Program, BN, web3 } from '@coral-xyz/anchor'
 import { PublicKey } from '@solana/web3.js'
-
 import {
 	TOKEN_2022_PROGRAM_ID,
 	ASSOCIATED_TOKEN_PROGRAM_ID,
 } from '@solana/spl-token'
-
 import {
 	getAssociatedAddress,
 	getPoolVault,
 	getRaydiumVault,
 	getPoolState,
+	getExtraMetas,
 } from './pda'
 
 interface GetMintInstructionsParams {
@@ -54,15 +52,11 @@ export async function getMintInstructions({
 		owner: raydiumVault,
 	})
 
-	const [extraMetasAccount] = PublicKey.findProgramAddressSync(
-		[utils.bytes.utf8.encode('extra-account-metas'), mint.toBuffer()],
-		program.programId,
-	)
+	const extraMetasAccount = getExtraMetas({ program, mint })
 
 	const poolState = getPoolState({ program, mint })
 
 	const init = await program.methods
-
 		.createMintAccount(decimals, metadata)
 		.accountsStrict({
 			payer: payer,
