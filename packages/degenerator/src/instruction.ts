@@ -54,17 +54,16 @@ import { CpmmPoolInfoLayout } from '@raydium-io/raydium-sdk-v2'
 
 export async function createMintAccount({
 	payer,
-	mint,
 	metadata,
 	decimals,
 	connection,
 }: {
 	payer: PublicKey
-	mint: PublicKey
 	metadata: TokenMetadata
 	decimals: number
 	connection: Connection
 }) {
+	const { mint } = metadata
 	const mintSpace = getMintLen([ExtensionType.MetadataPointer])
 	const metadataSpace = TYPE_SIZE + LENGTH_SIZE + pack(metadata).length
 
@@ -74,7 +73,7 @@ export async function createMintAccount({
 
 	const createAccountIx = SystemProgram.createAccount({
 		fromPubkey: payer,
-		newAccountPubkey: metadata.mint,
+		newAccountPubkey: mint,
 		space: mintSpace,
 		lamports,
 		programId: TOKEN_2022_PROGRAM_ID,
@@ -129,12 +128,11 @@ export async function getinitializeDegeneratorIxs({
 	program,
 	connection,
 	payer,
-	mint,
 	metadata,
 	decimals,
 	supply,
 }: GetinitializeDegeneratorParams) {
-	// Convert supply to BN (BigNumber) instance
+	const { mint } = metadata
 	const supplyBN = new BN(supply)
 
 	const poolVault = getPoolVault({ program, mint })
@@ -156,7 +154,6 @@ export async function getinitializeDegeneratorIxs({
 	const createMintAccountIxs = await createMintAccount({
 		payer,
 		connection,
-		mint,
 		metadata,
 		decimals,
 	})
