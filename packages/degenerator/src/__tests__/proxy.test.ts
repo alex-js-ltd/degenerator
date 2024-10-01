@@ -106,5 +106,18 @@ describe('proxy init', () => {
 			initAmount: { initAmount0: new BN(100), initAmount1: new BN(100) },
 			createPoolFee: createPoolFeeReceive,
 		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+		console.log(res)
 	})
 })

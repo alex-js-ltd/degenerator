@@ -10,6 +10,12 @@ use solana_program::{
     program::invoke,
 };
 
+use raydium_cp_swap::{
+    cpi, create_pool_fee_reveiver,
+    program::RaydiumCpSwap,
+    states::{AmmConfig, OBSERVATION_SEED, POOL_LP_MINT_SEED, POOL_SEED, POOL_VAULT_SEED},
+};
+
 #[derive(Accounts)]
 pub struct ProxyInitialize<'info> {
     /// CHECK: cp_swap_program
@@ -53,9 +59,11 @@ pub struct ProxyInitialize<'info> {
 
     /// creator token1 account
     #[account(
-        mut,
+        init_if_needed,
+        payer = creator,
         token::mint = token_1_mint,
         token::authority = creator,
+       
     )]
     pub creator_token_1: Box<InterfaceAccount<'info, TokenAccount>>,
 
@@ -70,7 +78,10 @@ pub struct ProxyInitialize<'info> {
     pub token_1_vault: UncheckedAccount<'info>,
 
     /// create pool fee account
-    #[account(mut)]
+    #[account(
+        mut,
+        address= create_pool_fee_reveiver::id(),
+    )]
     pub create_pool_fee: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// CHECK: an account to store oracle observations, init by cp-swap
