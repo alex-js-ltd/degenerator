@@ -251,7 +251,7 @@ interface GetProxyInitInstructionParams {
 	createPoolFee: PublicKey
 }
 
-export async function GetProxyInitInstruction({
+export async function getProxyInitInstruction({
 	program,
 	creator,
 	configAddress,
