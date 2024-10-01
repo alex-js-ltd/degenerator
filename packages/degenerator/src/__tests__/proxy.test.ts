@@ -3,7 +3,7 @@ import { Keypair } from '@solana/web3.js'
 import {
 	type Degenerator,
 	airDrop,
-	getinitializeDegeneratorIxs,
+	getInitializeDegeneratorIxs,
 	buildTransaction,
 	sendAndConfirm,
 	getBuyTokenInstruction,
@@ -42,7 +42,7 @@ describe('proxy init', () => {
 	})
 
 	it('mint token to payer & init bonding curve', async () => {
-		const ixs = await getinitializeDegeneratorIxs({
+		const ixs = await getInitializeDegeneratorIxs({
 			program,
 			connection,
 			payer: payer.publicKey,
@@ -69,7 +69,7 @@ describe('proxy init', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 800
+		const amountToBuy = 500
 
 		const ix = await getBuyTokenInstruction({
 			program,
@@ -106,7 +106,7 @@ describe('proxy init', () => {
 			token0Program: tokens[0].program,
 			token1: tokens[1].mint,
 			token1Program: tokens[1].program,
-			initAmount: { initAmount0: new BN(100), initAmount1: new BN(100) },
+			initAmount: { initAmount0: new BN(250), initAmount1: new BN(250) },
 			createPoolFee: createPoolFeeReceive,
 		})
 

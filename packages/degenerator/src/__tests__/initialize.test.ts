@@ -3,7 +3,7 @@ import { Keypair } from '@solana/web3.js'
 import {
 	type Degenerator,
 	airDrop,
-	getinitializeDegeneratorIxs,
+	getInitializeDegeneratorIxs,
 	buildTransaction,
 	sendAndConfirm,
 	getPoolVault,
@@ -58,7 +58,7 @@ describe('initialize', () => {
 	})
 
 	it('mint token to payer & init pool', async () => {
-		const ixs = await getinitializeDegeneratorIxs({
+		const ixs = await getInitializeDegeneratorIxs({
 			program,
 			connection,
 			payer: payer.publicKey,

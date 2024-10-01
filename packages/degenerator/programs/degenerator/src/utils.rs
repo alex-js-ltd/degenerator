@@ -3,26 +3,18 @@ use anchor_lang::system_program;
 use anchor_lang::{
     prelude::Result,
     solana_program::{
-        account_info::AccountInfo, program::invoke, pubkey::Pubkey, rent::Rent,
-        system_instruction::transfer, sysvar::Sysvar,
+        account_info::AccountInfo, program::invoke, rent::Rent, system_instruction::transfer,
+        sysvar::Sysvar,
     },
     Lamports,
 };
 use anchor_spl::token_2022;
-use anchor_spl::token_interface::spl_token_2022::{
-    extension::{BaseStateWithExtensions, Extension, StateWithExtensions},
-    solana_zk_token_sdk::zk_token_proof_instruction::Pod,
-    state::Mint,
-};
-use spl_tlv_account_resolution::{account::ExtraAccountMeta, state::ExtraAccountMetaList};
-use spl_type_length_value::variable_len_pack::VariableLenPack;
 
 use crate::state::PoolState;
 
 pub const POOL_VAULT_SEED: &str = "pool_vault";
 pub const RAYDIUM_VAULT_SEED: &str = "raydium_vault";
 pub const POOL_STATE_SEED: &str = "pool_state";
-pub const META_LIST_ACCOUNT_SEED: &str = "extra-account-metas";
 
 pub fn update_account_lamports_to_minimum_balance<'info>(
     account: AccountInfo<'info>,
@@ -37,39 +29,6 @@ pub fn update_account_lamports_to_minimum_balance<'info>(
         )?;
     }
     Ok(())
-}
-
-pub fn get_mint_extensible_extension_data<T: Extension + VariableLenPack>(
-    account: &mut AccountInfo,
-) -> Result<T> {
-    let mint_data = account.data.borrow();
-    let mint_with_extension = StateWithExtensions::<Mint>::unpack(&mint_data)?;
-    let extension_data = mint_with_extension.get_variable_len_extension::<T>()?;
-    Ok(extension_data)
-}
-
-pub fn get_mint_extension_data<T: Extension + Pod>(account: &mut AccountInfo) -> Result<T> {
-    let mint_data = account.data.borrow();
-    let mint_with_extension = StateWithExtensions::<Mint>::unpack(&mint_data)?;
-    let extension_data = *mint_with_extension.get_extension::<T>()?;
-    Ok(extension_data)
-}
-
-pub fn get_meta_list(approve_account: Option<Pubkey>) -> Vec<ExtraAccountMeta> {
-    if let Some(approve_account) = approve_account {
-        return vec![ExtraAccountMeta {
-            discriminator: 0,
-            address_config: approve_account.to_bytes(),
-            is_signer: false.into(),
-            is_writable: true.into(),
-        }];
-    }
-    vec![]
-}
-
-pub fn get_meta_list_size(approve_account: Option<Pubkey>) -> usize {
-    // safe because it's either 0 or 1
-    ExtraAccountMetaList::size_of(get_meta_list(approve_account).len()).unwrap()
 }
 
 const BASE_PRICE: u128 = 10_000; // Base price per token (0.00001 SOL)
