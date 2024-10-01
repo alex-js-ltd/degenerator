@@ -25,7 +25,7 @@ import {
 	getPoolAddress,
 	getPoolLpMintAddress,
 	getPoolVaultAddress,
-	getOrcleAccountAddress,
+	getOracleAccountAddress,
 	createTokenMintAndAssociatedTokenAccount,
 } from './index'
 
@@ -239,31 +239,53 @@ export async function setupInitializeTest(
 	}
 }
 
-export async function initialize(
-	program: Program<Degenerator>,
-	creator: Signer,
-	configAddress: PublicKey,
-	token0: PublicKey,
-	token0Program: PublicKey,
-	token1: PublicKey,
-	token1Program: PublicKey,
-	confirmOptions?: ConfirmOptions,
-	initAmount: { initAmount0: BN; initAmount1: BN } = {
-		initAmount0: new BN(10000000000),
-		initAmount1: new BN(20000000000),
-	},
-	createPoolFee = createPoolFeeReceive,
-) {
-	const auth = getAuthAddress(cpSwapProgram)
-	const poolAddress = getPoolAddress(
-		configAddress,
-		token0,
-		token1,
-		cpSwapProgram,
-	)
-	const lpMintAddress = getPoolLpMintAddress(poolAddress, cpSwapProgram)
-	const vault0 = getPoolVaultAddress(poolAddress, token0, cpSwapProgram)
-	const vault1 = getPoolVaultAddress(poolAddress, token1, cpSwapProgram)
+interface GetProxyInitInstructionParams {
+	program: Program<Degenerator>
+	creator: Signer
+	configAddress: PublicKey
+	token0: PublicKey
+	token0Program: PublicKey
+	token1: PublicKey
+	token1Program: PublicKey
+	initAmount: { initAmount0: BN; initAmount1: BN }
+	createPoolFee: PublicKey
+}
+
+export async function GetProxyInitInstruction({
+	program,
+	creator,
+	configAddress,
+	token0,
+	token0Program,
+	token1,
+	token1Program,
+	initAmount,
+	createPoolFee,
+}: GetProxyInitInstructionParams) {
+	const auth = getAuthAddress({ programId: cpSwapProgram })
+
+	const poolAddress = getPoolAddress({
+		ammConfig: configAddress,
+		tokenMint0: token0,
+		tokenMint1: token1,
+		programId: cpSwapProgram,
+	})
+
+	const lpMintAddress = getPoolLpMintAddress({
+		pool: poolAddress,
+		programId: cpSwapProgram,
+	})
+
+	const vault0 = getPoolVaultAddress({
+		pool: poolAddress,
+		vaultTokenMint: token0,
+		programId: cpSwapProgram,
+	})
+	const vault1 = getPoolVaultAddress({
+		pool: poolAddress,
+		vaultTokenMint: token1,
+		programId: cpSwapProgram,
+	})
 	const [creatorLpTokenAddress] = PublicKey.findProgramAddressSync(
 		[
 			creator.publicKey.toBuffer(),
@@ -273,7 +295,10 @@ export async function initialize(
 		ASSOCIATED_PROGRAM_ID,
 	)
 
-	const observationAddress = getOrcleAccountAddress(poolAddress, cpSwapProgram)
+	const observationAddress = getOracleAccountAddress({
+		pool: poolAddress,
+		programId: cpSwapProgram,
+	})
 
 	const creatorToken0 = getAssociatedTokenAddressSync(
 		token0,

@@ -1,14 +1,14 @@
 import * as anchor from '@coral-xyz/anchor'
 import { Program, BN } from '@coral-xyz/anchor'
-import { Degenerator } from '../target/types/degenerator'
-import { setupInitializeTest, initialize } from './utils'
+import { Degenerator } from '../../target/types/degenerator'
+import { setupInitializeTest, initialize } from '../index'
 
 describe('initialize test', () => {
 	anchor.setProvider(anchor.AnchorProvider.env())
 	const owner = anchor.Wallet.local().payer
 	console.log('owner: ', owner.publicKey.toString())
 
-	const program = anchor.workspace.CpSwapCpi as Program<CpSwapCpi>
+	const program = anchor.workspace.Degenerator as Program<Degenerator>
 
 	const confirmOptions = {
 		skipPreflight: true,
