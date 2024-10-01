@@ -287,9 +287,9 @@ export async function initialize(
 		false,
 		token1Program,
 	)
-	const tx = await program.methods
+	const ix = await program.methods
 		.proxyInitialize(initAmount.initAmount0, initAmount.initAmount1, new BN(0))
-		.accounts({
+		.accountsStrict({
 			cpSwapProgram: cpSwapProgram,
 			creator: creator.publicKey,
 			ammConfig: configAddress,
@@ -308,22 +308,14 @@ export async function initialize(
 			tokenProgram: TOKEN_PROGRAM_ID,
 			token0Program: token0Program,
 			token1Program: token1Program,
+			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			systemProgram: web3.SystemProgram.programId,
 			rent: web3.SYSVAR_RENT_PUBKEY,
 		})
 		.preInstructions([
 			ComputeBudgetProgram.setComputeUnitLimit({ units: 400000 }),
 		])
-		.rpc(confirmOptions)
-	const accountInfo =
-		await program.provider.connection.getAccountInfo(poolAddress)
-	const poolState = CpmmPoolInfoLayout.decode(accountInfo.data)
-	const cpSwapPoolState = {
-		ammConfig: poolState.configId,
-		token0Mint: poolState.mintA,
-		token0Program: poolState.mintProgramA,
-		token1Mint: poolState.mintB,
-		token1Program: poolState.mintProgramB,
-	}
-	return { poolAddress, cpSwapPoolState, tx }
+		.instruction()
+
+	return ix
 }

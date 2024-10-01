@@ -822,8 +822,7 @@
           "docs": [
             "create pool fee account"
           ],
-          "writable": true,
-          "address": "DNXgeM9EiiaAbaWvwjHj9fQQLAX5ZsfHyvmYUNRAdNC8"
+          "writable": true
         },
         {
           "name": "observation_state"
@@ -832,8 +831,7 @@
           "name": "token_program",
           "docs": [
             "Program to create mint account and mint tokens"
-          ],
-          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          ]
         },
         {
           "name": "token_0_program",

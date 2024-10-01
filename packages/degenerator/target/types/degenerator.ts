@@ -828,8 +828,7 @@ export type Degenerator = {
           "docs": [
             "create pool fee account"
           ],
-          "writable": true,
-          "address": "DNXgeM9EiiaAbaWvwjHj9fQQLAX5ZsfHyvmYUNRAdNC8"
+          "writable": true
         },
         {
           "name": "observationState"
@@ -838,8 +837,7 @@ export type Degenerator = {
           "name": "tokenProgram",
           "docs": [
             "Program to create mint account and mint tokens"
-          ],
-          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          ]
         },
         {
           "name": "token0Program",

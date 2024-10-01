@@ -70,17 +70,14 @@ pub struct ProxyInitialize<'info> {
     pub token_1_vault: UncheckedAccount<'info>,
 
     /// create pool fee account
-    #[account(
-        mut,
-        address= raydium_cp_swap::create_pool_fee_reveiver::id(),
-    )]
+    #[account(mut)]
     pub create_pool_fee: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// CHECK: an account to store oracle observations, init by cp-swap
     pub observation_state: UncheckedAccount<'info>,
 
     /// Program to create mint account and mint tokens
-    pub token_program: Program<'info, Token>,
+    pub token_program: Interface<'info, TokenInterface>,
     /// Spl token program or token program 2022
     pub token_0_program: Interface<'info, TokenInterface>,
     /// Spl token program or token program 2022
