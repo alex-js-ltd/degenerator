@@ -116,9 +116,6 @@ describe('initialize', () => {
 			.mul(new anchor.BN(80))
 			.div(new anchor.BN(100))
 
-		console.log('current supply', currentSupply.toString())
-		console.log('expected supply', expectedSupply.toString())
-
 		// Ensure that currentSupply equals expectedSupply
 		expect(currentSupply.eq(expectedSupply)).toBe(true)
 	})
