@@ -6,33 +6,23 @@ import {
 	getMintInstructions,
 	buildTransaction,
 	sendAndConfirm,
-	getPoolVault,
-	getRaydiumVault,
-	getAssociatedAddress,
 	getBuyTokenInstruction,
-	getSellTokenInstruction,
-	fetchPoolState,
+	getProxyInitInstruction,
+	sortTokens,
+	SOL,
+	MY_TOKEN,
 } from '../index'
 import {
 	getAccount,
 	TOKEN_2022_PROGRAM_ID,
+	TOKEN_PROGRAM_ID,
 	NATIVE_MINT,
 } from '@solana/spl-token'
+import { configAddress, createPoolFeeReceive } from '../config'
 
 const { BN } = anchor
 
-const SOL = { mint: { publicKey: NATIVE_MINT }, decimals: 9 }
-const MY_COIN = {
-	mint: Keypair.generate(),
-	decimals: 9,
-	metadata: {
-		name: 'OPOS',
-		symbol: 'OPOS',
-		uri: 'https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json',
-	},
-}
-
-describe('initialize', () => {
+describe('proxy init', () => {
 	const provider = anchor.AnchorProvider.env()
 	anchor.setProvider(provider)
 
@@ -57,13 +47,13 @@ describe('initialize', () => {
 				...(await getMintInstructions({
 					program,
 					payer: payer.publicKey,
-					mint: MY_COIN.mint.publicKey,
-					metadata: MY_COIN.metadata,
+					mint: MY_TOKEN.mint,
+					metadata: MY_TOKEN.metadata,
 					decimals: 9,
 					supply: 100,
 				})),
 			],
-			signers: [MY_COIN.mint],
+			signers: [MY_TOKEN.keypair],
 		})
 
 		tx.sign([payer])
@@ -81,7 +71,7 @@ describe('initialize', () => {
 		const ix = await getBuyTokenInstruction({
 			program,
 			payer: payer.publicKey,
-			mint: MY_COIN.mint.publicKey,
+			mint: MY_TOKEN.mint,
 			amount: amountToBuy,
 		})
 
@@ -100,5 +90,21 @@ describe('initialize', () => {
 
 		// Confirm the transaction
 		await sendAndConfirm({ connection, tx })
+	})
+
+	it('proxy init', async () => {
+		const tokens = sortTokens([SOL, MY_TOKEN])
+
+		const ix = await getProxyInitInstruction({
+			program,
+			creator: payer,
+			configAddress: configAddress,
+			token0: tokens[0].mint,
+			token0Program: tokens[0].program,
+			token1: tokens[1].mint,
+			token1Program: tokens[1].program,
+			initAmount: { initAmount0: new BN(100), initAmount1: new BN(100) },
+			createPoolFee: createPoolFeeReceive,
+		})
 	})
 })
