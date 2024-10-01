@@ -19,19 +19,6 @@ export function getAssociatedAddress({
 	)[0]
 }
 
-export function getExtraMetas({
-	program,
-	mint,
-}: {
-	program: Program<Degenerator>
-	mint: PublicKey
-}): PublicKey {
-	return PublicKey.findProgramAddressSync(
-		[utils.bytes.utf8.encode('extra-account-metas'), mint.toBuffer()],
-		program.programId,
-	)[0]
-}
-
 export function getPoolVault({
 	program,
 	mint,
