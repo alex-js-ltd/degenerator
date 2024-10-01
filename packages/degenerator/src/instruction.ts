@@ -105,6 +105,13 @@ async function createMintAccount({
 		uri: metadata.uri,
 		programId: TOKEN_2022_PROGRAM_ID,
 	})
+
+	return [
+		createAccountIx,
+		initializeMetadataPointerIx,
+		initializeMintIx,
+		initializeMetadataIx,
+	]
 }
 
 interface GetMintInstructionsParams {
