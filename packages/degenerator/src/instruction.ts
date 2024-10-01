@@ -2,11 +2,8 @@ import { Degenerator } from '../target/types/degenerator'
 import { Program, BN, web3 } from '@coral-xyz/anchor'
 import {
 	type Connection,
-	type ConfirmOptions,
 	type Signer,
-	Keypair,
 	PublicKey,
-	ComputeBudgetInstruction,
 	ComputeBudgetProgram,
 	SystemProgram,
 } from '@solana/web3.js'
@@ -19,9 +16,6 @@ import {
 	createInitializeMintInstruction,
 	getMintLen,
 	createInitializeMetadataPointerInstruction,
-	getMint,
-	getMetadataPointerState,
-	getTokenMetadata,
 	TYPE_SIZE,
 	LENGTH_SIZE,
 	AuthorityType,
@@ -30,8 +24,6 @@ import {
 
 import {
 	createInitializeInstruction,
-	createUpdateFieldInstruction,
-	createRemoveKeyInstruction,
 	pack,
 	TokenMetadata,
 } from '@solana/spl-token-metadata'
@@ -40,19 +32,16 @@ import {
 	getPoolVault,
 	getRaydiumVault,
 	getPoolState,
-	getExtraMetas,
 	getAuthAddress,
 	getPoolAddress,
 	getPoolLpMintAddress,
 	getPoolVaultAddress,
 	getOracleAccountAddress,
-	createTokenMintAndAssociatedTokenAccount,
 } from './index'
 
 import { cpSwapProgram, configAddress, createPoolFeeReceive } from './config'
 
 import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token'
-import { CpmmPoolInfoLayout } from '@raydium-io/raydium-sdk-v2'
 
 export async function createMintAccount({
 	payer,
@@ -116,7 +105,7 @@ export async function createMintAccount({
 	]
 }
 
-interface GetinitializeDegeneratorParams {
+interface GetInitializeDegeneratorParams {
 	program: Program<Degenerator>
 	connection: Connection
 	payer: PublicKey
@@ -126,14 +115,14 @@ interface GetinitializeDegeneratorParams {
 	supply: number
 }
 
-export async function getinitializeDegeneratorIxs({
+export async function getInitializeDegeneratorIxs({
 	program,
 	connection,
 	payer,
 	metadata,
 	decimals,
 	supply,
-}: GetinitializeDegeneratorParams) {
+}: GetInitializeDegeneratorParams) {
 	const { mint } = metadata
 	const supplyBN = new BN(supply)
 
