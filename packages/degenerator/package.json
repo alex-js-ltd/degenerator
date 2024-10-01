@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",
+    "@raydium-io/raydium-sdk-v2": "0.1.45-alpha",
     "@solana/web3.js": "^1.95.3",
     "ts-jest": "^29.1.2"
   }

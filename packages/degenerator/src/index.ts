@@ -1,5 +1,6 @@
 export * from './web3'
 export * from './pda'
 export * from './instruction'
+export * from './util'
 export { default as IDL } from '../target/idl/degenerator.json'
 export type { Degenerator } from '../target/types/degenerator'

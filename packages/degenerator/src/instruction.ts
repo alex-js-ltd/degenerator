@@ -1,9 +1,19 @@
 import { Degenerator } from '../target/types/degenerator'
 import { Program, BN, web3 } from '@coral-xyz/anchor'
-import { PublicKey } from '@solana/web3.js'
 import {
+	type Connection,
+	type ConfirmOptions,
+	type Signer,
+	Keypair,
+	PublicKey,
+	ComputeBudgetInstruction,
+	ComputeBudgetProgram,
+} from '@solana/web3.js'
+import {
+	TOKEN_PROGRAM_ID,
 	TOKEN_2022_PROGRAM_ID,
 	ASSOCIATED_TOKEN_PROGRAM_ID,
+	getAssociatedTokenAddressSync,
 } from '@solana/spl-token'
 import {
 	getAssociatedAddress,
@@ -11,7 +21,18 @@ import {
 	getRaydiumVault,
 	getPoolState,
 	getExtraMetas,
-} from './pda'
+	getAuthAddress,
+	getPoolAddress,
+	getPoolLpMintAddress,
+	getPoolVaultAddress,
+	getOrcleAccountAddress,
+	createTokenMintAndAssociatedTokenAccount,
+} from './index'
+
+import { cpSwapProgram, configAddress, createPoolFeeReceive } from './config'
+
+import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token'
+import { CpmmPoolInfoLayout } from '@raydium-io/raydium-sdk-v2'
 
 interface GetMintInstructionsParams {
 	program: Program<Degenerator>
@@ -191,4 +212,118 @@ export async function getSellTokenInstruction({
 		.instruction()
 
 	return sell
+}
+
+export async function setupInitializeTest(
+	connection: Connection,
+	owner: Signer,
+	transferFeeConfig: { transferFeeBasisPoints: number; MaxFee: number } = {
+		transferFeeBasisPoints: 0,
+		MaxFee: 0,
+	},
+	confirmOptions?: ConfirmOptions,
+) {
+	const [{ token0, token0Program }, { token1, token1Program }] =
+		await createTokenMintAndAssociatedTokenAccount(
+			connection,
+			owner,
+			new Keypair(),
+			transferFeeConfig,
+		)
+	return {
+		configAddress,
+		token0,
+		token0Program,
+		token1,
+		token1Program,
+	}
+}
+
+export async function initialize(
+	program: Program<Degenerator>,
+	creator: Signer,
+	configAddress: PublicKey,
+	token0: PublicKey,
+	token0Program: PublicKey,
+	token1: PublicKey,
+	token1Program: PublicKey,
+	confirmOptions?: ConfirmOptions,
+	initAmount: { initAmount0: BN; initAmount1: BN } = {
+		initAmount0: new BN(10000000000),
+		initAmount1: new BN(20000000000),
+	},
+	createPoolFee = createPoolFeeReceive,
+) {
+	const auth = getAuthAddress(cpSwapProgram)
+	const poolAddress = getPoolAddress(
+		configAddress,
+		token0,
+		token1,
+		cpSwapProgram,
+	)
+	const lpMintAddress = getPoolLpMintAddress(poolAddress, cpSwapProgram)
+	const vault0 = getPoolVaultAddress(poolAddress, token0, cpSwapProgram)
+	const vault1 = getPoolVaultAddress(poolAddress, token1, cpSwapProgram)
+	const [creatorLpTokenAddress] = PublicKey.findProgramAddressSync(
+		[
+			creator.publicKey.toBuffer(),
+			TOKEN_PROGRAM_ID.toBuffer(),
+			lpMintAddress.toBuffer(),
+		],
+		ASSOCIATED_PROGRAM_ID,
+	)
+
+	const observationAddress = getOrcleAccountAddress(poolAddress, cpSwapProgram)
+
+	const creatorToken0 = getAssociatedTokenAddressSync(
+		token0,
+		creator.publicKey,
+		false,
+		token0Program,
+	)
+	const creatorToken1 = getAssociatedTokenAddressSync(
+		token1,
+		creator.publicKey,
+		false,
+		token1Program,
+	)
+	const tx = await program.methods
+		.proxyInitialize(initAmount.initAmount0, initAmount.initAmount1, new BN(0))
+		.accounts({
+			cpSwapProgram: cpSwapProgram,
+			creator: creator.publicKey,
+			ammConfig: configAddress,
+			authority: auth,
+			poolState: poolAddress,
+			token0Mint: token0,
+			token1Mint: token1,
+			lpMint: lpMintAddress,
+			creatorToken0,
+			creatorToken1,
+			creatorLpToken: creatorLpTokenAddress,
+			token0Vault: vault0,
+			token1Vault: vault1,
+			createPoolFee: createPoolFee,
+			observationState: observationAddress,
+			tokenProgram: TOKEN_PROGRAM_ID,
+			token0Program: token0Program,
+			token1Program: token1Program,
+			systemProgram: web3.SystemProgram.programId,
+			rent: web3.SYSVAR_RENT_PUBKEY,
+		})
+		.preInstructions([
+			ComputeBudgetProgram.setComputeUnitLimit({ units: 400000 }),
+		])
+		.rpc(confirmOptions)
+	const accountInfo =
+		await program.provider.connection.getAccountInfo(poolAddress)
+	const poolState = CpmmPoolInfoLayout.decode(accountInfo.data)
+	const cpSwapPoolState = {
+		ammConfig: poolState.configId,
+		token0Mint: poolState.mintA,
+		token0Program: poolState.mintProgramA,
+		token1Mint: poolState.mintB,
+		token1Program: poolState.mintProgramB,
+	}
+	return { poolAddress, cpSwapPoolState, tx }
 }

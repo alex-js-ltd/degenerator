@@ -194,6 +194,9 @@ importers:
       '@coral-xyz/anchor':
         specifier: ^0.30.1
         version: 0.30.1
+      '@raydium-io/raydium-sdk-v2':
+        specifier: 0.1.45-alpha
+        version: 0.1.45-alpha(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
       '@solana/web3.js':
         specifier: ^1.95.3
         version: 1.95.3
@@ -3805,6 +3808,30 @@ packages:
       - utf-8-validate
     dev: false
 
+  /@raydium-io/raydium-sdk-v2@0.1.45-alpha(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4):
+    resolution: {integrity: sha512-2l2nyqHL2gleeTCLm1XN3BsI29d/ZBmbIn3MJqi/Bdojssj9oFuzLn1Lo26DJAAMRm6XCGdbMAwnuQHFcZwDGw==}
+    dependencies:
+      '@project-serum/serum': 0.13.65
+      '@solana/buffer-layout': 4.0.1
+      '@solana/spl-token': 0.4.8(@solana/web3.js@1.95.3)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
+      '@solana/web3.js': 1.95.3
+      axios: 1.7.5
+      big.js: 6.2.1
+      bn.js: 5.2.1
+      buffer: 6.0.3
+      dayjs: 1.11.13
+      decimal.js-light: 2.5.1
+      lodash: 4.17.21
+      toformat: 2.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - encoding
+      - fastestsmallesttextencoderdecoder
+      - typescript
+      - utf-8-validate
+    dev: false
+
   /@react-native-async-storage/async-storage@1.24.0(react-native@0.75.2):
     resolution: {integrity: sha512-W4/vbwUOYOjco0x3toB8QCr7EjIP6nE9G7o8PMguvvjYT5Awg09lyV4enACRx4s++PPulBiBSjL0KTFx2u0Z/g==}
     requiresBuild: true
@@ -4444,7 +4471,6 @@ packages:
     dependencies:
       '@solana/errors': 2.0.0-preview.4(typescript@5.5.4)
       typescript: 5.5.4
-    dev: true
 
   /@solana/codecs-data-structures@2.0.0-preview.2:
     resolution: {integrity: sha512-Xf5vIfromOZo94Q8HbR04TbgTwzigqrKII0GjYr21K7rb3nba4hUW2ir8kguY7HWFBcjHGlU5x3MevKBOLp3Zg==}
@@ -4473,7 +4499,6 @@ packages:
       '@solana/codecs-numbers': 2.0.0-preview.4(typescript@5.5.4)
       '@solana/errors': 2.0.0-preview.4(typescript@5.5.4)
       typescript: 5.5.4
-    dev: true
 
   /@solana/codecs-numbers@2.0.0-preview.2:
     resolution: {integrity: sha512-aLZnDTf43z4qOnpTcDsUVy1Ci9im1Md8thWipSWbE+WM9ojZAx528oAql+Cv8M8N+6ALKwgVRhPZkto6E59ARw==}
@@ -4499,7 +4524,6 @@ packages:
       '@solana/codecs-core': 2.0.0-preview.4(typescript@5.5.4)
       '@solana/errors': 2.0.0-preview.4(typescript@5.5.4)
       typescript: 5.5.4
-    dev: true
 
   /@solana/codecs-strings@2.0.0-preview.2(fastestsmallesttextencoderdecoder@1.0.22):
     resolution: {integrity: sha512-EgBwY+lIaHHgMJIqVOGHfIfpdmmUDNoNO/GAUGeFPf+q0dF+DtwhJPEMShhzh64X2MeCZcmSO6Kinx0Bvmmz2g==}
@@ -4535,7 +4559,6 @@ packages:
       '@solana/errors': 2.0.0-preview.4(typescript@5.5.4)
       fastestsmallesttextencoderdecoder: 1.0.22
       typescript: 5.5.4
-    dev: true
 
   /@solana/codecs@2.0.0-preview.2(fastestsmallesttextencoderdecoder@1.0.22):
     resolution: {integrity: sha512-4HHzCD5+pOSmSB71X6w9ptweV48Zj1Vqhe732+pcAQ2cMNnN0gMPMdDq7j3YwaZDZ7yrILVV/3+HTnfT77t2yA==}
@@ -4576,7 +4599,6 @@ packages:
       typescript: 5.5.4
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
-    dev: true
 
   /@solana/errors@2.0.0-preview.2:
     resolution: {integrity: sha512-H2DZ1l3iYF5Rp5pPbJpmmtCauWeQXRJapkDg8epQ8BJ7cA2Ut/QEtC3CMmw/iMTcuS6uemFNLcWvlOfoQhvQuA==}
@@ -4605,7 +4627,6 @@ packages:
       chalk: 5.3.0
       commander: 12.1.0
       typescript: 5.5.4
-    dev: true
 
   /@solana/options@2.0.0-preview.2:
     resolution: {integrity: sha512-FAHqEeH0cVsUOTzjl5OfUBw2cyT8d5Oekx4xcn5hn+NyPAfQJgM3CEThzgRD6Q/4mM5pVUnND3oK/Mt1RzSE/w==}
@@ -4641,7 +4662,6 @@ packages:
       typescript: 5.5.4
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
-    dev: true
 
   /@solana/spl-token-group@0.0.5(@solana/web3.js@1.95.3)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.2):
     resolution: {integrity: sha512-CLJnWEcdoUBpQJfx9WEbX3h6nTdNiUzswfFdkABUik7HVwSNA98u5AYvBVK2H93d9PGMOHAak2lHW9xr+zAJGQ==}
@@ -4669,7 +4689,6 @@ packages:
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
       - typescript
-    dev: true
 
   /@solana/spl-token-metadata@0.1.4(@solana/web3.js@1.95.3)(fastestsmallesttextencoderdecoder@1.0.22):
     resolution: {integrity: sha512-N3gZ8DlW6NWDV28+vCCDJoTqaCZiF/jDUnk3o8GRkAFzHObiR60Bs1gXHBa8zCPdvOwiG6Z3dg5pg7+RW6XNsQ==}
@@ -4737,7 +4756,6 @@ packages:
       - fastestsmallesttextencoderdecoder
       - typescript
       - utf-8-validate
-    dev: true
 
   /@solana/spl-type-length-value@0.1.0:
     resolution: {integrity: sha512-JBMGB0oR4lPttOZ5XiUGyvylwLQjt1CPJa6qQ5oM+MBCndfjz2TKKkw0eATlLLcYmq1jBVsNlJ2cD6ns2GR7lA==}

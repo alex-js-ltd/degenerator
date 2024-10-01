@@ -92,3 +92,67 @@ export async function fetchPoolState({
 
 	return data
 }
+
+// pdas for proxy
+
+export const POOL_AUTH_SEED = Buffer.from(
+	utils.bytes.utf8.encode('vault_and_lp_mint_auth_seed'),
+)
+
+export const POOL_SEED = Buffer.from(utils.bytes.utf8.encode('pool'))
+
+export const POOL_VAULT_SEED = Buffer.from(
+	utils.bytes.utf8.encode('pool_vault'),
+)
+
+export const POOL_LPMINT_SEED = Buffer.from(
+	utils.bytes.utf8.encode('pool_lp_mint'),
+)
+
+export const ORACLE_SEED = Buffer.from(utils.bytes.utf8.encode('observation'))
+
+export function getAuthAddress(programId: PublicKey) {
+	return PublicKey.findProgramAddressSync([POOL_AUTH_SEED], programId)[0]
+}
+
+export function getPoolAddress(
+	ammConfig: PublicKey,
+	tokenMint0: PublicKey,
+	tokenMint1: PublicKey,
+	programId: PublicKey,
+) {
+	return PublicKey.findProgramAddressSync(
+		[
+			POOL_SEED,
+			ammConfig.toBuffer(),
+			tokenMint0.toBuffer(),
+			tokenMint1.toBuffer(),
+		],
+		programId,
+	)[0]
+}
+
+export function getPoolLpMintAddress(pool: PublicKey, programId: PublicKey) {
+	return PublicKey.findProgramAddressSync(
+		[POOL_LPMINT_SEED, pool.toBuffer()],
+		programId,
+	)[0]
+}
+
+export function getPoolVaultAddress(
+	pool: PublicKey,
+	vaultTokenMint: PublicKey,
+	programId: PublicKey,
+) {
+	return PublicKey.findProgramAddressSync(
+		[POOL_VAULT_SEED, pool.toBuffer(), vaultTokenMint.toBuffer()],
+		programId,
+	)[0]
+}
+
+export function getOrcleAccountAddress(pool: PublicKey, programId: PublicKey) {
+	return PublicKey.findProgramAddressSync(
+		[ORACLE_SEED, pool.toBuffer()],
+		programId,
+	)[0]
+}
