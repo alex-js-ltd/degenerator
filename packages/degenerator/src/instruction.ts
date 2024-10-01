@@ -54,11 +54,15 @@ import { CpmmPoolInfoLayout } from '@raydium-io/raydium-sdk-v2'
 
 async function createMintAccount({
 	payer,
+	mint,
 	metadata,
+	decimals,
 	connection,
 }: {
 	payer: PublicKey
+	mint: PublicKey
 	metadata: TokenMetadata
+	decimals: number
 	connection: Connection
 }) {
 	const mintSpace = getMintLen([ExtensionType.MetadataPointer])
@@ -68,11 +72,37 @@ async function createMintAccount({
 		mintSpace + metadataSpace,
 	)
 
-	const createAccountInstruction = SystemProgram.createAccount({
+	const createAccountIx = SystemProgram.createAccount({
 		fromPubkey: payer,
 		newAccountPubkey: metadata.mint,
 		space: mintSpace,
 		lamports,
+		programId: TOKEN_2022_PROGRAM_ID,
+	})
+
+	const initializeMetadataPointerIx =
+		createInitializeMetadataPointerInstruction(
+			mint,
+			payer,
+			mint,
+			TOKEN_2022_PROGRAM_ID,
+		)
+
+	const initializeMintIx = createInitializeMintInstruction(
+		mint,
+		decimals,
+		payer,
+		null,
+	)
+
+	const initializeMetadataIx = createInitializeInstruction({
+		mint,
+		metadata: mint,
+		mintAuthority: payer,
+		updateAuthority: payer,
+		name: metadata.name,
+		symbol: metadata.symbol,
+		uri: metadata.uri,
 		programId: TOKEN_2022_PROGRAM_ID,
 	})
 }
