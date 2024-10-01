@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "DmZfnBwjtoQo6oGQWspsKYWVKSPZ7s9mpTzJRDXj6L6M",
+  "address": "FeLC9aZ6HoQsmTiHZ5gmguLQVBZBhLz3Gw35HxY22NZU",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -811,7 +811,8 @@ export type Degenerator = {
           "docs": [
             "creator token1 account"
           ],
-          "writable": true
+          "writable": true,
+          "signer": true
         },
         {
           "name": "creatorLpToken",
@@ -826,9 +827,11 @@ export type Degenerator = {
         {
           "name": "createPoolFee",
           "docs": [
+            "create pool fee account",
             "create pool fee account"
           ],
-          "writable": true
+          "writable": true,
+          "address": "DNXgeM9EiiaAbaWvwjHj9fQQLAX5ZsfHyvmYUNRAdNC8"
         },
         {
           "name": "observationState"

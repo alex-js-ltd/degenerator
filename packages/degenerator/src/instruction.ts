@@ -8,13 +8,31 @@ import {
 	PublicKey,
 	ComputeBudgetInstruction,
 	ComputeBudgetProgram,
+	SystemProgram,
 } from '@solana/web3.js'
 import {
 	TOKEN_PROGRAM_ID,
 	TOKEN_2022_PROGRAM_ID,
 	ASSOCIATED_TOKEN_PROGRAM_ID,
 	getAssociatedTokenAddressSync,
+	ExtensionType,
+	createInitializeMintInstruction,
+	getMintLen,
+	createInitializeMetadataPointerInstruction,
+	getMint,
+	getMetadataPointerState,
+	getTokenMetadata,
+	TYPE_SIZE,
+	LENGTH_SIZE,
 } from '@solana/spl-token'
+
+import {
+	createInitializeInstruction,
+	createUpdateFieldInstruction,
+	createRemoveKeyInstruction,
+	pack,
+	TokenMetadata,
+} from '@solana/spl-token-metadata'
 import {
 	getAssociatedAddress,
 	getPoolVault,
@@ -33,6 +51,31 @@ import { cpSwapProgram, configAddress, createPoolFeeReceive } from './config'
 
 import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token'
 import { CpmmPoolInfoLayout } from '@raydium-io/raydium-sdk-v2'
+
+async function createMintAccount({
+	payer,
+	metadata,
+	connection,
+}: {
+	payer: PublicKey
+	metadata: TokenMetadata
+	connection: Connection
+}) {
+	const mintSpace = getMintLen([ExtensionType.MetadataPointer])
+	const metadataSpace = TYPE_SIZE + LENGTH_SIZE + pack(metadata).length
+
+	const lamports = await connection.getMinimumBalanceForRentExemption(
+		mintSpace + metadataSpace,
+	)
+
+	const createAccountInstruction = SystemProgram.createAccount({
+		fromPubkey: payer,
+		newAccountPubkey: metadata.mint,
+		space: mintSpace,
+		lamports,
+		programId: TOKEN_2022_PROGRAM_ID,
+	})
+}
 
 interface GetMintInstructionsParams {
 	program: Program<Degenerator>
