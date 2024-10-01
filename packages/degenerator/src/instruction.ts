@@ -24,6 +24,8 @@ import {
 	getTokenMetadata,
 	TYPE_SIZE,
 	LENGTH_SIZE,
+	AuthorityType,
+	createSetAuthorityInstruction,
 } from '@solana/spl-token'
 
 import {
@@ -175,7 +177,16 @@ export async function getinitializeDegeneratorIxs({
 		})
 		.instruction()
 
-	return [...createMintAccountIxs, createPoolIx]
+	const createRevokeMintIx = createSetAuthorityInstruction(
+		mint,
+		payer,
+		AuthorityType.MintTokens,
+		null,
+		[],
+		TOKEN_2022_PROGRAM_ID,
+	)
+
+	return [...createMintAccountIxs, createPoolIx, createRevokeMintIx]
 }
 
 interface SwapTokenInstructionParams {
