@@ -1,5 +1,5 @@
 {
-  "address": "FeLC9aZ6HoQsmTiHZ5gmguLQVBZBhLz3Gw35HxY22NZU",
+  "address": "F4cyPKqJFDBR6EZfDBbfPvBxSpYTmSX4N5owHbdUu3RE",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -668,10 +668,6 @@
               }
             ]
           }
-        },
-        {
-          "name": "payer_ata",
-          "writable": true
         },
         {
           "name": "token_program",

@@ -3,7 +3,7 @@ import { Keypair } from '@solana/web3.js'
 import {
 	type Degenerator,
 	airDrop,
-	getMintInstructions,
+	getinitializeDegeneratorIxs,
 	buildTransaction,
 	sendAndConfirm,
 	getPoolVault,
@@ -12,6 +12,8 @@ import {
 	getBuyTokenInstruction,
 	getSellTokenInstruction,
 	fetchPoolState,
+	SOL,
+	MY_TOKEN,
 } from '../index'
 import { getAccount, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 
@@ -27,36 +29,26 @@ describe('initialize', () => {
 
 	const payer = Keypair.generate()
 
-	const mint = Keypair.generate()
+	const poolVault = getPoolVault({ program, mint: MY_TOKEN.mint })
 
-	const poolVault = getPoolVault({ program, mint: mint.publicKey })
-
-	const raydiumVault = getRaydiumVault({ program, mint: mint.publicKey })
+	const raydiumVault = getRaydiumVault({ program, mint: MY_TOKEN.mint })
 
 	const poolATA = getAssociatedAddress({
-		mint: mint.publicKey,
+		mint: MY_TOKEN.mint,
 		owner: poolVault,
 	})
 
 	const payerATA = getAssociatedAddress({
-		mint: mint.publicKey,
+		mint: MY_TOKEN.mint,
 		owner: payer.publicKey,
 	})
 
 	const raydiumATA = getAssociatedAddress({
-		mint: mint.publicKey,
+		mint: MY_TOKEN.mint,
 		owner: raydiumVault,
 	})
 
 	const supply = 100
-
-	const decimals = 9
-
-	const metadata = {
-		name: 'OPOS',
-		symbol: 'OPOS',
-		uri: 'https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json',
-	}
 
 	it('airdrop payer', async () => {
 		await airDrop({
@@ -66,26 +58,27 @@ describe('initialize', () => {
 	})
 
 	it('mint token to payer & init pool', async () => {
+		const ixs = await getinitializeDegeneratorIxs({
+			program,
+			connection,
+			payer: payer.publicKey,
+			mint: MY_TOKEN.mint,
+			metadata: MY_TOKEN.metadata,
+			decimals: MY_TOKEN.decimals,
+			supply: supply,
+		})
+
 		const tx = await buildTransaction({
 			connection: connection,
 			payer: payer.publicKey,
-			instructions: [
-				...(await getMintInstructions({
-					program,
-					payer: payer.publicKey,
-					mint: mint.publicKey,
-					metadata,
-					decimals: decimals,
-					supply,
-				})),
-			],
-			signers: [mint],
+			instructions: [...ixs],
+			signers: [MY_TOKEN.keypair],
 		})
 
 		tx.sign([payer])
 
 		const res = await connection.simulateTransaction(tx)
-
+		console.log(res)
 		expect(res.value.err).toBeNull()
 
 		await sendAndConfirm({ connection, tx })
@@ -110,18 +103,21 @@ describe('initialize', () => {
 	it('current supply should be 80% of supply', async () => {
 		const { currentSupply } = await fetchPoolState({
 			program,
-			mint: mint.publicKey,
+			mint: MY_TOKEN.mint,
 		})
 
 		// Convert the supply into the smallest unit considering the decimals
 		const supplyBN = new anchor.BN(supply).mul(
-			new anchor.BN(10).pow(new anchor.BN(decimals)),
+			new anchor.BN(10).pow(new anchor.BN(MY_TOKEN.decimals)),
 		)
 
 		// Correctly calculate 80% of the total supply
 		const expectedSupply = supplyBN
 			.mul(new anchor.BN(80))
 			.div(new anchor.BN(100))
+
+		console.log('current supply', currentSupply.toString())
+		console.log('expected supply', expectedSupply.toString())
 
 		// Ensure that currentSupply equals expectedSupply
 		expect(currentSupply.eq(expectedSupply)).toBe(true)
@@ -130,7 +126,7 @@ describe('initialize', () => {
 	it('progess should be 0%', async () => {
 		const { progress } = await fetchPoolState({
 			program,
-			mint: mint.publicKey,
+			mint: MY_TOKEN.mint,
 		})
 
 		const expectedProgress = new BN(0)
@@ -143,7 +139,7 @@ describe('initialize', () => {
 		const ix = await getBuyTokenInstruction({
 			program,
 			payer: payer.publicKey,
-			mint: mint.publicKey,
+			mint: MY_TOKEN.mint,
 			amount: amountToBuy,
 		})
 
@@ -167,7 +163,7 @@ describe('initialize', () => {
 	it('progess should be 100%', async () => {
 		const { progress } = await fetchPoolState({
 			program,
-			mint: mint.publicKey,
+			mint: MY_TOKEN.mint,
 		})
 
 		const expectedProgress = new BN(100)
@@ -179,7 +175,7 @@ describe('initialize', () => {
 	it('current supply should be 0', async () => {
 		const { currentSupply } = await fetchPoolState({
 			program,
-			mint: mint.publicKey,
+			mint: MY_TOKEN.mint,
 		})
 
 		const expectedCurrentSupply = new BN(0)

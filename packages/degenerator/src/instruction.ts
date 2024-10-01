@@ -52,7 +52,7 @@ import { cpSwapProgram, configAddress, createPoolFeeReceive } from './config'
 import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token'
 import { CpmmPoolInfoLayout } from '@raydium-io/raydium-sdk-v2'
 
-async function createMintAccount({
+export async function createMintAccount({
 	payer,
 	mint,
 	metadata,
@@ -93,6 +93,7 @@ async function createMintAccount({
 		decimals,
 		payer,
 		null,
+		TOKEN_2022_PROGRAM_ID,
 	)
 
 	const initializeMetadataIx = createInitializeInstruction({
@@ -114,30 +115,27 @@ async function createMintAccount({
 	]
 }
 
-interface GetMintInstructionsParams {
+interface GetinitializeDegeneratorParams {
 	program: Program<Degenerator>
+	connection: Connection
 	payer: PublicKey
 	mint: PublicKey
-	metadata: { name: string; symbol: string; uri: string }
+	metadata: TokenMetadata
 	decimals: number
 	supply: number
 }
 
-export async function getMintInstructions({
+export async function getinitializeDegeneratorIxs({
 	program,
+	connection,
 	payer,
 	mint,
 	metadata,
 	decimals,
 	supply,
-}: GetMintInstructionsParams) {
+}: GetinitializeDegeneratorParams) {
 	// Convert supply to BN (BigNumber) instance
 	const supplyBN = new BN(supply)
-
-	const payerATA = getAssociatedAddress({
-		mint: mint,
-		owner: payer,
-	})
 
 	const poolVault = getPoolVault({ program, mint })
 
@@ -153,26 +151,17 @@ export async function getMintInstructions({
 		owner: raydiumVault,
 	})
 
-	const extraMetasAccount = getExtraMetas({ program, mint })
-
 	const poolState = getPoolState({ program, mint })
 
-	const init = await program.methods
-		.createMintAccount(decimals, metadata)
-		.accountsStrict({
-			payer: payer,
-			authority: payer,
-			receiver: payer,
-			mint: mint,
-			mintTokenAccount: payerATA,
-			extraMetasAccount: extraMetasAccount,
-			systemProgram: web3.SystemProgram.programId,
-			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-			tokenProgram: TOKEN_2022_PROGRAM_ID,
-		})
-		.instruction()
+	const createMintAccountIxs = await createMintAccount({
+		payer,
+		connection,
+		mint,
+		metadata,
+		decimals,
+	})
 
-	const createPool = await program.methods
+	const createPoolIx = await program.methods
 		.createPool(supplyBN)
 		.accountsStrict({
 			payer: payer,
@@ -182,7 +171,6 @@ export async function getMintInstructions({
 			raydiumVault: raydiumVault,
 			raydiumAta: raydiumATA,
 			poolState: poolState,
-			payerAta: payerATA,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -190,23 +178,7 @@ export async function getMintInstructions({
 		})
 		.instruction()
 
-	const revokeMint = await program.methods
-		.revokeMintAuthority()
-		.accounts({
-			currentAuthority: payer,
-			mintAccount: mint,
-		})
-		.instruction()
-
-	const revokeFreeze = await program.methods
-		.revokeFreezeAuthority()
-		.accounts({
-			currentAuthority: payer,
-			mintAccount: mint,
-		})
-		.instruction()
-
-	return [init, createPool, revokeFreeze, revokeMint]
+	return [...createMintAccountIxs, createPoolIx]
 }
 
 interface SwapTokenInstructionParams {
@@ -292,31 +264,6 @@ export async function getSellTokenInstruction({
 		.instruction()
 
 	return sell
-}
-
-export async function setupInitializeTest(
-	connection: Connection,
-	owner: Signer,
-	transferFeeConfig: { transferFeeBasisPoints: number; MaxFee: number } = {
-		transferFeeBasisPoints: 0,
-		MaxFee: 0,
-	},
-	confirmOptions?: ConfirmOptions,
-) {
-	const [{ token0, token0Program }, { token1, token1Program }] =
-		await createTokenMintAndAssociatedTokenAccount(
-			connection,
-			owner,
-			new Keypair(),
-			transferFeeConfig,
-		)
-	return {
-		configAddress,
-		token0,
-		token0Program,
-		token1,
-		token1Program,
-	}
 }
 
 interface GetProxyInitInstructionParams {

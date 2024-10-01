@@ -3,7 +3,7 @@ import { Keypair } from '@solana/web3.js'
 import {
 	type Degenerator,
 	airDrop,
-	getMintInstructions,
+	getinitializeDegeneratorIxs,
 	buildTransaction,
 	sendAndConfirm,
 	getBuyTokenInstruction,
@@ -32,6 +32,8 @@ describe('proxy init', () => {
 
 	const payer = Keypair.generate()
 
+	const supply = 1000
+
 	it('airdrop payer', async () => {
 		await airDrop({
 			connection,
@@ -40,19 +42,20 @@ describe('proxy init', () => {
 	})
 
 	it('mint token to payer & init bonding curve', async () => {
+		const ixs = await getinitializeDegeneratorIxs({
+			program,
+			connection,
+			payer: payer.publicKey,
+			mint: MY_TOKEN.mint,
+			metadata: MY_TOKEN.metadata,
+			decimals: MY_TOKEN.decimals,
+			supply: supply,
+		})
+
 		const tx = await buildTransaction({
 			connection: connection,
 			payer: payer.publicKey,
-			instructions: [
-				...(await getMintInstructions({
-					program,
-					payer: payer.publicKey,
-					mint: MY_TOKEN.mint,
-					metadata: MY_TOKEN.metadata,
-					decimals: 9,
-					supply: 1000,
-				})),
-			],
+			instructions: [...ixs],
 			signers: [MY_TOKEN.keypair],
 		})
 

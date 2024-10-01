@@ -3,6 +3,7 @@ import {
 	TOKEN_PROGRAM_ID,
 	TOKEN_2022_PROGRAM_ID,
 } from '@solana/spl-token'
+import { type TokenMetadata } from '@solana/spl-token-metadata'
 import { Keypair, PublicKey } from '@solana/web3.js'
 
 // Define SOL token
@@ -15,10 +16,12 @@ export const SOL = {
 // Generate the keypair for your custom token
 const keypair = Keypair.generate()
 
-const metadata = {
+const metadata: TokenMetadata = {
 	name: 'OPOS',
 	symbol: 'OPOS',
 	uri: 'https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json',
+	additionalMetadata: [],
+	mint: keypair.publicKey,
 }
 
 // Define your custom token

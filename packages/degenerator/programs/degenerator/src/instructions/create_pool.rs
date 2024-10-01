@@ -108,9 +108,6 @@ pub struct CreatePool<'info> {
     )]
     pub pool_state: Account<'info, PoolState>,
 
-    #[account(mut)]
-    pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
-
     /// Spl token program or token program 2022
     pub token_program: Interface<'info, TokenInterface>,
 
