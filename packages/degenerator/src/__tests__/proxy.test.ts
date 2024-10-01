@@ -50,7 +50,7 @@ describe('proxy init', () => {
 					mint: MY_TOKEN.mint,
 					metadata: MY_TOKEN.metadata,
 					decimals: 9,
-					supply: 100,
+					supply: 1000,
 				})),
 			],
 			signers: [MY_TOKEN.keypair],
@@ -66,7 +66,7 @@ describe('proxy init', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 80
+		const amountToBuy = 800
 
 		const ix = await getBuyTokenInstruction({
 			program,
