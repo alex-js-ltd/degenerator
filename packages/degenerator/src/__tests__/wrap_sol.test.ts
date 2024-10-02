@@ -7,11 +7,13 @@ import {
 	buildTransaction,
 	sendAndConfirm,
 } from '../index'
-import { getAccount, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import {
+	NATIVE_MINT,
+	getAssociatedTokenAddress,
+	getAccount,
+} from '@solana/spl-token'
 
-const { BN } = anchor
-
-describe('initialize', () => {
+describe('initialize wrap sol', () => {
 	const provider = anchor.AnchorProvider.env()
 	anchor.setProvider(provider)
 
@@ -28,12 +30,10 @@ describe('initialize', () => {
 		})
 	})
 
-	it('get wrapped sol', async () => {
+	it('wrap sol', async () => {
 		const ix = await getWrapSolIx({
 			program,
-
 			payer: payer.publicKey,
-
 			amount: 10,
 		})
 
@@ -51,5 +51,16 @@ describe('initialize', () => {
 
 		// Confirm the transaction
 		await sendAndConfirm({ connection, tx })
+	})
+
+	it('check account is native', async () => {
+		const payerATA = await getAssociatedTokenAddress(
+			NATIVE_MINT,
+			payer.publicKey,
+		)
+
+		const account = await getAccount(connection, payerATA)
+
+		expect(account.isNative).toBe(true)
 	})
 })
