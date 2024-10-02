@@ -6,11 +6,8 @@ solana_version = "1.17.0"
 seeds = false
 skip-lint = false
 
-[programs.devnet]
-degenerator = "xgjtUmgNNi5xrR3ENG4VmVi65ZPfsCiw6LjW8aWfgQb"
-
 [programs.localnet]
-degenerator = "xgjtUmgNNi5xrR3ENG4VmVi65ZPfsCiw6LjW8aWfgQb"
+degenerator = "4p3AQFnprfg338UAmQyMYSVLsyFE2frjwyucKw35Cwkz"
 
 [registry]
 url = "https://api.apr.dev"
@@ -41,5 +38,3 @@ address = "DNXgeM9EiiaAbaWvwjHj9fQQLAX5ZsfHyvmYUNRAdNC8"
 
 [[test.validator.clone]]
 address = "D4FPEruKEHrG5TenZ2mpDGEfu1iUvTiqBxvpU8HLBvC2"
-
-
