@@ -809,6 +809,7 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
+ "num_enum 0.6.1",
  "raydium-cp-swap",
  "spl-memo",
 ]
