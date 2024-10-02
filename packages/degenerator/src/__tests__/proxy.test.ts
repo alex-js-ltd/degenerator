@@ -7,7 +7,7 @@ import {
 	buildTransaction,
 	sendAndConfirm,
 	getBuyTokenInstruction,
-	getProxyInitInstruction,
+	getProxyInitIxs,
 	sortTokens,
 	SOL,
 	MY_TOKEN,
@@ -122,7 +122,7 @@ describe('proxy init', () => {
 	it('proxy init', async () => {
 		const tokens = [SOL, MY_TOKEN]
 
-		const ix = await getProxyInitInstruction({
+		const ixs = await getProxyInitIxs({
 			program,
 			creator: payer,
 			configAddress: configAddress,
@@ -137,14 +137,14 @@ describe('proxy init', () => {
 		const tx = await buildTransaction({
 			connection: connection,
 			payer: payer.publicKey,
-			instructions: [ix],
+			instructions: [...ixs],
 			signers: [],
 		})
 
 		tx.sign([payer])
 
 		const res = await connection.simulateTransaction(tx)
-
+		console.log('units consumed', res.value.unitsConsumed)
 		console.log(res)
 	})
 })

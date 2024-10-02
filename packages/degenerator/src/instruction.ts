@@ -299,7 +299,7 @@ export async function getSellTokenInstruction({
 	return sell
 }
 
-interface GetProxyInitInstructionParams {
+interface GetProxyInitIxsParams {
 	program: Program<Degenerator>
 	creator: Signer
 	configAddress: PublicKey
@@ -311,7 +311,7 @@ interface GetProxyInitInstructionParams {
 	createPoolFee: PublicKey
 }
 
-export async function getProxyInitInstruction({
+export async function getProxyInitIxs({
 	program,
 	creator,
 	configAddress,
@@ -321,7 +321,7 @@ export async function getProxyInitInstruction({
 	token1Program,
 	initAmount,
 	createPoolFee,
-}: GetProxyInitInstructionParams) {
+}: GetProxyInitIxsParams) {
 	const auth = getAuthAddress({ programId: cpSwapProgram })
 
 	const poolAddress = getPoolAddress({
@@ -372,7 +372,12 @@ export async function getProxyInitInstruction({
 		false,
 		token1Program,
 	)
-	const ix = await program.methods
+
+	const computeUnitIx = ComputeBudgetProgram.setComputeUnitLimit({
+		units: 400000,
+	})
+
+	const proxyInitIx = await program.methods
 		.proxyInitialize(initAmount.initAmount0, initAmount.initAmount1, new BN(0))
 		.accounts({
 			cpSwapProgram: cpSwapProgram,
@@ -397,10 +402,7 @@ export async function getProxyInitInstruction({
 			systemProgram: web3.SystemProgram.programId,
 			rent: web3.SYSVAR_RENT_PUBKEY,
 		})
-		.preInstructions([
-			ComputeBudgetProgram.setComputeUnitLimit({ units: 400000 }),
-		])
 		.instruction()
 
-	return ix
+	return [computeUnitIx, proxyInitIx]
 }
