@@ -96,7 +96,7 @@ describe('proxy init', () => {
 	})
 
 	it('proxy init', async () => {
-		const tokens = sortTokens([SOL, MY_TOKEN])
+		const tokens = [SOL, MY_TOKEN]
 
 		const ix = await getProxyInitInstruction({
 			program,
@@ -120,7 +120,5 @@ describe('proxy init', () => {
 		tx.sign([payer])
 
 		const res = await connection.simulateTransaction(tx)
-
-		console.log(res)
 	})
 })

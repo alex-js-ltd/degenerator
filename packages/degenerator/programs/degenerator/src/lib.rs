@@ -5,7 +5,7 @@ mod instructions;
 mod state;
 mod utils;
 
-declare_id!("xgjtUmgNNi5xrR3ENG4VmVi65ZPfsCiw6LjW8aWfgQb");
+declare_id!("4p3AQFnprfg338UAmQyMYSVLsyFE2frjwyucKw35Cwkz");
 
 #[program]
 pub mod degenerator {
@@ -23,6 +23,10 @@ pub mod degenerator {
 
     pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         instructions::sell_token(ctx, amount)
+    }
+
+    pub fn wrap_sol(ctx: Context<WrapSol>, amount: u64) -> Result<()> {
+        instructions::wrap_sol(ctx, amount)
     }
 
     pub fn proxy_initialize(

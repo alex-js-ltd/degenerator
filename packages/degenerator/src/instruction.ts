@@ -8,6 +8,8 @@ import {
 	SystemProgram,
 } from '@solana/web3.js'
 import {
+	NATIVE_MINT,
+	NATIVE_MINT_2022,
 	TOKEN_PROGRAM_ID,
 	TOKEN_2022_PROGRAM_ID,
 	ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -20,6 +22,7 @@ import {
 	LENGTH_SIZE,
 	AuthorityType,
 	createSetAuthorityInstruction,
+	getAssociatedTokenAddress,
 } from '@solana/spl-token'
 
 import {
@@ -42,6 +45,39 @@ import {
 import { cpSwapProgram, configAddress, createPoolFeeReceive } from './config'
 
 import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token'
+
+interface GetInitializeDegeneratorParams {
+	program: Program<Degenerator>
+	payer: PublicKey
+}
+
+export async function getWrapSolIx({
+	program,
+	payer,
+	amount,
+}: {
+	program: Program<Degenerator>
+	payer: PublicKey
+	amount: number
+}) {
+	const amountBN = new BN(amount)
+
+	const payerATA = await getAssociatedTokenAddress(NATIVE_MINT, payer)
+
+	const wrapSolIx = await program.methods
+		.wrapSol(amountBN)
+		.accountsStrict({
+			payer,
+			nativeMint: NATIVE_MINT,
+			payerAta: payerATA,
+			systemProgram: web3.SystemProgram.programId,
+			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+			tokenProgram: TOKEN_PROGRAM_ID,
+		})
+		.instruction()
+
+	return wrapSolIx
+}
 
 export async function createMintAccount({
 	payer,
