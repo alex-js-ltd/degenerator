@@ -34,7 +34,7 @@ describe('initialize wrap sol', () => {
 		const ix = await getWrapSolIx({
 			program,
 			payer: payer.publicKey,
-			amount: 10,
+			amount: 100,
 		})
 
 		const tx = await buildTransaction({
@@ -60,7 +60,7 @@ describe('initialize wrap sol', () => {
 		)
 
 		const account = await getAccount(connection, payerATA)
-
+		console.log(account)
 		expect(account.isNative).toBe(true)
 	})
 })

@@ -374,7 +374,7 @@ export async function getProxyInitInstruction({
 	)
 	const ix = await program.methods
 		.proxyInitialize(initAmount.initAmount0, initAmount.initAmount1, new BN(0))
-		.accountsStrict({
+		.accounts({
 			cpSwapProgram: cpSwapProgram,
 			creator: creator.publicKey,
 			ammConfig: configAddress,

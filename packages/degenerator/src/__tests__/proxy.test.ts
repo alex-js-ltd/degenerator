@@ -11,6 +11,7 @@ import {
 	sortTokens,
 	SOL,
 	MY_TOKEN,
+	getWrapSolIx,
 } from '../index'
 import {
 	getAccount,
@@ -39,6 +40,29 @@ describe('proxy init', () => {
 			connection,
 			account: payer.publicKey,
 		})
+	})
+
+	it('wrap sol', async () => {
+		const ix = await getWrapSolIx({
+			program,
+			payer: payer.publicKey,
+			amount: 100,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		const res = await connection.simulateTransaction(tx)
+		expect(res.value.err).toBeNull()
+
+		// Confirm the transaction
+		await sendAndConfirm({ connection, tx })
 	})
 
 	it('mint token to payer & init bonding curve', async () => {
@@ -106,7 +130,7 @@ describe('proxy init', () => {
 			token0Program: tokens[0].program,
 			token1: tokens[1].mint,
 			token1Program: tokens[1].program,
-			initAmount: { initAmount0: new BN(250), initAmount1: new BN(250) },
+			initAmount: { initAmount0: new BN(100), initAmount1: new BN(100) },
 			createPoolFee: createPoolFeeReceive,
 		})
 
@@ -120,5 +144,7 @@ describe('proxy init', () => {
 		tx.sign([payer])
 
 		const res = await connection.simulateTransaction(tx)
+
+		console.log(res)
 	})
 })
