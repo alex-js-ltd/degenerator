@@ -1,31 +1,13 @@
-use anchor_lang::prelude::*;
-use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token::Token;
-use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
-
+use crate::state::BondingCurveState;
 use crate::utils::{
     set_bonding_curve_state, token_mint_to, update_account_lamports_to_minimum_balance,
     BONDING_CURVE_HODL_SEED, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
 };
-
+use anchor_lang::prelude::*;
+use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token::spl_token::native_mint;
-
-use crate::state::BondingCurveState;
-
-pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
-    // transfer minimum rent to pool account
-
-    let current_supply = ctx.accounts.token_1_ata.amount as u128;
-    let total_supply = ctx.accounts.token_1_ata.amount as u128;
-
-    set_bonding_curve_state(
-        &mut ctx.accounts.bonding_curve_state,
-        current_supply,
-        total_supply,
-    );
-
-    Ok(())
-}
+use anchor_spl::token::Token;
+use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 #[derive(Accounts)]
 pub struct CreateBondingCurve<'info> {
@@ -82,14 +64,6 @@ pub struct CreateBondingCurve<'info> {
     )]
     pub token_1_vault: UncheckedAccount<'info>,
 
-    #[account(init,
-        seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), token_0_mint.key().as_ref(), token_1_mint.key().as_ref()],
-        bump,
-        payer = creator,
-        space = BondingCurveState::LEN
-    )]
-    pub bonding_curve_state: Account<'info, BondingCurveState>,
-
     /// Spl token program or token program 2022
     pub token_program: Interface<'info, TokenInterface>,
     /// Program to create an ATA for receiving position NFT
@@ -98,4 +72,20 @@ pub struct CreateBondingCurve<'info> {
     pub system_program: Program<'info, System>,
     /// Sysvar for program account
     pub rent: Sysvar<'info, Rent>,
+}
+
+pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
+    update_account_lamports_to_minimum_balance(
+        ctx.accounts.token_0_vault.to_account_info(),
+        ctx.accounts.creator.to_account_info(),
+        ctx.accounts.system_program.to_account_info(),
+    )?;
+
+    update_account_lamports_to_minimum_balance(
+        ctx.accounts.token_1_vault.to_account_info(),
+        ctx.accounts.creator.to_account_info(),
+        ctx.accounts.system_program.to_account_info(),
+    )?;
+
+    Ok(())
 }

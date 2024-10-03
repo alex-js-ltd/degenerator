@@ -47,11 +47,6 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "bondingCurveState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
@@ -531,11 +526,6 @@ export const IDL: Degenerator = {
         },
         {
           "name": "token1Vault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false
         },

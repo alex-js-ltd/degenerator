@@ -54,11 +54,7 @@ export function getBondingCurveState({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[
-			Buffer.from('bonding_curve_state'),
-			NATIVE_MINT.toBuffer(),
-			mint.toBuffer(),
-		],
+		[Buffer.from('bonding_curve_state'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }

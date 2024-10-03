@@ -169,8 +169,6 @@ export async function getInitializeDegeneratorIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const bondingCurveState = getBondingCurveState({ program, mint })
-
 	const createMintAccountIxs = await getCreateMintIxs({
 		payer,
 		connection,
@@ -188,7 +186,7 @@ export async function getInitializeDegeneratorIxs({
 			token1Vault,
 			token0Ata,
 			token1Ata,
-			bondingCurveState,
+
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,

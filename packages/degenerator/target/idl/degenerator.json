@@ -47,11 +47,6 @@
           "isSigner": false
         },
         {
-          "name": "bondingCurveState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
@@ -485,6 +480,6 @@
     }
   ],
   "metadata": {
-    "address": "HYU4yvKHttcCRtr7rVFvxxvqN4ypXHoA8HsjizQZm5MW"
+    "address": "9uC4SjDoVd2bV8MeNxUd9kykxud7F4Q13kbZamgYXsiQ"
   }
 }
