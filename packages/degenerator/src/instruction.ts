@@ -9,7 +9,6 @@ import {
 } from '@solana/web3.js'
 import {
 	NATIVE_MINT,
-	NATIVE_MINT_2022,
 	TOKEN_PROGRAM_ID,
 	TOKEN_2022_PROGRAM_ID,
 	ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -46,11 +45,6 @@ import { cpSwapProgram, configAddress, createPoolFeeReceive } from './config'
 
 import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token'
 
-interface GetInitializeDegeneratorParams {
-	program: Program<Degenerator>
-	payer: PublicKey
-}
-
 export async function getWrapSolIx({
 	program,
 	payer,
@@ -79,7 +73,7 @@ export async function getWrapSolIx({
 	return wrapSolIx
 }
 
-export async function createMintAccount({
+export async function getCreateMintIxs({
 	payer,
 	metadata,
 	decimals,
@@ -141,7 +135,7 @@ export async function createMintAccount({
 	]
 }
 
-interface GetInitializeDegeneratorParams {
+interface GetInitializeDegeneratorIxsParams {
 	program: Program<Degenerator>
 	connection: Connection
 	payer: PublicKey
@@ -158,7 +152,7 @@ export async function getInitializeDegeneratorIxs({
 	metadata,
 	decimals,
 	supply,
-}: GetInitializeDegeneratorParams) {
+}: GetInitializeDegeneratorIxsParams) {
 	const { mint } = metadata
 	const supplyBN = new BN(supply)
 
@@ -178,7 +172,7 @@ export async function getInitializeDegeneratorIxs({
 
 	const poolState = getPoolState({ program, mint })
 
-	const createMintAccountIxs = await createMintAccount({
+	const createMintAccountIxs = await getCreateMintIxs({
 		payer,
 		connection,
 		metadata,
@@ -214,19 +208,19 @@ export async function getInitializeDegeneratorIxs({
 	return [...createMintAccountIxs, createPoolIx, createRevokeMintIx]
 }
 
-interface SwapTokenInstructionParams {
+interface SwapTokenIxsParams {
 	program: Program<Degenerator>
 	payer: PublicKey
 	mint: PublicKey
 	amount: number
 }
 
-export async function getBuyTokenInstruction({
+export async function getBuyTokenIxs({
 	program,
 	payer,
 	mint,
 	amount,
-}: SwapTokenInstructionParams) {
+}: SwapTokenIxsParams) {
 	const payerATA = getAssociatedAddress({
 		mint: mint,
 		owner: payer,
@@ -260,12 +254,12 @@ export async function getBuyTokenInstruction({
 	return buy
 }
 
-export async function getSellTokenInstruction({
+export async function getSellTokenIxs({
 	program,
 	payer,
 	mint,
 	amount,
-}: SwapTokenInstructionParams) {
+}: SwapTokenIxsParams) {
 	const payerATA = getAssociatedAddress({
 		mint: mint,
 		owner: payer,

@@ -9,8 +9,8 @@ import {
 	getPoolVault,
 	getRaydiumVault,
 	getAssociatedAddress,
-	getBuyTokenInstruction,
-	getSellTokenInstruction,
+	getBuyTokenIxs,
+	getSellTokenIxs,
 	fetchPoolState,
 	SOL,
 	MY_TOKEN,
@@ -133,7 +133,7 @@ describe('initialize', () => {
 	it('buy token', async () => {
 		const amountToBuy = 80
 
-		const ix = await getBuyTokenInstruction({
+		const ix = await getBuyTokenIxs({
 			program,
 			payer: payer.publicKey,
 			mint: MY_TOKEN.mint,

@@ -6,7 +6,7 @@ import {
 	getInitializeDegeneratorIxs,
 	buildTransaction,
 	sendAndConfirm,
-	getBuyTokenInstruction,
+	getBuyTokenIxs,
 	getProxyInitIxs,
 	sortTokens,
 	SOL,
@@ -95,7 +95,7 @@ describe('proxy init', () => {
 	it('buy token', async () => {
 		const amountToBuy = 500
 
-		const ix = await getBuyTokenInstruction({
+		const ix = await getBuyTokenIxs({
 			program,
 			payer: payer.publicKey,
 			mint: MY_TOKEN.mint,
