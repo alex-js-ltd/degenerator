@@ -56,7 +56,7 @@
           ]
         },
         {
-          "name": "tokenProgram",
+          "name": "tokenProgram2022",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -489,6 +489,6 @@
     }
   ],
   "metadata": {
-    "address": "FwEwyuBdJTdztPrpnKQJhW8y7eTgD2GBkZeiQz5ZKVv2"
+    "address": "BTo9PPsrC85c89aXusWWKFg4bUCmRgXrA8wSncqRun2J"
   }
 }

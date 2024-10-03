@@ -29,7 +29,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
     // mint 80% to bonding curve vault
     token_mint_to(
         ctx.accounts.payer.to_account_info(),
-        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.token_program_2022.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.bonding_curve_vault_ata.to_account_info(),
         eighty_percent,
@@ -39,7 +39,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
     // mint 20% to hodl address
     token_mint_to(
         ctx.accounts.payer.to_account_info(),
-        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.token_program_2022.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.bonding_curve_hodl_ata.to_account_info(),
         twenty_percent,
@@ -91,6 +91,8 @@ pub struct CreateBondingCurve<'info> {
         payer = payer,
         associated_token::mint = mint,
         associated_token::authority = bonding_curve_vault,
+        associated_token::token_program = token_program_2022
+
     )]
     pub bonding_curve_vault_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
@@ -100,6 +102,7 @@ pub struct CreateBondingCurve<'info> {
             payer = payer,
             associated_token::mint = mint,
             associated_token::authority = bonding_curve_hodl,
+            associated_token::token_program = token_program_2022
         )]
     pub bonding_curve_hodl_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
@@ -113,7 +116,7 @@ pub struct CreateBondingCurve<'info> {
     pub bonding_curve_state: Account<'info, BondingCurveState>,
 
     /// Spl token program or token program 2022
-    pub token_program: Interface<'info, TokenInterface>,
+    pub token_program_2022: Interface<'info, TokenInterface>,
 
     /// Associated Token Program
     pub associated_token_program: Program<'info, AssociatedToken>,

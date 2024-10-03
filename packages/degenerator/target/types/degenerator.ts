@@ -56,7 +56,7 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "tokenProgram",
+          "name": "tokenProgram2022",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -548,7 +548,7 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "tokenProgram",
+          "name": "tokenProgram2022",
           "isMut": false,
           "isSigner": false,
           "docs": [
