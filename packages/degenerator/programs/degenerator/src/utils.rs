@@ -205,3 +205,31 @@ pub fn token_mint_to<'a>(
         amount * 10u64.pow(mint_decimals as u32), // Mint tokens
     )
 }
+
+/// Creates wrapped sol
+pub fn transfer_sol_to_native_account<'a>(
+    from: &AccountInfo<'a>,
+    to: &AccountInfo<'a>,
+    system_program: &AccountInfo<'a>,
+    amount: u64,
+    signer_seeds: &[&[&[u8]]],
+) -> Result<()> {
+    system_program::transfer(
+        CpiContext::new_with_signer(
+            system_program.to_account_info(),
+            system_program::Transfer {
+                from: from.to_account_info(),
+                to: to.to_account_info(),
+            },
+            signer_seeds,
+        ),
+        amount,
+    )?;
+
+    token_2022::sync_native(CpiContext::new(
+        system_program.to_account_info(),
+        token_2022::SyncNative {
+            account: to.to_account_info(),
+        },
+    ))
+}
