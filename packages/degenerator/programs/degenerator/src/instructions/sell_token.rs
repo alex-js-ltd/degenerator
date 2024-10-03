@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::errors::Errors;
 use crate::utils::{
     calculate_sell_price, set_bonding_curve_state, transfer_from_user_to_bonding_curve_vault,
-    transfer_sol_to_user, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
+    transfer_sol_to_user, BONDING_CURVE_STATE_SEED, MEME_VAULT_SEED,
 };
 
 use crate::state::BondingCurveState;
@@ -20,7 +20,7 @@ pub struct SellToken<'info> {
     /// CHECK: pda to control bonding_curve_vault_ata & store lamports
     #[account(
         mut,
-        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [MEME_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
     pub bonding_curve_vault: AccountInfo<'info>,
@@ -94,7 +94,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.system_program.to_account_info(),
         price,
         &[&[
-            BONDING_CURVE_VAULT_SEED.as_bytes(),
+            MEME_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
             &[ctx.bumps.bonding_curve_vault][..],
         ][..]],

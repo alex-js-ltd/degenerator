@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::errors::Errors;
 use crate::utils::{
     calculate_buy_price, set_bonding_curve_state, transfer_from_bonding_curve_vault_to_user,
-    transfer_sol_to_bonding_curve_vault, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
+    transfer_sol_to_bonding_curve_vault, BONDING_CURVE_STATE_SEED, MEME_VAULT_SEED,
 };
 
 use crate::state::BondingCurveState;
@@ -19,7 +19,7 @@ pub struct BuyToken<'info> {
     /// CHECK: pda to control bonding_curve_vault_ata & store lamports
     #[account(
         mut,
-        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [MEME_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
     pub bonding_curve_vault: AccountInfo<'info>,
@@ -88,7 +88,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         amount,
         ctx.accounts.mint.decimals,
         &[&[
-            BONDING_CURVE_VAULT_SEED.as_bytes(),
+            MEME_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
             &[ctx.bumps.bonding_curve_vault][..],
         ][..]],

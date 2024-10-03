@@ -6,8 +6,7 @@ import {
 	getInitializeDegeneratorIxs,
 	buildTransaction,
 	sendAndConfirm,
-	getBondingCurveVault,
-	getBondingCurveHodl,
+	getMemeVault,
 	getAssociatedAddress,
 	getBuyTokenIxs,
 	getSellTokenIxs,
@@ -29,26 +28,9 @@ describe('initialize', () => {
 
 	const payer = Keypair.generate()
 
-	const bondingCurveVault = getBondingCurveVault({
+	const memeVault = getMemeVault({
 		program,
 		mint: MY_TOKEN.mint,
-	})
-
-	const bondingCurveHodl = getBondingCurveHodl({ program, mint: MY_TOKEN.mint })
-
-	const bondingCurveVaultAta = getAssociatedAddress({
-		mint: MY_TOKEN.mint,
-		owner: bondingCurveVault,
-	})
-
-	const payerAta = getAssociatedAddress({
-		mint: MY_TOKEN.mint,
-		owner: payer.publicKey,
-	})
-
-	const bondingCurveHodlAta = getAssociatedAddress({
-		mint: MY_TOKEN.mint,
-		owner: bondingCurveHodl,
 	})
 
 	const supply = 100
@@ -87,8 +69,8 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check bonding curve vault is rent exempt', async () => {
-		const accountInfo = await connection.getAccountInfo(bondingCurveVault)
+	it('check meme vault is rent exempt', async () => {
+		const accountInfo = await connection.getAccountInfo(memeVault)
 
 		if (accountInfo === null) {
 			throw new Error('Account not found')

@@ -12,9 +12,9 @@ use anchor_spl::token_2022;
 
 use crate::state::BondingCurveState;
 
-pub const BONDING_CURVE_VAULT_SEED: &str = "bonding_curve_vault";
+pub const MEME_VAULT_SEED: &str = "meme_vault";
 pub const SOL_VAULT_SEED: &str = "sol_vault";
-pub const BONDING_CURVE_HODL_SEED: &str = "bonding_curve_hodl";
+pub const HODL_VAULT_SEED: &str = "hodl_vault";
 pub const BONDING_CURVE_STATE_SEED: &str = "bonding_curve_state";
 
 pub fn update_account_lamports_to_minimum_balance<'info>(

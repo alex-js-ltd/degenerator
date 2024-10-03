@@ -24,12 +24,12 @@
           "isSigner": false
         },
         {
-          "name": "bondingCurveVault",
+          "name": "memeVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "bondingCurveHodl",
+          "name": "hodlVault",
           "isMut": true,
           "isSigner": false
         },
@@ -39,7 +39,7 @@
           "isSigner": false
         },
         {
-          "name": "bondingCurveVaultAta",
+          "name": "memeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -47,7 +47,7 @@
           ]
         },
         {
-          "name": "bondingCurveHodlAta",
+          "name": "hodlAta",
           "isMut": true,
           "isSigner": false,
           "docs": [

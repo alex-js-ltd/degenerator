@@ -31,15 +31,15 @@ import {
 } from '@solana/spl-token-metadata'
 import {
 	getAssociatedAddress,
-	getBondingCurveVault,
-	getBondingCurveHodl,
+	getMemeVault,
+	getHodlVault,
+	getSolVault,
 	getBondingCurveState,
 	getAuthAddress,
 	getPoolAddress,
 	getPoolLpMintAddress,
 	getPoolVaultAddress,
 	getOracleAccountAddress,
-	getSolVault,
 } from './index'
 
 import { cpSwapProgram, configAddress, createPoolFeeReceive } from './config'
@@ -157,20 +157,20 @@ export async function getInitializeDegeneratorIxs({
 	const { mint } = metadata
 	const supplyBN = new BN(supply)
 
-	const bondingCurveVault = getBondingCurveVault({ program, mint })
+	const memeVault = getMemeVault({ program, mint })
 
-	const bondingCurveVaultAta = await getAssociatedTokenAddress(
+	const memeAta = await getAssociatedTokenAddress(
 		mint,
-		bondingCurveVault,
+		memeVault,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const bondingCurveHodl = getBondingCurveHodl({ program, mint })
+	const hodlVault = getHodlVault({ program, mint })
 
-	const bondingCurveHodlAta = await getAssociatedTokenAddress(
+	const hodlAta = await getAssociatedTokenAddress(
 		mint,
-		bondingCurveHodl,
+		hodlVault,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
@@ -199,13 +199,13 @@ export async function getInitializeDegeneratorIxs({
 			payer: payer,
 			mint2022: mint,
 			mint: NATIVE_MINT,
-			bondingCurveVault,
-			bondingCurveVaultAta,
-			bondingCurveHodl,
-			bondingCurveHodlAta,
-			bondingCurveState,
+			memeVault,
+			memeAta,
+			hodlVault,
+			hodlAta,
 			solVault,
 			solAta,
+			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram2022: TOKEN_2022_PROGRAM_ID,
@@ -244,7 +244,7 @@ export async function getBuyTokenIxs({
 		owner: payer,
 	})
 
-	const bondingCurveVault = getBondingCurveVault({ program, mint })
+	const bondingCurveVault = getMemeVault({ program, mint })
 
 	const bondingCurveVaultAta = getAssociatedAddress({
 		mint: mint,
@@ -283,7 +283,7 @@ export async function getSellTokenIxs({
 		owner: payer,
 	})
 
-	const bondingCurveVault = getBondingCurveVault({ program, mint })
+	const bondingCurveVault = getMemeVault({ program, mint })
 
 	const bondingCurveVaultAta = getAssociatedAddress({
 		mint: mint,

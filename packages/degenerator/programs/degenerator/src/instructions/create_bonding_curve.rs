@@ -4,7 +4,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
     set_bonding_curve_state, token_mint_to, update_account_lamports_to_minimum_balance,
-    BONDING_CURVE_HODL_SEED, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED, SOL_VAULT_SEED,
+    BONDING_CURVE_STATE_SEED, HODL_VAULT_SEED, MEME_VAULT_SEED, SOL_VAULT_SEED,
 };
 
 use anchor_spl::token::spl_token::native_mint;
@@ -14,13 +14,13 @@ use crate::state::BondingCurveState;
 pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
     // transfer minimum rent to pool account
     update_account_lamports_to_minimum_balance(
-        ctx.accounts.bonding_curve_vault.to_account_info(),
+        ctx.accounts.meme_vault.to_account_info(),
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
     )?;
 
     update_account_lamports_to_minimum_balance(
-        ctx.accounts.bonding_curve_hodl.to_account_info(),
+        ctx.accounts.hodl_vault.to_account_info(),
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
     )?;
@@ -39,7 +39,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_program_2022.to_account_info(),
         ctx.accounts.mint_2022.to_account_info(),
-        ctx.accounts.bonding_curve_vault_ata.to_account_info(),
+        ctx.accounts.meme_ata.to_account_info(),
         eighty_percent,
         ctx.accounts.mint_2022.decimals,
     )?;
@@ -49,17 +49,17 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_program_2022.to_account_info(),
         ctx.accounts.mint_2022.to_account_info(),
-        ctx.accounts.bonding_curve_hodl_ata.to_account_info(),
+        ctx.accounts.hodl_ata.to_account_info(),
         twenty_percent,
         ctx.accounts.mint_2022.decimals,
     )?;
 
     ctx.accounts.mint_2022.reload()?;
-    ctx.accounts.bonding_curve_vault_ata.reload()?;
-    ctx.accounts.bonding_curve_hodl_ata.reload()?;
+    ctx.accounts.meme_ata.reload()?;
+    ctx.accounts.hodl_ata.reload()?;
 
-    let current_supply = ctx.accounts.bonding_curve_vault_ata.amount as u128;
-    let total_supply = ctx.accounts.bonding_curve_vault_ata.amount as u128;
+    let current_supply = ctx.accounts.meme_ata.amount as u128;
+    let total_supply = ctx.accounts.meme_ata.amount as u128;
 
     set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
@@ -87,21 +87,21 @@ pub struct CreateBondingCurve<'info> {
     )]
     pub mint: Box<InterfaceAccount<'info, Mint>>,
 
-    /// CHECK: pda to control bonding_curve_vault_ata & store lamports
+    /// CHECK: pda to control meme tokens
     #[account(mut,
-        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint_2022.key().as_ref()],
+        seeds = [MEME_VAULT_SEED.as_bytes(), mint_2022.key().as_ref()],
         bump,
     )]
-    pub bonding_curve_vault: AccountInfo<'info>,
+    pub meme_vault: AccountInfo<'info>,
 
     /// CHECK: pda to hodl tokens for the raydium pool
     #[account(mut,
-            seeds = [BONDING_CURVE_HODL_SEED.as_bytes(), mint_2022.key().as_ref()],
+            seeds = [HODL_VAULT_SEED.as_bytes(), mint_2022.key().as_ref()],
             bump,
         )]
-    pub bonding_curve_hodl: AccountInfo<'info>,
+    pub hodl_vault: AccountInfo<'info>,
 
-    /// CHECK: pda to hodl tokens for the raydium pool
+    /// CHECK: pda to control sol
     #[account(mut,
         seeds = [SOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
@@ -113,21 +113,21 @@ pub struct CreateBondingCurve<'info> {
         init,
         payer = payer,
         associated_token::mint = mint_2022,
-        associated_token::authority = bonding_curve_vault,
+        associated_token::authority = meme_vault,
         associated_token::token_program = token_program_2022
 
     )]
-    pub bonding_curve_vault_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub meme_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// The ATA that will be created
     #[account(
             init,
             payer = payer,
             associated_token::mint = mint_2022,
-            associated_token::authority = bonding_curve_hodl,
+            associated_token::authority = hodl_vault,
             associated_token::token_program = token_program_2022
         )]
-    pub bonding_curve_hodl_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub hodl_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// The ATA that will be created
     #[account(
