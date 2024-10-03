@@ -8,7 +8,13 @@ use anchor_lang::{
     },
     Lamports,
 };
-use anchor_spl::token_2022;
+use anchor_spl::{
+    self,
+    token_2022::{
+        self, spl_token_2022,
+        spl_token_2022::extension::{ExtensionType, StateWithExtensions},
+    },
+};
 
 use crate::state::BondingCurveState;
 

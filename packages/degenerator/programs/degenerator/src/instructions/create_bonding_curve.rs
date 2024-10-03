@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token::Token;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
@@ -7,120 +8,89 @@ use crate::utils::{
     BONDING_CURVE_HODL_SEED, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
 };
 
+use anchor_spl::token::spl_token::native_mint;
+
 use crate::state::BondingCurveState;
 
 pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
     // transfer minimum rent to pool account
-    update_account_lamports_to_minimum_balance(
-        ctx.accounts.bonding_curve_vault.to_account_info(),
-        ctx.accounts.payer.to_account_info(),
-        ctx.accounts.system_program.to_account_info(),
-    )?;
-
-    update_account_lamports_to_minimum_balance(
-        ctx.accounts.bonding_curve_hodl.to_account_info(),
-        ctx.accounts.payer.to_account_info(),
-        ctx.accounts.system_program.to_account_info(),
-    )?;
-
-    let eighty_percent = amount.saturating_mul(80).saturating_div(100);
-    let twenty_percent = amount.saturating_mul(20).saturating_div(100);
-
-    // mint 80% to bonding curve vault
-    token_mint_to(
-        ctx.accounts.payer.to_account_info(),
-        ctx.accounts.token_program.to_account_info(),
-        ctx.accounts.mint.to_account_info(),
-        ctx.accounts.bonding_curve_vault_ata.to_account_info(),
-        eighty_percent,
-        ctx.accounts.mint.decimals,
-    )?;
-
-    // mint 20% to hodl address
-    token_mint_to(
-        ctx.accounts.payer.to_account_info(),
-        ctx.accounts.token_program.to_account_info(),
-        ctx.accounts.mint.to_account_info(),
-        ctx.accounts.bonding_curve_hodl_ata.to_account_info(),
-        twenty_percent,
-        ctx.accounts.mint.decimals,
-    )?;
-
-    ctx.accounts.mint.reload()?;
-    ctx.accounts.bonding_curve_vault_ata.reload()?;
-    ctx.accounts.bonding_curve_hodl_ata.reload()?;
-
-    let current_supply = ctx.accounts.bonding_curve_vault_ata.amount as u128;
-    let total_supply = ctx.accounts.bonding_curve_vault_ata.amount as u128;
-
-    set_bonding_curve_state(
-        &mut ctx.accounts.bonding_curve_state,
-        current_supply,
-        total_supply,
-    );
 
     Ok(())
 }
 
 #[derive(Accounts)]
 pub struct CreateBondingCurve<'info> {
-    /// The payer for the transaction
+    /// Address paying to create the pool. Can be anyone
     #[account(mut)]
-    pub payer: Signer<'info>,
+    pub creator: Signer<'info>,
 
-    /// CHECK: pda to control bonding_curve_vault_ata & store lamports
-    #[account(mut,
-        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+    #[account(mut)]
+    pub bonding_curve_state: UncheckedAccount<'info>,
+
+    /// Token_0 mint, the key must smaller then token_1 mint.
+    #[account(
+        constraint = token_0_mint.key() < token_1_mint.key(),
+        constraint = token_0_mint.key() == native_mint::id(),
+        mint::token_program = token_0_program,
+    )]
+    pub token_0_mint: Box<InterfaceAccount<'info, Mint>>,
+
+    /// Token_1 mint, the key must grater then token_0 mint.
+    #[account(
+        mint::token_program = token_1_program,
+    )]
+    pub token_1_mint: Box<InterfaceAccount<'info, Mint>>,
+
+    /// payer token0 account
+    #[account(
+        mut,
+        token::mint = token_0_mint,
+        token::authority = token_0_vault,
+    )]
+    pub creator_token_0: Box<InterfaceAccount<'info, TokenAccount>>,
+
+    /// creator token1 account
+    #[account(
+        mut,
+        token::mint = token_1_mint,
+        token::authority = token_1_vault,
+    )]
+    pub creator_token_1: Box<InterfaceAccount<'info, TokenAccount>>,
+
+    /// CHECK: Token_0 vault for the pool
+    #[account(
+        mut,
+        seeds = [
+           BONDING_CURVE_VAULT_SEED.as_bytes(),
+           bonding_curve_state.key().as_ref(),
+            token_0_mint.key().as_ref()
+        ],
         bump,
     )]
-    pub bonding_curve_vault: AccountInfo<'info>,
+    pub token_0_vault: UncheckedAccount<'info>,
 
-    /// CHECK: pda to hodl tokens for the raydium pool
-    #[account(mut,
-            seeds = [BONDING_CURVE_HODL_SEED.as_bytes(), mint.key().as_ref()],
-            bump,
-        )]
-    pub bonding_curve_hodl: AccountInfo<'info>,
-
-    /// The Mint for which the ATA is being created
-    pub mint: Box<InterfaceAccount<'info, Mint>>,
-
-    /// The ATA that will be created
+    /// CHECK: Token_1 vault for the pool
     #[account(
-        init,
-        payer = payer,
-        associated_token::mint = mint,
-        associated_token::authority = bonding_curve_vault,
-    )]
-    pub bonding_curve_vault_ata: Box<InterfaceAccount<'info, TokenAccount>>,
-
-    /// The ATA that will be created
-    #[account(
-            init,
-            payer = payer,
-            associated_token::mint = mint,
-            associated_token::authority = bonding_curve_hodl,
-        )]
-    pub bonding_curve_hodl_ata: Box<InterfaceAccount<'info, TokenAccount>>,
-
-    /// pda to store current price
-    #[account(init,
-        seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), mint.key().as_ref()],
+        mut,
+        seeds = [
+            BONDING_CURVE_VAULT_SEED.as_bytes(),
+           bonding_curve_state.key().as_ref(),
+            token_1_mint.key().as_ref()
+        ],
         bump,
-        payer = payer,
-        space = BondingCurveState::LEN
     )]
-    pub bonding_curve_state: Account<'info, BondingCurveState>,
+    pub token_1_vault: UncheckedAccount<'info>,
 
+    /// Program to create mint account and mint tokens
+    pub token_program: Program<'info, Token>,
     /// Spl token program or token program 2022
-    pub token_program: Interface<'info, TokenInterface>,
-
-    /// Associated Token Program
+    pub token_0_program: Interface<'info, TokenInterface>,
+    /// Spl token program or token program 2022
+    pub token_1_program: Interface<'info, TokenInterface>,
+    /// Program to create an ATA for receiving position NFT
     pub associated_token_program: Program<'info, AssociatedToken>,
-
-    /// System Program
+    /// To create a new program account
     pub system_program: Program<'info, System>,
-
     /// Sysvar for program account
     pub rent: Sysvar<'info, Rent>,
 }
