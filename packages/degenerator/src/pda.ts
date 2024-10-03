@@ -4,6 +4,7 @@ import { PublicKey } from '@solana/web3.js'
 import {
 	TOKEN_2022_PROGRAM_ID,
 	ASSOCIATED_TOKEN_PROGRAM_ID,
+	NATIVE_MINT,
 } from '@solana/spl-token'
 
 export function getAssociatedAddress({
@@ -53,7 +54,11 @@ export function getBondingCurveState({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('bonding_curve_state'), mint.toBuffer()],
+		[
+			Buffer.from('bonding_curve_state'),
+			NATIVE_MINT.toBuffer(),
+			mint.toBuffer(),
+		],
 		program.programId,
 	)[0]
 }

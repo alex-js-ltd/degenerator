@@ -6,54 +6,50 @@ export type Degenerator = {
       "name": "createBondingCurve",
       "accounts": [
         {
-          "name": "payer",
+          "name": "creator",
           "isMut": true,
           "isSigner": true,
           "docs": [
-            "The payer for the transaction"
+            "Address paying to create the pool. Can be anyone"
           ]
         },
         {
-          "name": "bondingCurveVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondingCurveHodl",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
+          "name": "token0Mint",
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "The Mint for which the ATA is being created"
+            "Token_0 mint, the key must smaller then token_1 mint."
           ]
         },
         {
-          "name": "bondingCurveVaultAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA that will be created"
-          ]
+          "name": "token1Mint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          "name": "bondingCurveHodlAta",
+          "name": "token0Ata",
           "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA that will be created"
-          ]
+          "isSigner": false
+        },
+        {
+          "name": "token1Ata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token0Vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token1Vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "bondingCurveState",
           "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "pda to store current price"
-          ]
+          "isSigner": false
         },
         {
           "name": "tokenProgram",
@@ -68,7 +64,7 @@ export type Degenerator = {
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "Associated Token Program"
+            "Program to create an ATA for receiving position NFT"
           ]
         },
         {
@@ -76,7 +72,7 @@ export type Degenerator = {
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "System Program"
+            "To create a new program account"
           ]
         },
         {
@@ -498,54 +494,50 @@ export const IDL: Degenerator = {
       "name": "createBondingCurve",
       "accounts": [
         {
-          "name": "payer",
+          "name": "creator",
           "isMut": true,
           "isSigner": true,
           "docs": [
-            "The payer for the transaction"
+            "Address paying to create the pool. Can be anyone"
           ]
         },
         {
-          "name": "bondingCurveVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondingCurveHodl",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
+          "name": "token0Mint",
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "The Mint for which the ATA is being created"
+            "Token_0 mint, the key must smaller then token_1 mint."
           ]
         },
         {
-          "name": "bondingCurveVaultAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA that will be created"
-          ]
+          "name": "token1Mint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          "name": "bondingCurveHodlAta",
+          "name": "token0Ata",
           "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA that will be created"
-          ]
+          "isSigner": false
+        },
+        {
+          "name": "token1Ata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token0Vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token1Vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "bondingCurveState",
           "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "pda to store current price"
-          ]
+          "isSigner": false
         },
         {
           "name": "tokenProgram",
@@ -560,7 +552,7 @@ export const IDL: Degenerator = {
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "Associated Token Program"
+            "Program to create an ATA for receiving position NFT"
           ]
         },
         {
@@ -568,7 +560,7 @@ export const IDL: Degenerator = {
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "System Program"
+            "To create a new program account"
           ]
         },
         {

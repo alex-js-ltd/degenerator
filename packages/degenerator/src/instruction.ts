@@ -156,19 +156,18 @@ export async function getInitializeDegeneratorIxs({
 	const { mint } = metadata
 	const supplyBN = new BN(supply)
 
-	const bondingCurveVault = getBondingCurveVault({ program, mint })
+	const token0Vault = getBondingCurveVault({ program, mint: NATIVE_MINT })
 
-	const bondingCurveVaultAta = getAssociatedAddress({
-		mint: mint,
-		owner: bondingCurveVault,
-	})
+	const token1Vault = getBondingCurveVault({ program, mint })
 
-	const bondingCurveHodl = getBondingCurveHodl({ program, mint })
+	const token0Ata = await getAssociatedTokenAddress(token0Vault, NATIVE_MINT)
 
-	const bondingCurveHodlAta = getAssociatedAddress({
-		mint: mint,
-		owner: bondingCurveHodl,
-	})
+	const token1Ata = await getAssociatedTokenAddress(
+		token1Vault,
+		mint,
+		false,
+		TOKEN_2022_PROGRAM_ID,
+	)
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
@@ -182,12 +181,13 @@ export async function getInitializeDegeneratorIxs({
 	const createPoolIx = await program.methods
 		.createBondingCurve(supplyBN)
 		.accountsStrict({
-			payer: payer,
-			mint: mint,
-			bondingCurveVault,
-			bondingCurveVaultAta,
-			bondingCurveHodl,
-			bondingCurveHodlAta,
+			creator: payer,
+			token0Mint: NATIVE_MINT,
+			token1Mint: mint,
+			token0Vault,
+			token1Vault,
+			token0Ata,
+			token1Ata,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
