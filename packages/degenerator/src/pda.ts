@@ -4,6 +4,7 @@ import { PublicKey } from '@solana/web3.js'
 import {
 	TOKEN_2022_PROGRAM_ID,
 	ASSOCIATED_TOKEN_PROGRAM_ID,
+	NATIVE_MINT,
 } from '@solana/spl-token'
 
 export function getAssociatedAddress({
@@ -41,6 +42,19 @@ export function getBondingCurveHodl({
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
 		[Buffer.from('bonding_curve_hodl'), mint.toBuffer()],
+		program.programId,
+	)[0]
+}
+
+export function getSolVault({
+	program,
+	mint,
+}: {
+	program: Program<Degenerator>
+	mint: PublicKey
+}): PublicKey {
+	return PublicKey.findProgramAddressSync(
+		[Buffer.from('sol_vault'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }

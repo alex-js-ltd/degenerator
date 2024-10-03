@@ -14,6 +14,16 @@ export type Degenerator = {
           ]
         },
         {
+          "name": "mint2022",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "bondingCurveVault",
           "isMut": true,
           "isSigner": false
@@ -24,12 +34,9 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "The Mint for which the ATA is being created"
-          ]
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "bondingCurveVaultAta",
@@ -48,6 +55,14 @@ export type Degenerator = {
           ]
         },
         {
+          "name": "solAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The ATA that will be created"
+          ]
+        },
+        {
           "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false,
@@ -57,6 +72,14 @@ export type Degenerator = {
         },
         {
           "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Spl token program or token program 2022"
+          ]
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -506,6 +529,16 @@ export const IDL: Degenerator = {
           ]
         },
         {
+          "name": "mint2022",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "bondingCurveVault",
           "isMut": true,
           "isSigner": false
@@ -516,12 +549,9 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "The Mint for which the ATA is being created"
-          ]
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "bondingCurveVaultAta",
@@ -540,6 +570,14 @@ export const IDL: Degenerator = {
           ]
         },
         {
+          "name": "solAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The ATA that will be created"
+          ]
+        },
+        {
           "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false,
@@ -549,6 +587,14 @@ export const IDL: Degenerator = {
         },
         {
           "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Spl token program or token program 2022"
+          ]
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
           "docs": [

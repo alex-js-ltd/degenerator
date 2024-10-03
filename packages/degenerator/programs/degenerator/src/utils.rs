@@ -13,6 +13,7 @@ use anchor_spl::token_2022;
 use crate::state::BondingCurveState;
 
 pub const BONDING_CURVE_VAULT_SEED: &str = "bonding_curve_vault";
+pub const SOL_VAULT_SEED: &str = "sol_vault";
 pub const BONDING_CURVE_HODL_SEED: &str = "bonding_curve_hodl";
 pub const BONDING_CURVE_STATE_SEED: &str = "bonding_curve_state";
 

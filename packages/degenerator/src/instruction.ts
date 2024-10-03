@@ -39,6 +39,7 @@ import {
 	getPoolLpMintAddress,
 	getPoolVaultAddress,
 	getOracleAccountAddress,
+	getSolVault,
 } from './index'
 
 import { cpSwapProgram, configAddress, createPoolFeeReceive } from './config'
@@ -174,6 +175,15 @@ export async function getInitializeDegeneratorIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
+	const solVault = getSolVault({ program, mint: NATIVE_MINT })
+
+	const solAta = await getAssociatedTokenAddress(
+		NATIVE_MINT,
+		solVault,
+		true,
+		TOKEN_PROGRAM_ID,
+	)
+
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
 	const createMintAccountIxs = await getCreateMintIxs({
@@ -187,15 +197,19 @@ export async function getInitializeDegeneratorIxs({
 		.createBondingCurve(supplyBN)
 		.accountsStrict({
 			payer: payer,
-			mint: mint,
+			mint2022: mint,
+			mint: NATIVE_MINT,
 			bondingCurveVault,
 			bondingCurveVaultAta,
 			bondingCurveHodl,
 			bondingCurveHodlAta,
 			bondingCurveState,
+			solVault,
+			solAta,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram2022: TOKEN_2022_PROGRAM_ID,
+			tokenProgram: TOKEN_PROGRAM_ID,
 			rent: web3.SYSVAR_RENT_PUBKEY,
 		})
 		.instruction()

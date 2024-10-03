@@ -81,7 +81,7 @@ describe('initialize', () => {
 		tx.sign([payer])
 
 		const res = await connection.simulateTransaction(tx)
-
+		console.log('init degenerator', res)
 		expect(res.value.err).toBeNull()
 
 		await sendAndConfirm({ connection, tx })
