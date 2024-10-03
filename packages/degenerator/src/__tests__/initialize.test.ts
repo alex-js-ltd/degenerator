@@ -87,7 +87,7 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check pool auth is rent exempt', async () => {
+	it('check bonding curve vault is rent exempt', async () => {
 		const accountInfo = await connection.getAccountInfo(bondingCurveVault)
 
 		if (accountInfo === null) {
@@ -182,5 +182,64 @@ describe('initialize', () => {
 
 		// Ensure that currentSupply equals expectedSupply
 		expect(currentSupply.eq(expectedCurrentSupply)).toBe(true)
+	})
+
+	it('sell token', async () => {
+		const amountToSell = 80
+
+		const ix = await getSellTokenIxs({
+			program,
+			payer: payer.publicKey,
+			mint: MY_TOKEN.mint,
+			amount: amountToSell,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+		expect(res.value.err).toBeNull()
+
+		// Confirm the transaction
+		await sendAndConfirm({ connection, tx })
+	})
+
+	it('progess should be 0%', async () => {
+		const { progress } = await fetchBondingCurveState({
+			program,
+			mint: MY_TOKEN.mint,
+		})
+
+		const expectedProgress = new BN(0)
+
+		// Ensure that currentSupply equals expectedSupply
+		expect(progress.eq(expectedProgress)).toBe(true)
+	})
+
+	it('current supply should be 80% of supply', async () => {
+		const { currentSupply } = await fetchBondingCurveState({
+			program,
+			mint: MY_TOKEN.mint,
+		})
+
+		// Convert the supply into the smallest unit considering the decimals
+		const supplyBN = new anchor.BN(supply).mul(
+			new anchor.BN(10).pow(new anchor.BN(MY_TOKEN.decimals)),
+		)
+
+		// Correctly calculate 80% of the total supply
+		const expectedSupply = supplyBN
+			.mul(new anchor.BN(80))
+			.div(new anchor.BN(100))
+
+		// Ensure that currentSupply equals expectedSupply
+		expect(currentSupply.eq(expectedSupply)).toBe(true)
 	})
 })
