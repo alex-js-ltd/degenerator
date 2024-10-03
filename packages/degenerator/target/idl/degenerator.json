@@ -3,7 +3,7 @@
   "name": "degenerator",
   "instructions": [
     {
-      "name": "createPool",
+      "name": "createBondingCurve",
       "accounts": [
         {
           "name": "payer",
@@ -14,12 +14,12 @@
           ]
         },
         {
-          "name": "poolVault",
+          "name": "bondingCurveVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "raydiumVault",
+          "name": "bondingCurveHodl",
           "isMut": true,
           "isSigner": false
         },
@@ -32,7 +32,7 @@
           ]
         },
         {
-          "name": "poolAta",
+          "name": "bondingCurveVaultAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -40,7 +40,7 @@
           ]
         },
         {
-          "name": "raydiumAta",
+          "name": "bondingCurveHodlAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -48,7 +48,7 @@
           ]
         },
         {
-          "name": "poolState",
+          "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -99,7 +99,7 @@
       "name": "buyToken",
       "accounts": [
         {
-          "name": "signer",
+          "name": "payer",
           "isMut": true,
           "isSigner": true,
           "docs": [
@@ -107,17 +107,17 @@
           ]
         },
         {
-          "name": "poolVault",
+          "name": "bondingCurveVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolState",
+          "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolAta",
+          "name": "bondingCurveVaultAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -186,39 +186,51 @@
           "isSigner": false
         },
         {
-          "name": "poolVault",
+          "name": "bondingCurveVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolState",
+          "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolAta",
+          "name": "bondingCurveVaultAta",
           "isMut": true,
           "isSigner": false
         },
         {
           "name": "mint",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Mint associated with the token"
+          ]
         },
         {
           "name": "tokenProgram",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Token program"
+          ]
         },
         {
           "name": "systemProgram",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "System program"
+          ]
         },
         {
           "name": "associatedTokenProgram",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Associated token program"
+          ]
         }
       ],
       "args": [
@@ -441,7 +453,7 @@
   ],
   "accounts": [
     {
-      "name": "PoolState",
+      "name": "BondingCurveState",
       "type": {
         "kind": "struct",
         "fields": [
@@ -477,6 +489,6 @@
     }
   ],
   "metadata": {
-    "address": "36FR4mjaoUaFdaUE3B5XLXw23Y8VCbhkTvBQu1YJjmUm"
+    "address": "FwEwyuBdJTdztPrpnKQJhW8y7eTgD2GBkZeiQz5ZKVv2"
   }
 }

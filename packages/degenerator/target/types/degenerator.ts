@@ -3,7 +3,7 @@ export type Degenerator = {
   "name": "degenerator",
   "instructions": [
     {
-      "name": "createPool",
+      "name": "createBondingCurve",
       "accounts": [
         {
           "name": "payer",
@@ -14,12 +14,12 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "poolVault",
+          "name": "bondingCurveVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "raydiumVault",
+          "name": "bondingCurveHodl",
           "isMut": true,
           "isSigner": false
         },
@@ -32,7 +32,7 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "poolAta",
+          "name": "bondingCurveVaultAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -40,7 +40,7 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "raydiumAta",
+          "name": "bondingCurveHodlAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -48,7 +48,7 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "poolState",
+          "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -99,7 +99,7 @@ export type Degenerator = {
       "name": "buyToken",
       "accounts": [
         {
-          "name": "signer",
+          "name": "payer",
           "isMut": true,
           "isSigner": true,
           "docs": [
@@ -107,17 +107,17 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "poolVault",
+          "name": "bondingCurveVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolState",
+          "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolAta",
+          "name": "bondingCurveVaultAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -186,39 +186,51 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "poolVault",
+          "name": "bondingCurveVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolState",
+          "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolAta",
+          "name": "bondingCurveVaultAta",
           "isMut": true,
           "isSigner": false
         },
         {
           "name": "mint",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Mint associated with the token"
+          ]
         },
         {
           "name": "tokenProgram",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Token program"
+          ]
         },
         {
           "name": "systemProgram",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "System program"
+          ]
         },
         {
           "name": "associatedTokenProgram",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Associated token program"
+          ]
         }
       ],
       "args": [
@@ -441,7 +453,7 @@ export type Degenerator = {
   ],
   "accounts": [
     {
-      "name": "poolState",
+      "name": "bondingCurveState",
       "type": {
         "kind": "struct",
         "fields": [
@@ -483,7 +495,7 @@ export const IDL: Degenerator = {
   "name": "degenerator",
   "instructions": [
     {
-      "name": "createPool",
+      "name": "createBondingCurve",
       "accounts": [
         {
           "name": "payer",
@@ -494,12 +506,12 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "poolVault",
+          "name": "bondingCurveVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "raydiumVault",
+          "name": "bondingCurveHodl",
           "isMut": true,
           "isSigner": false
         },
@@ -512,7 +524,7 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "poolAta",
+          "name": "bondingCurveVaultAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -520,7 +532,7 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "raydiumAta",
+          "name": "bondingCurveHodlAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -528,7 +540,7 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "poolState",
+          "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -579,7 +591,7 @@ export const IDL: Degenerator = {
       "name": "buyToken",
       "accounts": [
         {
-          "name": "signer",
+          "name": "payer",
           "isMut": true,
           "isSigner": true,
           "docs": [
@@ -587,17 +599,17 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "poolVault",
+          "name": "bondingCurveVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolState",
+          "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolAta",
+          "name": "bondingCurveVaultAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -666,39 +678,51 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "poolVault",
+          "name": "bondingCurveVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolState",
+          "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "poolAta",
+          "name": "bondingCurveVaultAta",
           "isMut": true,
           "isSigner": false
         },
         {
           "name": "mint",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Mint associated with the token"
+          ]
         },
         {
           "name": "tokenProgram",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Token program"
+          ]
         },
         {
           "name": "systemProgram",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "System program"
+          ]
         },
         {
           "name": "associatedTokenProgram",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Associated token program"
+          ]
         }
       ],
       "args": [
@@ -921,7 +945,7 @@ export const IDL: Degenerator = {
   ],
   "accounts": [
     {
-      "name": "poolState",
+      "name": "bondingCurveState",
       "type": {
         "kind": "struct",
         "fields": [

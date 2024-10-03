@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 #[account]
 #[derive(InitSpace)]
-pub struct PoolState {
+pub struct BondingCurveState {
     pub buy_price: u64,
     pub sell_price: u64,
     pub current_supply: u64,
@@ -10,6 +10,6 @@ pub struct PoolState {
     pub progress: u64,
 }
 
-impl PoolState {
+impl BondingCurveState {
     pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8;
 }

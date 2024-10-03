@@ -4,44 +4,44 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
 use crate::utils::{
-    calculate_buy_price, set_pool_state, transfer_from_pool_vault_to_user,
-    transfer_sol_to_pool_vault, POOL_STATE_SEED, POOL_VAULT_SEED,
+    calculate_buy_price, set_bonding_curve_state, transfer_from_bonding_curve_vault_to_user,
+    transfer_sol_to_bonding_curve_vault, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
 };
 
-use crate::state::PoolState;
+use crate::state::BondingCurveState;
 
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
     /// The payer of the transaction and the signer
     #[account(mut)]
-    pub signer: Signer<'info>,
+    pub payer: Signer<'info>,
 
-    /// CHECK: pda to control pool_ata & store lamports
+    /// CHECK: pda to control bonding_curve_vault_ata & store lamports
     #[account(
         mut,
-        seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub pool_vault: AccountInfo<'info>,
+    pub bonding_curve_vault: AccountInfo<'info>,
 
     /// CHECK: pda to store current price
     #[account(
             mut,
-            seeds = [POOL_STATE_SEED.as_bytes(), mint.key().as_ref()],
+            seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), mint.key().as_ref()],
             bump,
         )]
-    pub pool_state: Account<'info, PoolState>,
+    pub bonding_curve_state: Account<'info, BondingCurveState>,
 
     /// Token account from which the tokens will be transferred
     #[account(mut)]
-    pub pool_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub bonding_curve_vault_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Token account to which the tokens will be transferred (created if needed)
     #[account(
         init_if_needed,
         associated_token::mint = mint,
-        payer = signer,
-        associated_token::authority = signer
+        payer = payer,
+        associated_token::authority = payer
     )]
     pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
@@ -60,53 +60,57 @@ pub struct BuyToken<'info> {
 }
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
-    let total_supply = ctx.accounts.pool_state.total_supply;
+    let total_supply = ctx.accounts.bonding_curve_state.total_supply;
 
     let price = calculate_buy_price(
-        ctx.accounts.pool_ata.amount as u128,
+        ctx.accounts.bonding_curve_vault_ata.amount as u128,
         total_supply as u128,
         amount as u128,
     );
 
     // Ensure the requested amount does not exceed available supply
-    if amount > ctx.accounts.pool_ata.amount {
+    if amount > ctx.accounts.bonding_curve_vault_ata.amount {
         return Err(Errors::InsufficientTokens.into());
     }
 
-    // Check if the signer has enough lamports to cover the price
-    let signer_balance = ctx.accounts.signer.lamports();
-    if signer_balance < price {
+    // Check if the payer has enough lamports to cover the price
+    let payer_balance = ctx.accounts.payer.lamports();
+    if payer_balance < price {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
-    transfer_from_pool_vault_to_user(
-        ctx.accounts.pool_vault.to_account_info(),
-        ctx.accounts.pool_ata.to_account_info(),
+    transfer_from_bonding_curve_vault_to_user(
+        ctx.accounts.bonding_curve_vault.to_account_info(),
+        ctx.accounts.bonding_curve_vault_ata.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         amount,
         ctx.accounts.mint.decimals,
         &[&[
-            POOL_VAULT_SEED.as_bytes(),
+            BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.pool_vault][..],
+            &[ctx.bumps.bonding_curve_vault][..],
         ][..]],
     )?;
 
-    transfer_sol_to_pool_vault(
-        ctx.accounts.signer.to_account_info(),
-        ctx.accounts.pool_vault.to_account_info(),
+    transfer_sol_to_bonding_curve_vault(
+        ctx.accounts.payer.to_account_info(),
+        ctx.accounts.bonding_curve_vault.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
         price,
     )?;
 
-    ctx.accounts.pool_ata.reload()?;
+    ctx.accounts.bonding_curve_vault_ata.reload()?;
 
-    let current_supply = ctx.accounts.pool_ata.amount as u128;
-    let total_supply = ctx.accounts.pool_state.total_supply as u128;
+    let current_supply = ctx.accounts.bonding_curve_vault_ata.amount as u128;
+    let total_supply = ctx.accounts.bonding_curve_state.total_supply as u128;
 
-    set_pool_state(&mut ctx.accounts.pool_state, current_supply, total_supply);
+    set_bonding_curve_state(
+        &mut ctx.accounts.bonding_curve_state,
+        current_supply,
+        total_supply,
+    );
 
     Ok(())
 }

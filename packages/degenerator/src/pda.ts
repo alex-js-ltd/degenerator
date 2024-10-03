@@ -19,7 +19,7 @@ export function getAssociatedAddress({
 	)[0]
 }
 
-export function getPoolVault({
+export function getBondingCurveVault({
 	program,
 	mint,
 }: {
@@ -27,12 +27,12 @@ export function getPoolVault({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('pool_vault'), mint.toBuffer()],
+		[Buffer.from('bonding_curve_vault'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }
 
-export function getRaydiumVault({
+export function getBondingCurveHodl({
 	program,
 	mint,
 }: {
@@ -40,12 +40,12 @@ export function getRaydiumVault({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('raydium_vault'), mint.toBuffer()],
+		[Buffer.from('bonding_curve_hodl'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }
 
-export function getPoolState({
+export function getBondingCurveState({
 	program,
 	mint,
 }: {
@@ -53,12 +53,12 @@ export function getPoolState({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('pool_state'), mint.toBuffer()],
+		[Buffer.from('bonding_curve_state'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }
 
-export interface PoolState {
+export interface BondingCurveState {
 	buyPrice: BN
 	sellPrice: BN
 	currentSupply: BN
@@ -66,16 +66,16 @@ export interface PoolState {
 	progress: BN
 }
 
-export async function fetchPoolState({
+export async function fetchBondingCurveState({
 	program,
 	mint,
 }: {
 	program: Program<Degenerator>
 	mint: PublicKey
 }) {
-	const pda = getPoolState({ program, mint })
+	const pda = getBondingCurveState({ program, mint })
 
-	const data = await program.account.poolState.fetch(pda)
+	const data = await program.account.bondingCurveState.fetch(pda)
 
 	return data
 }

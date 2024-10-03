@@ -31,9 +31,9 @@ import {
 } from '@solana/spl-token-metadata'
 import {
 	getAssociatedAddress,
-	getPoolVault,
-	getRaydiumVault,
-	getPoolState,
+	getBondingCurveVault,
+	getBondingCurveHodl,
+	getBondingCurveState,
 	getAuthAddress,
 	getPoolAddress,
 	getPoolLpMintAddress,
@@ -156,21 +156,21 @@ export async function getInitializeDegeneratorIxs({
 	const { mint } = metadata
 	const supplyBN = new BN(supply)
 
-	const poolVault = getPoolVault({ program, mint })
+	const bondingCurveVault = getBondingCurveVault({ program, mint })
 
-	const poolATA = getAssociatedAddress({
+	const bondingCurveVaultAta = getAssociatedAddress({
 		mint: mint,
-		owner: poolVault,
+		owner: bondingCurveVault,
 	})
 
-	const raydiumVault = getRaydiumVault({ program, mint })
+	const bondingCurveHodl = getBondingCurveHodl({ program, mint })
 
-	const raydiumATA = getAssociatedAddress({
+	const bondingCurveHodlAta = getAssociatedAddress({
 		mint: mint,
-		owner: raydiumVault,
+		owner: bondingCurveHodl,
 	})
 
-	const poolState = getPoolState({ program, mint })
+	const bondingCurveState = getBondingCurveState({ program, mint })
 
 	const createMintAccountIxs = await getCreateMintIxs({
 		payer,
@@ -180,15 +180,15 @@ export async function getInitializeDegeneratorIxs({
 	})
 
 	const createPoolIx = await program.methods
-		.createPool(supplyBN)
+		.createBondingCurve(supplyBN)
 		.accountsStrict({
 			payer: payer,
-			poolAta: poolATA,
 			mint: mint,
-			poolVault: poolVault,
-			raydiumVault: raydiumVault,
-			raydiumAta: raydiumATA,
-			poolState: poolState,
+			bondingCurveVault,
+			bondingCurveVaultAta,
+			bondingCurveHodl,
+			bondingCurveHodlAta,
+			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -221,30 +221,30 @@ export async function getBuyTokenIxs({
 	mint,
 	amount,
 }: SwapTokenIxsParams) {
-	const payerATA = getAssociatedAddress({
+	const payerAta = getAssociatedAddress({
 		mint: mint,
 		owner: payer,
 	})
 
-	const poolVault = getPoolVault({ program, mint })
+	const bondingCurveVault = getBondingCurveVault({ program, mint })
 
-	const poolATA = getAssociatedAddress({
+	const bondingCurveVaultAta = getAssociatedAddress({
 		mint: mint,
-		owner: poolVault,
+		owner: bondingCurveVault,
 	})
 
-	const poolState = getPoolState({ program, mint })
+	const bondingCurveState = getBondingCurveState({ program, mint })
 
 	const amountBN = new BN(amount)
 	const buy = await program.methods
 		.buyToken(amountBN)
 		.accountsStrict({
 			mint: mint,
-			signer: payer,
-			poolAta: poolATA,
-			payerAta: payerATA,
-			poolVault: poolVault,
-			poolState: poolState,
+			payer: payer,
+			bondingCurveVault,
+			bondingCurveVaultAta,
+			payerAta,
+			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -260,19 +260,19 @@ export async function getSellTokenIxs({
 	mint,
 	amount,
 }: SwapTokenIxsParams) {
-	const payerATA = getAssociatedAddress({
+	const payerAta = getAssociatedAddress({
 		mint: mint,
 		owner: payer,
 	})
 
-	const poolVault = getPoolVault({ program, mint })
+	const bondingCurveVault = getBondingCurveVault({ program, mint })
 
-	const poolATA = getAssociatedAddress({
+	const bondingCurveVaultAta = getAssociatedAddress({
 		mint: mint,
-		owner: poolVault,
+		owner: bondingCurveVault,
 	})
 
-	const poolState = getPoolState({ program, mint })
+	const bondingCurveState = getBondingCurveState({ program, mint })
 
 	const amountBN = new BN(amount)
 	const sell = await program.methods
@@ -280,10 +280,10 @@ export async function getSellTokenIxs({
 		.accountsStrict({
 			mint: mint,
 			signer: payer,
-			payerAta: payerATA,
-			poolAta: poolATA,
-			poolVault: poolVault,
-			poolState: poolState,
+			bondingCurveVault,
+			bondingCurveVaultAta,
+			payerAta,
+			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_2022_PROGRAM_ID,

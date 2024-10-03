@@ -6,12 +6,12 @@ import {
 	getInitializeDegeneratorIxs,
 	buildTransaction,
 	sendAndConfirm,
-	getPoolVault,
-	getRaydiumVault,
+	getBondingCurveVault,
+	getBondingCurveHodl,
 	getAssociatedAddress,
 	getBuyTokenIxs,
 	getSellTokenIxs,
-	fetchPoolState,
+	fetchBondingCurveState,
 	SOL,
 	MY_TOKEN,
 } from '../index'
@@ -29,23 +29,26 @@ describe('initialize', () => {
 
 	const payer = Keypair.generate()
 
-	const poolVault = getPoolVault({ program, mint: MY_TOKEN.mint })
-
-	const raydiumVault = getRaydiumVault({ program, mint: MY_TOKEN.mint })
-
-	const poolATA = getAssociatedAddress({
+	const bondingCurveVault = getBondingCurveVault({
+		program,
 		mint: MY_TOKEN.mint,
-		owner: poolVault,
 	})
 
-	const payerATA = getAssociatedAddress({
+	const bondingCurveHodl = getBondingCurveHodl({ program, mint: MY_TOKEN.mint })
+
+	const bondingCurveVaultAta = getAssociatedAddress({
+		mint: MY_TOKEN.mint,
+		owner: bondingCurveVault,
+	})
+
+	const payerAta = getAssociatedAddress({
 		mint: MY_TOKEN.mint,
 		owner: payer.publicKey,
 	})
 
-	const raydiumATA = getAssociatedAddress({
+	const bondingCurveHodlAta = getAssociatedAddress({
 		mint: MY_TOKEN.mint,
-		owner: raydiumVault,
+		owner: bondingCurveHodl,
 	})
 
 	const supply = 100
@@ -85,7 +88,7 @@ describe('initialize', () => {
 	})
 
 	it('check pool auth is rent exempt', async () => {
-		const accountInfo = await connection.getAccountInfo(poolVault)
+		const accountInfo = await connection.getAccountInfo(bondingCurveVault)
 
 		if (accountInfo === null) {
 			throw new Error('Account not found')
@@ -101,7 +104,7 @@ describe('initialize', () => {
 	})
 
 	it('current supply should be 80% of supply', async () => {
-		const { currentSupply } = await fetchPoolState({
+		const { currentSupply } = await fetchBondingCurveState({
 			program,
 			mint: MY_TOKEN.mint,
 		})
@@ -121,7 +124,7 @@ describe('initialize', () => {
 	})
 
 	it('progess should be 0%', async () => {
-		const { progress } = await fetchPoolState({
+		const { progress } = await fetchBondingCurveState({
 			program,
 			mint: MY_TOKEN.mint,
 		})
@@ -158,7 +161,7 @@ describe('initialize', () => {
 	})
 
 	it('progess should be 100%', async () => {
-		const { progress } = await fetchPoolState({
+		const { progress } = await fetchBondingCurveState({
 			program,
 			mint: MY_TOKEN.mint,
 		})
@@ -170,7 +173,7 @@ describe('initialize', () => {
 	})
 
 	it('current supply should be 0', async () => {
-		const { currentSupply } = await fetchPoolState({
+		const { currentSupply } = await fetchBondingCurveState({
 			program,
 			mint: MY_TOKEN.mint,
 		})

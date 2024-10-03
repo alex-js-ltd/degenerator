@@ -5,7 +5,7 @@ mod instructions;
 mod state;
 mod utils;
 
-declare_id!("36FR4mjaoUaFdaUE3B5XLXw23Y8VCbhkTvBQu1YJjmUm");
+declare_id!("FwEwyuBdJTdztPrpnKQJhW8y7eTgD2GBkZeiQz5ZKVv2");
 
 #[program]
 pub mod degenerator {
@@ -13,8 +13,8 @@ pub mod degenerator {
     pub use super::instructions::*;
     use super::*;
 
-    pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
-        instructions::create_pool(ctx, amount)
+    pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
+        instructions::create_bonding_curve(ctx, amount)
     }
 
     pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {

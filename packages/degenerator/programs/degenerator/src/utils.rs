@@ -10,11 +10,11 @@ use anchor_lang::{
 };
 use anchor_spl::token_2022;
 
-use crate::state::PoolState;
+use crate::state::BondingCurveState;
 
-pub const POOL_VAULT_SEED: &str = "pool_vault";
-pub const RAYDIUM_VAULT_SEED: &str = "raydium_vault";
-pub const POOL_STATE_SEED: &str = "pool_state";
+pub const BONDING_CURVE_VAULT_SEED: &str = "bonding_curve_vault";
+pub const BONDING_CURVE_HODL_SEED: &str = "bonding_curve_hodl";
+pub const BONDING_CURVE_STATE_SEED: &str = "bonding_curve_state";
 
 pub fn update_account_lamports_to_minimum_balance<'info>(
     account: AccountInfo<'info>,
@@ -84,19 +84,19 @@ pub fn calculate_progress(current_supply: u128, total_supply: u128) -> u64 {
 }
 
 /// Sets the price per token in the Pool account.
-pub fn set_pool_state(
-    pool_state: &mut Account<PoolState>,
+pub fn set_bonding_curve_state(
+    bonding_curve_state: &mut Account<BondingCurveState>,
     current_supply: u128,
     total_supply: u128,
 ) {
-    pool_state.current_supply = current_supply as u64;
-    pool_state.total_supply = total_supply as u64;
-    pool_state.buy_price = calculate_buy_price(current_supply, total_supply, 1);
-    pool_state.sell_price = calculate_sell_price(current_supply, total_supply, 1);
-    pool_state.progress = calculate_progress(current_supply, total_supply);
+    bonding_curve_state.current_supply = current_supply as u64;
+    bonding_curve_state.total_supply = total_supply as u64;
+    bonding_curve_state.buy_price = calculate_buy_price(current_supply, total_supply, 1);
+    bonding_curve_state.sell_price = calculate_sell_price(current_supply, total_supply, 1);
+    bonding_curve_state.progress = calculate_progress(current_supply, total_supply);
 }
 
-pub fn transfer_from_user_to_pool_vault<'a>(
+pub fn transfer_from_user_to_bonding_curve_vault<'a>(
     authority: AccountInfo<'a>,
     from: AccountInfo<'a>,
     to_vault: AccountInfo<'a>,
@@ -123,7 +123,7 @@ pub fn transfer_from_user_to_pool_vault<'a>(
     )
 }
 
-pub fn transfer_from_pool_vault_to_user<'a>(
+pub fn transfer_from_bonding_curve_vault_to_user<'a>(
     authority: AccountInfo<'a>,
     from_vault: AccountInfo<'a>,
     to: AccountInfo<'a>,
@@ -152,7 +152,7 @@ pub fn transfer_from_pool_vault_to_user<'a>(
     )
 }
 
-pub fn transfer_sol_to_pool_vault<'a>(
+pub fn transfer_sol_to_bonding_curve_vault<'a>(
     from: AccountInfo<'a>,
     to: AccountInfo<'a>,
     system_program: AccountInfo<'a>,

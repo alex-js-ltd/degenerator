@@ -3,22 +3,22 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
-    set_pool_state, token_mint_to, update_account_lamports_to_minimum_balance, POOL_STATE_SEED,
-    POOL_VAULT_SEED, RAYDIUM_VAULT_SEED,
+    set_bonding_curve_state, token_mint_to, update_account_lamports_to_minimum_balance,
+    BONDING_CURVE_HODL_SEED, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
 };
 
-use crate::state::PoolState;
+use crate::state::BondingCurveState;
 
-pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
+pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
     // transfer minimum rent to pool account
     update_account_lamports_to_minimum_balance(
-        ctx.accounts.pool_vault.to_account_info(),
+        ctx.accounts.bonding_curve_vault.to_account_info(),
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
     )?;
 
     update_account_lamports_to_minimum_balance(
-        ctx.accounts.raydium_vault.to_account_info(),
+        ctx.accounts.bonding_curve_hodl.to_account_info(),
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
     )?;
@@ -26,57 +26,61 @@ pub fn create_pool(ctx: Context<CreatePool>, amount: u64) -> Result<()> {
     let eighty_percent = amount.saturating_mul(80).saturating_div(100);
     let twenty_percent = amount.saturating_mul(20).saturating_div(100);
 
-    // mint 80% to pool vault
+    // mint 80% to bonding curve vault
     token_mint_to(
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
-        ctx.accounts.pool_ata.to_account_info(),
+        ctx.accounts.bonding_curve_vault_ata.to_account_info(),
         eighty_percent,
         ctx.accounts.mint.decimals,
     )?;
 
-    // mint 20% to raydium vault
+    // mint 20% to hodl address
     token_mint_to(
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
-        ctx.accounts.raydium_ata.to_account_info(),
+        ctx.accounts.bonding_curve_hodl_ata.to_account_info(),
         twenty_percent,
         ctx.accounts.mint.decimals,
     )?;
 
     ctx.accounts.mint.reload()?;
-    ctx.accounts.pool_ata.reload()?;
-    ctx.accounts.raydium_ata.reload()?;
+    ctx.accounts.bonding_curve_vault_ata.reload()?;
+    ctx.accounts.bonding_curve_hodl_ata.reload()?;
 
-    let current_supply = ctx.accounts.pool_ata.amount as u128;
-    let total_supply = ctx.accounts.pool_ata.amount as u128;
+    let current_supply = ctx.accounts.bonding_curve_vault_ata.amount as u128;
+    let total_supply = ctx.accounts.bonding_curve_vault_ata.amount as u128;
 
-    set_pool_state(&mut ctx.accounts.pool_state, current_supply, total_supply);
+    set_bonding_curve_state(
+        &mut ctx.accounts.bonding_curve_state,
+        current_supply,
+        total_supply,
+    );
 
     Ok(())
 }
 
 #[derive(Accounts)]
-pub struct CreatePool<'info> {
+pub struct CreateBondingCurve<'info> {
     /// The payer for the transaction
     #[account(mut)]
     pub payer: Signer<'info>,
 
-    /// CHECK: pda to control pool_ata & store lamports
+    /// CHECK: pda to control bonding_curve_vault_ata & store lamports
     #[account(mut,
-        seeds = [POOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub pool_vault: AccountInfo<'info>,
+    pub bonding_curve_vault: AccountInfo<'info>,
 
-    /// CHECK: pda to control pool_ata & store lamports
+    /// CHECK: pda to hodl tokens for the raydium pool
     #[account(mut,
-            seeds = [RAYDIUM_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+            seeds = [BONDING_CURVE_HODL_SEED.as_bytes(), mint.key().as_ref()],
             bump,
         )]
-    pub raydium_vault: AccountInfo<'info>,
+    pub bonding_curve_hodl: AccountInfo<'info>,
 
     /// The Mint for which the ATA is being created
     pub mint: Box<InterfaceAccount<'info, Mint>>,
@@ -86,27 +90,27 @@ pub struct CreatePool<'info> {
         init,
         payer = payer,
         associated_token::mint = mint,
-        associated_token::authority = pool_vault,
+        associated_token::authority = bonding_curve_vault,
     )]
-    pub pool_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub bonding_curve_vault_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// The ATA that will be created
     #[account(
             init,
             payer = payer,
             associated_token::mint = mint,
-            associated_token::authority = raydium_vault,
+            associated_token::authority = bonding_curve_hodl,
         )]
-    pub raydium_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub bonding_curve_hodl_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// pda to store current price
     #[account(init,
-        seeds = [POOL_STATE_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), mint.key().as_ref()],
         bump,
         payer = payer,
-        space = PoolState::LEN
+        space = BondingCurveState::LEN
     )]
-    pub pool_state: Account<'info, PoolState>,
+    pub bonding_curve_state: Account<'info, BondingCurveState>,
 
     /// Spl token program or token program 2022
     pub token_program: Interface<'info, TokenInterface>,
