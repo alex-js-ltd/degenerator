@@ -158,17 +158,21 @@ export async function getInitializeDegeneratorIxs({
 
 	const bondingCurveVault = getBondingCurveVault({ program, mint })
 
-	const bondingCurveVaultAta = getAssociatedAddress({
-		mint: mint,
-		owner: bondingCurveVault,
-	})
+	const bondingCurveVaultAta = await getAssociatedTokenAddress(
+		mint,
+		bondingCurveVault,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
 
 	const bondingCurveHodl = getBondingCurveHodl({ program, mint })
 
-	const bondingCurveHodlAta = getAssociatedAddress({
-		mint: mint,
-		owner: bondingCurveHodl,
-	})
+	const bondingCurveHodlAta = await getAssociatedTokenAddress(
+		mint,
+		bondingCurveHodl,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
