@@ -5,6 +5,8 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_2022;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
+use anchor_spl::token::spl_token::native_mint;
+
 pub fn wrap_sol(ctx: Context<WrapSol>, amount: u64) -> Result<()> {
     // Transfer SOL to the associated token account
     system_program::transfer(
@@ -40,6 +42,9 @@ pub struct WrapSol<'info> {
         associated_token::authority = payer)]
     pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
+    #[account(
+        constraint = native_mint.key() == native_mint::id(),
+    )]
     pub native_mint: Box<InterfaceAccount<'info, Mint>>,
 
     /// Associated token program
