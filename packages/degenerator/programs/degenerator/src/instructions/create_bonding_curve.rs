@@ -12,19 +12,21 @@ use anchor_spl::token::spl_token::native_mint;
 use crate::state::BondingCurveState;
 
 pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
-    // transfer minimum rent to pool account
+    // transfer minimum rent to meme vault
     update_account_lamports_to_minimum_balance(
         ctx.accounts.meme_vault.to_account_info(),
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
     )?;
 
+    // transfer minimum rent to hodl vault
     update_account_lamports_to_minimum_balance(
         ctx.accounts.hodl_vault.to_account_info(),
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
     )?;
 
+    // transfer minimum rent to sol vault
     update_account_lamports_to_minimum_balance(
         ctx.accounts.sol_vault.to_account_info(),
         ctx.accounts.payer.to_account_info(),
@@ -34,7 +36,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
     let eighty_percent = amount.saturating_mul(80).saturating_div(100);
     let twenty_percent = amount.saturating_mul(20).saturating_div(100);
 
-    // mint 80% to bonding curve vault
+    // mint 80% to meme vault
     token_mint_to(
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_program_2022.to_account_info(),
@@ -44,7 +46,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
         ctx.accounts.mint_2022.decimals,
     )?;
 
-    // mint 20% to hodl address
+    // mint 20% to hodl vault
     token_mint_to(
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_program_2022.to_account_info(),
