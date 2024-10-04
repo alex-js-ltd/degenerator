@@ -98,7 +98,7 @@ describe('proxy init', () => {
 		const ix = await getBuyTokenIxs({
 			program,
 			payer: payer.publicKey,
-			mint: MY_TOKEN.mint,
+			token1Mint: MY_TOKEN.mint,
 			amount: amountToBuy,
 		})
 
