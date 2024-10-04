@@ -8,8 +8,6 @@ use crate::utils::{
     transfer_sol_to_bonding_curve_vault, BONDING_CURVE_STATE_SEED, MEME_VAULT_SEED, SOL_VAULT_SEED,
 };
 
-use anchor_spl::token::spl_token::native_mint;
-
 use crate::state::BondingCurveState;
 
 #[derive(Accounts)]

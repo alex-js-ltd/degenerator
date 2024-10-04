@@ -315,7 +315,7 @@ export async function getSellTokenIxs({
 	const sell = await program.methods
 		.sellToken(amountBN)
 		.accountsStrict({
-			mint: token1Mint,
+			token1Mint,
 			signer: payer,
 			memeVault,
 			memeAta,
@@ -324,7 +324,7 @@ export async function getSellTokenIxs({
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-			tokenProgram: TOKEN_2022_PROGRAM_ID,
+			token1Program: TOKEN_2022_PROGRAM_ID,
 		})
 		.instruction()
 

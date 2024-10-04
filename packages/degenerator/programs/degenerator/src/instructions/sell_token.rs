@@ -17,43 +17,47 @@ pub struct SellToken<'info> {
 
     #[account(mut)]
     pub payer_ata: InterfaceAccount<'info, TokenAccount>,
-    /// CHECK: pda to control meme_ata & store lamports
+
+    /// CHECK: pda to control bonding_curve_vault_ata & store lamports
     #[account(
         mut,
-        seeds = [MEME_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [MEME_VAULT_SEED.as_bytes(), token_1_mint.key().as_ref()],
         bump,
     )]
     pub meme_vault: AccountInfo<'info>,
 
     /// CHECK: pda to control sol
     #[account(mut,
-            seeds = [SOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [SOL_VAULT_SEED.as_bytes(), token_1_mint.key().as_ref()],
             bump,
         )]
     pub sol_vault: AccountInfo<'info>,
 
     /// CHECK: pda to store current price
     #[account(
-            mut,
-            seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), mint.key().as_ref()],
-            bump,
-        )]
+        mut,
+        seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), token_1_mint.key().as_ref()],
+        bump,
+    )]
     pub bonding_curve_state: Account<'info, BondingCurveState>,
 
     #[account(
         init_if_needed,
-        associated_token::mint = mint,
+        associated_token::mint = token_1_mint,
         payer = signer,
-        associated_token::authority = meme_vault
+        associated_token::authority = meme_vault,
+        associated_token::token_program = token_1_program
     )]
     pub meme_ata: InterfaceAccount<'info, TokenAccount>,
 
     /// Mint associated with the token
-    #[account(mut)]
-    pub mint: InterfaceAccount<'info, Mint>,
+    #[account(
+        mint::token_program = token_1_program,
+    )]
+    pub token_1_mint: Box<InterfaceAccount<'info, Mint>>,
 
     /// Token program
-    pub token_program: Interface<'info, TokenInterface>,
+    pub token_1_program: Interface<'info, TokenInterface>,
 
     /// System program
     pub system_program: Program<'info, System>,
@@ -89,10 +93,10 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         ctx.accounts.meme_ata.to_account_info(),
-        ctx.accounts.mint.to_account_info(),
-        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.token_1_mint.to_account_info(),
+        ctx.accounts.token_1_program.to_account_info(),
         amount,
-        ctx.accounts.mint.decimals,
+        ctx.accounts.token_1_mint.decimals,
     )?;
 
     transfer_sol_to_user(
@@ -102,7 +106,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         price,
         &[&[
             SOL_VAULT_SEED.as_bytes(),
-            ctx.accounts.mint.key().as_ref(),
+            ctx.accounts.token_1_mint.key().as_ref(),
             &[ctx.bumps.sol_vault][..],
         ][..]],
     )?;

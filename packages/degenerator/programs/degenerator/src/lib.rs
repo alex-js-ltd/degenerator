@@ -5,7 +5,7 @@ mod instructions;
 mod state;
 mod utils;
 
-declare_id!("52s3QBVw7NGyKqd5s9jnfYHUzYMEXQHYzcvAYosZvUDR");
+declare_id!("HLnrNg9vHYYsb1a7WTuYCifAyrEjHw7xXs2FN4Tv2R1S");
 
 #[program]
 pub mod degenerator {

@@ -234,15 +234,15 @@
           "isSigner": false
         },
         {
-          "name": "mint",
-          "isMut": true,
+          "name": "token1Mint",
+          "isMut": false,
           "isSigner": false,
           "docs": [
             "Mint associated with the token"
           ]
         },
         {
-          "name": "tokenProgram",
+          "name": "token1Program",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -522,6 +522,6 @@
     }
   ],
   "metadata": {
-    "address": "52s3QBVw7NGyKqd5s9jnfYHUzYMEXQHYzcvAYosZvUDR"
+    "address": "HLnrNg9vHYYsb1a7WTuYCifAyrEjHw7xXs2FN4Tv2R1S"
   }
 }
