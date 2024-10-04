@@ -8,6 +8,8 @@ use crate::utils::{
     transfer_sol_to_bonding_curve_vault, BONDING_CURVE_STATE_SEED, MEME_VAULT_SEED, SOL_VAULT_SEED,
 };
 
+use anchor_spl::token::spl_token::native_mint;
+
 use crate::state::BondingCurveState;
 
 #[derive(Accounts)]
@@ -19,14 +21,14 @@ pub struct BuyToken<'info> {
     /// CHECK: pda to control bonding_curve_vault_ata & store lamports
     #[account(
         mut,
-        seeds = [MEME_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [MEME_VAULT_SEED.as_bytes(), token_1_mint.key().as_ref()],
         bump,
     )]
     pub meme_vault: AccountInfo<'info>,
 
     /// CHECK: pda to control sol
     #[account(mut,
-            seeds = [SOL_VAULT_SEED.as_bytes(), mint.key().as_ref()],
+        seeds = [SOL_VAULT_SEED.as_bytes(), token_1_mint.key().as_ref()],
             bump,
         )]
     pub sol_vault: AccountInfo<'info>,
@@ -34,7 +36,7 @@ pub struct BuyToken<'info> {
     /// CHECK: pda to store current price
     #[account(
             mut,
-            seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), mint.key().as_ref()],
+            seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), token_1_mint.key().as_ref()],
             bump,
         )]
     pub bonding_curve_state: Account<'info, BondingCurveState>,
@@ -46,18 +48,22 @@ pub struct BuyToken<'info> {
     /// Token account to which the tokens will be transferred (created if needed)
     #[account(
         init_if_needed,
-        associated_token::mint = mint,
+        associated_token::mint = token_1_mint,
         payer = payer,
-        associated_token::authority = payer
+        associated_token::authority = payer,
+        associated_token::token_program = token_1_program
+     
     )]
     pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Mint associated with the token
-    #[account(mut)]
-    pub mint: InterfaceAccount<'info, Mint>,
+    #[account(
+        mint::token_program = token_1_program,
+    )]
+    pub token_1_mint: Box<InterfaceAccount<'info, Mint>>,
 
-    /// Token program
-    pub token_program: Interface<'info, TokenInterface>,
+    /// Spl token program or token program 2022
+    pub token_1_program: Interface<'info, TokenInterface>,
 
     /// System program
     pub system_program: Program<'info, System>,
@@ -90,13 +96,13 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ctx.accounts.meme_vault.to_account_info(),
         ctx.accounts.meme_ata.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
-        ctx.accounts.mint.to_account_info(),
-        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.token_1_mint.to_account_info(),
+        ctx.accounts.token_1_program.to_account_info(),
         amount,
-        ctx.accounts.mint.decimals,
+        ctx.accounts.token_1_mint.decimals,
         &[&[
             MEME_VAULT_SEED.as_bytes(),
-            ctx.accounts.mint.key().as_ref(),
+            ctx.accounts.token_1_mint.key().as_ref(),
             &[ctx.bumps.meme_vault][..],
         ][..]],
     )?;

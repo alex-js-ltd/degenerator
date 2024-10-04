@@ -54,7 +54,7 @@ export function getSolVault({
 	token1Mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('sol_vault'), NATIVE_MINT.toBuffer(), token1Mint.toBuffer()],
+		[Buffer.from('sol_vault'), token1Mint.toBuffer()],
 		program.programId,
 	)[0]
 }
@@ -67,11 +67,7 @@ export function getBondingCurveState({
 	token1Mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[
-			Buffer.from('bonding_curve_state'),
-			NATIVE_MINT.toBuffer(),
-			token1Mint.toBuffer(),
-		],
+		[Buffer.from('bonding_curve_state'), token1Mint.toBuffer()],
 		program.programId,
 	)[0]
 }

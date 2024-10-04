@@ -89,7 +89,7 @@ pub struct CreateBondingCurve<'info> {
 
     /// CHECK: pda to control sol
     #[account(mut,
-        seeds = [SOL_VAULT_SEED.as_bytes(), token_0_mint.key().as_ref(), token_1_mint.key().as_ref()],
+        seeds = [SOL_VAULT_SEED.as_bytes(), token_1_mint.key().as_ref()],
         bump,
     )]
     pub sol_vault: AccountInfo<'info>,
@@ -141,7 +141,7 @@ pub struct CreateBondingCurve<'info> {
 
     /// pda to store bonding curve state
     #[account(init,
-        seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), token_0_mint.key().as_ref(), token_1_mint.key().as_ref()],
+        seeds = [BONDING_CURVE_STATE_SEED.as_bytes(),  token_1_mint.key().as_ref()],
         bump,
         payer = payer,
         space = BondingCurveState::LEN

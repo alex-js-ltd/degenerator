@@ -161,19 +161,19 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "mint",
-          "isMut": true,
+          "name": "token1Mint",
+          "isMut": false,
           "isSigner": false,
           "docs": [
             "Mint associated with the token"
           ]
         },
         {
-          "name": "tokenProgram",
+          "name": "token1Program",
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "Token program"
+            "Spl token program or token program 2022"
           ]
         },
         {
@@ -686,19 +686,19 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "mint",
-          "isMut": true,
+          "name": "token1Mint",
+          "isMut": false,
           "isSigner": false,
           "docs": [
             "Mint associated with the token"
           ]
         },
         {
-          "name": "tokenProgram",
+          "name": "token1Program",
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "Token program"
+            "Spl token program or token program 2022"
           ]
         },
         {
