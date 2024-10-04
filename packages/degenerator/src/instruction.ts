@@ -31,6 +31,8 @@ import {
 } from '@solana/spl-token-metadata'
 import {
 	getAssociatedAddress,
+	getAuth,
+	getBondingCurveVault,
 	getMemeVault,
 	getHodlVault,
 	getSolVault,
@@ -157,34 +159,29 @@ export async function getInitializeDegeneratorIxs({
 	const { mint } = metadata
 	const supplyBN = new BN(supply)
 
-	const memeVault = getMemeVault({ program, mint })
+	const authority = getAuth({
+		program,
+		token_0_mint: NATIVE_MINT,
+		token_1_mint: mint,
+	})
 
-	const memeAta = await getAssociatedTokenAddress(
-		mint,
-		memeVault,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
-	const hodlVault = getHodlVault({ program, mint })
-
-	const hodlAta = await getAssociatedTokenAddress(
-		mint,
-		hodlVault,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
-	const solVault = getSolVault({ program, mint })
-
-	const solAta = await getAssociatedTokenAddress(
+	const creatorToken0 = getAssociatedTokenAddressSync(
 		NATIVE_MINT,
-		solVault,
+		payer,
 		true,
 		TOKEN_PROGRAM_ID,
 	)
 
-	const bondingCurveState = getBondingCurveState({ program, mint })
+	const creatorToken1 = getAssociatedTokenAddressSync(
+		mint,
+		payer,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
+
+	const token0Vault = getBondingCurveVault({ program, mint: NATIVE_MINT })
+
+	const token1Vault = getBondingCurveVault({ program, mint: mint })
 
 	const createMintAccountIxs = await getCreateMintIxs({
 		payer,
@@ -196,20 +193,22 @@ export async function getInitializeDegeneratorIxs({
 	const createPoolIx = await program.methods
 		.createBondingCurve(supplyBN)
 		.accountsStrict({
-			payer: payer,
-			mint2022: mint,
-			mint: NATIVE_MINT,
-			memeVault,
-			memeAta,
-			hodlVault,
-			hodlAta,
-			solVault,
-			solAta,
-			bondingCurveState,
+			creator: payer,
+			authority,
+			token0Mint: NATIVE_MINT,
+			token1Mint: mint,
+
+			creatorToken0,
+			creatorToken1,
+
+			token0Vault,
+			token1Vault,
+
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-			tokenProgram2022: TOKEN_2022_PROGRAM_ID,
 			tokenProgram: TOKEN_PROGRAM_ID,
+			token1Program: TOKEN_2022_PROGRAM_ID,
+			token0Program: TOKEN_PROGRAM_ID,
 			rent: web3.SYSVAR_RENT_PUBKEY,
 		})
 		.instruction()

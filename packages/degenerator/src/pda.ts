@@ -20,6 +20,34 @@ export function getAssociatedAddress({
 	)[0]
 }
 
+export function getAuth({
+	program,
+	token_0_mint,
+	token_1_mint,
+}: {
+	program: Program<Degenerator>
+	token_0_mint: PublicKey
+	token_1_mint: PublicKey
+}): PublicKey {
+	return PublicKey.findProgramAddressSync(
+		[Buffer.from('auth'), token_0_mint.toBuffer(), token_1_mint.toBuffer()],
+		program.programId,
+	)[0]
+}
+
+export function getBondingCurveVault({
+	program,
+	mint,
+}: {
+	program: Program<Degenerator>
+	mint: PublicKey
+}): PublicKey {
+	return PublicKey.findProgramAddressSync(
+		[Buffer.from('bonding_curve_vault'), mint.toBuffer()],
+		program.programId,
+	)[0]
+}
+
 export function getMemeVault({
 	program,
 	mint,

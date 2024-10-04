@@ -10,8 +10,21 @@ use anchor_lang::{
 };
 use anchor_spl::token_2022;
 
+use anchor_spl::{
+    token::TokenAccount,
+    token_2022::spl_token_2022::{
+        self,
+        extension::{ExtensionType, StateWithExtensions},
+    },
+    token_interface::{
+        initialize_account3, spl_token_2022::extension::BaseStateWithExtensions, InitializeAccount3,
+    },
+};
+
 use crate::state::BondingCurveState;
 
+pub const AUTH_SEED: &str = "auth";
+pub const BONDING_CURVE_VAULT_SEED: &str = "bonding_curve_vault";
 pub const MEME_VAULT_SEED: &str = "meme_vault";
 pub const SOL_VAULT_SEED: &str = "sol_vault";
 pub const HODL_VAULT_SEED: &str = "hodl_vault";
@@ -231,6 +244,53 @@ pub fn transfer_sol_to_native_account<'a>(
         system_program.to_account_info(),
         token_2022::SyncNative {
             account: to.to_account_info(),
+        },
+    ))
+}
+
+pub fn create_token_account<'a>(
+    authority: &AccountInfo<'a>,
+    payer: &AccountInfo<'a>,
+    token_account: &AccountInfo<'a>,
+    mint_account: &AccountInfo<'a>,
+    system_program: &AccountInfo<'a>,
+    token_program: &AccountInfo<'a>,
+    signer_seeds: &[&[&[u8]]],
+) -> Result<()> {
+    let space = {
+        let mint_info = mint_account.to_account_info();
+        if *mint_info.owner == token_2022::Token2022::id() {
+            let mint_data = mint_info.try_borrow_data()?;
+            let mint_state =
+                StateWithExtensions::<spl_token_2022::state::Mint>::unpack(&mint_data)?;
+            let mint_extensions = mint_state.get_extension_types()?;
+            let required_extensions =
+                ExtensionType::get_required_init_account_extensions(&mint_extensions);
+            ExtensionType::try_calculate_account_len::<spl_token_2022::state::Account>(
+                &required_extensions,
+            )?
+        } else {
+            TokenAccount::LEN
+        }
+    };
+    let lamports = Rent::get()?.minimum_balance(space);
+    let cpi_accounts = anchor_lang::system_program::CreateAccount {
+        from: payer.to_account_info(),
+        to: token_account.to_account_info(),
+    };
+    let cpi_context = CpiContext::new(system_program.to_account_info(), cpi_accounts);
+    anchor_lang::system_program::create_account(
+        cpi_context.with_signer(signer_seeds),
+        lamports,
+        space as u64,
+        token_program.key,
+    )?;
+    initialize_account3(CpiContext::new(
+        token_program.to_account_info(),
+        InitializeAccount3 {
+            account: token_account.to_account_info(),
+            mint: mint_account.to_account_info(),
+            authority: authority.to_account_info(),
         },
     ))
 }

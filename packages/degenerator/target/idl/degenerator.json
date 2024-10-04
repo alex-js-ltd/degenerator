@@ -6,72 +6,70 @@
       "name": "createBondingCurve",
       "accounts": [
         {
-          "name": "payer",
+          "name": "creator",
           "isMut": true,
           "isSigner": true,
           "docs": [
-            "The payer for the transaction"
+            "Address paying to create the pool. Can be anyone"
           ]
         },
         {
-          "name": "mint2022",
+          "name": "authority",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "mint",
+          "name": "token0Mint",
           "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "memeVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hodlVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "memeAta",
-          "isMut": true,
           "isSigner": false,
           "docs": [
-            "The ATA that will be created"
+            "Token_0 mint, the key must smaller then token_1 mint."
           ]
         },
         {
-          "name": "hodlAta",
-          "isMut": true,
+          "name": "token1Mint",
+          "isMut": false,
           "isSigner": false,
           "docs": [
-            "The ATA that will be created"
+            "Token_1 mint, the key must grater then token_0 mint."
           ]
         },
         {
-          "name": "solAta",
+          "name": "creatorToken0",
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "The ATA that will be created"
+            "payer token0 account"
           ]
         },
         {
-          "name": "bondingCurveState",
+          "name": "creatorToken1",
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "pda to store current price"
+            "creator token1 account"
           ]
         },
         {
-          "name": "tokenProgram2022",
+          "name": "token0Vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token1Vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Program to create mint account and mint tokens"
+          ]
+        },
+        {
+          "name": "token0Program",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -79,7 +77,7 @@
           ]
         },
         {
-          "name": "tokenProgram",
+          "name": "token1Program",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -91,7 +89,7 @@
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "Associated Token Program"
+            "Program to create an ATA for receiving position NFT"
           ]
         },
         {
@@ -99,7 +97,7 @@
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "System Program"
+            "To create a new program account"
           ]
         },
         {
@@ -520,8 +518,5 @@
       "name": "InsufficientTokens",
       "msg": "Insufficient tokens in the pool."
     }
-  ],
-  "metadata": {
-    "address": "8t9qQXWnVSnGLzcUhb5NWETRP4gPvNyfCpyczEhGfdYd"
-  }
+  ]
 }
