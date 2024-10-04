@@ -32,3 +32,5 @@ export const MY_TOKEN = {
 	decimals: 9, // Number of decimals for your token (9 is standard, but can be adjusted)
 	metadata, // Ensure `metadata` is defined elsewhere in your code
 }
+
+function getTokens() {}

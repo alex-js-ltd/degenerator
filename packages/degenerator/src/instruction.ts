@@ -207,8 +207,8 @@ export async function getInitializeDegeneratorIxs({
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 			tokenProgram: TOKEN_PROGRAM_ID,
-			token1Program: TOKEN_2022_PROGRAM_ID,
 			token0Program: TOKEN_PROGRAM_ID,
+			token1Program: TOKEN_2022_PROGRAM_ID,
 			rent: web3.SYSVAR_RENT_PUBKEY,
 		})
 		.instruction()

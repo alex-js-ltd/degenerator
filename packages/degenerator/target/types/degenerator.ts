@@ -37,7 +37,7 @@ export type Degenerator = {
         {
           "name": "creatorToken0",
           "isMut": true,
-          "isSigner": false,
+          "isSigner": true,
           "docs": [
             "payer token0 account"
           ]
@@ -45,7 +45,7 @@ export type Degenerator = {
         {
           "name": "creatorToken1",
           "isMut": true,
-          "isSigner": false,
+          "isSigner": true,
           "docs": [
             "creator token1 account"
           ]
@@ -560,7 +560,7 @@ export const IDL: Degenerator = {
         {
           "name": "creatorToken0",
           "isMut": true,
-          "isSigner": false,
+          "isSigner": true,
           "docs": [
             "payer token0 account"
           ]
@@ -568,7 +568,7 @@ export const IDL: Degenerator = {
         {
           "name": "creatorToken1",
           "isMut": true,
-          "isSigner": false,
+          "isSigner": true,
           "docs": [
             "creator token1 account"
           ]

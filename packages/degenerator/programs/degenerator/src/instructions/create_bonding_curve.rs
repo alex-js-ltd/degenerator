@@ -77,7 +77,8 @@ pub struct CreateBondingCurve<'info> {
 
     /// payer token0 account
     #[account(
-        mut,
+        init,
+        payer = creator,
         token::mint = token_0_mint,
         token::authority = creator,
     )]
@@ -85,7 +86,8 @@ pub struct CreateBondingCurve<'info> {
 
     /// creator token1 account
     #[account(
-        mut,
+        init,
+        payer = creator,
         token::mint = token_1_mint,
         token::authority = creator,
     )]
