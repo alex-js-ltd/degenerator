@@ -239,10 +239,12 @@ export async function getBuyTokenIxs({
 	mint,
 	amount,
 }: SwapTokenIxsParams) {
-	const payerAta = getAssociatedAddress({
-		mint: mint,
-		owner: payer,
-	})
+	const payerAta = await getAssociatedTokenAddress(
+		mint,
+		payer,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
 
 	const memeVault = getMemeVault({ program, mint })
 
@@ -280,10 +282,12 @@ export async function getSellTokenIxs({
 	mint,
 	amount,
 }: SwapTokenIxsParams) {
-	const payerAta = getAssociatedAddress({
-		mint: mint,
-		owner: payer,
-	})
+	const payerAta = await getAssociatedTokenAddress(
+		mint,
+		payer,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
 
 	const memeVault = getMemeVault({ program, mint })
 
