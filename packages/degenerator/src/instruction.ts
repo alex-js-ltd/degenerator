@@ -255,6 +255,8 @@ export async function getBuyTokenIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
+	const solVault = getSolVault({ program, mint })
+
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
 	const amountBN = new BN(amount)
@@ -266,6 +268,7 @@ export async function getBuyTokenIxs({
 			memeVault,
 			memeAta,
 			payerAta,
+			solVault,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -298,6 +301,8 @@ export async function getSellTokenIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
+	const solVault = getSolVault({ program, mint })
+
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
 	const amountBN = new BN(amount)
@@ -309,6 +314,7 @@ export async function getSellTokenIxs({
 			memeVault,
 			memeAta,
 			payerAta,
+			solVault,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,

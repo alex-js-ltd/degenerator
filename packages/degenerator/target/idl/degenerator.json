@@ -135,6 +135,11 @@
           "isSigner": false
         },
         {
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false
@@ -210,6 +215,11 @@
         },
         {
           "name": "memeVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solVault",
           "isMut": true,
           "isSigner": false
         },

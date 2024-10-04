@@ -103,7 +103,7 @@ pub struct CreateBondingCurve<'info> {
 
     /// CHECK: pda to control sol
     #[account(mut,
-        seeds = [SOL_VAULT_SEED.as_bytes(), mint_2022.key().as_ref(), mint.key().as_ref()],
+        seeds = [SOL_VAULT_SEED.as_bytes(), mint_2022.key().as_ref()],
         bump,
     )]
     pub sol_vault: AccountInfo<'info>,

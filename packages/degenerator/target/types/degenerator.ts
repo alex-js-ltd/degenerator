@@ -135,6 +135,11 @@ export type Degenerator = {
           "isSigner": false
         },
         {
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false
@@ -210,6 +215,11 @@ export type Degenerator = {
         },
         {
           "name": "memeVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solVault",
           "isMut": true,
           "isSigner": false
         },
@@ -650,6 +660,11 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false
@@ -725,6 +740,11 @@ export const IDL: Degenerator = {
         },
         {
           "name": "memeVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solVault",
           "isMut": true,
           "isSigner": false
         },
