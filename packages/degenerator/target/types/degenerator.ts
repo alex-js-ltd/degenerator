@@ -130,7 +130,7 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "bondingCurveVault",
+          "name": "memeVault",
           "isMut": true,
           "isSigner": false
         },
@@ -140,7 +140,7 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "bondingCurveVaultAta",
+          "name": "memeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -209,7 +209,7 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "bondingCurveVault",
+          "name": "memeVault",
           "isMut": true,
           "isSigner": false
         },
@@ -219,7 +219,7 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "bondingCurveVaultAta",
+          "name": "memeAta",
           "isMut": true,
           "isSigner": false
         },
@@ -645,7 +645,7 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "bondingCurveVault",
+          "name": "memeVault",
           "isMut": true,
           "isSigner": false
         },
@@ -655,7 +655,7 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "bondingCurveVaultAta",
+          "name": "memeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -724,7 +724,7 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "bondingCurveVault",
+          "name": "memeVault",
           "isMut": true,
           "isSigner": false
         },
@@ -734,7 +734,7 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "bondingCurveVaultAta",
+          "name": "memeAta",
           "isMut": true,
           "isSigner": false
         },

@@ -22,7 +22,7 @@ pub struct BuyToken<'info> {
         seeds = [MEME_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub bonding_curve_vault: AccountInfo<'info>,
+    pub meme_vault: AccountInfo<'info>,
 
     /// CHECK: pda to store current price
     #[account(
@@ -34,7 +34,7 @@ pub struct BuyToken<'info> {
 
     /// Token account from which the tokens will be transferred
     #[account(mut)]
-    pub bonding_curve_vault_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub meme_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Token account to which the tokens will be transferred (created if needed)
     #[account(
@@ -63,13 +63,13 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     let total_supply = ctx.accounts.bonding_curve_state.total_supply;
 
     let price = calculate_buy_price(
-        ctx.accounts.bonding_curve_vault_ata.amount as u128,
+        ctx.accounts.meme_ata.amount as u128,
         total_supply as u128,
         amount as u128,
     );
 
     // Ensure the requested amount does not exceed available supply
-    if amount > ctx.accounts.bonding_curve_vault_ata.amount {
+    if amount > ctx.accounts.meme_ata.amount {
         return Err(Errors::InsufficientTokens.into());
     }
 
@@ -80,8 +80,8 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     }
 
     transfer_from_bonding_curve_vault_to_user(
-        ctx.accounts.bonding_curve_vault.to_account_info(),
-        ctx.accounts.bonding_curve_vault_ata.to_account_info(),
+        ctx.accounts.meme_vault.to_account_info(),
+        ctx.accounts.meme_ata.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
@@ -90,20 +90,20 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         &[&[
             MEME_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.bonding_curve_vault][..],
+            &[ctx.bumps.meme_vault][..],
         ][..]],
     )?;
 
     transfer_sol_to_bonding_curve_vault(
         ctx.accounts.payer.to_account_info(),
-        ctx.accounts.bonding_curve_vault.to_account_info(),
+        ctx.accounts.meme_vault.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
         price,
     )?;
 
-    ctx.accounts.bonding_curve_vault_ata.reload()?;
+    ctx.accounts.meme_ata.reload()?;
 
-    let current_supply = ctx.accounts.bonding_curve_vault_ata.amount as u128;
+    let current_supply = ctx.accounts.meme_ata.amount as u128;
     let total_supply = ctx.accounts.bonding_curve_state.total_supply as u128;
 
     set_bonding_curve_state(

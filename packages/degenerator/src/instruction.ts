@@ -175,7 +175,7 @@ export async function getInitializeDegeneratorIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const solVault = getSolVault({ program, mint: NATIVE_MINT })
+	const solVault = getSolVault({ program, mint })
 
 	const solAta = await getAssociatedTokenAddress(
 		NATIVE_MINT,
@@ -244,12 +244,14 @@ export async function getBuyTokenIxs({
 		owner: payer,
 	})
 
-	const bondingCurveVault = getMemeVault({ program, mint })
+	const memeVault = getMemeVault({ program, mint })
 
-	const bondingCurveVaultAta = getAssociatedAddress({
-		mint: mint,
-		owner: bondingCurveVault,
-	})
+	const memeAta = await getAssociatedTokenAddress(
+		mint,
+		memeVault,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
@@ -259,8 +261,8 @@ export async function getBuyTokenIxs({
 		.accountsStrict({
 			mint: mint,
 			payer: payer,
-			bondingCurveVault,
-			bondingCurveVaultAta,
+			memeVault,
+			memeAta,
 			payerAta,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
@@ -283,12 +285,14 @@ export async function getSellTokenIxs({
 		owner: payer,
 	})
 
-	const bondingCurveVault = getMemeVault({ program, mint })
+	const memeVault = getMemeVault({ program, mint })
 
-	const bondingCurveVaultAta = getAssociatedAddress({
-		mint: mint,
-		owner: bondingCurveVault,
-	})
+	const memeAta = await getAssociatedTokenAddress(
+		mint,
+		memeVault,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
@@ -298,8 +302,8 @@ export async function getSellTokenIxs({
 		.accountsStrict({
 			mint: mint,
 			signer: payer,
-			bondingCurveVault,
-			bondingCurveVaultAta,
+			memeVault,
+			memeAta,
 			payerAta,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,

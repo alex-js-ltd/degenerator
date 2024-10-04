@@ -130,7 +130,7 @@
           ]
         },
         {
-          "name": "bondingCurveVault",
+          "name": "memeVault",
           "isMut": true,
           "isSigner": false
         },
@@ -140,7 +140,7 @@
           "isSigner": false
         },
         {
-          "name": "bondingCurveVaultAta",
+          "name": "memeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -209,7 +209,7 @@
           "isSigner": false
         },
         {
-          "name": "bondingCurveVault",
+          "name": "memeVault",
           "isMut": true,
           "isSigner": false
         },
@@ -219,7 +219,7 @@
           "isSigner": false
         },
         {
-          "name": "bondingCurveVaultAta",
+          "name": "memeAta",
           "isMut": true,
           "isSigner": false
         },

@@ -54,7 +54,7 @@ export function getSolVault({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('sol_vault'), mint.toBuffer()],
+		[Buffer.from('sol_vault'), mint.toBuffer(), NATIVE_MINT.toBuffer()],
 		program.programId,
 	)[0]
 }
