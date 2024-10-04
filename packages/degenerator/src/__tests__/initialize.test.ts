@@ -30,7 +30,7 @@ describe('initialize', () => {
 
 	const memeVault = getMemeVault({
 		program,
-		mint: MY_TOKEN.mint,
+		token1Mint: MY_TOKEN.mint,
 	})
 
 	const supply = 100
@@ -121,7 +121,7 @@ describe('initialize', () => {
 		const ix = await getBuyTokenIxs({
 			program,
 			payer: payer.publicKey,
-			mint: MY_TOKEN.mint,
+			token1Mint: MY_TOKEN.mint,
 			amount: amountToBuy,
 		})
 
@@ -136,6 +136,8 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
+
+		console.log(res)
 		expect(res.value.err).toBeNull()
 
 		// Confirm the transaction
@@ -172,7 +174,7 @@ describe('initialize', () => {
 		const ix = await getSellTokenIxs({
 			program,
 			payer: payer.publicKey,
-			mint: MY_TOKEN.mint,
+			token1Mint: MY_TOKEN.mint,
 			amount: amountToSell,
 		})
 

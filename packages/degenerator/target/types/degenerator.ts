@@ -14,13 +14,18 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "mint2022",
+          "name": "token0Mint",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "mint",
+          "name": "token1Mint",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "solVault",
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -34,16 +39,19 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "solVault",
+          "name": "solAta",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "The ATA for the sol"
+          ]
         },
         {
           "name": "memeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "The ATA that will be created"
+            "The ATA for the meme coin"
           ]
         },
         {
@@ -51,15 +59,7 @@ export type Degenerator = {
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "The ATA that will be created"
-          ]
-        },
-        {
-          "name": "solAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA that will be created"
+            "The ATA to hodl meme token"
           ]
         },
         {
@@ -67,11 +67,11 @@ export type Degenerator = {
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "pda to store current price"
+            "pda to store bonding curve state"
           ]
         },
         {
-          "name": "tokenProgram2022",
+          "name": "token0Program",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -79,7 +79,7 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "tokenProgram",
+          "name": "token1Program",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -539,13 +539,18 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "mint2022",
+          "name": "token0Mint",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "mint",
+          "name": "token1Mint",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "solVault",
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -559,16 +564,19 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "solVault",
+          "name": "solAta",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "The ATA for the sol"
+          ]
         },
         {
           "name": "memeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "The ATA that will be created"
+            "The ATA for the meme coin"
           ]
         },
         {
@@ -576,15 +584,7 @@ export const IDL: Degenerator = {
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "The ATA that will be created"
-          ]
-        },
-        {
-          "name": "solAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA that will be created"
+            "The ATA to hodl meme token"
           ]
         },
         {
@@ -592,11 +592,11 @@ export const IDL: Degenerator = {
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "pda to store current price"
+            "pda to store bonding curve state"
           ]
         },
         {
-          "name": "tokenProgram2022",
+          "name": "token0Program",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -604,7 +604,7 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "tokenProgram",
+          "name": "token1Program",
           "isMut": false,
           "isSigner": false,
           "docs": [

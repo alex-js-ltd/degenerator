@@ -22,52 +22,56 @@ export function getAssociatedAddress({
 
 export function getMemeVault({
 	program,
-	mint,
+	token1Mint,
 }: {
 	program: Program<Degenerator>
-	mint: PublicKey
+	token1Mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('meme_vault'), mint.toBuffer()],
+		[Buffer.from('meme_vault'), token1Mint.toBuffer()],
 		program.programId,
 	)[0]
 }
 
 export function getHodlVault({
 	program,
-	mint,
+	token1Mint,
 }: {
 	program: Program<Degenerator>
-	mint: PublicKey
+	token1Mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('hodl_vault'), mint.toBuffer()],
+		[Buffer.from('hodl_vault'), token1Mint.toBuffer()],
 		program.programId,
 	)[0]
 }
 
 export function getSolVault({
 	program,
-	mint,
+	token1Mint,
 }: {
 	program: Program<Degenerator>
-	mint: PublicKey
+	token1Mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('sol_vault'), mint.toBuffer()],
+		[Buffer.from('sol_vault'), NATIVE_MINT.toBuffer(), token1Mint.toBuffer()],
 		program.programId,
 	)[0]
 }
 
 export function getBondingCurveState({
 	program,
-	mint,
+	token1Mint,
 }: {
 	program: Program<Degenerator>
-	mint: PublicKey
+	token1Mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('bonding_curve_state'), mint.toBuffer()],
+		[
+			Buffer.from('bonding_curve_state'),
+			NATIVE_MINT.toBuffer(),
+			token1Mint.toBuffer(),
+		],
 		program.programId,
 	)[0]
 }
@@ -87,7 +91,7 @@ export async function fetchBondingCurveState({
 	program: Program<Degenerator>
 	mint: PublicKey
 }) {
-	const pda = getBondingCurveState({ program, mint })
+	const pda = getBondingCurveState({ program, token1Mint: mint })
 
 	const data = await program.account.bondingCurveState.fetch(pda)
 

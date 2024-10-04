@@ -157,34 +157,40 @@ export async function getInitializeDegeneratorIxs({
 	const { mint } = metadata
 	const supplyBN = new BN(supply)
 
-	const memeVault = getMemeVault({ program, mint })
+	const token0Mint = NATIVE_MINT
+	const token1Mint = mint
 
-	const memeAta = await getAssociatedTokenAddress(
-		mint,
-		memeVault,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
-	const hodlVault = getHodlVault({ program, mint })
-
-	const hodlAta = await getAssociatedTokenAddress(
-		mint,
-		hodlVault,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
-	const solVault = getSolVault({ program, mint })
+	const solVault = getSolVault({ program, token1Mint })
 
 	const solAta = await getAssociatedTokenAddress(
-		NATIVE_MINT,
+		token0Mint,
 		solVault,
 		true,
 		TOKEN_PROGRAM_ID,
 	)
 
-	const bondingCurveState = getBondingCurveState({ program, mint })
+	const memeVault = getMemeVault({ program, token1Mint })
+
+	const memeAta = await getAssociatedTokenAddress(
+		token1Mint,
+		memeVault,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
+
+	const hodlVault = getHodlVault({ program, token1Mint })
+
+	const hodlAta = await getAssociatedTokenAddress(
+		token1Mint,
+		hodlVault,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
+
+	const bondingCurveState = getBondingCurveState({
+		program,
+		token1Mint,
+	})
 
 	const createMintAccountIxs = await getCreateMintIxs({
 		payer,
@@ -196,20 +202,20 @@ export async function getInitializeDegeneratorIxs({
 	const createPoolIx = await program.methods
 		.createBondingCurve(supplyBN)
 		.accountsStrict({
-			payer: payer,
-			mint2022: mint,
-			mint: NATIVE_MINT,
+			payer,
+			token0Mint,
+			token1Mint,
+			solVault,
+			solAta,
 			memeVault,
 			memeAta,
 			hodlVault,
 			hodlAta,
-			solVault,
-			solAta,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-			tokenProgram2022: TOKEN_2022_PROGRAM_ID,
-			tokenProgram: TOKEN_PROGRAM_ID,
+			token0Program: TOKEN_PROGRAM_ID,
+			token1Program: TOKEN_2022_PROGRAM_ID,
 			rent: web3.SYSVAR_RENT_PUBKEY,
 		})
 		.instruction()
@@ -229,41 +235,41 @@ export async function getInitializeDegeneratorIxs({
 interface SwapTokenIxsParams {
 	program: Program<Degenerator>
 	payer: PublicKey
-	mint: PublicKey
+	token1Mint: PublicKey
 	amount: number
 }
 
 export async function getBuyTokenIxs({
 	program,
 	payer,
-	mint,
+	token1Mint,
 	amount,
 }: SwapTokenIxsParams) {
 	const payerAta = await getAssociatedTokenAddress(
-		mint,
+		token1Mint,
 		payer,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const memeVault = getMemeVault({ program, mint })
+	const memeVault = getMemeVault({ program, token1Mint })
 
 	const memeAta = await getAssociatedTokenAddress(
-		mint,
+		token1Mint,
 		memeVault,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const solVault = getSolVault({ program, mint })
+	const solVault = getSolVault({ program, token1Mint })
 
-	const bondingCurveState = getBondingCurveState({ program, mint })
+	const bondingCurveState = getBondingCurveState({ program, token1Mint })
 
 	const amountBN = new BN(amount)
 	const buy = await program.methods
 		.buyToken(amountBN)
 		.accountsStrict({
-			mint: mint,
+			mint: token1Mint,
 			payer: payer,
 			memeVault,
 			memeAta,
@@ -282,34 +288,34 @@ export async function getBuyTokenIxs({
 export async function getSellTokenIxs({
 	program,
 	payer,
-	mint,
+	token1Mint,
 	amount,
 }: SwapTokenIxsParams) {
 	const payerAta = await getAssociatedTokenAddress(
-		mint,
+		token1Mint,
 		payer,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const memeVault = getMemeVault({ program, mint })
+	const memeVault = getMemeVault({ program, token1Mint })
 
 	const memeAta = await getAssociatedTokenAddress(
-		mint,
+		token1Mint,
 		memeVault,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const solVault = getSolVault({ program, mint })
+	const solVault = getSolVault({ program, token1Mint })
 
-	const bondingCurveState = getBondingCurveState({ program, mint })
+	const bondingCurveState = getBondingCurveState({ program, token1Mint })
 
 	const amountBN = new BN(amount)
 	const sell = await program.methods
 		.sellToken(amountBN)
 		.accountsStrict({
-			mint: mint,
+			mint: token1Mint,
 			signer: payer,
 			memeVault,
 			memeAta,
