@@ -323,6 +323,7 @@ export async function getSellTokenIxs({
 
 interface GetProxyInitIxsParams {
 	program: Program<Degenerator>
+	creator: PublicKey
 	configAddress: PublicKey
 	token0: PublicKey
 	token0Program: PublicKey
@@ -334,6 +335,7 @@ interface GetProxyInitIxsParams {
 
 export async function getProxyInitIxs({
 	program,
+	creator,
 	configAddress,
 	token0,
 	token0Program,
@@ -343,8 +345,6 @@ export async function getProxyInitIxs({
 	createPoolFee,
 }: GetProxyInitIxsParams) {
 	const auth = getAuthAddress({ programId: cpSwapProgram })
-
-	const creator = getBondingCurveHodl({ program, token1Mint: token1 })
 
 	const poolAddress = getPoolAddress({
 		ammConfig: configAddress,

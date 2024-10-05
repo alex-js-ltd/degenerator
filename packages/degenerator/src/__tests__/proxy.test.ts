@@ -106,17 +106,41 @@ describe('proxy init', () => {
 		})
 	})
 
+	it('wrap sol', async () => {
+		const ix = await getWrapSolIx({
+			program,
+			payer: payer.publicKey,
+			amount: 100,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		const res = await connection.simulateTransaction(tx)
+		expect(res.value.err).toBeNull()
+
+		// Confirm the transaction
+		await sendAndConfirm({ connection, tx })
+	})
+
 	it('proxy init', async () => {
 		const tokens = [SOL, MEME]
 
 		const ixs = await getProxyInitIxs({
 			program,
+			creator: payer.publicKey,
 			configAddress: configAddress,
 			token0: tokens[0].mint,
 			token0Program: tokens[0].program,
 			token1: tokens[1].mint,
 			token1Program: tokens[1].program,
-			initAmount: { initAmount0: new BN(10), initAmount1: new BN(10) },
+			initAmount: { initAmount0: new BN(100), initAmount1: new BN(100) },
 			createPoolFee: createPoolFeeReceive,
 		})
 

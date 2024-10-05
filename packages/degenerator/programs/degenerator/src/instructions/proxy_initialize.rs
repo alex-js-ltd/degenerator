@@ -17,10 +17,7 @@ pub struct ProxyInitialize<'info> {
     pub cp_swap_program: Program<'info, RaydiumCpSwap>,
 
     /// CHECK: Address paying to create the pool. Must be the bonding curve hodl account
-    #[account(mut,
-        seeds = [ BONDING_CURVE_HODL_SEED.as_bytes(), token_1_mint.key().as_ref()],
-            bump,
-        )]
+    #[account(mut)]
     pub creator: SystemAccount<'info>,
 
     /// Which config the pool belongs to.
@@ -161,7 +158,7 @@ pub fn proxy_initialize(
     open_time: u64,
 ) -> Result<()> {
     cpi::initialize(
-        CpiContext::new_with_signer(
+        CpiContext::new(
             ctx.accounts.cp_swap_program.to_account_info(),
             cpi::accounts::Initialize {
                 creator: ctx.accounts.creator.to_account_info(),
@@ -185,11 +182,6 @@ pub fn proxy_initialize(
                 system_program: ctx.accounts.system_program.to_account_info(),
                 rent: ctx.accounts.rent.to_account_info(),
             },
-            &[&[
-                BONDING_CURVE_HODL_SEED.as_bytes(),
-                ctx.accounts.token_1_mint.key().as_ref(),
-                &[ctx.bumps.creator][..],
-            ][..]],
         ),
         init_amount_0,
         init_amount_1,
