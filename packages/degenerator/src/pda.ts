@@ -20,7 +20,7 @@ export function getAssociatedAddress({
 	)[0]
 }
 
-export function getMemeVault({
+export function getBondingCurveVault({
 	program,
 	token1Mint,
 }: {
@@ -28,12 +28,12 @@ export function getMemeVault({
 	token1Mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('meme_vault'), token1Mint.toBuffer()],
+		[Buffer.from('bonding_curve_vault'), token1Mint.toBuffer()],
 		program.programId,
 	)[0]
 }
 
-export function getHodlVault({
+export function getBondingCurveHodl({
 	program,
 	token1Mint,
 }: {
@@ -41,20 +41,7 @@ export function getHodlVault({
 	token1Mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('hodl_vault'), token1Mint.toBuffer()],
-		program.programId,
-	)[0]
-}
-
-export function getSolVault({
-	program,
-	token1Mint,
-}: {
-	program: Program<Degenerator>
-	token1Mint: PublicKey
-}): PublicKey {
-	return PublicKey.findProgramAddressSync(
-		[Buffer.from('sol_vault'), token1Mint.toBuffer()],
+		[Buffer.from('bonding_curve_hodl'), token1Mint.toBuffer()],
 		program.programId,
 	)[0]
 }

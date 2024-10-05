@@ -24,30 +24,17 @@
           "isSigner": false
         },
         {
-          "name": "solVault",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "memeVault",
+          "name": "hodl",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "hodlVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA for the sol"
-          ]
-        },
-        {
-          "name": "memeAta",
+          "name": "vaultMemeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -55,11 +42,19 @@
           ]
         },
         {
-          "name": "hodlAta",
+          "name": "hodlMemeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
             "The ATA to hodl meme token"
+          ]
+        },
+        {
+          "name": "hodlSolAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The ATA to the sol account"
           ]
         },
         {
@@ -130,12 +125,7 @@
           ]
         },
         {
-          "name": "memeVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solVault",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -145,7 +135,7 @@
           "isSigner": false
         },
         {
-          "name": "memeAta",
+          "name": "vaultMemeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -214,12 +204,7 @@
           "isSigner": false
         },
         {
-          "name": "memeVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solVault",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -229,7 +214,7 @@
           "isSigner": false
         },
         {
-          "name": "memeAta",
+          "name": "vaultMemeAta",
           "isMut": true,
           "isSigner": false
         },
@@ -331,10 +316,7 @@
         {
           "name": "creator",
           "isMut": true,
-          "isSigner": true,
-          "docs": [
-            "Address paying to create the pool. Can be anyone"
-          ]
+          "isSigner": false
         },
         {
           "name": "ammConfig",
@@ -416,11 +398,6 @@
         },
         {
           "name": "observationState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solVault",
           "isMut": true,
           "isSigner": false
         },
@@ -527,6 +504,6 @@
     }
   ],
   "metadata": {
-    "address": "HLnrNg9vHYYsb1a7WTuYCifAyrEjHw7xXs2FN4Tv2R1S"
+    "address": "3P3pRPbpAB9kKCo1msyUFNsrGerHGJv15UmDMjmt2z4Q"
   }
 }

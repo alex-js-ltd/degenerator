@@ -24,30 +24,17 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "solVault",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "memeVault",
+          "name": "hodl",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "hodlVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA for the sol"
-          ]
-        },
-        {
-          "name": "memeAta",
+          "name": "vaultMemeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -55,11 +42,19 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "hodlAta",
+          "name": "hodlMemeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
             "The ATA to hodl meme token"
+          ]
+        },
+        {
+          "name": "hodlSolAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The ATA to the sol account"
           ]
         },
         {
@@ -130,12 +125,7 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "memeVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solVault",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -145,7 +135,7 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "memeAta",
+          "name": "vaultMemeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -214,12 +204,7 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "memeVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solVault",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -229,7 +214,7 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "memeAta",
+          "name": "vaultMemeAta",
           "isMut": true,
           "isSigner": false
         },
@@ -331,10 +316,7 @@ export type Degenerator = {
         {
           "name": "creator",
           "isMut": true,
-          "isSigner": true,
-          "docs": [
-            "Address paying to create the pool. Can be anyone"
-          ]
+          "isSigner": false
         },
         {
           "name": "ammConfig",
@@ -416,11 +398,6 @@ export type Degenerator = {
         },
         {
           "name": "observationState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solVault",
           "isMut": true,
           "isSigner": false
         },
@@ -554,30 +531,17 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "solVault",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "memeVault",
+          "name": "hodl",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "hodlVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA for the sol"
-          ]
-        },
-        {
-          "name": "memeAta",
+          "name": "vaultMemeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -585,11 +549,19 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "hodlAta",
+          "name": "hodlMemeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
             "The ATA to hodl meme token"
+          ]
+        },
+        {
+          "name": "hodlSolAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The ATA to the sol account"
           ]
         },
         {
@@ -660,12 +632,7 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "memeVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solVault",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -675,7 +642,7 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "memeAta",
+          "name": "vaultMemeAta",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -744,12 +711,7 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "memeVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solVault",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -759,7 +721,7 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "memeAta",
+          "name": "vaultMemeAta",
           "isMut": true,
           "isSigner": false
         },
@@ -861,10 +823,7 @@ export const IDL: Degenerator = {
         {
           "name": "creator",
           "isMut": true,
-          "isSigner": true,
-          "docs": [
-            "Address paying to create the pool. Can be anyone"
-          ]
+          "isSigner": false
         },
         {
           "name": "ammConfig",
@@ -946,11 +905,6 @@ export const IDL: Degenerator = {
         },
         {
           "name": "observationState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solVault",
           "isMut": true,
           "isSigner": false
         },

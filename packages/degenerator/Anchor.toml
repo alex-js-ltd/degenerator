@@ -7,7 +7,7 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-degenerator = "HLnrNg9vHYYsb1a7WTuYCifAyrEjHw7xXs2FN4Tv2R1S"
+degenerator = "3P3pRPbpAB9kKCo1msyUFNsrGerHGJv15UmDMjmt2z4Q"
 
 [registry]
 url = "https://api.apr.dev"
@@ -17,7 +17,7 @@ cluster = "Localnet"
 wallet = "/Users/alexandergilbert/.config/solana/id.json"
 
 [scripts]
-test = "pnpm run jest"
+test = "pnpm run jest src/__tests__/initialize.test.ts"
 
 [test]
 startup_wait = 5000

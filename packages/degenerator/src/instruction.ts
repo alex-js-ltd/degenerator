@@ -31,9 +31,8 @@ import {
 } from '@solana/spl-token-metadata'
 import {
 	getAssociatedAddress,
-	getMemeVault,
-	getHodlVault,
-	getSolVault,
+	getBondingCurveVault,
+	getBondingCurveHodl,
 	getBondingCurveState,
 	getAuthAddress,
 	getPoolAddress,
@@ -160,31 +159,29 @@ export async function getInitializeDegeneratorIxs({
 	const token0Mint = NATIVE_MINT
 	const token1Mint = mint
 
-	const solVault = getSolVault({ program, token1Mint })
+	const vault = getBondingCurveVault({ program, token1Mint })
 
-	const solAta = await getAssociatedTokenAddress(
+	const hodl = getBondingCurveHodl({ program, token1Mint })
+
+	const vaultMemeAta = await getAssociatedTokenAddress(
+		token1Mint,
+		vault,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
+
+	const hodlMemeAta = await getAssociatedTokenAddress(
+		token1Mint,
+		hodl,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
+
+	const hodlSolAta = await getAssociatedTokenAddress(
 		token0Mint,
-		solVault,
+		hodl,
 		true,
 		TOKEN_PROGRAM_ID,
-	)
-
-	const memeVault = getMemeVault({ program, token1Mint })
-
-	const memeAta = await getAssociatedTokenAddress(
-		token1Mint,
-		memeVault,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
-	const hodlVault = getHodlVault({ program, token1Mint })
-
-	const hodlAta = await getAssociatedTokenAddress(
-		token1Mint,
-		hodlVault,
-		true,
-		TOKEN_2022_PROGRAM_ID,
 	)
 
 	const bondingCurveState = getBondingCurveState({
@@ -205,12 +202,11 @@ export async function getInitializeDegeneratorIxs({
 			payer,
 			token0Mint,
 			token1Mint,
-			solVault,
-			solAta,
-			memeVault,
-			memeAta,
-			hodlVault,
-			hodlAta,
+			vault,
+			hodl,
+			vaultMemeAta,
+			hodlMemeAta,
+			hodlSolAta,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -252,16 +248,16 @@ export async function getBuyTokenIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const memeVault = getMemeVault({ program, token1Mint })
+	const vault = getBondingCurveVault({ program, token1Mint })
 
-	const memeAta = await getAssociatedTokenAddress(
+	const hodl = getBondingCurveHodl({ program, token1Mint })
+
+	const vaultMemeAta = await getAssociatedTokenAddress(
 		token1Mint,
-		memeVault,
+		vault,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
-
-	const solVault = getSolVault({ program, token1Mint })
 
 	const bondingCurveState = getBondingCurveState({ program, token1Mint })
 
@@ -270,11 +266,10 @@ export async function getBuyTokenIxs({
 		.buyToken(amountBN)
 		.accountsStrict({
 			token1Mint,
-			payer: payer,
-			memeVault,
-			memeAta,
+			payer,
+			vault,
+			vaultMemeAta,
 			payerAta,
-			solVault,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -298,16 +293,16 @@ export async function getSellTokenIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const memeVault = getMemeVault({ program, token1Mint })
+	const vault = getBondingCurveVault({ program, token1Mint })
 
-	const memeAta = await getAssociatedTokenAddress(
+	const hodl = getBondingCurveHodl({ program, token1Mint })
+
+	const vaultMemeAta = await getAssociatedTokenAddress(
 		token1Mint,
-		memeVault,
+		vault,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
-
-	const solVault = getSolVault({ program, token1Mint })
 
 	const bondingCurveState = getBondingCurveState({ program, token1Mint })
 
@@ -317,10 +312,10 @@ export async function getSellTokenIxs({
 		.accountsStrict({
 			token1Mint,
 			signer: payer,
-			memeVault,
-			memeAta,
+			vault,
+			vaultMemeAta,
 			payerAta,
-			solVault,
+
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -333,7 +328,6 @@ export async function getSellTokenIxs({
 
 interface GetProxyInitIxsParams {
 	program: Program<Degenerator>
-	creator: Signer
 	configAddress: PublicKey
 	token0: PublicKey
 	token0Program: PublicKey
@@ -345,7 +339,6 @@ interface GetProxyInitIxsParams {
 
 export async function getProxyInitIxs({
 	program,
-	creator,
 	configAddress,
 	token0,
 	token0Program,
@@ -355,6 +348,8 @@ export async function getProxyInitIxs({
 	createPoolFee,
 }: GetProxyInitIxsParams) {
 	const auth = getAuthAddress({ programId: cpSwapProgram })
+
+	const creator = getBondingCurveHodl({ program, token1Mint: token1 })
 
 	const poolAddress = getPoolAddress({
 		ammConfig: configAddress,
@@ -379,11 +374,7 @@ export async function getProxyInitIxs({
 		programId: cpSwapProgram,
 	})
 	const [creatorLpTokenAddress] = PublicKey.findProgramAddressSync(
-		[
-			creator.publicKey.toBuffer(),
-			TOKEN_PROGRAM_ID.toBuffer(),
-			lpMintAddress.toBuffer(),
-		],
+		[creator.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), lpMintAddress.toBuffer()],
 		ASSOCIATED_PROGRAM_ID,
 	)
 
@@ -394,18 +385,16 @@ export async function getProxyInitIxs({
 
 	const creatorToken0 = getAssociatedTokenAddressSync(
 		token0,
-		creator.publicKey,
+		creator,
 		false,
 		token0Program,
 	)
 	const creatorToken1 = getAssociatedTokenAddressSync(
 		token1,
-		creator.publicKey,
+		creator,
 		false,
 		token1Program,
 	)
-
-	const solVault = getSolVault({ program, token1Mint: token1 })
 
 	const computeUnitIx = ComputeBudgetProgram.setComputeUnitLimit({
 		units: 400000,
@@ -415,7 +404,7 @@ export async function getProxyInitIxs({
 		.proxyInitialize(initAmount.initAmount0, initAmount.initAmount1, new BN(0))
 		.accountsStrict({
 			cpSwapProgram: cpSwapProgram,
-			creator: creator.publicKey,
+			creator,
 			ammConfig: configAddress,
 			authority: auth,
 			poolState: poolAddress,
@@ -427,7 +416,6 @@ export async function getProxyInitIxs({
 			creatorLpToken: creatorLpTokenAddress,
 			token0Vault: vault0,
 			token1Vault: vault1,
-			solVault,
 			createPoolFee: createPoolFee,
 			observationState: observationAddress,
 			tokenProgram: TOKEN_PROGRAM_ID,

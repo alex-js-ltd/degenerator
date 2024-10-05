@@ -10,14 +10,18 @@ use raydium_cp_swap::{
     states::{AmmConfig, OBSERVATION_SEED, POOL_LP_MINT_SEED, POOL_SEED, POOL_VAULT_SEED},
 };
 
-use crate::utils::SOL_VAULT_SEED;
+use crate::utils::BONDING_CURVE_HODL_SEED;
 
 #[derive(Accounts)]
 pub struct ProxyInitialize<'info> {
     pub cp_swap_program: Program<'info, RaydiumCpSwap>,
-    /// Address paying to create the pool. Can be anyone
-    #[account(mut)]
-    pub creator: Signer<'info>,
+
+    /// CHECK: Address paying to create the pool. Must be the bonding curve hodl account
+    #[account(mut,
+        seeds = [ BONDING_CURVE_HODL_SEED.as_bytes(), token_1_mint.key().as_ref()],
+            bump,
+        )]
+    pub creator: SystemAccount<'info>,
 
     /// Which config the pool belongs to.
     pub amm_config: Box<Account<'info, AmmConfig>>,
@@ -136,13 +140,6 @@ pub struct ProxyInitialize<'info> {
     )]
     pub observation_state: UncheckedAccount<'info>,
 
-    /// CHECK: pda to control sol
-    #[account(mut,
-            seeds = [SOL_VAULT_SEED.as_bytes(), token_1_mint.key().as_ref()],
-                bump,
-            )]
-    pub sol_vault: AccountInfo<'info>,
-
     /// Program to create mint account and mint tokens
     pub token_program: Program<'info, Token>,
     /// Spl token program or token program 2022
@@ -164,7 +161,7 @@ pub fn proxy_initialize(
     open_time: u64,
 ) -> Result<()> {
     cpi::initialize(
-        CpiContext::new(
+        CpiContext::new_with_signer(
             ctx.accounts.cp_swap_program.to_account_info(),
             cpi::accounts::Initialize {
                 creator: ctx.accounts.creator.to_account_info(),
@@ -188,6 +185,11 @@ pub fn proxy_initialize(
                 system_program: ctx.accounts.system_program.to_account_info(),
                 rent: ctx.accounts.rent.to_account_info(),
             },
+            &[&[
+                BONDING_CURVE_HODL_SEED.as_bytes(),
+                ctx.accounts.token_1_mint.key().as_ref(),
+                &[ctx.bumps.creator][..],
+            ][..]],
         ),
         init_amount_0,
         init_amount_1,
