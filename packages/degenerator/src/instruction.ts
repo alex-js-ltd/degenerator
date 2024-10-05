@@ -405,13 +405,15 @@ export async function getProxyInitIxs({
 		token1Program,
 	)
 
+	const solVault = getSolVault({ program, token1Mint: token1 })
+
 	const computeUnitIx = ComputeBudgetProgram.setComputeUnitLimit({
 		units: 400000,
 	})
 
 	const proxyInitIx = await program.methods
 		.proxyInitialize(initAmount.initAmount0, initAmount.initAmount1, new BN(0))
-		.accounts({
+		.accountsStrict({
 			cpSwapProgram: cpSwapProgram,
 			creator: creator.publicKey,
 			ammConfig: configAddress,
@@ -425,6 +427,7 @@ export async function getProxyInitIxs({
 			creatorLpToken: creatorLpTokenAddress,
 			token0Vault: vault0,
 			token1Vault: vault1,
+			solVault,
 			createPoolFee: createPoolFee,
 			observationState: observationAddress,
 			tokenProgram: TOKEN_PROGRAM_ID,

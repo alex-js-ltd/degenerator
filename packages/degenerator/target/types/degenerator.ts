@@ -420,6 +420,11 @@ export type Degenerator = {
           "isSigner": false
         },
         {
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
@@ -941,6 +946,11 @@ export const IDL: Degenerator = {
         },
         {
           "name": "observationState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solVault",
           "isMut": true,
           "isSigner": false
         },
