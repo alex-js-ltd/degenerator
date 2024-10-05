@@ -3,13 +3,12 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
+use crate::state::BondingCurveState;
 use crate::utils::{
     calculate_buy_price, set_bonding_curve_state, transfer_from_bonding_curve_vault_to_user,
     transfer_sol_to_bonding_curve_vault, BONDING_CURVE_HODL_SEED, BONDING_CURVE_STATE_SEED,
     BONDING_CURVE_VAULT_SEED,
 };
-
-use crate::state::BondingCurveState;
 
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
@@ -33,8 +32,13 @@ pub struct BuyToken<'info> {
     )]
     pub bonding_curve_state: Account<'info, BondingCurveState>,
 
-    /// Token account from which the tokens will be transferred
-    #[account(mut)]
+    /// The ATA for the meme coin
+    #[account(
+        mut,
+        associated_token::mint = token_1_mint,
+        associated_token::authority = vault,
+        associated_token::token_program = token_1_program,
+    )]
     pub vault_meme_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Token account to which the tokens will be transferred (created if needed)
@@ -53,7 +57,7 @@ pub struct BuyToken<'info> {
     )]
     pub token_1_mint: Box<InterfaceAccount<'info, Mint>>,
 
-    /// Spl token program or token program 2022
+    /// SPL token program or token program 2022
     pub token_1_program: Interface<'info, TokenInterface>,
 
     /// System program
@@ -83,6 +87,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
+    // Transfer tokens from bonding curve vault to the user
     transfer_from_bonding_curve_vault_to_user(
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.vault_meme_ata.to_account_info(),
@@ -98,6 +103,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ][..]],
     )?;
 
+    // Transfer SOL to bonding curve vault
     transfer_sol_to_bonding_curve_vault(
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.vault.to_account_info(),
@@ -105,15 +111,16 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         price,
     )?;
 
+    // Reload the vault ATA to update the current supply
     ctx.accounts.vault_meme_ata.reload()?;
 
     let current_supply = ctx.accounts.vault_meme_ata.amount as u128;
-    let total_supply = ctx.accounts.bonding_curve_state.total_supply as u128;
 
+    // Update bonding curve state
     set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
         current_supply,
-        total_supply,
+        total_supply as u128,
     );
 
     Ok(())

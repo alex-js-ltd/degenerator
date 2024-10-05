@@ -139,7 +139,7 @@ export type Degenerator = {
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "Token account from which the tokens will be transferred"
+            "The ATA for the meme coin"
           ]
         },
         {
@@ -163,7 +163,7 @@ export type Degenerator = {
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "Spl token program or token program 2022"
+            "SPL token program or token program 2022"
           ]
         },
         {
@@ -216,7 +216,10 @@ export type Degenerator = {
         {
           "name": "vaultMemeAta",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "The ATA for the meme coin"
+          ]
         },
         {
           "name": "token1Mint",
@@ -646,7 +649,7 @@ export const IDL: Degenerator = {
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "Token account from which the tokens will be transferred"
+            "The ATA for the meme coin"
           ]
         },
         {
@@ -670,7 +673,7 @@ export const IDL: Degenerator = {
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "Spl token program or token program 2022"
+            "SPL token program or token program 2022"
           ]
         },
         {
@@ -723,7 +726,10 @@ export const IDL: Degenerator = {
         {
           "name": "vaultMemeAta",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "The ATA for the meme coin"
+          ]
         },
         {
           "name": "token1Mint",

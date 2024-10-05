@@ -34,14 +34,14 @@ pub struct SellToken<'info> {
     )]
     pub bonding_curve_state: Account<'info, BondingCurveState>,
 
+    /// The ATA for the meme coin
     #[account(
-        init_if_needed,
+        mut,
         associated_token::mint = token_1_mint,
-        payer = signer,
         associated_token::authority = vault,
-        associated_token::token_program = token_1_program
+        associated_token::token_program = token_1_program,
     )]
-    pub vault_meme_ata: InterfaceAccount<'info, TokenAccount>,
+    pub vault_meme_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Mint associated with the token
     #[account(

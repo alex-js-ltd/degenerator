@@ -139,7 +139,7 @@
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "Token account from which the tokens will be transferred"
+            "The ATA for the meme coin"
           ]
         },
         {
@@ -163,7 +163,7 @@
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "Spl token program or token program 2022"
+            "SPL token program or token program 2022"
           ]
         },
         {
@@ -216,7 +216,10 @@
         {
           "name": "vaultMemeAta",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "The ATA for the meme coin"
+          ]
         },
         {
           "name": "token1Mint",
