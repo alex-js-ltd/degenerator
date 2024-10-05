@@ -167,11 +167,7 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
-
-		console.log(res)
 		expect(res.value.err).toBeNull()
-
-		// Confirm the transaction
 		await sendAndConfirm({ connection, tx })
 	})
 
@@ -182,8 +178,6 @@ describe('initialize', () => {
 		})
 
 		const expectedProgress = new BN(100)
-
-		// Ensure that currentSupply equals expectedSupply
 		expect(progress.eq(expectedProgress)).toBe(true)
 	})
 
@@ -195,7 +189,6 @@ describe('initialize', () => {
 
 		const expectedCurrentSupply = new BN(0)
 
-		// Ensure that currentSupply equals expectedSupply
 		expect(currentSupply.eq(expectedCurrentSupply)).toBe(true)
 	})
 
@@ -218,11 +211,9 @@ describe('initialize', () => {
 
 		tx.sign([payer])
 
-		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
 		expect(res.value.err).toBeNull()
 
-		// Confirm the transaction
 		await sendAndConfirm({ connection, tx })
 	})
 
@@ -234,7 +225,6 @@ describe('initialize', () => {
 
 		const expectedProgress = new BN(0)
 
-		// Ensure that currentSupply equals expectedSupply
 		expect(progress.eq(expectedProgress)).toBe(true)
 	})
 
@@ -244,17 +234,14 @@ describe('initialize', () => {
 			mint: MEME.mint,
 		})
 
-		// Convert the supply into the smallest unit considering the decimals
 		const supplyBN = new anchor.BN(supply).mul(
 			new anchor.BN(10).pow(new anchor.BN(MEME.decimals)),
 		)
 
-		// Correctly calculate 80% of the total supply
 		const expectedSupply = supplyBN
 			.mul(new anchor.BN(80))
 			.div(new anchor.BN(100))
 
-		// Ensure that currentSupply equals expectedSupply
 		expect(currentSupply.eq(expectedSupply)).toBe(true)
 	})
 })
