@@ -60,7 +60,6 @@ describe('initialize wrap sol', () => {
 		)
 
 		const account = await getAccount(connection, payerATA)
-		console.log(account)
 		expect(account.isNative).toBe(true)
 	})
 })

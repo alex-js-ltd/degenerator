@@ -10,7 +10,7 @@ import {
 	getProxyInitIxs,
 	sortTokens,
 	SOL,
-	MY_TOKEN,
+	MEME,
 	getWrapSolIx,
 } from '../index'
 import {
@@ -70,9 +70,9 @@ describe('proxy init', () => {
 			program,
 			connection,
 			payer: payer.publicKey,
-			mint: MY_TOKEN.mint,
-			metadata: MY_TOKEN.metadata,
-			decimals: MY_TOKEN.decimals,
+			mint: MEME.mint,
+			metadata: MEME.metadata,
+			decimals: MEME.decimals,
 			supply: supply,
 		})
 
@@ -80,7 +80,7 @@ describe('proxy init', () => {
 			connection: connection,
 			payer: payer.publicKey,
 			instructions: [...ixs],
-			signers: [MY_TOKEN.keypair],
+			signers: [MEME.keypair],
 		})
 
 		tx.sign([payer])
@@ -98,7 +98,7 @@ describe('proxy init', () => {
 		const ix = await getBuyTokenIxs({
 			program,
 			payer: payer.publicKey,
-			token1Mint: MY_TOKEN.mint,
+			token1Mint: MEME.mint,
 			amount: amountToBuy,
 		})
 
@@ -120,7 +120,7 @@ describe('proxy init', () => {
 	})
 
 	it('proxy init', async () => {
-		const tokens = [SOL, MY_TOKEN]
+		const tokens = [SOL, MEME]
 
 		const ixs = await getProxyInitIxs({
 			program,

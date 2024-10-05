@@ -12,7 +12,7 @@ import {
 	getSellTokenIxs,
 	fetchBondingCurveState,
 	SOL,
-	MY_TOKEN,
+	MEME,
 } from '../index'
 import { getAccount, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 
@@ -30,7 +30,7 @@ describe('initialize', () => {
 
 	const memeVault = getMemeVault({
 		program,
-		token1Mint: MY_TOKEN.mint,
+		token1Mint: MEME.mint,
 	})
 
 	const supply = 100
@@ -47,9 +47,9 @@ describe('initialize', () => {
 			program,
 			connection,
 			payer: payer.publicKey,
-			mint: MY_TOKEN.mint,
-			metadata: MY_TOKEN.metadata,
-			decimals: MY_TOKEN.decimals,
+			mint: MEME.mint,
+			metadata: MEME.metadata,
+			decimals: MEME.decimals,
 			supply: supply,
 		})
 
@@ -57,7 +57,7 @@ describe('initialize', () => {
 			connection: connection,
 			payer: payer.publicKey,
 			instructions: [...ixs],
-			signers: [MY_TOKEN.keypair],
+			signers: [MEME.keypair],
 		})
 
 		tx.sign([payer])
@@ -88,12 +88,12 @@ describe('initialize', () => {
 	it('current supply should be 80% of supply', async () => {
 		const { currentSupply } = await fetchBondingCurveState({
 			program,
-			mint: MY_TOKEN.mint,
+			mint: MEME.mint,
 		})
 
 		// Convert the supply into the smallest unit considering the decimals
 		const supplyBN = new anchor.BN(supply).mul(
-			new anchor.BN(10).pow(new anchor.BN(MY_TOKEN.decimals)),
+			new anchor.BN(10).pow(new anchor.BN(MEME.decimals)),
 		)
 
 		// Correctly calculate 80% of the total supply
@@ -108,7 +108,7 @@ describe('initialize', () => {
 	it('progess should be 0%', async () => {
 		const { progress } = await fetchBondingCurveState({
 			program,
-			mint: MY_TOKEN.mint,
+			mint: MEME.mint,
 		})
 
 		const expectedProgress = new BN(0)
@@ -121,7 +121,7 @@ describe('initialize', () => {
 		const ix = await getBuyTokenIxs({
 			program,
 			payer: payer.publicKey,
-			token1Mint: MY_TOKEN.mint,
+			token1Mint: MEME.mint,
 			amount: amountToBuy,
 		})
 
@@ -147,7 +147,7 @@ describe('initialize', () => {
 	it('progess should be 100%', async () => {
 		const { progress } = await fetchBondingCurveState({
 			program,
-			mint: MY_TOKEN.mint,
+			mint: MEME.mint,
 		})
 
 		const expectedProgress = new BN(100)
@@ -159,7 +159,7 @@ describe('initialize', () => {
 	it('current supply should be 0', async () => {
 		const { currentSupply } = await fetchBondingCurveState({
 			program,
-			mint: MY_TOKEN.mint,
+			mint: MEME.mint,
 		})
 
 		const expectedCurrentSupply = new BN(0)
@@ -174,7 +174,7 @@ describe('initialize', () => {
 		const ix = await getSellTokenIxs({
 			program,
 			payer: payer.publicKey,
-			token1Mint: MY_TOKEN.mint,
+			token1Mint: MEME.mint,
 			amount: amountToSell,
 		})
 
@@ -198,7 +198,7 @@ describe('initialize', () => {
 	it('progess should be 0%', async () => {
 		const { progress } = await fetchBondingCurveState({
 			program,
-			mint: MY_TOKEN.mint,
+			mint: MEME.mint,
 		})
 
 		const expectedProgress = new BN(0)
@@ -210,12 +210,12 @@ describe('initialize', () => {
 	it('current supply should be 80% of supply', async () => {
 		const { currentSupply } = await fetchBondingCurveState({
 			program,
-			mint: MY_TOKEN.mint,
+			mint: MEME.mint,
 		})
 
 		// Convert the supply into the smallest unit considering the decimals
 		const supplyBN = new anchor.BN(supply).mul(
-			new anchor.BN(10).pow(new anchor.BN(MY_TOKEN.decimals)),
+			new anchor.BN(10).pow(new anchor.BN(MEME.decimals)),
 		)
 
 		// Correctly calculate 80% of the total supply
