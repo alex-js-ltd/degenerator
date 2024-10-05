@@ -293,8 +293,6 @@ export async function getSellTokenIxs({
 
 	const vault = getBondingCurveVault({ program, token1Mint })
 
-	const hodl = getBondingCurveHodl({ program, token1Mint })
-
 	const vaultMemeAta = await getAssociatedTokenAddress(
 		token1Mint,
 		vault,
@@ -313,7 +311,6 @@ export async function getSellTokenIxs({
 			vault,
 			vaultMemeAta,
 			payerAta,
-
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -384,13 +381,13 @@ export async function getProxyInitIxs({
 	const creatorToken0 = getAssociatedTokenAddressSync(
 		token0,
 		creator,
-		false,
+		true,
 		token0Program,
 	)
 	const creatorToken1 = getAssociatedTokenAddressSync(
 		token1,
 		creator,
-		false,
+		true,
 		token1Program,
 	)
 

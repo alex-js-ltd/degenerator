@@ -9,6 +9,7 @@ import {
 	getBuyTokenIxs,
 	getProxyInitIxs,
 	sortTokens,
+	getBondingCurveHodl,
 	SOL,
 	MEME,
 	getWrapSolIx,
@@ -32,6 +33,8 @@ describe('proxy init', () => {
 	const connection = provider.connection
 
 	const payer = Keypair.generate()
+
+	const creator = getBondingCurveHodl({ program, token1Mint: MEME.mint })
 
 	const supply = 1000
 
@@ -96,18 +99,24 @@ describe('proxy init', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
+	it('airdrop creator', async () => {
+		await airDrop({
+			connection,
+			account: creator,
+		})
+	})
+
 	it('proxy init', async () => {
 		const tokens = [SOL, MEME]
 
 		const ixs = await getProxyInitIxs({
 			program,
-			creator: payer,
 			configAddress: configAddress,
 			token0: tokens[0].mint,
 			token0Program: tokens[0].program,
 			token1: tokens[1].mint,
 			token1Program: tokens[1].program,
-			initAmount: { initAmount0: new BN(100), initAmount1: new BN(100) },
+			initAmount: { initAmount0: new BN(10), initAmount1: new BN(10) },
 			createPoolFee: createPoolFeeReceive,
 		})
 
