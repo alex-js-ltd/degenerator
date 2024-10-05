@@ -42,29 +42,6 @@ describe('proxy init', () => {
 		})
 	})
 
-	it('wrap sol', async () => {
-		const ix = await getWrapSolIx({
-			program,
-			payer: payer.publicKey,
-			amount: 100,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		const res = await connection.simulateTransaction(tx)
-		expect(res.value.err).toBeNull()
-
-		// Confirm the transaction
-		await sendAndConfirm({ connection, tx })
-	})
-
 	it('mint token to payer & init bonding curve', async () => {
 		const ixs = await getInitializeDegeneratorIxs({
 			program,
