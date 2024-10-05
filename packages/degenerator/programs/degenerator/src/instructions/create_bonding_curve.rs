@@ -29,7 +29,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
     let eighty_percent = amount.saturating_mul(80).saturating_div(100);
     let twenty_percent = amount.saturating_mul(20).saturating_div(100);
 
-    // mint 80% to meme vault
+    // mint 80% to vault
     token_mint_to(
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_1_program.to_account_info(),
@@ -39,7 +39,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
         ctx.accounts.token_1_mint.decimals,
     )?;
 
-    // mint 20% to hodl vault
+    // mint 20% to hodl
     token_mint_to(
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.token_1_program.to_account_info(),
@@ -80,7 +80,7 @@ pub struct CreateBondingCurve<'info> {
     )]
     pub token_1_mint: Box<InterfaceAccount<'info, Mint>>,
 
-    /// CHECK: pda to control sol
+    /// CHECK: pda to control vault_meme_ata & lamports
     #[account(mut,
         seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), token_1_mint.key().as_ref()],
         bump,

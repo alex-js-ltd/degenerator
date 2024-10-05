@@ -15,9 +15,6 @@ pub struct SellToken<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
-    #[account(mut)]
-    pub payer_ata: InterfaceAccount<'info, TokenAccount>,
-
     /// CHECK: pda to control bonding_curve_vault_ata & store lamports
     #[account(
         mut,
@@ -48,6 +45,15 @@ pub struct SellToken<'info> {
         mint::token_program = token_1_program,
     )]
     pub token_1_mint: Box<InterfaceAccount<'info, Mint>>,
+
+    /// Token account the tokens will be transferred from
+    #[account(
+        mut,
+        associated_token::mint = token_1_mint,
+        associated_token::authority = signer,
+        associated_token::token_program = token_1_program,
+    )]
+    pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Token program
     pub token_1_program: Interface<'info, TokenInterface>,

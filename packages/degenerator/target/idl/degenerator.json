@@ -199,11 +199,6 @@
           "isSigner": true
         },
         {
-          "name": "payerAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "vault",
           "isMut": true,
           "isSigner": false
@@ -227,6 +222,14 @@
           "isSigner": false,
           "docs": [
             "Mint associated with the token"
+          ]
+        },
+        {
+          "name": "payerAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Token account the tokens will be transferred from"
           ]
         },
         {

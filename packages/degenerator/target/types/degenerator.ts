@@ -199,11 +199,6 @@ export type Degenerator = {
           "isSigner": true
         },
         {
-          "name": "payerAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "vault",
           "isMut": true,
           "isSigner": false
@@ -227,6 +222,14 @@ export type Degenerator = {
           "isSigner": false,
           "docs": [
             "Mint associated with the token"
+          ]
+        },
+        {
+          "name": "payerAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Token account the tokens will be transferred from"
           ]
         },
         {
@@ -709,11 +712,6 @@ export const IDL: Degenerator = {
           "isSigner": true
         },
         {
-          "name": "payerAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "vault",
           "isMut": true,
           "isSigner": false
@@ -737,6 +735,14 @@ export const IDL: Degenerator = {
           "isSigner": false,
           "docs": [
             "Mint associated with the token"
+          ]
+        },
+        {
+          "name": "payerAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Token account the tokens will be transferred from"
           ]
         },
         {

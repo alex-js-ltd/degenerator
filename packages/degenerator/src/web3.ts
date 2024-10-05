@@ -18,7 +18,7 @@ export async function airDrop({
 	account: PublicKey
 	connection: Connection
 }) {
-	const amount = 2 * LAMPORTS_PER_SOL
+	const amount = 10 * LAMPORTS_PER_SOL
 	const blocks = connection.getLatestBlockhash()
 	const airDrop = connection.requestAirdrop(account, amount)
 
