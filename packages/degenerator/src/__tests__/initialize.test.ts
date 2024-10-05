@@ -7,14 +7,20 @@ import {
 	buildTransaction,
 	sendAndConfirm,
 	getBondingCurveVault,
+	getBondingCurveHodl,
 	getAssociatedAddress,
 	getBuyTokenIxs,
 	getSellTokenIxs,
 	fetchBondingCurveState,
+	isRentExempt,
 	SOL,
 	MEME,
 } from '../index'
-import { getAccount, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import {
+	getAccount,
+	TOKEN_2022_PROGRAM_ID,
+	getAssociatedTokenAddress,
+} from '@solana/spl-token'
 
 const { BN } = anchor
 
@@ -29,6 +35,11 @@ describe('initialize', () => {
 	const payer = Keypair.generate()
 
 	const vault = getBondingCurveVault({
+		program,
+		token1Mint: MEME.mint,
+	})
+
+	const hodl = getBondingCurveVault({
 		program,
 		token1Mint: MEME.mint,
 	})
@@ -70,19 +81,19 @@ describe('initialize', () => {
 	})
 
 	it('check bonding curve vault is rent exempt', async () => {
-		const accountInfo = await connection.getAccountInfo(vault)
+		const rentExempt = await isRentExempt({
+			connection: connection,
+			address: vault,
+		})
+		expect(rentExempt).toBe(true)
+	})
 
-		if (accountInfo === null) {
-			throw new Error('Account not found')
-		}
-
-		const minRent = await connection.getMinimumBalanceForRentExemption(
-			accountInfo.data.length,
-		)
-		const isRentExempt = accountInfo.lamports >= minRent
-
-		// Assert that the PDA is rent-exempt
-		expect(isRentExempt).toBe(true)
+	it('check bonding curve hodl is rent exempt', async () => {
+		const rentExempt = await isRentExempt({
+			connection: connection,
+			address: hodl,
+		})
+		expect(rentExempt).toBe(true)
 	})
 
 	it('current supply should be 80% of supply', async () => {

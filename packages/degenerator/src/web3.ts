@@ -82,51 +82,21 @@ export async function sendAndConfirm({
 	return signature
 }
 
-export async function getBalance({
+export async function isRentExempt({
 	connection,
 	address,
 }: {
 	connection: Connection
 	address: PublicKey
 }) {
-	const res = await connection.getBalance(address)
-	return res
-}
+	const accountInfo = await connection.getAccountInfo(address)
 
-export async function sendTransaction(
-	connection: Connection,
-	ixs: TransactionInstruction[],
-	signers: Array<Signer>,
-	options?: ConfirmOptions,
-): Promise<TransactionSignature> {
-	const tx = new Transaction()
-	for (var i = 0; i < ixs.length; i++) {
-		tx.add(ixs[i])
+	if (accountInfo === null) {
+		throw new Error('Account not found')
 	}
 
-	if (options == undefined) {
-		options = {
-			preflightCommitment: 'confirmed',
-			commitment: 'confirmed',
-		}
-	}
-
-	const sendOpt = options && {
-		skipPreflight: options.skipPreflight,
-		preflightCommitment: options.preflightCommitment || options.commitment,
-	}
-
-	tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
-	const signature = await connection.sendTransaction(tx, signers, sendOpt)
-
-	const status = (
-		await connection.confirmTransaction(signature, options.commitment)
-	).value
-
-	if (status.err) {
-		throw new Error(
-			`Raw transaction ${signature} failed (${JSON.stringify(status)})`,
-		)
-	}
-	return signature
+	const minRent = await connection.getMinimumBalanceForRentExemption(
+		accountInfo.data.length,
+	)
+	return accountInfo.lamports >= minRent
 }

@@ -250,8 +250,6 @@ export async function getBuyTokenIxs({
 
 	const vault = getBondingCurveVault({ program, token1Mint })
 
-	const hodl = getBondingCurveHodl({ program, token1Mint })
-
 	const vaultMemeAta = await getAssociatedTokenAddress(
 		token1Mint,
 		vault,
