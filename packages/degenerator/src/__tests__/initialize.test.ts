@@ -19,7 +19,9 @@ import {
 import {
 	getAccount,
 	TOKEN_2022_PROGRAM_ID,
+	TOKEN_PROGRAM_ID,
 	getAssociatedTokenAddress,
+	NATIVE_MINT,
 } from '@solana/spl-token'
 
 const { BN } = anchor
@@ -39,7 +41,7 @@ describe('initialize', () => {
 		token1Mint: MEME.mint,
 	})
 
-	const hodl = getBondingCurveVault({
+	const hodl = getBondingCurveHodl({
 		program,
 		token1Mint: MEME.mint,
 	})
@@ -74,7 +76,6 @@ describe('initialize', () => {
 		tx.sign([payer])
 
 		const res = await connection.simulateTransaction(tx)
-		console.log('init degenerator', res)
 		expect(res.value.err).toBeNull()
 
 		await sendAndConfirm({ connection, tx })
@@ -124,6 +125,25 @@ describe('initialize', () => {
 
 		const expectedProgress = new BN(0)
 		expect(progress.eq(expectedProgress)).toBe(true)
+	})
+
+	it('check hodl_sol_ata', async () => {
+		const hodlSolAta = await getAssociatedTokenAddress(
+			NATIVE_MINT,
+			hodl,
+			true,
+			TOKEN_PROGRAM_ID,
+		)
+
+		const account = await getAccount(
+			connection,
+			hodlSolAta,
+			'confirmed',
+			TOKEN_PROGRAM_ID,
+		)
+
+		expect(account.isNative).toBe(true)
+		expect(account.isInitialized).toBe(true)
 	})
 
 	it('buy token', async () => {
