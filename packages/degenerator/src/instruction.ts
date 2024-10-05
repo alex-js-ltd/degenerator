@@ -265,9 +265,9 @@ export async function getBuyTokenIxs({
 	const buy = await program.methods
 		.buyToken(amountBN)
 		.accountsStrict({
-			token1Mint,
 			payer,
 			vault,
+			token1Mint,
 			vaultMemeAta,
 			payerAta,
 			bondingCurveState,

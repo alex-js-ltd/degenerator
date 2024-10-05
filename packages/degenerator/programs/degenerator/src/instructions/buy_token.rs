@@ -5,7 +5,8 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::errors::Errors;
 use crate::utils::{
     calculate_buy_price, set_bonding_curve_state, transfer_from_bonding_curve_vault_to_user,
-    transfer_sol_to_bonding_curve_vault, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED, BONDING_CURVE_HODL_SEED
+    transfer_sol_to_bonding_curve_vault, BONDING_CURVE_HODL_SEED, BONDING_CURVE_STATE_SEED,
+    BONDING_CURVE_VAULT_SEED,
 };
 
 use crate::state::BondingCurveState;
@@ -24,21 +25,12 @@ pub struct BuyToken<'info> {
     )]
     pub vault: AccountInfo<'info>,
 
-        /// CHECK: pda to hodl tokens for the raydium pool
-        #[account(mut,
-            seeds = [BONDING_CURVE_HODL_SEED.as_bytes(), token_1_mint.key().as_ref()],
-            bump,
-        )]
-pub hodl: AccountInfo<'info>,
-
-  
-
     /// CHECK: pda to store current price
     #[account(
-            mut,
-            seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), token_1_mint.key().as_ref()],
-            bump,
-        )]
+        mut,
+        seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), token_1_mint.key().as_ref()],
+        bump,
+    )]
     pub bonding_curve_state: Account<'info, BondingCurveState>,
 
     /// Token account from which the tokens will be transferred
@@ -51,8 +43,7 @@ pub hodl: AccountInfo<'info>,
         associated_token::mint = token_1_mint,
         payer = payer,
         associated_token::authority = payer,
-        associated_token::token_program = token_1_program
-     
+        associated_token::token_program = token_1_program,
     )]
     pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
