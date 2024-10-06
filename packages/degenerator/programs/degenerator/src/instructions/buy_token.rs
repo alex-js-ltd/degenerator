@@ -83,6 +83,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         amount,
+        ctx.accounts.mint.decimals,
         &[&[
             BONDING_CURVE_MINT_AUTHORITY.as_bytes(),
             ctx.accounts.mint.key().as_ref(),

@@ -182,6 +182,7 @@ pub fn token_mint_to<'a>(
     mint: AccountInfo<'a>,
     destination: AccountInfo<'a>,
     amount: u64,
+    mint_decimals: u8,
     signer_seeds: &[&[&[u8]]],
 ) -> Result<()> {
     token_2022::mint_to(
@@ -194,7 +195,7 @@ pub fn token_mint_to<'a>(
             },
             signer_seeds,
         ),
-        amount,
+        amount * 10u64.pow(mint_decimals as u32),
     )
 }
 
@@ -204,7 +205,7 @@ pub fn token_burn<'a>(
     mint: AccountInfo<'a>,
     from: AccountInfo<'a>,
     amount: u64,
-    mint_decimals: u32,
+    mint_decimals: u8,
     signer_seeds: &[&[&[u8]]],
 ) -> Result<()> {
     token_2022::burn(

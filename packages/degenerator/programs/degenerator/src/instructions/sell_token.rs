@@ -40,8 +40,9 @@ pub struct SellToken<'info> {
     pub bonding_curve_state: Account<'info, BondingCurveState>,
 
     /// Mint associated with the token
-    #[account(
+    #[account(mut,
         mint::token_program = token_program,
+        mint::authority = mint_authority,
     )]
     pub mint: Box<InterfaceAccount<'info, Mint>>,
 
@@ -83,7 +84,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         amount,
-        ctx.accounts.mint.decimals as u32,
+        ctx.accounts.mint.decimals,
         &[&[
             BONDING_CURVE_MINT_AUTHORITY.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
