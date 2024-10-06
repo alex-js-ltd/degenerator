@@ -7,19 +7,6 @@ import {
 	NATIVE_MINT,
 } from '@solana/spl-token'
 
-export function getAssociatedAddress({
-	mint,
-	owner,
-}: {
-	mint: PublicKey
-	owner: PublicKey
-}): PublicKey {
-	return PublicKey.findProgramAddressSync(
-		[owner.toBuffer(), TOKEN_2022_PROGRAM_ID.toBuffer(), mint.toBuffer()],
-		ASSOCIATED_TOKEN_PROGRAM_ID,
-	)[0]
-}
-
 export function getMintAuthority({
 	program,
 	mint,
@@ -63,7 +50,6 @@ export interface BondingCurveState {
 	buyPrice: BN
 	sellPrice: BN
 	currentSupply: BN
-	totalSupply: BN
 	progress: BN
 }
 

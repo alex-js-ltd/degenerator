@@ -8,7 +8,6 @@ import {
 	sendAndConfirm,
 	getBondingCurveVault,
 	getMintAuthority,
-	getAssociatedAddress,
 	getBuyTokenIxs,
 	getSellTokenIxs,
 	fetchBondingCurveState,

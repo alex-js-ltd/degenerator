@@ -30,7 +30,6 @@ import {
 	TokenMetadata,
 } from '@solana/spl-token-metadata'
 import {
-	getAssociatedAddress,
 	getMintAuthority,
 	getBondingCurveVault,
 	getBondingCurveState,
