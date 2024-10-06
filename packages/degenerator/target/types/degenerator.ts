@@ -312,6 +312,74 @@ export type Degenerator = {
       ]
     },
     {
+      "name": "createWrappedSol",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "token0Mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token1Mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "hodl",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "hodlSolAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The ATA to the sol account"
+          ]
+        },
+        {
+          "name": "token0Program",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Spl token program or token program 2022"
+          ]
+        },
+        {
+          "name": "token1Program",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Spl token program or token program 2022"
+          ]
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Associated token program"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "proxyInitialize",
       "accounts": [
         {
@@ -823,6 +891,74 @@ export const IDL: Degenerator = {
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "createWrappedSol",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "token0Mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token1Mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "hodl",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "hodlSolAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The ATA to the sol account"
+          ]
+        },
+        {
+          "name": "token0Program",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Spl token program or token program 2022"
+          ]
+        },
+        {
+          "name": "token1Program",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Spl token program or token program 2022"
+          ]
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Associated token program"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     },
     {
       "name": "proxyInitialize",

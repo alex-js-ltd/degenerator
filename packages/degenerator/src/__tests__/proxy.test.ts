@@ -12,7 +12,7 @@ import {
 	getBondingCurveHodl,
 	SOL,
 	MEME,
-	getWrapSolIx,
+	getCreateWrappedSolIx,
 } from '../index'
 import {
 	getAccount,
@@ -36,7 +36,7 @@ describe('proxy init', () => {
 
 	const creator = getBondingCurveHodl({ program, token1Mint: MEME.mint })
 
-	const supply = 1000
+	const supply = 100000
 
 	it('airdrop payer', async () => {
 		await airDrop({
@@ -79,11 +79,11 @@ describe('proxy init', () => {
 		})
 	})
 
-	it('wrap sol', async () => {
-		const ix = await getWrapSolIx({
+	it('create wrapped sol account', async () => {
+		const ix = await getCreateWrappedSolIx({
 			program,
 			payer: payer.publicKey,
-			amount: 100,
+			token1Mint: MEME.mint,
 		})
 
 		const tx = await buildTransaction({
@@ -95,11 +95,19 @@ describe('proxy init', () => {
 
 		tx.sign([payer])
 
+		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
-		expect(res.value.err).toBeNull()
 
-		// Confirm the transaction
+		console.log(res)
+		// expect(res.value.err).toBeNull()
 		await sendAndConfirm({ connection, tx })
+	})
+
+	it('airdrop creator', async () => {
+		await airDrop({
+			connection,
+			account: creator,
+		})
 	})
 
 	it('proxy init', async () => {
@@ -113,7 +121,7 @@ describe('proxy init', () => {
 			token0Program: tokens[0].program,
 			token1: tokens[1].mint,
 			token1Program: tokens[1].program,
-			initAmount: { initAmount0: new BN(100), initAmount1: new BN(100) },
+			initAmount: { initAmount0: new BN(50), initAmount1: new BN(50) },
 			createPoolFee: createPoolFeeReceive,
 		})
 

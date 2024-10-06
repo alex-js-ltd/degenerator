@@ -321,6 +321,46 @@ export async function getSellTokenIxs({
 	return sell
 }
 
+export async function getCreateWrappedSolIx({
+	program,
+	payer,
+	token1Mint,
+}: {
+	program: Program<Degenerator>
+	payer: PublicKey
+	token1Mint: PublicKey
+}) {
+	const token0Mint = NATIVE_MINT
+	const vault = getBondingCurveVault({ program, token1Mint })
+
+	const hodl = getBondingCurveHodl({ program, token1Mint })
+
+	const hodlSolAta = await getAssociatedTokenAddress(
+		token0Mint,
+		hodl,
+		true,
+		TOKEN_PROGRAM_ID,
+	)
+
+	const createWrappedSolIx = await program.methods
+		.createWrappedSol()
+		.accountsStrict({
+			payer,
+			token0Mint,
+			token1Mint,
+			vault,
+			hodl,
+			hodlSolAta,
+			systemProgram: web3.SystemProgram.programId,
+			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+			token0Program: TOKEN_PROGRAM_ID,
+			token1Program: TOKEN_2022_PROGRAM_ID,
+		})
+		.instruction()
+
+	return createWrappedSolIx
+}
+
 interface GetProxyInitIxsParams {
 	program: Program<Degenerator>
 	creator: PublicKey

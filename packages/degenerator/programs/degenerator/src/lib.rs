@@ -29,6 +29,10 @@ pub mod degenerator {
         instructions::wrap_sol(ctx, amount)
     }
 
+    pub fn create_wrapped_sol(ctx: Context<CreateWrappedSol>) -> Result<()> {
+        instructions::create_wrapped_sol(ctx)
+    }
+
     pub fn proxy_initialize(
         ctx: Context<ProxyInitialize>,
         init_amount_0: u64,
