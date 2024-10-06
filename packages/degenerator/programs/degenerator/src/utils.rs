@@ -12,6 +12,7 @@ use anchor_spl::token_2022;
 
 use crate::state::BondingCurveState;
 
+pub const BONDING_CURVE_MINT_AUTHORITY: &str = "bonding_mint_authority";
 pub const BONDING_CURVE_VAULT_SEED: &str = "bonding_curve_vault";
 pub const BONDING_CURVE_HODL_SEED: &str = "bonding_curve_hodl";
 pub const BONDING_CURVE_STATE_SEED: &str = "bonding_curve_state";
@@ -34,13 +35,9 @@ pub fn update_account_lamports_to_minimum_balance<'info>(
 const BASE_PRICE: u128 = 10_000; // Base price per token (0.00001 SOL)
 const PRICE_INCREMENT: u128 = 1_000; // Linear increment per unit of supply
 
-pub fn calculate_buy_price(current_supply: u128, total_supply: u128, amount: u128) -> u64 {
-    // Calculate the price increase component based on the remaining supply
-    let remaining_supply = total_supply.saturating_sub(current_supply);
-    let price_increase = PRICE_INCREMENT * remaining_supply / total_supply;
-
-    // Total price per token including the increase
-    let price_per_token = BASE_PRICE.saturating_add(price_increase);
+pub fn calculate_buy_price(current_supply: u128, amount: u128) -> u64 {
+    // Total supply is implicitly known and increases with the current supply
+    let price_per_token = BASE_PRICE.saturating_add(PRICE_INCREMENT * current_supply);
 
     // Total price for the amount of tokens requested
     let total_price = price_per_token.saturating_mul(amount as u128);
@@ -49,12 +46,10 @@ pub fn calculate_buy_price(current_supply: u128, total_supply: u128, amount: u12
     total_price.try_into().unwrap_or(u64::MAX)
 }
 
-pub fn calculate_sell_price(current_supply: u128, total_supply: u128, amount: u128) -> u64 {
-    // Calculate the price decrease component based on the current supply
-    let price_decrease = PRICE_INCREMENT * current_supply / total_supply;
-
-    // Total price per token including the decrease
-    let price_per_token = BASE_PRICE.saturating_sub(price_decrease);
+pub fn calculate_sell_price(current_supply: u128, amount: u128) -> u64 {
+    // Ensure the price per token is a function of the current supply
+    let price_per_token =
+        BASE_PRICE.saturating_sub(PRICE_INCREMENT * (current_supply.saturating_sub(amount)));
 
     // Ensure that price does not drop below zero
     let price_per_token = price_per_token.max(0);
@@ -87,13 +82,10 @@ pub fn calculate_progress(current_supply: u128, total_supply: u128) -> u64 {
 pub fn set_bonding_curve_state(
     bonding_curve_state: &mut Account<BondingCurveState>,
     current_supply: u128,
-    total_supply: u128,
 ) {
     bonding_curve_state.current_supply = current_supply as u64;
-    bonding_curve_state.total_supply = total_supply as u64;
-    bonding_curve_state.buy_price = calculate_buy_price(current_supply, total_supply, 1);
-    bonding_curve_state.sell_price = calculate_sell_price(current_supply, total_supply, 1);
-    bonding_curve_state.progress = calculate_progress(current_supply, total_supply);
+    bonding_curve_state.buy_price = calculate_buy_price(current_supply, 1);
+    bonding_curve_state.sell_price = calculate_sell_price(current_supply, 1);
 }
 
 pub fn transfer_from_user_to_bonding_curve_vault<'a>(
@@ -191,17 +183,42 @@ pub fn token_mint_to<'a>(
     mint: AccountInfo<'a>,
     destination: AccountInfo<'a>,
     amount: u64,
-    mint_decimals: u8,
+    mint_decimals: u32,
+    signer_seeds: &[&[&[u8]]],
 ) -> Result<()> {
     token_2022::mint_to(
-        CpiContext::new(
+        CpiContext::new_with_signer(
             token_program,
             token_2022::MintTo {
                 to: destination,
                 authority,
                 mint,
             },
+            signer_seeds,
         ),
-        amount * 10u64.pow(mint_decimals as u32), // Mint tokens
+        amount * 10u64.pow(mint_decimals as u32),
+    )
+}
+
+pub fn token_burn<'a>(
+    authority: AccountInfo<'a>,
+    token_program: AccountInfo<'a>,
+    mint: AccountInfo<'a>,
+    from: AccountInfo<'a>,
+    amount: u64,
+    mint_decimals: u32,
+    signer_seeds: &[&[&[u8]]],
+) -> Result<()> {
+    token_2022::burn(
+        CpiContext::new_with_signer(
+            token_program.to_account_info(),
+            token_2022::Burn {
+                from,
+                authority,
+                mint,
+            },
+            signer_seeds,
+        ),
+        amount * 10u64.pow(mint_decimals as u32),
     )
 }

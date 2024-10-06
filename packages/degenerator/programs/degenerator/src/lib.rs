@@ -13,8 +13,8 @@ pub mod degenerator {
     pub use super::instructions::*;
     use super::*;
 
-    pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
-        instructions::create_bonding_curve(ctx, amount)
+    pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
+        instructions::create_bonding_curve(ctx)
     }
 
     pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {

@@ -1,17 +1,22 @@
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
+use anchor_spl::token_interface::{Mint, TokenInterface};
 
 use crate::utils::{
-    set_bonding_curve_state, token_mint_to, update_account_lamports_to_minimum_balance,
-    BONDING_CURVE_HODL_SEED, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
+    set_bonding_curve_state, update_account_lamports_to_minimum_balance,
+    BONDING_CURVE_MINT_AUTHORITY, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
 };
-
-use anchor_spl::token::spl_token::native_mint;
 
 use crate::state::BondingCurveState;
 
-pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
+pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
+    // transfer minimum rent to sol vault
+    update_account_lamports_to_minimum_balance(
+        ctx.accounts.mint_authority.to_account_info(),
+        ctx.accounts.payer.to_account_info(),
+        ctx.accounts.system_program.to_account_info(),
+    )?;
+
     // transfer minimum rent to sol vault
     update_account_lamports_to_minimum_balance(
         ctx.accounts.vault.to_account_info(),
@@ -19,46 +24,9 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
         ctx.accounts.system_program.to_account_info(),
     )?;
 
-    // transfer minimum rent to hodl vault
-    update_account_lamports_to_minimum_balance(
-        ctx.accounts.hodl.to_account_info(),
-        ctx.accounts.payer.to_account_info(),
-        ctx.accounts.system_program.to_account_info(),
-    )?;
+    let current_supply = ctx.accounts.mint.supply as u128;
 
-    let eighty_percent = amount.saturating_mul(80).saturating_div(100);
-    let twenty_percent = amount.saturating_mul(20).saturating_div(100);
-
-    // mint 80% to vault
-    token_mint_to(
-        ctx.accounts.payer.to_account_info(),
-        ctx.accounts.token_1_program.to_account_info(),
-        ctx.accounts.token_1_mint.to_account_info(),
-        ctx.accounts.vault_meme_ata.to_account_info(),
-        eighty_percent,
-        ctx.accounts.token_1_mint.decimals,
-    )?;
-
-    // mint 20% to hodl
-    token_mint_to(
-        ctx.accounts.payer.to_account_info(),
-        ctx.accounts.token_1_program.to_account_info(),
-        ctx.accounts.token_1_mint.to_account_info(),
-        ctx.accounts.hodl_meme_ata.to_account_info(),
-        twenty_percent,
-        ctx.accounts.token_1_mint.decimals,
-    )?;
-
-    ctx.accounts.vault_meme_ata.reload()?;
-
-    let current_supply = ctx.accounts.vault_meme_ata.amount as u128;
-    let total_supply = ctx.accounts.vault_meme_ata.amount as u128;
-
-    set_bonding_curve_state(
-        &mut ctx.accounts.bonding_curve_state,
-        current_supply,
-        total_supply,
-    );
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, current_supply);
 
     Ok(())
 }
@@ -70,64 +38,27 @@ pub struct CreateBondingCurve<'info> {
     pub payer: Signer<'info>,
 
     #[account(
-        constraint = token_0_mint.key() == native_mint::id(),
-        mint::token_program = token_0_program,
+        mint::token_program = token_program,
     )]
-    pub token_0_mint: Box<InterfaceAccount<'info, Mint>>,
-
-    #[account(
-        mint::token_program = token_1_program,
-    )]
-    pub token_1_mint: Box<InterfaceAccount<'info, Mint>>,
+    pub mint: Box<InterfaceAccount<'info, Mint>>,
 
     /// CHECK: pda to control vault_meme_ata & lamports
     #[account(mut,
-        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), token_1_mint.key().as_ref()],
+            seeds = [BONDING_CURVE_MINT_AUTHORITY.as_bytes(), mint.key().as_ref()],
+            bump,
+        )]
+    pub mint_authority: AccountInfo<'info>,
+
+    /// CHECK: pda to store lamports
+    #[account(mut,
+        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
     pub vault: AccountInfo<'info>,
 
-    /// CHECK: pda to hodl tokens for the raydium pool
-    #[account(mut,
-                seeds = [BONDING_CURVE_HODL_SEED.as_bytes(), token_1_mint.key().as_ref()],
-                bump,
-            )]
-    pub hodl: AccountInfo<'info>,
-
-    /// The ATA for the meme coin
-    #[account(
-        init,
-        payer = payer,
-        associated_token::mint = token_1_mint,
-        associated_token::authority = vault,
-        associated_token::token_program = token_1_program
-
-    )]
-    pub vault_meme_ata: Box<InterfaceAccount<'info, TokenAccount>>,
-
-    /// The ATA to hodl meme token
-    #[account(
-            init,
-            payer = payer,
-            associated_token::mint = token_1_mint,
-            associated_token::authority = hodl,
-            associated_token::token_program = token_1_program
-        )]
-    pub hodl_meme_ata: Box<InterfaceAccount<'info, TokenAccount>>,
-
-    /// The ATA to the sol account
-    #[account(
-            init,
-            payer = payer,
-            associated_token::mint = token_0_mint,
-            associated_token::authority = hodl,
-            associated_token::token_program = token_0_program
-        )]
-    pub hodl_sol_ata: Box<InterfaceAccount<'info, TokenAccount>>,
-
     /// pda to store bonding curve state
     #[account(init,
-        seeds = [BONDING_CURVE_STATE_SEED.as_bytes(),  token_1_mint.key().as_ref()],
+        seeds = [BONDING_CURVE_STATE_SEED.as_bytes(),  mint.key().as_ref()],
         bump,
         payer = payer,
         space = BondingCurveState::LEN
@@ -135,10 +66,7 @@ pub struct CreateBondingCurve<'info> {
     pub bonding_curve_state: Account<'info, BondingCurveState>,
 
     /// Spl token program or token program 2022
-    pub token_0_program: Interface<'info, TokenInterface>,
-
-    /// Spl token program or token program 2022
-    pub token_1_program: Interface<'info, TokenInterface>,
+    pub token_program: Interface<'info, TokenInterface>,
 
     /// Associated Token Program
     pub associated_token_program: Program<'info, AssociatedToken>,

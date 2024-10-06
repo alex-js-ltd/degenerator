@@ -31,8 +31,8 @@ import {
 } from '@solana/spl-token-metadata'
 import {
 	getAssociatedAddress,
+	getMintAuthority,
 	getBondingCurveVault,
-	getBondingCurveHodl,
 	getBondingCurveState,
 	getAuthAddress,
 	getPoolAddress,
@@ -74,17 +74,20 @@ export async function getWrapSolIx({
 }
 
 export async function getCreateMintIxs({
+	mintAuthority,
 	payer,
 	metadata,
 	decimals,
 	connection,
 }: {
+	mintAuthority: PublicKey
 	payer: PublicKey
 	metadata: TokenMetadata
 	decimals: number
 	connection: Connection
 }) {
 	const { mint } = metadata
+
 	const mintSpace = getMintLen([ExtensionType.MetadataPointer])
 	const metadataSpace = TYPE_SIZE + LENGTH_SIZE + pack(metadata).length
 
@@ -119,8 +122,8 @@ export async function getCreateMintIxs({
 	const initializeMetadataIx = createInitializeInstruction({
 		mint,
 		metadata: mint,
-		mintAuthority: payer,
-		updateAuthority: payer,
+		mintAuthority: mintAuthority,
+		updateAuthority: mintAuthority,
 		name: metadata.name,
 		symbol: metadata.symbol,
 		uri: metadata.uri,
@@ -142,7 +145,6 @@ interface GetInitializeDegeneratorIxsParams {
 	mint: PublicKey
 	metadata: TokenMetadata
 	decimals: number
-	supply: number
 }
 
 export async function getInitializeDegeneratorIxs({
@@ -151,113 +153,67 @@ export async function getInitializeDegeneratorIxs({
 	payer,
 	metadata,
 	decimals,
-	supply,
 }: GetInitializeDegeneratorIxsParams) {
 	const { mint } = metadata
-	const supplyBN = new BN(supply)
 
-	const token0Mint = NATIVE_MINT
-	const token1Mint = mint
-
-	const vault = getBondingCurveVault({ program, token1Mint })
-
-	const hodl = getBondingCurveHodl({ program, token1Mint })
-
-	const vaultMemeAta = await getAssociatedTokenAddress(
-		token1Mint,
-		vault,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
-	const hodlMemeAta = await getAssociatedTokenAddress(
-		token1Mint,
-		hodl,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
-	const hodlSolAta = await getAssociatedTokenAddress(
-		token0Mint,
-		hodl,
-		true,
-		TOKEN_PROGRAM_ID,
-	)
+	const mintAuthority = getMintAuthority({ program, mint })
+	const vault = getBondingCurveVault({ program, mint })
 
 	const bondingCurveState = getBondingCurveState({
 		program,
-		token1Mint,
+		mint,
 	})
 
 	const createMintAccountIxs = await getCreateMintIxs({
+		mintAuthority,
 		payer,
 		connection,
 		metadata,
 		decimals,
 	})
 
-	const createPoolIx = await program.methods
-		.createBondingCurve(supplyBN)
+	const createBondingCurveIx = await program.methods
+		.createBondingCurve()
 		.accountsStrict({
 			payer,
-			token0Mint,
-			token1Mint,
+			mint,
+			mintAuthority,
 			vault,
-			hodl,
-			vaultMemeAta,
-			hodlMemeAta,
-			hodlSolAta,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-			token0Program: TOKEN_PROGRAM_ID,
-			token1Program: TOKEN_2022_PROGRAM_ID,
+			tokenProgram: TOKEN_2022_PROGRAM_ID,
 			rent: web3.SYSVAR_RENT_PUBKEY,
 		})
 		.instruction()
 
-	const createRevokeMintIx = createSetAuthorityInstruction(
-		mint,
-		payer,
-		AuthorityType.MintTokens,
-		null,
-		[],
-		TOKEN_2022_PROGRAM_ID,
-	)
-
-	return [...createMintAccountIxs, createPoolIx, createRevokeMintIx]
+	return [...createMintAccountIxs, createBondingCurveIx]
 }
 
 interface SwapTokenIxsParams {
 	program: Program<Degenerator>
 	payer: PublicKey
-	token1Mint: PublicKey
+	mint: PublicKey
 	amount: number
 }
 
 export async function getBuyTokenIxs({
 	program,
 	payer,
-	token1Mint,
+	mint,
 	amount,
 }: SwapTokenIxsParams) {
 	const payerAta = await getAssociatedTokenAddress(
-		token1Mint,
+		mint,
 		payer,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const vault = getBondingCurveVault({ program, token1Mint })
+	const mintAuthority = getMintAuthority({ program, mint })
+	const vault = getBondingCurveVault({ program, mint })
 
-	const vaultMemeAta = await getAssociatedTokenAddress(
-		token1Mint,
-		vault,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
-	const bondingCurveState = getBondingCurveState({ program, token1Mint })
+	const bondingCurveState = getBondingCurveState({ program, mint })
 
 	const amountBN = new BN(amount)
 	const buy = await program.methods
@@ -265,13 +221,13 @@ export async function getBuyTokenIxs({
 		.accountsStrict({
 			payer,
 			vault,
-			token1Mint,
-			vaultMemeAta,
+			mint,
+			mintAuthority,
 			payerAta,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-			token1Program: TOKEN_2022_PROGRAM_ID,
+			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
 		.instruction()
 
@@ -281,40 +237,34 @@ export async function getBuyTokenIxs({
 export async function getSellTokenIxs({
 	program,
 	payer,
-	token1Mint,
+	mint,
 	amount,
 }: SwapTokenIxsParams) {
 	const payerAta = await getAssociatedTokenAddress(
-		token1Mint,
+		mint,
 		payer,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const vault = getBondingCurveVault({ program, token1Mint })
+	const mintAuthority = getMintAuthority({ program, mint })
+	const vault = getBondingCurveVault({ program, mint })
 
-	const vaultMemeAta = await getAssociatedTokenAddress(
-		token1Mint,
-		vault,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
-	const bondingCurveState = getBondingCurveState({ program, token1Mint })
+	const bondingCurveState = getBondingCurveState({ program, mint })
 
 	const amountBN = new BN(amount)
 	const sell = await program.methods
 		.sellToken(amountBN)
 		.accountsStrict({
-			token1Mint,
 			signer: payer,
+			mint,
+			mintAuthority,
 			vault,
-			vaultMemeAta,
 			payerAta,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-			token1Program: TOKEN_2022_PROGRAM_ID,
+			tokenProgram: TOKEN_2022_PROGRAM_ID,
 		})
 		.instruction()
 

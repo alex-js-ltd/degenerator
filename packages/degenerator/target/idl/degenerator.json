@@ -14,48 +14,19 @@
           ]
         },
         {
-          "name": "token0Mint",
+          "name": "mint",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "token1Mint",
-          "isMut": false,
+          "name": "mintAuthority",
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "vault",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "hodl",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultMemeAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA for the meme coin"
-          ]
-        },
-        {
-          "name": "hodlMemeAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA to hodl meme token"
-          ]
-        },
-        {
-          "name": "hodlSolAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA to the sol account"
-          ]
         },
         {
           "name": "bondingCurveState",
@@ -66,15 +37,7 @@
           ]
         },
         {
-          "name": "token0Program",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Spl token program or token program 2022"
-          ]
-        },
-        {
-          "name": "token1Program",
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -106,12 +69,7 @@
           ]
         }
       ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
+      "args": []
     },
     {
       "name": "buyToken",
@@ -125,6 +83,11 @@
           ]
         },
         {
+          "name": "mintAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "vault",
           "isMut": true,
           "isSigner": false
@@ -135,14 +98,6 @@
           "isSigner": false
         },
         {
-          "name": "vaultMemeAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA for the meme coin"
-          ]
-        },
-        {
           "name": "payerAta",
           "isMut": true,
           "isSigner": false,
@@ -151,7 +106,7 @@
           ]
         },
         {
-          "name": "token1Mint",
+          "name": "mint",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -159,7 +114,7 @@
           ]
         },
         {
-          "name": "token1Program",
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -199,6 +154,11 @@
           "isSigner": true
         },
         {
+          "name": "mintAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "vault",
           "isMut": true,
           "isSigner": false
@@ -209,15 +169,7 @@
           "isSigner": false
         },
         {
-          "name": "vaultMemeAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "The ATA for the meme coin"
-          ]
-        },
-        {
-          "name": "token1Mint",
+          "name": "mint",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -233,7 +185,7 @@
           ]
         },
         {
-          "name": "token1Program",
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -508,8 +460,5 @@
       "name": "InsufficientTokens",
       "msg": "Insufficient tokens in the pool."
     }
-  ],
-  "metadata": {
-    "address": "3P3pRPbpAB9kKCo1msyUFNsrGerHGJv15UmDMjmt2z4Q"
-  }
+  ]
 }

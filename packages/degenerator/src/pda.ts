@@ -20,41 +20,41 @@ export function getAssociatedAddress({
 	)[0]
 }
 
-export function getBondingCurveVault({
+export function getMintAuthority({
 	program,
-	token1Mint,
+	mint,
 }: {
 	program: Program<Degenerator>
-	token1Mint: PublicKey
+	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('bonding_curve_vault'), token1Mint.toBuffer()],
+		[Buffer.from('bonding_curve_mint_authority'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }
 
-export function getBondingCurveHodl({
+export function getBondingCurveVault({
 	program,
-	token1Mint,
+	mint,
 }: {
 	program: Program<Degenerator>
-	token1Mint: PublicKey
+	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('bonding_curve_hodl'), token1Mint.toBuffer()],
+		[Buffer.from('bonding_curve_vault'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }
 
 export function getBondingCurveState({
 	program,
-	token1Mint,
+	mint,
 }: {
 	program: Program<Degenerator>
-	token1Mint: PublicKey
+	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('bonding_curve_state'), token1Mint.toBuffer()],
+		[Buffer.from('bonding_curve_state'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }

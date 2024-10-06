@@ -4,8 +4,9 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
 use crate::utils::{
-    calculate_sell_price, set_bonding_curve_state, transfer_from_user_to_bonding_curve_vault,
-    transfer_sol_to_user, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
+    calculate_sell_price, set_bonding_curve_state, token_burn,
+    transfer_from_user_to_bonding_curve_vault, transfer_sol_to_user, BONDING_CURVE_MINT_AUTHORITY,
+    BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
 };
 
 use crate::state::BondingCurveState;
@@ -15,10 +16,17 @@ pub struct SellToken<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
+    /// CHECK: pda to control vault_meme_ata & lamports
+    #[account(mut,
+            seeds = [BONDING_CURVE_MINT_AUTHORITY.as_bytes(), mint.key().as_ref()],
+            bump,
+        )]
+    pub mint_authority: AccountInfo<'info>,
+
     /// CHECK: pda to control bonding_curve_vault_ata & store lamports
     #[account(
         mut,
-        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), token_1_mint.key().as_ref()],
+        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
     pub vault: AccountInfo<'info>,
@@ -26,37 +34,28 @@ pub struct SellToken<'info> {
     /// CHECK: pda to store current price
     #[account(
         mut,
-        seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), token_1_mint.key().as_ref()],
+        seeds = [BONDING_CURVE_STATE_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
     pub bonding_curve_state: Account<'info, BondingCurveState>,
 
-    /// The ATA for the meme coin
-    #[account(
-        mut,
-        associated_token::mint = token_1_mint,
-        associated_token::authority = vault,
-        associated_token::token_program = token_1_program,
-    )]
-    pub vault_meme_ata: Box<InterfaceAccount<'info, TokenAccount>>,
-
     /// Mint associated with the token
     #[account(
-        mint::token_program = token_1_program,
+        mint::token_program = token_program,
     )]
-    pub token_1_mint: Box<InterfaceAccount<'info, Mint>>,
+    pub mint: Box<InterfaceAccount<'info, Mint>>,
 
     /// Token account the tokens will be transferred from
     #[account(
         mut,
-        associated_token::mint = token_1_mint,
+        associated_token::mint = mint,
         associated_token::authority = signer,
-        associated_token::token_program = token_1_program,
+        associated_token::token_program = token_program,
     )]
     pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Token program
-    pub token_1_program: Interface<'info, TokenInterface>,
+    pub token_program: Interface<'info, TokenInterface>,
 
     /// System program
     pub system_program: Program<'info, System>,
@@ -66,13 +65,9 @@ pub struct SellToken<'info> {
 }
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
-    let total_supply = ctx.accounts.bonding_curve_state.total_supply;
+    let total_supply = ctx.accounts.mint.supply;
 
-    let price = calculate_sell_price(
-        ctx.accounts.vault_meme_ata.amount as u128,
-        total_supply as u128,
-        amount as u128,
-    );
+    let price = calculate_sell_price(total_supply as u128, amount as u128);
     // Get the current supply of tokens
     let user_supply = ctx.accounts.payer_ata.amount;
 
@@ -81,21 +76,19 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         return Err(Errors::InsufficientTokens.into());
     }
 
-    let pool_balance = ctx.accounts.vault.lamports(); // Access lamports in pool vault
-
-    if pool_balance < price {
-        return Err(ProgramError::InsufficientFunds.into());
-    }
-
-    // Transfer the tokens
-    transfer_from_user_to_bonding_curve_vault(
-        ctx.accounts.signer.to_account_info(),
+    // burn tokens
+    token_burn(
+        ctx.accounts.mint_authority.to_account_info(),
+        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
-        ctx.accounts.vault_meme_ata.to_account_info(),
-        ctx.accounts.token_1_mint.to_account_info(),
-        ctx.accounts.token_1_program.to_account_info(),
         amount,
-        ctx.accounts.token_1_mint.decimals,
+        ctx.accounts.mint.decimals as u32,
+        &[&[
+            BONDING_CURVE_MINT_AUTHORITY.as_bytes(),
+            ctx.accounts.mint.key().as_ref(),
+            &[ctx.bumps.mint_authority][..],
+        ][..]],
     )?;
 
     transfer_sol_to_user(
@@ -105,21 +98,17 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         price,
         &[&[
             BONDING_CURVE_VAULT_SEED.as_bytes(),
-            ctx.accounts.token_1_mint.key().as_ref(),
+            ctx.accounts.mint.key().as_ref(),
             &[ctx.bumps.vault][..],
         ][..]],
     )?;
 
-    ctx.accounts.vault_meme_ata.reload()?;
+    ctx.accounts.mint.reload()?;
 
-    let current_supply = ctx.accounts.vault_meme_ata.amount as u128;
-    let total_supply = ctx.accounts.bonding_curve_state.total_supply as u128;
+    let updated_supply = ctx.accounts.mint.supply as u128;
 
-    set_bonding_curve_state(
-        &mut ctx.accounts.bonding_curve_state,
-        current_supply,
-        total_supply,
-    );
+    // Update bonding curve state
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, updated_supply);
 
     Ok(())
 }
