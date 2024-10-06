@@ -12,9 +12,8 @@ use anchor_spl::token_2022;
 
 use crate::state::BondingCurveState;
 
-pub const BONDING_CURVE_MINT_AUTHORITY: &str = "bonding_mint_authority";
+pub const BONDING_CURVE_MINT_AUTHORITY: &str = "bonding_curve_mint_authority";
 pub const BONDING_CURVE_VAULT_SEED: &str = "bonding_curve_vault";
-pub const BONDING_CURVE_HODL_SEED: &str = "bonding_curve_hodl";
 pub const BONDING_CURVE_STATE_SEED: &str = "bonding_curve_state";
 
 pub fn update_account_lamports_to_minimum_balance<'info>(
@@ -183,7 +182,6 @@ pub fn token_mint_to<'a>(
     mint: AccountInfo<'a>,
     destination: AccountInfo<'a>,
     amount: u64,
-    mint_decimals: u32,
     signer_seeds: &[&[&[u8]]],
 ) -> Result<()> {
     token_2022::mint_to(
@@ -196,7 +194,7 @@ pub fn token_mint_to<'a>(
             },
             signer_seeds,
         ),
-        amount * 10u64.pow(mint_decimals as u32),
+        amount,
     )
 }
 

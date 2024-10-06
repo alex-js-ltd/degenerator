@@ -107,7 +107,7 @@ export type Degenerator = {
         },
         {
           "name": "mint",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "docs": [
             "Mint associated with the token"
@@ -440,10 +440,6 @@ export type Degenerator = {
           },
           {
             "name": "currentSupply",
-            "type": "u64"
-          },
-          {
-            "name": "totalSupply",
             "type": "u64"
           },
           {
@@ -572,7 +568,7 @@ export const IDL: Degenerator = {
         },
         {
           "name": "mint",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "docs": [
             "Mint associated with the token"
@@ -905,10 +901,6 @@ export const IDL: Degenerator = {
           },
           {
             "name": "currentSupply",
-            "type": "u64"
-          },
-          {
-            "name": "totalSupply",
             "type": "u64"
           },
           {

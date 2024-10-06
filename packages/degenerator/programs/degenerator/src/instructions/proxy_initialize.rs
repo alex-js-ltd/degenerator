@@ -10,8 +10,6 @@ use raydium_cp_swap::{
     states::{AmmConfig, OBSERVATION_SEED, POOL_LP_MINT_SEED, POOL_SEED, POOL_VAULT_SEED},
 };
 
-use crate::utils::BONDING_CURVE_HODL_SEED;
-
 #[derive(Accounts)]
 pub struct ProxyInitialize<'info> {
     pub cp_swap_program: Program<'info, RaydiumCpSwap>,

@@ -74,13 +74,11 @@ export async function getWrapSolIx({
 }
 
 export async function getCreateMintIxs({
-	mintAuthority,
 	payer,
 	metadata,
 	decimals,
 	connection,
 }: {
-	mintAuthority: PublicKey
 	payer: PublicKey
 	metadata: TokenMetadata
 	decimals: number
@@ -122,8 +120,8 @@ export async function getCreateMintIxs({
 	const initializeMetadataIx = createInitializeInstruction({
 		mint,
 		metadata: mint,
-		mintAuthority: mintAuthority,
-		updateAuthority: mintAuthority,
+		mintAuthority: payer,
+		updateAuthority: payer,
 		name: metadata.name,
 		symbol: metadata.symbol,
 		uri: metadata.uri,
@@ -165,7 +163,6 @@ export async function getInitializeDegeneratorIxs({
 	})
 
 	const createMintAccountIxs = await getCreateMintIxs({
-		mintAuthority,
 		payer,
 		connection,
 		metadata,
@@ -187,7 +184,16 @@ export async function getInitializeDegeneratorIxs({
 		})
 		.instruction()
 
-	return [...createMintAccountIxs, createBondingCurveIx]
+	const createSetMintAuthIx = createSetAuthorityInstruction(
+		mint,
+		payer,
+		AuthorityType.MintTokens,
+		mintAuthority,
+		[],
+		TOKEN_2022_PROGRAM_ID,
+	)
+
+	return [...createMintAccountIxs, createSetMintAuthIx, createBondingCurveIx]
 }
 
 interface SwapTokenIxsParams {

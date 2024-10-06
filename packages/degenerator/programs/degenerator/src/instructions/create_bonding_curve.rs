@@ -24,9 +24,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ctx.accounts.system_program.to_account_info(),
     )?;
 
-    let current_supply = ctx.accounts.mint.supply as u128;
-
-    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, current_supply);
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, 0 as u128);
 
     Ok(())
 }

@@ -23,7 +23,7 @@ pub struct SellToken<'info> {
         )]
     pub mint_authority: AccountInfo<'info>,
 
-    /// CHECK: pda to control bonding_curve_vault_ata & store lamports
+    /// CHECK: pda to store lamports
     #[account(
         mut,
         seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],

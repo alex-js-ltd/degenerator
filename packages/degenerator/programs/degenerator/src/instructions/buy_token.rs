@@ -50,8 +50,9 @@ pub struct BuyToken<'info> {
     pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Mint associated with the token
-    #[account(
+    #[account(mut,
         mint::token_program = token_program,
+        mint::authority = mint_authority,
     )]
     pub mint: Box<InterfaceAccount<'info, Mint>>,
 
@@ -76,19 +77,17 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
-    // mint token to payer
     token_mint_to(
         ctx.accounts.mint_authority.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         amount,
-        ctx.accounts.mint.decimals as u32,
         &[&[
             BONDING_CURVE_MINT_AUTHORITY.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.mint_authority][..],
-        ][..]],
+            &[ctx.bumps.mint_authority],
+        ]],
     )?;
 
     // Transfer SOL to bonding curve vault

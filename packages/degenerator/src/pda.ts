@@ -74,7 +74,7 @@ export async function fetchBondingCurveState({
 	program: Program<Degenerator>
 	mint: PublicKey
 }) {
-	const pda = getBondingCurveState({ program, token1Mint: mint })
+	const pda = getBondingCurveState({ program, mint })
 
 	const data = await program.account.bondingCurveState.fetch(pda)
 
