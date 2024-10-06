@@ -37,6 +37,7 @@ pub struct CreateBondingCurve<'info> {
 
     #[account(
         mint::token_program = token_program,
+        mint::authority = mint_authority,
     )]
     pub mint: Box<InterfaceAccount<'info, Mint>>,
 

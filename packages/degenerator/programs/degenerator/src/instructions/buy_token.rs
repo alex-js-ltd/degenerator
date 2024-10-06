@@ -6,8 +6,8 @@ use crate::errors::Errors;
 use crate::state::BondingCurveState;
 use crate::utils::{
     calculate_buy_price, set_bonding_curve_state, token_mint_to,
-    transfer_from_bonding_curve_vault_to_user, transfer_sol_to_bonding_curve_vault,
-    BONDING_CURVE_MINT_AUTHORITY, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
+    transfer_sol_to_bonding_curve_vault, BONDING_CURVE_MINT_AUTHORITY, BONDING_CURVE_STATE_SEED,
+    BONDING_CURVE_VAULT_SEED,
 };
 
 #[derive(Accounts)]
