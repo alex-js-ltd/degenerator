@@ -32,6 +32,9 @@ pub fn create_wrapped_sol(ctx: Context<CreateWrappedSol>) -> Result<()> {
         ctx.accounts.vault.lamports(),
     )?;
 
+    let total_lamports = ctx.accounts.hodl.lamports();
+    let lamports_to_transfer = (total_lamports as f64 * 0.9) as u64; // Calculate 90%
+
     system_program::transfer(
         CpiContext::new_with_signer(
             ctx.accounts.system_program.to_account_info(),
@@ -45,7 +48,7 @@ pub fn create_wrapped_sol(ctx: Context<CreateWrappedSol>) -> Result<()> {
                 &[ctx.bumps.hodl][..],
             ][..]],
         ),
-        ctx.accounts.vault.lamports(),
+        lamports_to_transfer, // Use the calculated amount
     )?;
 
     token::sync_native(CpiContext::new(

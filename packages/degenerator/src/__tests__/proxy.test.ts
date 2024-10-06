@@ -19,6 +19,7 @@ import {
 	TOKEN_2022_PROGRAM_ID,
 	TOKEN_PROGRAM_ID,
 	NATIVE_MINT,
+	getAssociatedTokenAddress,
 } from '@solana/spl-token'
 import { configAddress, createPoolFeeReceive } from '../config'
 
@@ -103,11 +104,25 @@ describe('proxy init', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('airdrop creator', async () => {
-		await airDrop({
+	it('check hodl_sol_ata', async () => {
+		const hodlSolAta = await getAssociatedTokenAddress(
+			NATIVE_MINT,
+			creator,
+			true,
+			TOKEN_PROGRAM_ID,
+		)
+
+		const account = await getAccount(
 			connection,
-			account: creator,
-		})
+			hodlSolAta,
+			'confirmed',
+			TOKEN_PROGRAM_ID,
+		)
+
+		console.log(account)
+
+		expect(account.isNative).toBe(true)
+		expect(account.isInitialized).toBe(true)
 	})
 
 	it('proxy init', async () => {
@@ -121,7 +136,7 @@ describe('proxy init', () => {
 			token0Program: tokens[0].program,
 			token1: tokens[1].mint,
 			token1Program: tokens[1].program,
-			initAmount: { initAmount0: new BN(50), initAmount1: new BN(50) },
+			initAmount: { initAmount0: new BN(100), initAmount1: new BN(100) },
 			createPoolFee: createPoolFeeReceive,
 		})
 
