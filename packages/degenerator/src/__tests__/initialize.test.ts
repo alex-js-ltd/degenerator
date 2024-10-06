@@ -142,6 +142,8 @@ describe('initialize', () => {
 			TOKEN_PROGRAM_ID,
 		)
 
+		console.log(account)
+
 		expect(account.isNative).toBe(true)
 		expect(account.isInitialized).toBe(true)
 	})

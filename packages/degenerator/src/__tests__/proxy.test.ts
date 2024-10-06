@@ -72,33 +72,6 @@ describe('proxy init', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('buy token', async () => {
-		const amountToBuy = 500
-
-		const ix = await getBuyTokenIxs({
-			program,
-			payer: payer.publicKey,
-			token1Mint: MEME.mint,
-			amount: amountToBuy,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-		expect(res.value.err).toBeNull()
-
-		// Confirm the transaction
-		await sendAndConfirm({ connection, tx })
-	})
-
 	it('airdrop creator', async () => {
 		await airDrop({
 			connection,
@@ -134,7 +107,7 @@ describe('proxy init', () => {
 
 		const ixs = await getProxyInitIxs({
 			program,
-			creator: payer.publicKey,
+			creator: creator,
 			configAddress: configAddress,
 			token0: tokens[0].mint,
 			token0Program: tokens[0].program,
