@@ -3,7 +3,7 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
-    calculate_price, update_account_lamports_to_minimum_balance, BONDING_CURVE_AUTHORITY,
+    set_bonding_curve_state, update_account_lamports_to_minimum_balance, BONDING_CURVE_AUTHORITY,
     BONDING_CURVE_STATE_SEED,
 };
 
@@ -19,10 +19,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
 
     let supply = ctx.accounts.mint.supply;
 
-    let bonding_curve_state = &mut ctx.accounts.bonding_curve_state;
-    bonding_curve_state.buy_price = calculate_price(supply);
-    bonding_curve_state.sell_price = calculate_price(supply);
-    bonding_curve_state.supply = supply;
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, supply, supply);
 
     Ok(())
 }

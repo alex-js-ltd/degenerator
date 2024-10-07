@@ -41,6 +41,17 @@ pub fn calculate_price(supply: u64) -> u64 {
     price_per_token
 }
 
+/// Sets the price per token in the Pool account.
+pub fn set_bonding_curve_state(
+    bonding_curve_state: &mut Account<BondingCurveState>,
+    current_supply: u64,
+    new_supply: u64,
+) {
+    bonding_curve_state.sell_price = calculate_price(current_supply);
+    bonding_curve_state.buy_price = calculate_price(new_supply);
+    bonding_curve_state.supply = new_supply;
+}
+
 pub fn transfer_from_user_to_bonding_curve<'a>(
     authority: AccountInfo<'a>,
     from: AccountInfo<'a>,
