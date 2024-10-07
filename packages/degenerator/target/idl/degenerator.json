@@ -454,11 +454,8 @@
   "errors": [
     {
       "code": 6000,
-      "name": "InsufficientTokens",
-      "msg": "Insufficient tokens in the pool."
+      "name": "InsufficientUserSupply",
+      "msg": "Insufficient tokens in user's wallet"
     }
-  ],
-  "metadata": {
-    "address": "DYYk2tsroxbbXw1nwtnMKeXWrfsHZZQa17rG7jgaspiX"
-  }
+  ]
 }

@@ -454,8 +454,8 @@ export type Degenerator = {
   "errors": [
     {
       "code": 6000,
-      "name": "InsufficientTokens",
-      "msg": "Insufficient tokens in the pool."
+      "name": "InsufficientUserSupply",
+      "msg": "Insufficient tokens in user's wallet"
     }
   ]
 };
@@ -916,8 +916,8 @@ export const IDL: Degenerator = {
   "errors": [
     {
       "code": 6000,
-      "name": "InsufficientTokens",
-      "msg": "Insufficient tokens in the pool."
+      "name": "InsufficientUserSupply",
+      "msg": "Insufficient tokens in user's wallet"
     }
   ]
 };
