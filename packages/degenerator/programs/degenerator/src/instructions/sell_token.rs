@@ -77,12 +77,19 @@ pub struct SellToken<'info> {
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     let total_supply = ctx.accounts.mint.supply;
 
-    let price = calculate_sell_price(total_supply as u128, amount as u128);
-    // Get the current supply of tokens
     let user_supply = ctx.accounts.payer_ata.amount;
+
+    let price = calculate_sell_price(total_supply as u128, amount as u128);
+
+    let vault_balance = ctx.accounts.vault.lamports();
 
     // Ensure the requested amount does not exceed available supply
     if amount > user_supply {
+        return Err(Errors::InsufficientTokens.into());
+    }
+
+    // Ensure the requested amount does not exceed available supply
+    if price > vault_balance {
         return Err(Errors::InsufficientTokens.into());
     }
 
