@@ -99,6 +99,14 @@ describe('initialize', () => {
 		expect(account.mintAuthority?.toBase58()).toBe(mintAuthority?.toBase58())
 	})
 
+	it('check bonding curve state before buy', async () => {
+		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+
+		console.log('buy price before buy', state.buyPrice.toString())
+		console.log('sell price before buy', state.sellPrice.toString())
+		console.log('current supply before buy', state.supply.toString())
+	})
+
 	it('buy token', async () => {
 		const amountToBuy = 10
 
@@ -124,12 +132,12 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check bonding curve state', async () => {
+	it('check bonding curve state after buy', async () => {
 		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
 
-		console.log('buy price', state.buyPrice.toString())
-		console.log('sell price', state.sellPrice.toString())
-		console.log('current supply', state.currentSupply.toString())
+		console.log('buy price after buy', state.buyPrice.toString())
+		console.log('sell price after buy', state.sellPrice.toString())
+		console.log('current supply after buy', state.supply.toString())
 	})
 
 	it('sell token', async () => {
@@ -157,11 +165,11 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check bonding curve state', async () => {
+	it('check bonding curve state after sell', async () => {
 		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
 
-		console.log('buy price', state.buyPrice.toString())
-		console.log('sell price', state.sellPrice.toString())
-		console.log('current supply', state.currentSupply.toString())
+		console.log('buy price after sell', state.buyPrice.toString())
+		console.log('sell price after sell', state.sellPrice.toString())
+		console.log('current supply after sell', state.supply.toString())
 	})
 })

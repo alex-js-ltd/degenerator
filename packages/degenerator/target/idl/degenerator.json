@@ -440,7 +440,7 @@
             "type": "u64"
           },
           {
-            "name": "currentSupply",
+            "name": "supply",
             "type": "u64"
           },
           {
@@ -457,5 +457,8 @@
       "name": "InsufficientUserSupply",
       "msg": "Insufficient tokens in user's wallet"
     }
-  ]
+  ],
+  "metadata": {
+    "address": "H7W9iQZwjhftnTQMRyKkiYiCuX9txppJayBtBSAkPKYM"
+  }
 }

@@ -30,44 +30,33 @@ pub fn update_account_lamports_to_minimum_balance<'info>(
     Ok(())
 }
 
-// Base price and increment in terms of smallest unit (1 lamport)
-const BASE_PRICE: u64 = 1; // Base price per token in smallest unit (0.000000001 SOL)
-const PRICE_INCREMENT: u64 = 1_000; // Linear increment per unit of supply (0.000001 SOL)
+// Calculate the buy price for a new token
+pub fn calculate_buy_price(supply: u64) -> u64 {
+    let m: u64 = 10; // Slope for buy price (increases price with supply)
+    let b: u64 = 100; // Base price (initial price)
 
-pub fn calculate_buy_price(current_supply: u64, amount: u64) -> u64 {
-    // Calculate the price per token, scaled by the current supply
-    let price_per_token = BASE_PRICE.saturating_add(PRICE_INCREMENT * current_supply);
+    // Calculate buy price based on the bonding curve
+    let buy_price = m * supply + b; // Price increases as supply increases
 
-    // The total price is the price per token multiplied by the amount (already scaled by 10^decimals)
-    let total_price = price_per_token.saturating_mul(amount);
-
-    // Since `BASE_PRICE` and `PRICE_INCREMENT` are already in terms of the smallest unit (scaled by decimals),
-    // there's no need to multiply by 10^mint_decimals here.
-
-    total_price.try_into().unwrap_or(u64::MAX)
+    buy_price.try_into().unwrap_or(u64::MAX)
 }
 
-pub fn calculate_sell_price(current_supply: u64, amount: u64) -> u64 {
-    // Calculate the price per token, scaled by the current supply
-    let price_per_token = BASE_PRICE.saturating_add(PRICE_INCREMENT * current_supply);
+pub fn calculate_sell_price(supply: u64) -> u64 {
+    let m: u64 = 10; // Slope for sell price (increases price as supply decreases)
+    let b: u64 = 100; // Base price (initial price)
 
-    // The total price is the price per token multiplied by the amount (already scaled by 10^decimals)
-    let total_price = price_per_token.saturating_mul(amount);
+    // Calculate sell price based on the bonding curve
+    let sell_price = b.saturating_sub(m * supply); // Price increases as supply decreases
 
-    // Since `BASE_PRICE` and `PRICE_INCREMENT` are already in terms of the smallest unit (scaled by decimals),
-    // there's no need to multiply by 10^mint_decimals here.
-
-    total_price.try_into().unwrap_or(u64::MAX)
+    // Ensure sell price is at least a minimum value (you can set this as needed)
+    sell_price.try_into().unwrap_or(u64::MAX)
 }
 
 /// Sets the price per token in the Pool account.
-pub fn set_bonding_curve_state(
-    bonding_curve_state: &mut Account<BondingCurveState>,
-    current_supply: u64,
-) {
-    bonding_curve_state.current_supply = current_supply;
-    bonding_curve_state.buy_price = calculate_buy_price(current_supply, 1);
-    bonding_curve_state.sell_price = calculate_sell_price(current_supply, 1);
+pub fn set_bonding_curve_state(bonding_curve_state: &mut Account<BondingCurveState>, supply: u64) {
+    bonding_curve_state.supply = supply;
+    bonding_curve_state.buy_price = calculate_buy_price(supply);
+    bonding_curve_state.sell_price = calculate_sell_price(supply);
 }
 
 pub fn transfer_from_user_to_bonding_curve<'a>(

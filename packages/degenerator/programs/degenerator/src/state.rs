@@ -5,7 +5,7 @@ use anchor_lang::prelude::*;
 pub struct BondingCurveState {
     pub buy_price: u64,
     pub sell_price: u64,
-    pub current_supply: u64,
+    pub supply: u64,
     pub progress: u64,
 }
 
