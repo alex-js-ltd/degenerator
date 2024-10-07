@@ -30,21 +30,21 @@ pub fn update_account_lamports_to_minimum_balance<'info>(
     Ok(())
 }
 
-const BASE_PRICE: u128 = 1; // Base price per token (0.000000001 SOL)
-const PRICE_INCREMENT: u128 = 1_000; // Linear increment per unit of supply
+const BASE_PRICE: u64 = 1; // Base price per token (0.000000001 SOL)
+const PRICE_INCREMENT: u64 = 1_000; // Linear increment per unit of supply
 
-pub fn calculate_buy_price(current_supply: u128, amount: u128) -> u64 {
+pub fn calculate_buy_price(current_supply: u64, amount: u64) -> u64 {
     // Total supply is implicitly known and increases with the current supply
     let price_per_token = BASE_PRICE.saturating_add(PRICE_INCREMENT * current_supply);
 
     // Total price for the amount of tokens requested
-    let total_price = price_per_token.saturating_mul(amount as u128);
+    let total_price = price_per_token.saturating_mul(amount);
 
     // Convert to u64, with a maximum cap to avoid overflow
     total_price.try_into().unwrap_or(u64::MAX)
 }
 
-pub fn calculate_sell_price(current_supply: u128, amount: u128) -> u64 {
+pub fn calculate_sell_price(current_supply: u64, amount: u64) -> u64 {
     // Ensure the price per token is a function of the current supply
     let price_per_token =
         BASE_PRICE.saturating_sub(PRICE_INCREMENT * (current_supply.saturating_sub(amount)));
@@ -53,35 +53,18 @@ pub fn calculate_sell_price(current_supply: u128, amount: u128) -> u64 {
     let price_per_token = price_per_token.max(BASE_PRICE);
 
     // Total price for the amount of tokens being sold
-    let total_price = price_per_token.saturating_mul(amount as u128);
+    let total_price = price_per_token.saturating_mul(amount);
 
     // Convert to u64, with a maximum cap to avoid overflow
     total_price.try_into().unwrap_or(u64::MAX)
 }
 
-pub fn calculate_progress(current_supply: u128, total_supply: u128) -> u64 {
-    // Handle edge case where currentSupply is zero
-    if current_supply == 0 {
-        return 100; // Progress is 100% if current supply is zero
-    }
-
-    // Handle edge case where currentSupply equals totalSupply
-    if current_supply == total_supply {
-        return 0; // Progress is 0% if current supply is equal to total supply
-    }
-
-    // Calculate progress as inverse percentage using saturating_sub
-    let progress = (total_supply.saturating_sub(current_supply)) * 100 / total_supply;
-
-    progress.try_into().unwrap_or(u64::MAX)
-}
-
 /// Sets the price per token in the Pool account.
 pub fn set_bonding_curve_state(
     bonding_curve_state: &mut Account<BondingCurveState>,
-    current_supply: u128,
+    current_supply: u64,
 ) {
-    bonding_curve_state.current_supply = current_supply as u64;
+    bonding_curve_state.current_supply = current_supply;
     bonding_curve_state.buy_price = calculate_buy_price(current_supply, 1);
     bonding_curve_state.sell_price = calculate_sell_price(current_supply, 1);
 }
