@@ -30,8 +30,7 @@ import {
 	TokenMetadata,
 } from '@solana/spl-token-metadata'
 import {
-	getMintAuthority,
-	getBondingCurveVault,
+	getBondingCurveAuth,
 	getBondingCurveState,
 	getAuthAddress,
 	getPoolAddress,
@@ -153,7 +152,7 @@ export async function getInitializeDegeneratorIxs({
 }: GetInitializeDegeneratorIxsParams) {
 	const { mint } = metadata
 
-	const authority = getMintAuthority({ program, mint })
+	const authority = getBondingCurveAuth({ program, mint })
 
 	const bondingCurveState = getBondingCurveState({
 		program,
@@ -221,7 +220,7 @@ export async function getBuyTokenIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const authority = getMintAuthority({ program, mint })
+	const authority = getBondingCurveAuth({ program, mint })
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
@@ -256,7 +255,7 @@ export async function getSellTokenIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const authority = getMintAuthority({ program, mint })
+	const authority = getBondingCurveAuth({ program, mint })
 
 	const burnAta = getAssociatedTokenAddressSync(
 		mint,

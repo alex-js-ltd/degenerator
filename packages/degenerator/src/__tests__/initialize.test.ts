@@ -6,8 +6,7 @@ import {
 	getInitializeDegeneratorIxs,
 	buildTransaction,
 	sendAndConfirm,
-	getBondingCurveVault,
-	getMintAuthority,
+	getBondingCurveAuth,
 	getBuyTokenIxs,
 	getSellTokenIxs,
 	fetchBondingCurveState,
@@ -36,12 +35,7 @@ describe('initialize', () => {
 
 	const payer = Keypair.generate()
 
-	const mintAuthority = getMintAuthority({
-		program,
-		mint: MEME.mint,
-	})
-
-	const vault = getBondingCurveVault({
+	const mintAuthority = getBondingCurveAuth({
 		program,
 		mint: MEME.mint,
 	})
