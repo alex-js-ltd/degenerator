@@ -19,12 +19,7 @@
           "isSigner": false
         },
         {
-          "name": "mintAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vault",
+          "name": "authority",
           "isMut": true,
           "isSigner": false
         },
@@ -91,12 +86,7 @@
           ]
         },
         {
-          "name": "mintAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vault",
+          "name": "authority",
           "isMut": true,
           "isSigner": false
         },
@@ -162,12 +152,7 @@
           "isSigner": true
         },
         {
-          "name": "mintAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vault",
+          "name": "authority",
           "isMut": true,
           "isSigner": false
         },
@@ -474,6 +459,6 @@
     }
   ],
   "metadata": {
-    "address": "BrarDLQjQMEqy7idk9fv7HHM9gi8BcP18qDGNLaKtVKA"
+    "address": "DYYk2tsroxbbXw1nwtnMKeXWrfsHZZQa17rG7jgaspiX"
   }
 }

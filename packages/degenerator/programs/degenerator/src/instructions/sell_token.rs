@@ -5,8 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::errors::Errors;
 use crate::utils::{
     calculate_sell_price, set_bonding_curve_state, token_burn, transfer_from_user_to_bonding_curve,
-    transfer_sol_to_user, BONDING_CURVE_MINT_AUTHORITY, BONDING_CURVE_STATE_SEED,
-    BONDING_CURVE_VAULT_SEED,
+    transfer_sol_to_user, BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED,
 };
 
 use crate::state::BondingCurveState;
@@ -18,18 +17,10 @@ pub struct SellToken<'info> {
 
     /// CHECK: pda to control vault_meme_ata & lamports
     #[account(mut,
-            seeds = [BONDING_CURVE_MINT_AUTHORITY.as_bytes(), mint.key().as_ref()],
+            seeds = [BONDING_CURVE_AUTHORITY.as_bytes(), mint.key().as_ref()],
             bump,
         )]
-    pub mint_authority: AccountInfo<'info>,
-
-    /// CHECK: pda to store lamports
-    #[account(
-        mut,
-        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
-        bump,
-    )]
-    pub vault: AccountInfo<'info>,
+    pub authority: AccountInfo<'info>,
 
     /// CHECK: pda to store current price
     #[account(
@@ -42,7 +33,7 @@ pub struct SellToken<'info> {
     /// Mint associated with the token
     #[account(mut,
         mint::token_program = token_program,
-        mint::authority = mint_authority,
+        mint::authority = authority,
     )]
     pub mint: Box<InterfaceAccount<'info, Mint>>,
 
@@ -59,7 +50,7 @@ pub struct SellToken<'info> {
     #[account(
             mut,
             associated_token::mint = mint,
-            associated_token::authority = mint_authority,
+            associated_token::authority = authority,
             associated_token::token_program = token_program,
         )]
     pub burn_ata: Box<InterfaceAccount<'info, TokenAccount>>,
@@ -81,7 +72,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     let price = calculate_sell_price(total_supply as u128, amount as u128);
 
-    let vault_balance = ctx.accounts.vault.lamports();
+    let pda_balance = ctx.accounts.authority.lamports();
 
     // Ensure the requested amount does not exceed available supply
     if amount > user_supply {
@@ -89,7 +80,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     }
 
     // Ensure the requested amount does not exceed available supply
-    if price > vault_balance {
+    if price > pda_balance {
         return Err(Errors::InsufficientTokens.into());
     }
 
@@ -106,28 +97,28 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     // burn tokens
     token_burn(
-        ctx.accounts.mint_authority.to_account_info(),
+        ctx.accounts.authority.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.burn_ata.to_account_info(),
         amount,
         ctx.accounts.mint.decimals,
         &[&[
-            BONDING_CURVE_MINT_AUTHORITY.as_bytes(),
+            BONDING_CURVE_AUTHORITY.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.mint_authority][..],
+            &[ctx.bumps.authority][..],
         ][..]],
     )?;
 
     transfer_sol_to_user(
-        ctx.accounts.vault.to_account_info(),
+        ctx.accounts.authority.to_account_info(),
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
         price,
         &[&[
-            BONDING_CURVE_VAULT_SEED.as_bytes(),
+            BONDING_CURVE_AUTHORITY.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.vault][..],
+            &[ctx.bumps.authority][..],
         ][..]],
     )?;
 

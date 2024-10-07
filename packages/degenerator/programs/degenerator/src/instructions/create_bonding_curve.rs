@@ -3,23 +3,16 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
-    set_bonding_curve_state, update_account_lamports_to_minimum_balance,
-    BONDING_CURVE_MINT_AUTHORITY, BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
+    set_bonding_curve_state, update_account_lamports_to_minimum_balance, BONDING_CURVE_AUTHORITY,
+    BONDING_CURVE_STATE_SEED,
 };
 
 use crate::state::BondingCurveState;
 
 pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
-    // transfer minimum rent to sol vault
+    // transfer minimum rent to pda
     update_account_lamports_to_minimum_balance(
-        ctx.accounts.mint_authority.to_account_info(),
-        ctx.accounts.payer.to_account_info(),
-        ctx.accounts.system_program.to_account_info(),
-    )?;
-
-    // transfer minimum rent to sol vault
-    update_account_lamports_to_minimum_balance(
-        ctx.accounts.vault.to_account_info(),
+        ctx.accounts.authority.to_account_info(),
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
     )?;
@@ -39,23 +32,16 @@ pub struct CreateBondingCurve<'info> {
 
     #[account(
         mint::token_program = token_program,
-        mint::authority = mint_authority,
+        mint::authority = authority,
     )]
     pub mint: Box<InterfaceAccount<'info, Mint>>,
 
     /// CHECK: pda to control vault_meme_ata & lamports
     #[account(mut,
-            seeds = [BONDING_CURVE_MINT_AUTHORITY.as_bytes(), mint.key().as_ref()],
+            seeds = [BONDING_CURVE_AUTHORITY.as_bytes(), mint.key().as_ref()],
             bump,
         )]
-    pub mint_authority: AccountInfo<'info>,
-
-    /// CHECK: pda to store lamports
-    #[account(mut,
-        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
-        bump,
-    )]
-    pub vault: AccountInfo<'info>,
+    pub authority: AccountInfo<'info>,
 
     /// pda to store bonding curve state
     #[account(init,
@@ -71,7 +57,7 @@ pub struct CreateBondingCurve<'info> {
             init,
             associated_token::mint = mint,
             payer = payer,
-            associated_token::authority = mint_authority,
+            associated_token::authority = authority,
             associated_token::token_program = token_program,
         )]
     pub burn_ata: Box<InterfaceAccount<'info, TokenAccount>>,

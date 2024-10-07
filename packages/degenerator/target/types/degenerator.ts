@@ -19,12 +19,7 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "mintAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vault",
+          "name": "authority",
           "isMut": true,
           "isSigner": false
         },
@@ -91,12 +86,7 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "mintAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vault",
+          "name": "authority",
           "isMut": true,
           "isSigner": false
         },
@@ -162,12 +152,7 @@ export type Degenerator = {
           "isSigner": true
         },
         {
-          "name": "mintAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vault",
+          "name": "authority",
           "isMut": true,
           "isSigner": false
         },
@@ -496,12 +481,7 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "mintAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vault",
+          "name": "authority",
           "isMut": true,
           "isSigner": false
         },
@@ -568,12 +548,7 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "mintAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vault",
+          "name": "authority",
           "isMut": true,
           "isSigner": false
         },
@@ -639,12 +614,7 @@ export const IDL: Degenerator = {
           "isSigner": true
         },
         {
-          "name": "mintAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vault",
+          "name": "authority",
           "isMut": true,
           "isSigner": false
         },

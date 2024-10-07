@@ -6,8 +6,7 @@ use crate::errors::Errors;
 use crate::state::BondingCurveState;
 use crate::utils::{
     calculate_buy_price, set_bonding_curve_state, token_mint_to,
-    transfer_sol_to_bonding_curve_vault, BONDING_CURVE_MINT_AUTHORITY, BONDING_CURVE_STATE_SEED,
-    BONDING_CURVE_VAULT_SEED,
+    transfer_sol_to_bonding_curve_vault, BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED,
 };
 
 #[derive(Accounts)]
@@ -18,18 +17,10 @@ pub struct BuyToken<'info> {
 
     /// CHECK: pda to control vault_meme_ata & lamports
     #[account(mut,
-        seeds = [BONDING_CURVE_MINT_AUTHORITY.as_bytes(), mint.key().as_ref()],
+        seeds = [BONDING_CURVE_AUTHORITY.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub mint_authority: AccountInfo<'info>,
-
-    /// CHECK: pda to control bonding_curve_vault_ata & store lamports
-    #[account(
-        mut,
-        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
-        bump,
-    )]
-    pub vault: AccountInfo<'info>,
+    pub authority: AccountInfo<'info>,
 
     /// CHECK: pda to store current price
     #[account(
@@ -52,7 +43,7 @@ pub struct BuyToken<'info> {
     /// Mint associated with the token
     #[account(mut,
         mint::token_program = token_program,
-        mint::authority = mint_authority,
+        mint::authority = authority,
     )]
     pub mint: Box<InterfaceAccount<'info, Mint>>,
 
@@ -78,23 +69,23 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     }
 
     token_mint_to(
-        ctx.accounts.mint_authority.to_account_info(),
+        ctx.accounts.authority.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         amount,
         ctx.accounts.mint.decimals,
         &[&[
-            BONDING_CURVE_MINT_AUTHORITY.as_bytes(),
+            BONDING_CURVE_AUTHORITY.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.mint_authority],
+            &[ctx.bumps.authority],
         ]],
     )?;
 
-    // Transfer SOL to bonding curve vault
+    // Transfer SOL to pda
     transfer_sol_to_bonding_curve_vault(
         ctx.accounts.payer.to_account_info(),
-        ctx.accounts.vault.to_account_info(),
+        ctx.accounts.authority.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
         price,
     )?;

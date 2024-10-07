@@ -15,7 +15,7 @@ export function getMintAuthority({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('bonding_curve_mint_authority'), mint.toBuffer()],
+		[Buffer.from('bonding_curve_authority'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }

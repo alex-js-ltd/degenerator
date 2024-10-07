@@ -153,8 +153,7 @@ export async function getInitializeDegeneratorIxs({
 }: GetInitializeDegeneratorIxsParams) {
 	const { mint } = metadata
 
-	const mintAuthority = getMintAuthority({ program, mint })
-	const vault = getBondingCurveVault({ program, mint })
+	const authority = getMintAuthority({ program, mint })
 
 	const bondingCurveState = getBondingCurveState({
 		program,
@@ -170,7 +169,7 @@ export async function getInitializeDegeneratorIxs({
 
 	const burnAta = getAssociatedTokenAddressSync(
 		mint,
-		mintAuthority,
+		authority,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
@@ -180,8 +179,7 @@ export async function getInitializeDegeneratorIxs({
 		.accountsStrict({
 			payer,
 			mint,
-			mintAuthority,
-			vault,
+			authority,
 			burnAta,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
@@ -195,7 +193,7 @@ export async function getInitializeDegeneratorIxs({
 		mint,
 		payer,
 		AuthorityType.MintTokens,
-		mintAuthority,
+		authority,
 		[],
 		TOKEN_2022_PROGRAM_ID,
 	)
@@ -223,8 +221,7 @@ export async function getBuyTokenIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const mintAuthority = getMintAuthority({ program, mint })
-	const vault = getBondingCurveVault({ program, mint })
+	const authority = getMintAuthority({ program, mint })
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
@@ -233,9 +230,8 @@ export async function getBuyTokenIxs({
 		.buyToken(amountBN)
 		.accountsStrict({
 			payer,
-			vault,
 			mint,
-			mintAuthority,
+			authority,
 			payerAta,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
@@ -260,12 +256,11 @@ export async function getSellTokenIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const mintAuthority = getMintAuthority({ program, mint })
-	const vault = getBondingCurveVault({ program, mint })
+	const authority = getMintAuthority({ program, mint })
 
 	const burnAta = getAssociatedTokenAddressSync(
 		mint,
-		mintAuthority,
+		authority,
 		true,
 		TOKEN_2022_PROGRAM_ID,
 	)
@@ -278,8 +273,7 @@ export async function getSellTokenIxs({
 		.accountsStrict({
 			signer: payer,
 			mint,
-			mintAuthority,
-			vault,
+			authority,
 			payerAta,
 			burnAta,
 			bondingCurveState,

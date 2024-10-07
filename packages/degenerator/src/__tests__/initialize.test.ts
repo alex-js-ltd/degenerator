@@ -80,14 +80,6 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check bonding curve vault is rent exempt', async () => {
-		const rentExempt = await isRentExempt({
-			connection: connection,
-			address: vault,
-		})
-		expect(rentExempt).toBe(true)
-	})
-
 	it('check bonding curve mint authority is rent exempt', async () => {
 		const rentExempt = await isRentExempt({
 			connection: connection,
