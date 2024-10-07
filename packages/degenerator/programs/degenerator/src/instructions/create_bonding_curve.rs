@@ -19,7 +19,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
 
     let supply = ctx.accounts.mint.supply;
 
-    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, supply);
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, supply, supply);
 
     Ok(())
 }

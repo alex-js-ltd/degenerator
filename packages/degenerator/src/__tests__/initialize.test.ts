@@ -108,7 +108,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 10
+		const amountToBuy = 100
 
 		const ix = await getBuyTokenIxs({
 			program,
@@ -141,7 +141,7 @@ describe('initialize', () => {
 	})
 
 	it('sell token', async () => {
-		const amountToSell = 10
+		const amountToSell = 100
 
 		const ix = await getSellTokenIxs({
 			program,
@@ -171,5 +171,30 @@ describe('initialize', () => {
 		console.log('buy price after sell', state.buyPrice.toString())
 		console.log('sell price after sell', state.sellPrice.toString())
 		console.log('current supply after sell', state.supply.toString())
+	})
+
+	it('buy token', async () => {
+		const amountToBuy = 100
+
+		const ix = await getBuyTokenIxs({
+			program,
+			payer: payer.publicKey,
+			mint: MEME.mint,
+			amount: amountToBuy,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+		console.log(res)
+		await sendAndConfirm({ connection, tx })
 	})
 })

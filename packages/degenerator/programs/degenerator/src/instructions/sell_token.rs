@@ -1,3 +1,5 @@
+use std::ops::Mul;
+
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
@@ -66,9 +68,10 @@ pub struct SellToken<'info> {
 }
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
-    let supply = ctx.accounts.mint.supply;
+    let current_supply = ctx.accounts.mint.supply;
+    let sell_price = ctx.accounts.bonding_curve_state.sell_price;
 
-    let price = calculate_sell_price(supply, amount);
+    let price = sell_price.mul(amount);
 
     let user_supply = ctx.accounts.payer_ata.amount;
 
@@ -124,10 +127,14 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
-    let updated_supply = ctx.accounts.mint.supply;
+    let new_supply = ctx.accounts.mint.supply;
 
     // Update bonding curve state
-    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, updated_supply);
+    set_bonding_curve_state(
+        &mut ctx.accounts.bonding_curve_state,
+        new_supply,
+        new_supply,
+    );
 
     Ok(())
 }

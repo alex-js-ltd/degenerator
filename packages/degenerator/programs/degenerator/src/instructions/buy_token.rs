@@ -58,9 +58,10 @@ pub struct BuyToken<'info> {
 }
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
-    let supply = ctx.accounts.mint.supply;
+    let current_supply = ctx.accounts.mint.supply;
+    let buy_price = ctx.accounts.bonding_curve_state.buy_price;
 
-    let price = calculate_buy_price(supply, amount);
+    let price = buy_price.saturating_mul(amount);
 
     // Check if the payer has enough lamports to cover the price
     let payer_balance = ctx.accounts.payer.lamports();
@@ -92,10 +93,14 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
-    let updated_supply = ctx.accounts.mint.supply;
+    let new_supply = ctx.accounts.mint.supply;
 
     // Update bonding curve state
-    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, updated_supply);
+    set_bonding_curve_state(
+        &mut ctx.accounts.bonding_curve_state,
+        current_supply,
+        new_supply,
+    );
 
     Ok(())
 }
