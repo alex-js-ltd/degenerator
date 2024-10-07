@@ -51,7 +51,7 @@ pub fn calculate_sell_price(current_supply: u128, amount: u128) -> u64 {
         BASE_PRICE.saturating_sub(PRICE_INCREMENT * (current_supply.saturating_sub(amount)));
 
     // Ensure that price does not drop below zero
-    let price_per_token = price_per_token.max(0);
+    let price_per_token = price_per_token.max(BASE_PRICE);
 
     // Total price for the amount of tokens being sold
     let total_price = price_per_token.saturating_mul(amount as u128);
