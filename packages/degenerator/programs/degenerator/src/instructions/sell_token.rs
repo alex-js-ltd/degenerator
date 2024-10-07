@@ -4,9 +4,9 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
 use crate::utils::{
-    calculate_sell_price, set_bonding_curve_state, token_burn,
-    transfer_from_user_to_bonding_curve_vault, transfer_sol_to_user, BONDING_CURVE_MINT_AUTHORITY,
-    BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED,
+    calculate_sell_price, set_bonding_curve_state, token_burn, transfer_from_user_to_bonding_curve,
+    transfer_sol_to_user, BONDING_CURVE_MINT_AUTHORITY, BONDING_CURVE_STATE_SEED,
+    BONDING_CURVE_VAULT_SEED,
 };
 
 use crate::state::BondingCurveState;
@@ -55,6 +55,15 @@ pub struct SellToken<'info> {
     )]
     pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
+    /// ata to burn tokens
+    #[account(
+            mut,
+            associated_token::mint = mint,
+            associated_token::authority = mint_authority,
+            associated_token::token_program = token_program,
+        )]
+    pub burn_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+
     /// Token program
     pub token_program: Interface<'info, TokenInterface>,
 
@@ -77,12 +86,23 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         return Err(Errors::InsufficientTokens.into());
     }
 
+    // transfer the tokens
+    transfer_from_user_to_bonding_curve(
+        ctx.accounts.signer.to_account_info(),
+        ctx.accounts.payer_ata.to_account_info(),
+        ctx.accounts.burn_ata.to_account_info(),
+        ctx.accounts.mint.to_account_info(),
+        ctx.accounts.token_program.to_account_info(),
+        amount,
+        ctx.accounts.mint.decimals,
+    )?;
+
     // burn tokens
     token_burn(
         ctx.accounts.mint_authority.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
-        ctx.accounts.payer_ata.to_account_info(),
+        ctx.accounts.burn_ata.to_account_info(),
         amount,
         ctx.accounts.mint.decimals,
         &[&[

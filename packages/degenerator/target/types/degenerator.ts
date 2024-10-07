@@ -37,6 +37,14 @@ export type Degenerator = {
           ]
         },
         {
+          "name": "burnAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ata to burn tokens"
+          ]
+        },
+        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
@@ -182,6 +190,14 @@ export type Degenerator = {
           "isSigner": false,
           "docs": [
             "Token account the tokens will be transferred from"
+          ]
+        },
+        {
+          "name": "burnAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ata to burn tokens"
           ]
         },
         {
@@ -498,6 +514,14 @@ export const IDL: Degenerator = {
           ]
         },
         {
+          "name": "burnAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ata to burn tokens"
+          ]
+        },
+        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
@@ -643,6 +667,14 @@ export const IDL: Degenerator = {
           "isSigner": false,
           "docs": [
             "Token account the tokens will be transferred from"
+          ]
+        },
+        {
+          "name": "burnAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ata to burn tokens"
           ]
         },
         {

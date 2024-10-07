@@ -37,6 +37,14 @@
           ]
         },
         {
+          "name": "burnAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ata to burn tokens"
+          ]
+        },
+        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
@@ -182,6 +190,14 @@
           "isSigner": false,
           "docs": [
             "Token account the tokens will be transferred from"
+          ]
+        },
+        {
+          "name": "burnAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ata to burn tokens"
           ]
         },
         {

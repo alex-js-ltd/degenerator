@@ -31,7 +31,7 @@ pub fn update_account_lamports_to_minimum_balance<'info>(
     Ok(())
 }
 
-const BASE_PRICE: u128 = 10_000; // Base price per token (0.00001 SOL)
+const BASE_PRICE: u128 = 1; // Base price per token (0.000000001 SOL)
 const PRICE_INCREMENT: u128 = 1_000; // Linear increment per unit of supply
 
 pub fn calculate_buy_price(current_supply: u128, amount: u128) -> u64 {
@@ -87,7 +87,7 @@ pub fn set_bonding_curve_state(
     bonding_curve_state.sell_price = calculate_sell_price(current_supply, 1);
 }
 
-pub fn transfer_from_user_to_bonding_curve_vault<'a>(
+pub fn transfer_from_user_to_bonding_curve<'a>(
     authority: AccountInfo<'a>,
     from: AccountInfo<'a>,
     to_vault: AccountInfo<'a>,

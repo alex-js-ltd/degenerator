@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{Mint, TokenInterface};
+use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::utils::{
     set_bonding_curve_state, update_account_lamports_to_minimum_balance,
@@ -24,7 +24,9 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ctx.accounts.system_program.to_account_info(),
     )?;
 
-    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, 0 as u128);
+    let current_supply = ctx.accounts.mint.supply as u128;
+
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, current_supply);
 
     Ok(())
 }
@@ -63,6 +65,16 @@ pub struct CreateBondingCurve<'info> {
         space = BondingCurveState::LEN
     )]
     pub bonding_curve_state: Account<'info, BondingCurveState>,
+
+    /// ata to burn tokens
+    #[account(
+            init,
+            associated_token::mint = mint,
+            payer = payer,
+            associated_token::authority = mint_authority,
+            associated_token::token_program = token_program,
+        )]
+    pub burn_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// Spl token program or token program 2022
     pub token_program: Interface<'info, TokenInterface>,
