@@ -7,6 +7,7 @@ import {
 	buildTransaction,
 	sendAndConfirm,
 	getBondingCurveAuth,
+	getBondingCurveState,
 	getBuyTokenIxs,
 	getSellTokenIxs,
 	fetchBondingCurveState,
@@ -36,6 +37,11 @@ describe('initialize', () => {
 	const payer = Keypair.generate()
 
 	const mintAuthority = getBondingCurveAuth({
+		program,
+		mint: MEME.mint,
+	})
+
+	const bondingCurveState = getBondingCurveState({
 		program,
 		mint: MEME.mint,
 	})
@@ -118,6 +124,14 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
+	it('check bonding curve state', async () => {
+		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+
+		console.log('buy price', state.buyPrice.toString())
+		console.log('sell price', state.sellPrice.toString())
+		console.log('current supply', state.currentSupply.toString())
+	})
+
 	it('sell token', async () => {
 		const amountToSell = 1000
 
@@ -141,5 +155,13 @@ describe('initialize', () => {
 		const res = await connection.simulateTransaction(tx)
 		console.log(res)
 		await sendAndConfirm({ connection, tx })
+	})
+
+	it('check bonding curve state', async () => {
+		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+
+		console.log('buy price', state.buyPrice.toString())
+		console.log('sell price', state.sellPrice.toString())
+		console.log('current supply', state.currentSupply.toString())
 	})
 })
