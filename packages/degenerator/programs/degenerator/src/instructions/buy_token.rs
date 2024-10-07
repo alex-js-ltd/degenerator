@@ -58,13 +58,13 @@ pub struct BuyToken<'info> {
 }
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
-    let price = ctx.accounts.bonding_curve_state.buy_price;
+    let supply = ctx.accounts.mint.supply;
 
-    let total_price = price.saturating_mul(amount);
+    let price = calculate_buy_price(supply, amount);
 
     // Check if the payer has enough lamports to cover the price
     let payer_balance = ctx.accounts.payer.lamports();
-    if payer_balance < total_price {
+    if payer_balance < price {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -87,7 +87,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.authority.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        total_price,
+        price,
     )?;
 
     ctx.accounts.mint.reload()?;

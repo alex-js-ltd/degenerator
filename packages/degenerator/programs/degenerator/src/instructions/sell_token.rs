@@ -66,9 +66,9 @@ pub struct SellToken<'info> {
 }
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
-    let price = ctx.accounts.bonding_curve_state.sell_price;
+    let supply = ctx.accounts.mint.supply;
 
-    let total_price = price.saturating_mul(amount);
+    let price = calculate_sell_price(supply, amount);
 
     let user_supply = ctx.accounts.payer_ata.amount;
 
@@ -80,7 +80,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     }
 
     // Ensure the requested amount does not exceed available supply
-    if total_price > pda_balance {
+    if price > pda_balance {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -114,7 +114,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.authority.to_account_info(),
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        total_price,
+        price,
         &[&[
             BONDING_CURVE_AUTHORITY.as_bytes(),
             ctx.accounts.mint.key().as_ref(),

@@ -30,33 +30,37 @@ pub fn update_account_lamports_to_minimum_balance<'info>(
     Ok(())
 }
 
-// Calculate the buy price for a new token
-pub fn calculate_buy_price(supply: u64) -> u64 {
+pub fn calculate_buy_price(supply: u64, amount: u64) -> u64 {
     let m: u64 = 10; // Slope for buy price (increases price with supply)
     let b: u64 = 100; // Base price (initial price)
 
     // Calculate buy price based on the bonding curve
-    let buy_price = m * supply + b; // Price increases as supply increases
+    // Use saturating to prevent overflow
+    let price_per_token = m.saturating_mul(supply).saturating_add(b); // Price increases as supply increases
 
-    buy_price.try_into().unwrap_or(u64::MAX)
+    let total_price = price_per_token.saturating_mul(amount);
+    total_price.try_into().unwrap_or(u64::MAX)
 }
 
-pub fn calculate_sell_price(supply: u64) -> u64 {
-    let m: u64 = 10; // Slope for sell price (increases price as supply decreases)
+pub fn calculate_sell_price(supply: u64, amount: u64) -> u64 {
+    let m: u64 = 10; // Slope for sell price (decreases price with supply)
     let b: u64 = 100; // Base price (initial price)
 
     // Calculate sell price based on the bonding curve
-    let sell_price = b.saturating_sub(m * supply); // Price increases as supply decreases
+    let price_per_token = m
+        .saturating_mul(supply.saturating_sub(amount))
+        .saturating_add(b); // Price decreases as supply decreases
 
-    // Ensure sell price is at least a minimum value (you can set this as needed)
-    sell_price.try_into().unwrap_or(u64::MAX)
+    let total_price = price_per_token.saturating_mul(amount);
+    total_price.try_into().unwrap_or(u64::MAX)
 }
 
 /// Sets the price per token in the Pool account.
 pub fn set_bonding_curve_state(bonding_curve_state: &mut Account<BondingCurveState>, supply: u64) {
     bonding_curve_state.supply = supply;
-    bonding_curve_state.buy_price = calculate_buy_price(supply);
-    bonding_curve_state.sell_price = calculate_sell_price(supply);
+    bonding_curve_state.buy_price = calculate_buy_price(supply, 1);
+    bonding_curve_state.sell_price = calculate_sell_price(supply, 1);
+    bonding_curve_state.progress = 0;
 }
 
 pub fn transfer_from_user_to_bonding_curve<'a>(
