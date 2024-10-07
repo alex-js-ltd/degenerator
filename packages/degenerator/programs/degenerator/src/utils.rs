@@ -30,32 +30,33 @@ pub fn update_account_lamports_to_minimum_balance<'info>(
     Ok(())
 }
 
-const BASE_PRICE: u64 = 1; // Base price per token (0.000000001 SOL)
-const PRICE_INCREMENT: u64 = 1_000; // Linear increment per unit of supply
+// Base price and increment in terms of smallest unit (1 lamport)
+const BASE_PRICE: u64 = 1; // Base price per token in smallest unit (0.000000001 SOL)
+const PRICE_INCREMENT: u64 = 1_000; // Linear increment per unit of supply (0.000001 SOL)
 
-pub fn calculate_buy_price(current_supply: u64, amount: u64) -> u64 {
-    // Total supply is implicitly known and increases with the current supply
+pub fn calculate_buy_price(current_supply: u64, amount: u64, mint_decimals: u8) -> u64 {
+    // Calculate the price per token, scaled by the current supply
     let price_per_token = BASE_PRICE.saturating_add(PRICE_INCREMENT * current_supply);
 
-    // Total price for the amount of tokens requested
+    // The total price is the price per token multiplied by the amount (already scaled by 10^decimals)
     let total_price = price_per_token.saturating_mul(amount);
 
-    // Convert to u64, with a maximum cap to avoid overflow
+    // Since `BASE_PRICE` and `PRICE_INCREMENT` are already in terms of the smallest unit (scaled by decimals),
+    // there's no need to multiply by 10^mint_decimals here.
+
     total_price.try_into().unwrap_or(u64::MAX)
 }
 
-pub fn calculate_sell_price(current_supply: u64, amount: u64) -> u64 {
-    // Ensure the price per token is a function of the current supply
-    let price_per_token =
-        BASE_PRICE.saturating_sub(PRICE_INCREMENT * (current_supply.saturating_sub(amount)));
+pub fn calculate_sell_price(current_supply: u64, amount: u64, mint_decimals: u8) -> u64 {
+    // Calculate the price per token, scaled by the current supply
+    let price_per_token = BASE_PRICE.saturating_add(PRICE_INCREMENT * current_supply);
 
-    // Ensure that price does not drop below zero
-    let price_per_token = price_per_token.max(BASE_PRICE);
-
-    // Total price for the amount of tokens being sold
+    // The total price is the price per token multiplied by the amount (already scaled by 10^decimals)
     let total_price = price_per_token.saturating_mul(amount);
 
-    // Convert to u64, with a maximum cap to avoid overflow
+    // Since `BASE_PRICE` and `PRICE_INCREMENT` are already in terms of the smallest unit (scaled by decimals),
+    // there's no need to multiply by 10^mint_decimals here.
+
     total_price.try_into().unwrap_or(u64::MAX)
 }
 
@@ -63,10 +64,11 @@ pub fn calculate_sell_price(current_supply: u64, amount: u64) -> u64 {
 pub fn set_bonding_curve_state(
     bonding_curve_state: &mut Account<BondingCurveState>,
     current_supply: u64,
+    mint_decimals: u8,
 ) {
     bonding_curve_state.current_supply = current_supply;
-    bonding_curve_state.buy_price = calculate_buy_price(current_supply, 1);
-    bonding_curve_state.sell_price = calculate_sell_price(current_supply, 1);
+    bonding_curve_state.buy_price = calculate_buy_price(current_supply, 1, mint_decimals);
+    bonding_curve_state.sell_price = calculate_sell_price(current_supply, 1, mint_decimals);
 }
 
 pub fn transfer_from_user_to_bonding_curve<'a>(

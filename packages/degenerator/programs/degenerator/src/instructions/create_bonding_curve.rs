@@ -18,8 +18,13 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
     )?;
 
     let current_supply = ctx.accounts.mint.supply;
+    let mint_decimals = ctx.accounts.mint.decimals;
 
-    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, current_supply);
+    set_bonding_curve_state(
+        &mut ctx.accounts.bonding_curve_state,
+        current_supply,
+        mint_decimals,
+    );
 
     Ok(())
 }
