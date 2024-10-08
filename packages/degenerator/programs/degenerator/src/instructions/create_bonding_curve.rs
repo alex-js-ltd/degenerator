@@ -16,7 +16,9 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
 
     let current_supply = ctx.accounts.mint.supply;
 
-    BondingCurveState::set_state(&mut ctx.accounts.bonding_curve_state, current_supply);
+    BondingCurveState::set_buy_price(&mut ctx.accounts.bonding_curve_state, current_supply, 1);
+    BondingCurveState::set_sell_price(&mut ctx.accounts.bonding_curve_state, current_supply, 1);
+    BondingCurveState::set_supply(&mut ctx.accounts.bonding_curve_state, current_supply);
 
     Ok(())
 }

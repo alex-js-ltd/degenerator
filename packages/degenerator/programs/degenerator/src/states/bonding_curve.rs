@@ -16,13 +16,11 @@ impl BondingCurveState {
     pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8;
 
     /// Sets the price per token in the bonding curve state.
-    pub fn set_state(&mut self, current_supply: u64) {
-        self.sell_price = self.calculate_sell_price(current_supply, 1);
-        self.buy_price = self.calculate_buy_price(current_supply, 1);
+    pub fn set_supply(&mut self, current_supply: u64) {
         self.supply = current_supply;
     }
 
-    pub fn calculate_buy_price(&self, current_supply: u64, amount: u64) -> u64 {
+    pub fn set_buy_price(&mut self, current_supply: u64, amount: u64) {
         // Calculate the price increase component based on the remaining supply
 
         let price_increase = PRICE_INCREMENT.saturating_mul(current_supply);
@@ -33,11 +31,10 @@ impl BondingCurveState {
         // Total price for the amount of tokens requested
         let total_price = price_per_token.saturating_mul(amount);
 
-        // Convert to u64, with a maximum cap to avoid overflow
-        total_price.try_into().unwrap_or(u64::MAX)
+        self.buy_price = total_price;
     }
 
-    pub fn calculate_sell_price(&self, current_supply: u64, amount: u64) -> u64 {
+    pub fn set_sell_price(&mut self, current_supply: u64, amount: u64) {
         // Calculate the price decrease component based on the current supply
         let price_decrease = PRICE_INCREMENT.saturating_mul(current_supply);
 
@@ -50,7 +47,6 @@ impl BondingCurveState {
         // Total price for the amount of tokens being sold
         let total_price = price_per_token.saturating_mul(amount);
 
-        // Convert to u64, with a maximum cap to avoid overflow
-        total_price.try_into().unwrap_or(u64::MAX)
+        self.sell_price = total_price;
     }
 }
