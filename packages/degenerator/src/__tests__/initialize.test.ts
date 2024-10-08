@@ -110,7 +110,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 100
+		const amountToBuy = 1
 
 		const ix = await getBuyTokenIxs({
 			program,
@@ -145,7 +145,7 @@ describe('initialize', () => {
 	})
 
 	it('sell token', async () => {
-		const amountToSell = 10
+		const amountToSell = 1
 
 		const ix = await getSellTokenIxs({
 			program,
@@ -177,5 +177,40 @@ describe('initialize', () => {
 		console.log('current supply after sell', state.supply.toString())
 		console.log('progress after sell', state.progress.toString())
 		console.log('lamports after sell', state.lamports.toString())
+	})
+
+	it('buy token', async () => {
+		const amountToBuy = 1
+
+		const ix = await getBuyTokenIxs({
+			program,
+			payer: payer.publicKey,
+			mint: MEME.mint,
+			amount: amountToBuy,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+		console.log(res)
+		await sendAndConfirm({ connection, tx })
+	})
+
+	it('check bonding curve state after buy', async () => {
+		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+
+		console.log('buy price after buy', state.buyPrice.toString())
+		console.log('sell price after buy', state.sellPrice.toString())
+		console.log('current supply after buy', state.supply.toString())
+		console.log('progress after buy', state.progress.toString())
+		console.log('lamports after buy', state.lamports.toString())
 	})
 })

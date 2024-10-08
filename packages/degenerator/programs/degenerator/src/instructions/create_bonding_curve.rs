@@ -16,7 +16,10 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
 
     let supply = ctx.accounts.mint.supply;
     let lamports = ctx.accounts.authority.lamports();
-    ctx.accounts.bonding_curve_state.set_state(supply, lamports);
+
+    let price = ctx.accounts.bonding_curve_state.calculate_price(supply);
+    ctx.accounts.bonding_curve_state.set_buy_price(price);
+    ctx.accounts.bonding_curve_state.set_sell_price(price);
 
     Ok(())
 }
