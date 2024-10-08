@@ -11,44 +11,12 @@ pub struct BondingCurveState {
     pub progress: u64,
 }
 
-const BASE_PRICE: u64 = 10_000; // 0.00001 SOL
-const PRICE_INCREMENT: u64 = 1_000; // Linear increment per unit of supply
-
 impl BondingCurveState {
     pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8 + 8;
-
-    pub fn calculate_price(&self, supply: u64) -> u64 {
-        // Calculate the price increase component based on the remaining supply
-
-        let price_increase = PRICE_INCREMENT.saturating_mul(supply);
-
-        // Total price per token including the increase
-        let price_per_token = price_increase.saturating_add(BASE_PRICE);
-
-        price_per_token.try_into().unwrap_or(u64::MAX)
-    }
-
-    pub fn set_buy_price(&mut self, supply_0: u64) {
-        self.buy_price = self.calculate_price(supply_0);
-    }
-
-    pub fn set_sell_price(&mut self, supply_1: u64) {
-        self.buy_price = self.calculate_price(supply_1);
-    }
-
-    pub fn set_state(
-        &mut self,
-        buy_supply: u64,
-        sell_supply: u64,
-        lamports: u64,
-        current_supply: u64,
-    ) {
-        self.buy_price = self.calculate_price(buy_supply);
-        self.sell_price = self.calculate_price(sell_supply);
-        self.lamports = lamports;
-        self.supply = current_supply;
-    }
 }
+
+const BASE_PRICE: u64 = 10_000; // 0.00001 SOL
+const PRICE_INCREMENT: u64 = 1_000; // Linear increment per unit of supply
 
 pub fn calculate_price(supply: u64) -> u64 {
     // Calculate the price increase component based on the remaining supply
@@ -62,13 +30,12 @@ pub fn calculate_price(supply: u64) -> u64 {
 }
 pub fn set_bonding_curve_state<'a>(
     state: &mut Account<BondingCurveState>,
-    &buy_supply: &u64,
-    &sell_supply: &u64,
+    &initial_supply: &u64,
     &current_supply: &u64,
     &lamports: &u64,
 ) {
-    state.buy_price = calculate_price(buy_supply);
-    state.sell_price = calculate_price(sell_supply);
+    state.sell_price = calculate_price(initial_supply);
+    state.buy_price = calculate_price(current_supply);
     state.lamports = lamports;
     state.supply = current_supply;
 }

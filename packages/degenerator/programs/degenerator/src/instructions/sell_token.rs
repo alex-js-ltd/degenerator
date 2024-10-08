@@ -63,7 +63,7 @@ pub struct SellToken<'info> {
 }
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
-    let sell_supply = ctx.accounts.mint.supply;
+    let initial_supply = ctx.accounts.mint.supply;
     let sell_price = ctx.accounts.bonding_curve_state.sell_price;
 
     let price = sell_price.saturating_mul(amount);
@@ -124,10 +124,9 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
+        &initial_supply,
         &ctx.accounts.mint.supply,
-        &sell_supply,
         &ctx.accounts.authority.lamports(),
-        &ctx.accounts.mint.supply,
     );
 
     Ok(())
