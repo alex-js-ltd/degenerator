@@ -1,16 +1,16 @@
+pub mod error;
+pub mod instructions;
+pub mod states;
+pub mod utils;
+
 use anchor_lang::prelude::*;
+use instructions::*;
 
-mod errors;
-mod instructions;
-mod state;
-mod utils;
-
-declare_id!("DEAibdEEyuBBLBRYpWnnZwgqaNKY5nxAyGLbYWP5zfEa");
+declare_id!("qTkaa9FcWcRFBYZkkrdaBZKF8BiEVWMU4ur4WHXCAZ5");
 
 #[program]
 pub mod degenerator {
 
-    pub use super::instructions::*;
     use super::*;
 
     pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {

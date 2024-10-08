@@ -1,9 +1,9 @@
-mod buy_token;
-mod create_bonding_curve;
+pub mod buy_token;
+pub mod create_bonding_curve;
 
-mod proxy_initialize;
-mod sell_token;
-mod wrap_sol;
+pub mod proxy_initialize;
+pub mod sell_token;
+pub mod wrap_sol;
 
 pub use buy_token::*;
 pub use create_bonding_curve::*;

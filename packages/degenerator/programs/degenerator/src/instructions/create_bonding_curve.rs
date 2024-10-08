@@ -2,12 +2,9 @@ use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
-use crate::utils::{
-    set_bonding_curve_state, update_account_lamports_to_minimum_balance, BONDING_CURVE_AUTHORITY,
-    BONDING_CURVE_STATE_SEED,
-};
-
-use crate::state::BondingCurveState;
+use crate::states::BondingCurveState;
+use crate::utils::seed::{BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED};
+use crate::utils::token::update_account_lamports_to_minimum_balance;
 
 pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
     // transfer minimum rent to pda
@@ -17,9 +14,9 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ctx.accounts.system_program.to_account_info(),
     )?;
 
-    let supply = ctx.accounts.mint.supply;
+    let current_supply = ctx.accounts.mint.supply;
 
-    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, supply);
+    BondingCurveState::set_state(&mut ctx.accounts.bonding_curve_state, current_supply);
 
     Ok(())
 }

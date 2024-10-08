@@ -1,16 +1,11 @@
-use std::ops::Mul;
-
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
-use crate::errors::Errors;
-use crate::utils::{
-    set_bonding_curve_state, token_burn, transfer_from_user_to_bonding_curve, transfer_sol_to_user,
-    BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED,
-};
-
-use crate::state::BondingCurveState;
+use crate::error::ErrorCode;
+use crate::states::BondingCurveState;
+use crate::utils::seed::{BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED};
+use crate::utils::token::{token_burn, transfer_from_user_to_bonding_curve, transfer_sol_to_user};
 
 #[derive(Accounts)]
 pub struct SellToken<'info> {
@@ -78,7 +73,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     // Ensure the requested amount does not exceed available supply
     if amount > user_supply {
-        return Err(Errors::InsufficientUserSupply.into());
+        return Err(ErrorCode::InsufficientUserSupply.into());
     }
 
     // Ensure the requested amount does not exceed available supply
@@ -128,7 +123,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     let new_supply = ctx.accounts.mint.supply;
 
-    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, new_supply);
+    BondingCurveState::set_state(&mut ctx.accounts.bonding_curve_state, new_supply);
 
     Ok(())
 }
