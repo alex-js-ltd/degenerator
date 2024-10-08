@@ -444,6 +444,10 @@ export type Degenerator = {
             "type": "u64"
           },
           {
+            "name": "lamports",
+            "type": "u64"
+          },
+          {
             "name": "progress",
             "type": "u64"
           }
@@ -903,6 +907,10 @@ export const IDL: Degenerator = {
           },
           {
             "name": "supply",
+            "type": "u64"
+          },
+          {
+            "name": "lamports",
             "type": "u64"
           },
           {

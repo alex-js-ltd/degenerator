@@ -444,6 +444,10 @@
             "type": "u64"
           },
           {
+            "name": "lamports",
+            "type": "u64"
+          },
+          {
             "name": "progress",
             "type": "u64"
           }
@@ -459,6 +463,6 @@
     }
   ],
   "metadata": {
-    "address": "D34rPyUfcJETqQb81sxnU9bNmBtosRtTdpj8x8vnS812"
+    "address": "93r5buy7jXgKGcmJ7nVpRz2Yi2s1CMTbzrKLTZ6gYRfC"
   }
 }

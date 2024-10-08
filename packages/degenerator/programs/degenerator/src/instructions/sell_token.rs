@@ -121,9 +121,9 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
-    let new_supply = ctx.accounts.mint.supply;
-
-    ctx.accounts.bonding_curve_state.set_state(new_supply);
+    let supply = ctx.accounts.mint.supply;
+    let lamports = ctx.accounts.authority.lamports();
+    ctx.accounts.bonding_curve_state.set_state(supply, lamports);
 
     Ok(())
 }

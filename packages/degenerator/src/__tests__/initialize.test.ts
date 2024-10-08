@@ -1,5 +1,5 @@
 import * as anchor from '@coral-xyz/anchor'
-import { Keypair } from '@solana/web3.js'
+import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js'
 import {
 	type Degenerator,
 	airDrop,
@@ -105,10 +105,12 @@ describe('initialize', () => {
 		console.log('buy price before buy', state.buyPrice.toString())
 		console.log('sell price before buy', state.sellPrice.toString())
 		console.log('current supply before buy', state.supply.toString())
+		console.log('progress before buy', state.progress.toString())
+		console.log('lamports before buy', state.lamports.toString())
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 1000
+		const amountToBuy = 100
 
 		const ix = await getBuyTokenIxs({
 			program,
@@ -138,10 +140,12 @@ describe('initialize', () => {
 		console.log('buy price after buy', state.buyPrice.toString())
 		console.log('sell price after buy', state.sellPrice.toString())
 		console.log('current supply after buy', state.supply.toString())
+		console.log('progress after buy', state.progress.toString())
+		console.log('lamports after buy', state.lamports.toString())
 	})
 
 	it('sell token', async () => {
-		const amountToSell = 1000
+		const amountToSell = 10
 
 		const ix = await getSellTokenIxs({
 			program,
@@ -171,80 +175,7 @@ describe('initialize', () => {
 		console.log('buy price after sell', state.buyPrice.toString())
 		console.log('sell price after sell', state.sellPrice.toString())
 		console.log('current supply after sell', state.supply.toString())
-	})
-
-	it('buy token', async () => {
-		const amountToBuy = 1000
-
-		const ix = await getBuyTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			amount: amountToBuy,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
-	})
-
-	it('sell token', async () => {
-		const amountToSell = 500
-
-		const ix = await getSellTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			amount: amountToSell,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
-	})
-
-	it('sell token', async () => {
-		const amountToSell = 500
-
-		const ix = await getSellTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			amount: amountToSell,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
+		console.log('progress after sell', state.progress.toString())
+		console.log('lamports after sell', state.lamports.toString())
 	})
 })

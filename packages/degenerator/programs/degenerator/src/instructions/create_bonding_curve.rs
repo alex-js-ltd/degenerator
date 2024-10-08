@@ -14,9 +14,9 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ctx.accounts.system_program.to_account_info(),
     )?;
 
-    let current_supply = ctx.accounts.mint.supply;
-
-    ctx.accounts.bonding_curve_state.set_state(current_supply);
+    let supply = ctx.accounts.mint.supply;
+    let lamports = ctx.accounts.authority.lamports();
+    ctx.accounts.bonding_curve_state.set_state(supply, lamports);
 
     Ok(())
 }
