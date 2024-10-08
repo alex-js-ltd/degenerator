@@ -58,7 +58,6 @@ pub struct BuyToken<'info> {
 }
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
-    let current_supply = ctx.accounts.mint.supply;
     let buy_price = ctx.accounts.bonding_curve_state.buy_price;
 
     let price = buy_price.saturating_mul(amount);

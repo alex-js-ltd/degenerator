@@ -68,10 +68,9 @@ pub struct SellToken<'info> {
 }
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
-    let current_supply = ctx.accounts.mint.supply;
     let sell_price = ctx.accounts.bonding_curve_state.sell_price;
 
-    let price = sell_price.mul(amount);
+    let price = sell_price.saturating_mul(amount);
 
     let user_supply = ctx.accounts.payer_ata.amount;
 
