@@ -49,3 +49,26 @@ impl BondingCurveState {
         self.supply = current_supply;
     }
 }
+
+pub fn calculate_price(supply: u64) -> u64 {
+    // Calculate the price increase component based on the remaining supply
+
+    let price_increase = PRICE_INCREMENT.saturating_mul(supply);
+
+    // Total price per token including the increase
+    let price_per_token = price_increase.saturating_add(BASE_PRICE);
+
+    price_per_token.try_into().unwrap_or(u64::MAX)
+}
+pub fn set_bonding_curve_state<'a>(
+    state: &mut Account<BondingCurveState>,
+    &buy_supply: &u64,
+    &sell_supply: &u64,
+    &current_supply: &u64,
+    &lamports: &u64,
+) {
+    state.buy_price = calculate_price(buy_supply);
+    state.sell_price = calculate_price(sell_supply);
+    state.lamports = lamports;
+    state.supply = current_supply;
+}
