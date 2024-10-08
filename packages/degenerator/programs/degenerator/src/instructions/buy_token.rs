@@ -55,13 +55,14 @@ pub struct BuyToken<'info> {
 }
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
-    let current_price = ctx.accounts.bonding_curve_state.buy_price;
+    let sell_supply = ctx.accounts.mint.supply;
+    let buy_price = ctx.accounts.bonding_curve_state.buy_price;
 
-    let total_price = current_price.saturating_mul(amount);
+    let price = buy_price.saturating_mul(amount);
 
     // Check if the payer has enough lamports to cover the price
     let payer_balance = ctx.accounts.payer.lamports();
-    if payer_balance < total_price {
+    if payer_balance < price {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -84,19 +85,18 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.authority.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        total_price,
+        price,
     )?;
 
     ctx.accounts.mint.reload()?;
 
-    let supply = ctx.accounts.mint.supply;
+    let buy_supply = ctx.accounts.mint.supply;
     let lamports = ctx.accounts.authority.lamports();
+    let current_supply = buy_supply;
 
-    let new_price = ctx.accounts.bonding_curve_state.calculate_price(supply);
-    ctx.accounts.bonding_curve_state.set_buy_price(new_price);
-    ctx.accounts
-        .bonding_curve_state
-        .set_sell_price(current_price);
+    let bonding_curve_state = &mut ctx.accounts.bonding_curve_state;
+
+    bonding_curve_state.set_state(buy_supply, sell_supply, lamports, current_supply);
 
     Ok(())
 }

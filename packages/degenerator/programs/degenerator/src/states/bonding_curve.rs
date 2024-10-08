@@ -28,16 +28,24 @@ impl BondingCurveState {
         price_per_token.try_into().unwrap_or(u64::MAX)
     }
 
-    pub fn set_buy_price(&mut self, price: u64) {
-        self.buy_price = price;
-    }
-
-    pub fn set_sell_price(&mut self, price: u64) {
-        self.sell_price = price;
-    }
-
-    pub fn set_state(&mut self, supply_0: u64, supply_1: u64) {
+    pub fn set_buy_price(&mut self, supply_0: u64) {
         self.buy_price = self.calculate_price(supply_0);
-        self.sell_price = self.calculate_price(supply_1);
+    }
+
+    pub fn set_sell_price(&mut self, supply_1: u64) {
+        self.buy_price = self.calculate_price(supply_1);
+    }
+
+    pub fn set_state(
+        &mut self,
+        buy_supply: u64,
+        sell_supply: u64,
+        lamports: u64,
+        current_supply: u64,
+    ) {
+        self.buy_price = self.calculate_price(buy_supply);
+        self.sell_price = self.calculate_price(sell_supply);
+        self.lamports = lamports;
+        self.supply = current_supply;
     }
 }
