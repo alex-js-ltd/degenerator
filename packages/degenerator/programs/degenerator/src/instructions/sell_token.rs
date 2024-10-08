@@ -123,13 +123,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     let new_supply = ctx.accounts.mint.supply;
 
-    ctx.accounts
-        .bonding_curve_state
-        .set_buy_price(new_supply, 1);
-    ctx.accounts
-        .bonding_curve_state
-        .set_sell_price(new_supply, 1);
-    ctx.accounts.bonding_curve_state.set_supply(new_supply);
+    ctx.accounts.bonding_curve_state.set_state(new_supply);
 
     Ok(())
 }

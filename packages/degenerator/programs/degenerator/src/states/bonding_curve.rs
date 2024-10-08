@@ -15,12 +15,7 @@ const PRICE_INCREMENT: u64 = 1_000; // Linear increment per unit of supply
 impl BondingCurveState {
     pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8;
 
-    /// Sets the price per token in the bonding curve state.
-    pub fn set_supply(&mut self, current_supply: u64) {
-        self.supply = current_supply;
-    }
-
-    pub fn set_buy_price(&mut self, current_supply: u64, amount: u64) {
+    pub fn calculate_buy_price(&self, current_supply: u64, amount: u64) -> u64 {
         // Calculate the price increase component based on the remaining supply
 
         let price_increase = PRICE_INCREMENT.saturating_mul(current_supply);
@@ -31,10 +26,10 @@ impl BondingCurveState {
         // Total price for the amount of tokens requested
         let total_price = price_per_token.saturating_mul(amount);
 
-        self.buy_price = total_price;
+        total_price.try_into().unwrap_or(u64::MAX)
     }
 
-    pub fn set_sell_price(&mut self, current_supply: u64, amount: u64) {
+    pub fn calculate_sell_price(&self, current_supply: u64, amount: u64) -> u64 {
         // Calculate the price decrease component based on the current supply
         let price_decrease = PRICE_INCREMENT.saturating_mul(current_supply);
 
@@ -47,6 +42,12 @@ impl BondingCurveState {
         // Total price for the amount of tokens being sold
         let total_price = price_per_token.saturating_mul(amount);
 
-        self.sell_price = total_price;
+        total_price.try_into().unwrap_or(u64::MAX)
+    }
+
+    pub fn set_state(&mut self, current_supply: u64) {
+        self.buy_price = self.calculate_buy_price(current_supply, 1);
+        self.sell_price = self.calculate_sell_price(current_supply, 1);
+        self.supply = current_supply
     }
 }
