@@ -6,8 +6,8 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::errors::Errors;
 use crate::utils::{
-    calculate_price, set_bonding_curve_state, token_burn, transfer_from_user_to_bonding_curve,
-    transfer_sol_to_user, BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED,
+    set_bonding_curve_state, token_burn, transfer_from_user_to_bonding_curve, transfer_sol_to_user,
+    BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED,
 };
 
 use crate::state::BondingCurveState;
@@ -129,11 +129,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     let new_supply = ctx.accounts.mint.supply;
 
-    set_bonding_curve_state(
-        &mut ctx.accounts.bonding_curve_state,
-        current_supply,
-        new_supply,
-    );
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, new_supply);
 
     Ok(())
 }

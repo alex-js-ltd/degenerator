@@ -108,7 +108,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 100
+		const amountToBuy = 1000
 
 		const ix = await getBuyTokenIxs({
 			program,
@@ -141,7 +141,7 @@ describe('initialize', () => {
 	})
 
 	it('sell token', async () => {
-		const amountToSell = 100
+		const amountToSell = 1000
 
 		const ix = await getSellTokenIxs({
 			program,
@@ -174,7 +174,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 100
+		const amountToBuy = 1000
 
 		const ix = await getBuyTokenIxs({
 			program,
@@ -199,7 +199,7 @@ describe('initialize', () => {
 	})
 
 	it('sell token', async () => {
-		const amountToSell = 100
+		const amountToSell = 1000
 
 		const ix = await getSellTokenIxs({
 			program,
