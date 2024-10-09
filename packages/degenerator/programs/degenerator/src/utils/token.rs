@@ -162,11 +162,14 @@ pub fn token_burn<'a>(
 
 pub fn token_ui_amount_to_amount<'a>(
     token_program: AccountInfo<'a>,
-    account: AccountInfo<'a>,
+    mint: AccountInfo<'a>,
     amount: &str,
 ) -> Result<u64> {
     token_2022::ui_amount_to_amount(
-        CpiContext::new(token_program, token_2022::UiAmountToAmount { account }),
+        CpiContext::new(
+            token_program,
+            token_2022::UiAmountToAmount { account: mint },
+        ),
         amount,
     )
 }
