@@ -16,7 +16,7 @@ impl BondingCurveState {
 }
 
 // Constants for pricing
-const BASE_PRICE: u64 = 10_000; // 0.00001 SOL in lamports
+const BASE_PRICE: u64 = 1; // 0.00001 SOL in lamports
 const PRICE_INCREMENT: u64 = 1_000; // Linear increment per unit of supply
 
 pub fn calculate_buy_price(supply: u64, amount: u64) -> u64 {

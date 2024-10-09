@@ -98,7 +98,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 2
+		const amountToBuy = 3
 
 		const one = await getBuyTokenIxs({
 			program,
@@ -121,9 +121,7 @@ describe('initialize', () => {
 
 		console.log(res)
 		await sendAndConfirm({ connection, tx })
-	})
 
-	it('state supply matches mint supply', async () => {
 		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
 
@@ -150,6 +148,7 @@ describe('initialize', () => {
 		const res = await connection.simulateTransaction(tx)
 		console.log(res)
 		await sendAndConfirm({ connection, tx })
+		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
 
 	it('sell token', async () => {
