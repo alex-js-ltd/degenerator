@@ -94,7 +94,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 3
+		const amountToBuy = 1
 
 		const one = await getBuyTokenIxs({
 			program,
