@@ -12,54 +12,46 @@ pub struct BondingCurveState {
 }
 
 impl BondingCurveState {
-    pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8 + 8;
+    pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8; // Adjusted length if necessary
 }
 
-const BASE_PRICE: u64 = 10_000; // 0.00001 SOL
+// Constants for pricing
+const BASE_PRICE: u64 = 10_000; // 0.00001 SOL in lamports
 const PRICE_INCREMENT: u64 = 1_000; // Linear increment per unit of supply
 
-pub fn calculate_price(supply: u64) -> u64 {
-    // Calculate the price increase component based on the remaining supply
+pub fn calculate_buy_price(supply: u64, amount: u64) -> u64 {
+    // Use LAMPORTS_PER_SOL if the supply is 0
 
-    let price_increase = PRICE_INCREMENT.saturating_mul(supply);
+    // Use saturating_add and saturating_mul to prevent overflow
+    let total_price = (BASE_PRICE.saturating_add(PRICE_INCREMENT.saturating_mul(supply)))
+        .saturating_mul(amount)
+        .saturating_div(LAMPORTS_PER_SOL)
+        .max(BASE_PRICE);
 
-    // Total price per token including the increase
-    let price_per_token = price_increase.saturating_add(BASE_PRICE);
-
-    price_per_token.try_into().unwrap_or(u64::MAX)
+    total_price
 }
 
-pub fn set_bonding_curve_state_init<'a>(
+pub fn calculate_sell_price(supply: u64, amount: u64) -> u64 {
+    // Ensure no underflow when subtracting
+    let new_supply = supply.saturating_sub(amount);
+
+    // Use saturating_add and saturating_mul to prevent overflow
+    let total_price = (BASE_PRICE.saturating_add(PRICE_INCREMENT.saturating_mul(new_supply)))
+        .saturating_mul(amount)
+        .saturating_div(LAMPORTS_PER_SOL)
+        .max(BASE_PRICE);
+
+    total_price
+}
+
+// Function to set bonding curve state
+pub fn set_bonding_curve_state(
     state: &mut Account<BondingCurveState>,
     &current_supply: &u64,
     &lamports: &u64,
 ) {
-    state.sell_price = calculate_price(current_supply);
-    state.buy_price = calculate_price(current_supply);
-    state.lamports = lamports;
-    state.supply = current_supply;
-}
-
-pub fn set_bonding_curve_state_buy<'a>(
-    state: &mut Account<BondingCurveState>,
-    &initial_supply: &u64,
-    &current_supply: &u64,
-    &lamports: &u64,
-) {
-    state.sell_price = calculate_price(initial_supply);
-    state.buy_price = calculate_price(current_supply);
     state.supply = current_supply;
     state.lamports = lamports;
-}
-
-pub fn set_bonding_curve_state_sell<'a>(
-    state: &mut Account<BondingCurveState>,
-    &initial_supply: &u64,
-    &current_supply: &u64,
-    &lamports: &u64,
-) {
-    state.buy_price = calculate_price(initial_supply);
-    state.sell_price = calculate_price(current_supply);
-    state.supply = current_supply;
-    state.lamports = lamports;
+    state.buy_price = calculate_buy_price(current_supply, 1); // Set initial buy price
+    state.sell_price = calculate_sell_price(current_supply, 1); // Set initial sell price
 }

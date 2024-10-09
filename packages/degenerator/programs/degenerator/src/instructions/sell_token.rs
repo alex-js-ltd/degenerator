@@ -3,9 +3,12 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::error::ErrorCode;
-use crate::states::{set_bonding_curve_state_sell, BondingCurveState};
+use crate::states::{calculate_sell_price, set_bonding_curve_state, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED};
-use crate::utils::token::{token_burn, transfer_from_user_to_bonding_curve, transfer_sol_to_user};
+use crate::utils::token::{
+    token_burn, transfer_from_user_to_bonding_curve, transfer_sol_to_user,
+    update_account_lamports_to_minimum_balance,
+};
 
 #[derive(Accounts)]
 pub struct SellToken<'info> {
@@ -63,11 +66,10 @@ pub struct SellToken<'info> {
 }
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
-    let initial_supply = ctx.accounts.mint.supply;
-    let sell_price = ctx.accounts.bonding_curve_state.sell_price;
+    let supply = ctx.accounts.mint.supply;
 
-    let price = sell_price.saturating_mul(amount);
-
+    let price = calculate_sell_price(supply, amount);
+    msg!("sell price: {}", price);
     let user_supply = ctx.accounts.payer_ata.amount;
 
     let pda_balance = ctx.accounts.authority.lamports();
@@ -93,6 +95,24 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.mint.decimals,
     )?;
 
+    transfer_sol_to_user(
+        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.signer.to_account_info(),
+        ctx.accounts.system_program.to_account_info(),
+        price,
+        &[&[
+            BONDING_CURVE_AUTHORITY.as_bytes(),
+            ctx.accounts.mint.key().as_ref(),
+            &[ctx.bumps.authority][..],
+        ][..]],
+    )?;
+
+    update_account_lamports_to_minimum_balance(
+        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.signer.to_account_info(),
+        ctx.accounts.system_program.to_account_info(),
+    )?;
+
     // burn tokens
     token_burn(
         ctx.accounts.authority.to_account_info(),
@@ -108,23 +128,10 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ][..]],
     )?;
 
-    transfer_sol_to_user(
-        ctx.accounts.authority.to_account_info(),
-        ctx.accounts.signer.to_account_info(),
-        ctx.accounts.system_program.to_account_info(),
-        price,
-        &[&[
-            BONDING_CURVE_AUTHORITY.as_bytes(),
-            ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.authority][..],
-        ][..]],
-    )?;
-
     ctx.accounts.mint.reload()?;
 
-    set_bonding_curve_state_sell(
+    set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
-        &initial_supply,
         &ctx.accounts.mint.supply,
         &ctx.accounts.authority.lamports(),
     );

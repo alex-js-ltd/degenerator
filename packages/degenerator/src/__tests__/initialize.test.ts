@@ -71,7 +71,7 @@ describe('initialize', () => {
 		tx.sign([payer])
 
 		const res = await connection.simulateTransaction(tx)
-
+		console.log(res)
 		expect(res.value.err).toBeNull()
 
 		await sendAndConfirm({ connection, tx })
@@ -93,8 +93,12 @@ describe('initialize', () => {
 		})
 	})
 
+	it('init', async () => {
+		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+	})
+
 	it('buy token', async () => {
-		const amountToBuy = 1
+		const amountToBuy = 2
 
 		const one = await getBuyTokenIxs({
 			program,
@@ -114,6 +118,8 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
+
+		console.log(res)
 		await sendAndConfirm({ connection, tx })
 	})
 
@@ -142,31 +148,35 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
-
+		console.log(res)
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('state supply matches mint supply', async () => {
+	it('sell token', async () => {
+		const amountToSell = 1
+
+		const ix = await getSellTokenIxs({
+			program,
+			payer: payer.publicKey,
+			mint: MEME.mint,
+			amount: amountToSell,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+		console.log(res)
+		await sendAndConfirm({ connection, tx })
+
 		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
-	})
-
-	it('supply is 0', async () => {
-		const account = await getMint(
-			connection,
-			MEME.mint,
-			'confirmed',
-			TOKEN_2022_PROGRAM_ID,
-		)
-
-		account.supply
-
-		const expectedSupply = new BN(0)
-		const actualSupply = new BN(account.supply.toString())
-
-		console.log('actual supply', actualSupply.toString())
-
-		// Assert that the supplies match
-		expect(expectedSupply).toEqual(actualSupply)
 	})
 })
 

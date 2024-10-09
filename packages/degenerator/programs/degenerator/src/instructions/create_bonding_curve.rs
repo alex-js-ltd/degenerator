@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
-use crate::states::{set_bonding_curve_state_init, BondingCurveState};
+use crate::states::{set_bonding_curve_state, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED};
 use crate::utils::token::update_account_lamports_to_minimum_balance;
 
@@ -14,7 +14,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ctx.accounts.system_program.to_account_info(),
     )?;
 
-    set_bonding_curve_state_init(
+    set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
         &ctx.accounts.mint.supply,
         &ctx.accounts.authority.lamports(),
