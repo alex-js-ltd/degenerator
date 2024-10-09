@@ -29,7 +29,18 @@ pub fn calculate_price(supply: u64) -> u64 {
     price_per_token.try_into().unwrap_or(u64::MAX)
 }
 
-pub fn set_bonding_curve_state<'a>(
+pub fn set_bonding_curve_state_init<'a>(
+    state: &mut Account<BondingCurveState>,
+    &current_supply: &u64,
+    &lamports: &u64,
+) {
+    state.sell_price = calculate_price(current_supply);
+    state.buy_price = calculate_price(current_supply);
+    state.lamports = lamports;
+    state.supply = current_supply;
+}
+
+pub fn set_bonding_curve_state_buy<'a>(
     state: &mut Account<BondingCurveState>,
     &initial_supply: &u64,
     &current_supply: &u64,
@@ -37,6 +48,18 @@ pub fn set_bonding_curve_state<'a>(
 ) {
     state.sell_price = calculate_price(initial_supply);
     state.buy_price = calculate_price(current_supply);
-    state.lamports = lamports;
     state.supply = current_supply;
+    state.lamports = lamports;
+}
+
+pub fn set_bonding_curve_state_sell<'a>(
+    state: &mut Account<BondingCurveState>,
+    &initial_supply: &u64,
+    &current_supply: &u64,
+    &lamports: &u64,
+) {
+    state.buy_price = calculate_price(initial_supply);
+    state.sell_price = calculate_price(current_supply);
+    state.supply = current_supply;
+    state.lamports = lamports;
 }

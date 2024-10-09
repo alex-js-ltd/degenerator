@@ -94,7 +94,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 1
+		const amountToBuy = 3
 
 		const one = await getBuyTokenIxs({
 			program,
@@ -114,7 +114,6 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
-		console.log(res)
 		await sendAndConfirm({ connection, tx })
 	})
 
@@ -143,7 +142,7 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
-		console.log(res)
+
 		await sendAndConfirm({ connection, tx })
 	})
 

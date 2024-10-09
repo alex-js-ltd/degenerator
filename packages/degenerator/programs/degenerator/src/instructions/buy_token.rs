@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
-use crate::states::{set_bonding_curve_state, BondingCurveState};
+use crate::states::{set_bonding_curve_state_buy, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED};
 use crate::utils::token::{token_mint_to, transfer_sol_to_bonding_curve_vault};
 
@@ -90,7 +90,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
-    set_bonding_curve_state(
+    set_bonding_curve_state_buy(
         &mut ctx.accounts.bonding_curve_state,
         &initial_supply,
         &ctx.accounts.mint.supply,
