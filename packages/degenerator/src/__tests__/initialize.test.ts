@@ -149,6 +149,25 @@ describe('initialize', () => {
 	it('state supply matches mint supply', async () => {
 		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
+
+	it('supply is 0', async () => {
+		const account = await getMint(
+			connection,
+			MEME.mint,
+			'confirmed',
+			TOKEN_2022_PROGRAM_ID,
+		)
+
+		account.supply
+
+		const expectedSupply = new BN(0)
+		const actualSupply = new BN(account.supply.toString())
+
+		console.log('actual supply', actualSupply.toString())
+
+		// Assert that the supplies match
+		expect(expectedSupply).toEqual(actualSupply)
+	})
 })
 
 async function checkMintAuthority({
