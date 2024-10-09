@@ -51,16 +51,6 @@ pub struct CreateBondingCurve<'info> {
     )]
     pub bonding_curve_state: Account<'info, BondingCurveState>,
 
-    /// ata to burn tokens
-    #[account(
-            init,
-            associated_token::mint = mint,
-            payer = payer,
-            associated_token::authority = authority,
-            associated_token::token_program = token_program,
-        )]
-    pub burn_ata: Box<InterfaceAccount<'info, TokenAccount>>,
-
     /// Spl token program or token program 2022
     pub token_program: Interface<'info, TokenInterface>,
 

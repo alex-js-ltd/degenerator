@@ -6,8 +6,8 @@ use crate::error::ErrorCode;
 use crate::states::{calculate_sell_price, set_bonding_curve_state, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED};
 use crate::utils::token::{
-    token_burn, transfer_from_user_to_bonding_curve, transfer_sol_to_user,
-    update_account_lamports_to_minimum_balance,
+    check_account_rent_exempt, token_approve_burn, token_burn, transfer_from_user_to_bonding_curve,
+    transfer_sol_to_user, update_account_lamports_to_minimum_balance,
 };
 
 #[derive(Accounts)]
@@ -46,15 +46,6 @@ pub struct SellToken<'info> {
     )]
     pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
-    /// ata to burn tokens
-    #[account(
-            mut,
-            associated_token::mint = mint,
-            associated_token::authority = authority,
-            associated_token::token_program = token_program,
-        )]
-    pub burn_ata: Box<InterfaceAccount<'info, TokenAccount>>,
-
     /// Token program
     pub token_program: Interface<'info, TokenInterface>,
 
@@ -84,15 +75,30 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
-    // transfer the tokens
-    transfer_from_user_to_bonding_curve(
-        ctx.accounts.signer.to_account_info(),
-        ctx.accounts.payer_ata.to_account_info(),
-        ctx.accounts.burn_ata.to_account_info(),
-        ctx.accounts.mint.to_account_info(),
+    msg!("balance before burn: {}", ctx.accounts.authority.lamports());
+
+    token_approve_burn(
         ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.payer_ata.to_account_info(),
+        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.signer.to_account_info(),
         amount,
         ctx.accounts.mint.decimals,
+    )?;
+
+    // burn tokens
+    token_burn(
+        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.mint.to_account_info(),
+        ctx.accounts.payer_ata.to_account_info(),
+        amount,
+        ctx.accounts.mint.decimals,
+        &[&[
+            BONDING_CURVE_AUTHORITY.as_bytes(),
+            ctx.accounts.mint.key().as_ref(),
+            &[ctx.bumps.authority][..],
+        ][..]],
     )?;
 
     transfer_sol_to_user(
@@ -111,21 +117,6 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.authority.to_account_info(),
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-    )?;
-
-    // burn tokens
-    token_burn(
-        ctx.accounts.authority.to_account_info(),
-        ctx.accounts.token_program.to_account_info(),
-        ctx.accounts.mint.to_account_info(),
-        ctx.accounts.burn_ata.to_account_info(),
-        amount,
-        ctx.accounts.mint.decimals,
-        &[&[
-            BONDING_CURVE_AUTHORITY.as_bytes(),
-            ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.authority][..],
-        ][..]],
     )?;
 
     ctx.accounts.mint.reload()?;

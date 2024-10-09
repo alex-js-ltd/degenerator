@@ -166,20 +166,13 @@ export async function getInitializeDegeneratorIxs({
 		decimals,
 	})
 
-	const burnAta = getAssociatedTokenAddressSync(
-		mint,
-		authority,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
 	const createBondingCurveIx = await program.methods
 		.createBondingCurve()
 		.accountsStrict({
 			payer,
 			mint,
 			authority,
-			burnAta,
+
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -257,13 +250,6 @@ export async function getSellTokenIxs({
 
 	const authority = getBondingCurveAuth({ program, mint })
 
-	const burnAta = getAssociatedTokenAddressSync(
-		mint,
-		authority,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
 	const amountBN = new BN(amount)
@@ -274,7 +260,7 @@ export async function getSellTokenIxs({
 			mint,
 			authority,
 			payerAta,
-			burnAta,
+
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,

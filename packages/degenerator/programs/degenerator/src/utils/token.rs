@@ -1,3 +1,4 @@
+use crate::error::ErrorCode;
 use anchor_lang::prelude::*;
 use anchor_lang::system_program;
 use anchor_lang::{
@@ -172,4 +173,38 @@ pub fn token_ui_amount_to_amount<'a>(
         ),
         amount,
     )
+}
+
+pub fn token_approve_burn<'a>(
+    token_program: AccountInfo<'a>,
+    to: AccountInfo<'a>,
+    delegate: AccountInfo<'a>,
+    authority: AccountInfo<'a>,
+    amount: u64,
+    mint_decimals: u8,
+) -> Result<()> {
+    token_2022::approve(
+        CpiContext::new(
+            token_program,
+            token_2022::Approve {
+                to,
+                delegate,
+                authority,
+            },
+        ),
+        amount * 10u64.pow(mint_decimals as u32),
+    )
+}
+
+pub fn check_account_rent_exempt<'info>(account: &AccountInfo<'info>) -> Result<()> {
+    let rent = Rent::get()?;
+    let required_lamports = rent.minimum_balance(account.data_len());
+
+    // Check if the account's lamports are below the required amount for rent exemption
+    require!(
+        account.lamports() >= required_lamports,
+        ErrorCode::AccountNotRentExempt
+    );
+
+    Ok(())
 }

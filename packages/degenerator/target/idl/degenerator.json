@@ -32,14 +32,6 @@
           ]
         },
         {
-          "name": "burnAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "ata to burn tokens"
-          ]
-        },
-        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
@@ -175,14 +167,6 @@
           "isSigner": false,
           "docs": [
             "Token account the tokens will be transferred from"
-          ]
-        },
-        {
-          "name": "burnAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "ata to burn tokens"
           ]
         },
         {
@@ -460,9 +444,14 @@
       "code": 6000,
       "name": "InsufficientUserSupply",
       "msg": "Insufficient tokens in user's wallet"
+    },
+    {
+      "code": 6001,
+      "name": "AccountNotRentExempt",
+      "msg": "Account is not rent-exempt."
     }
   ],
   "metadata": {
-    "address": "5kmVzpWYyuBHo3ZwGpS7xd1hKDFFTL91ejwez9MoN1eJ"
+    "address": "AMYuKcidQUkjLyVHWRNtQcowFFK2dfHVGLRRLZqftmVH"
   }
 }

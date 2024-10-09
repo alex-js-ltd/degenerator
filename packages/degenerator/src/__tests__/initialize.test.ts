@@ -22,7 +22,11 @@ import {
 	SOL,
 	MEME,
 } from '../index'
-import { TOKEN_2022_PROGRAM_ID, getMint } from '@solana/spl-token'
+import {
+	TOKEN_2022_PROGRAM_ID,
+	getMint,
+	getAssociatedTokenAddress,
+} from '@solana/spl-token'
 
 describe('initialize', () => {
 	const provider = AnchorProvider.env()
@@ -98,7 +102,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = 3
+		const amountToBuy = 10
 
 		const one = await getBuyTokenIxs({
 			program,
@@ -126,7 +130,7 @@ describe('initialize', () => {
 	})
 
 	it('sell token', async () => {
-		const amountToSell = 1
+		const amountToSell = 5
 
 		const ix = await getSellTokenIxs({
 			program,
@@ -151,31 +155,34 @@ describe('initialize', () => {
 		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
 
-	it('sell token', async () => {
-		const amountToSell = 1
-
-		const ix = await getSellTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			amount: amountToSell,
-		})
-
-		const tx = await buildTransaction({
+	it('check bonding curve mint authority is rent exempt', async () => {
+		const rentExempt = await isRentExempt({
 			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
+			address: mintAuthority,
 		})
+		expect(rentExempt).toBe(true)
+	})
 
-		tx.sign([payer])
+	it('check bonding curve state is rent exempt', async () => {
+		const rentExempt = await isRentExempt({
+			connection: connection,
+			address: bondingCurveState,
+		})
+		expect(rentExempt).toBe(true)
+	})
 
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
-
-		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+	it('check payer ata', async () => {
+		const payerAta = await getAssociatedTokenAddress(
+			MEME.mint,
+			payer.publicKey,
+			false,
+			TOKEN_2022_PROGRAM_ID,
+		)
+		const rentExempt = await isRentExempt({
+			connection: connection,
+			address: payerAta,
+		})
+		expect(rentExempt).toBe(true)
 	})
 })
 

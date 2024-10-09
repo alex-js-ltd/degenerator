@@ -5,4 +5,7 @@ use anchor_lang::prelude::*;
 pub enum ErrorCode {
     #[msg("Insufficient tokens in user's wallet")]
     InsufficientUserSupply,
+
+    #[msg("Account is not rent-exempt.")]
+    AccountNotRentExempt,
 }

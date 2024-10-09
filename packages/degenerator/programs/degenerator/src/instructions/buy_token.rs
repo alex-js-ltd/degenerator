@@ -95,5 +95,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         &ctx.accounts.authority.lamports(),
     );
 
+    msg!("balance before burn: {}", ctx.accounts.authority.lamports());
+
     Ok(())
 }
