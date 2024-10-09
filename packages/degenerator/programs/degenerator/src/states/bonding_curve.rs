@@ -28,6 +28,7 @@ pub fn calculate_price(supply: u64) -> u64 {
 
     price_per_token.try_into().unwrap_or(u64::MAX)
 }
+
 pub fn set_bonding_curve_state<'a>(
     state: &mut Account<BondingCurveState>,
     &initial_supply: &u64,

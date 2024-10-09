@@ -1,5 +1,12 @@
-import * as anchor from '@coral-xyz/anchor'
-import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js'
+import {
+	Program,
+	BN,
+	web3,
+	AnchorProvider,
+	setProvider,
+	workspace,
+} from '@coral-xyz/anchor'
+import { type Connection, type PublicKey, Keypair } from '@solana/web3.js'
 import {
 	type Degenerator,
 	airDrop,
@@ -15,22 +22,13 @@ import {
 	SOL,
 	MEME,
 } from '../index'
-import {
-	getAccount,
-	TOKEN_2022_PROGRAM_ID,
-	TOKEN_PROGRAM_ID,
-	getAssociatedTokenAddress,
-	NATIVE_MINT,
-	getMint,
-} from '@solana/spl-token'
-
-const { BN } = anchor
+import { TOKEN_2022_PROGRAM_ID, getMint } from '@solana/spl-token'
 
 describe('initialize', () => {
-	const provider = anchor.AnchorProvider.env()
-	anchor.setProvider(provider)
+	const provider = AnchorProvider.env()
+	setProvider(provider)
 
-	const program = anchor.workspace.Degenerator as anchor.Program<Degenerator>
+	const program = workspace.Degenerator as Program<Degenerator>
 
 	const connection = provider.connection
 
@@ -74,7 +72,6 @@ describe('initialize', () => {
 
 		const res = await connection.simulateTransaction(tx)
 
-		console.log(res)
 		expect(res.value.err).toBeNull()
 
 		await sendAndConfirm({ connection, tx })
@@ -89,30 +86,17 @@ describe('initialize', () => {
 	})
 
 	it('check mint authority', async () => {
-		const account = await getMint(
+		await checkMintAuthority({
 			connection,
-			MEME.mint,
-			'confirmed',
-			TOKEN_2022_PROGRAM_ID,
-		)
-
-		expect(account.mintAuthority?.toBase58()).toBe(mintAuthority?.toBase58())
-	})
-
-	it('check bonding curve state before buy', async () => {
-		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
-
-		console.log('buy price before buy', state.buyPrice.toString())
-		console.log('sell price before buy', state.sellPrice.toString())
-		console.log('current supply before buy', state.supply.toString())
-		console.log('progress before buy', state.progress.toString())
-		console.log('lamports before buy', state.lamports.toString())
+			mint: MEME.mint,
+			mintAuthority,
+		})
 	})
 
 	it('buy token', async () => {
 		const amountToBuy = 1
 
-		const ix = await getBuyTokenIxs({
+		const one = await getBuyTokenIxs({
 			program,
 			payer: payer.publicKey,
 			mint: MEME.mint,
@@ -122,7 +106,7 @@ describe('initialize', () => {
 		const tx = await buildTransaction({
 			connection: connection,
 			payer: payer.publicKey,
-			instructions: [ix],
+			instructions: [one],
 			signers: [],
 		})
 
@@ -134,14 +118,8 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check bonding curve state after buy', async () => {
-		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
-
-		console.log('buy price after buy', state.buyPrice.toString())
-		console.log('sell price after buy', state.sellPrice.toString())
-		console.log('current supply after buy', state.supply.toString())
-		console.log('progress after buy', state.progress.toString())
-		console.log('lamports after buy', state.lamports.toString())
+	it('state supply matches mint supply', async () => {
+		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
 
 	it('sell token', async () => {
@@ -169,108 +147,64 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 	})
 
-	it('check bonding curve state after sell', async () => {
-		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
-
-		console.log('buy price after sell', state.buyPrice.toString())
-		console.log('sell price after sell', state.sellPrice.toString())
-		console.log('current supply after sell', state.supply.toString())
-		console.log('progress after sell', state.progress.toString())
-		console.log('lamports after sell', state.lamports.toString())
-	})
-
-	it('buy token', async () => {
-		const amountToBuy = 2
-
-		const ix = await getBuyTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			amount: amountToBuy,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
-	})
-
-	it('check bonding curve state after buy', async () => {
-		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
-
-		console.log('buy price after buy', state.buyPrice.toString())
-		console.log('sell price after buy', state.sellPrice.toString())
-		console.log('current supply after buy', state.supply.toString())
-		console.log('progress after buy', state.progress.toString())
-		console.log('lamports after buy', state.lamports.toString())
-	})
-
-	it('sell token', async () => {
-		const amountToSell = 2
-
-		const ix = await getSellTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			amount: amountToSell,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
-	})
-
-	it('buy token', async () => {
-		const amountToBuy = 2
-
-		const ix = await getBuyTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			amount: amountToBuy,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
-	})
-
-	it('check bonding curve state after buy', async () => {
-		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
-
-		console.log('buy price after buy', state.buyPrice.toString())
-		console.log('sell price after buy', state.sellPrice.toString())
-		console.log('current supply after buy', state.supply.toString())
-		console.log('progress after buy', state.progress.toString())
-		console.log('lamports after buy', state.lamports.toString())
+	it('state supply matches mint supply', async () => {
+		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
 })
+
+async function checkMintAuthority({
+	connection,
+	mint,
+	mintAuthority,
+}: {
+	connection: Connection
+	mint: PublicKey
+	mintAuthority: PublicKey
+}) {
+	const account = await getMint(
+		connection,
+		mint,
+		'confirmed',
+		TOKEN_2022_PROGRAM_ID,
+	)
+
+	expect(account.mintAuthority?.toBase58()).toBe(mintAuthority?.toBase58())
+}
+
+// Function using object as the parameter
+async function checkSupplyMatchesMint({
+	program,
+	mint,
+	connection,
+}: {
+	program: Program<Degenerator>
+	mint: PublicKey
+	connection: Connection
+}) {
+	// Fetch the bonding curve state
+	const state = await fetchBondingCurveState({ program, mint })
+
+	// Get mint account data
+	const account = await getMint(
+		connection,
+		mint,
+		'confirmed',
+		TOKEN_2022_PROGRAM_ID,
+	)
+
+	// Logging for debugging purposes
+	console.log('buy price:', state.buyPrice.toString())
+	console.log('sell price:', state.sellPrice.toString())
+	console.log('current supply:', state.supply.toString())
+	console.log('progress:', state.progress.toString())
+	console.log('lamports:', state.lamports.toString())
+	console.log('account supply:', account.supply.toString())
+	console.log('state supply:', state.supply.toString())
+
+	// Convert the supplies to BN and compare
+	const stateSupply = new BN(state.supply.toString())
+	const accountSupply = new BN(account.supply.toString())
+
+	// Assert that the supplies match
+	expect(stateSupply).toEqual(accountSupply)
+}
