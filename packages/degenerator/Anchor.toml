@@ -7,7 +7,7 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-degenerator = "AMYuKcidQUkjLyVHWRNtQcowFFK2dfHVGLRRLZqftmVH"
+degenerator = "4gnLn2zoBMQx8o8zeHVsQKSa3uH8j7DP7KNryQgq49yA"
 
 [registry]
 url = "https://api.apr.dev"

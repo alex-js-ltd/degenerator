@@ -130,7 +130,33 @@ describe('initialize', () => {
 	})
 
 	it('sell token', async () => {
-		const amountToSell = 8
+		const amountToSell = 5
+
+		const ix = await getSellTokenIxs({
+			program,
+			payer: payer.publicKey,
+			mint: MEME.mint,
+			amount: amountToSell,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+		console.log(res)
+		await sendAndConfirm({ connection, tx })
+		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+	})
+
+	it('sell token', async () => {
+		const amountToSell = 5
 
 		const ix = await getSellTokenIxs({
 			program,

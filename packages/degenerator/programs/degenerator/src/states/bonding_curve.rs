@@ -22,6 +22,7 @@ pub fn calculate_buy_price(supply: u64, amount: u64) -> u64 {
     let price_per_token = supply
         .saturating_mul(2)
         .saturating_div(LAMPORTS_PER_SOL)
+        .saturating_add(BASE_PRICE)
         .max(BASE_PRICE);
 
     let total_price = price_per_token.saturating_mul(amount);
@@ -35,6 +36,7 @@ pub fn calculate_sell_price(supply: u64, amount: u64) -> u64 {
     let price_per_token = current_supply
         .saturating_mul(2)
         .saturating_div(LAMPORTS_PER_SOL)
+        .saturating_sub(BASE_PRICE)
         .max(BASE_PRICE);
 
     let total_price = price_per_token.saturating_mul(amount);
