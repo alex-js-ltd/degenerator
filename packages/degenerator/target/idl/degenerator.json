@@ -19,7 +19,7 @@
           "isSigner": false
         },
         {
-          "name": "authority",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -78,7 +78,7 @@
           ]
         },
         {
-          "name": "authority",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -144,7 +144,7 @@
           "isSigner": true
         },
         {
-          "name": "authority",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -416,23 +416,27 @@
         "kind": "struct",
         "fields": [
           {
+            "name": "basePrice",
+            "type": "u64"
+          },
+          {
+            "name": "reserveRatio",
+            "type": "f64"
+          },
+          {
+            "name": "totalSupply",
+            "type": "u64"
+          },
+          {
+            "name": "vaultBalance",
+            "type": "u64"
+          },
+          {
             "name": "buyPrice",
             "type": "u64"
           },
           {
             "name": "sellPrice",
-            "type": "u64"
-          },
-          {
-            "name": "supply",
-            "type": "u64"
-          },
-          {
-            "name": "lamports",
-            "type": "u64"
-          },
-          {
-            "name": "progress",
             "type": "u64"
           }
         ]
@@ -450,8 +454,5 @@
       "name": "AccountNotRentExempt",
       "msg": "Account is not rent-exempt."
     }
-  ],
-  "metadata": {
-    "address": "3WiQbeN6isL9Lgyn3tf4d42Rgggt5GEawHVf1xcqjUfY"
-  }
+  ]
 }

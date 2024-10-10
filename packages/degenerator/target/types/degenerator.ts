@@ -19,7 +19,7 @@ export type Degenerator = {
           "isSigner": false
         },
         {
-          "name": "authority",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -78,7 +78,7 @@ export type Degenerator = {
           ]
         },
         {
-          "name": "authority",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -144,7 +144,7 @@ export type Degenerator = {
           "isSigner": true
         },
         {
-          "name": "authority",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -416,23 +416,27 @@ export type Degenerator = {
         "kind": "struct",
         "fields": [
           {
+            "name": "basePrice",
+            "type": "u64"
+          },
+          {
+            "name": "reserveRatio",
+            "type": "f64"
+          },
+          {
+            "name": "totalSupply",
+            "type": "u64"
+          },
+          {
+            "name": "vaultBalance",
+            "type": "u64"
+          },
+          {
             "name": "buyPrice",
             "type": "u64"
           },
           {
             "name": "sellPrice",
-            "type": "u64"
-          },
-          {
-            "name": "supply",
-            "type": "u64"
-          },
-          {
-            "name": "lamports",
-            "type": "u64"
-          },
-          {
-            "name": "progress",
             "type": "u64"
           }
         ]
@@ -474,7 +478,7 @@ export const IDL: Degenerator = {
           "isSigner": false
         },
         {
-          "name": "authority",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -533,7 +537,7 @@ export const IDL: Degenerator = {
           ]
         },
         {
-          "name": "authority",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -599,7 +603,7 @@ export const IDL: Degenerator = {
           "isSigner": true
         },
         {
-          "name": "authority",
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
@@ -871,23 +875,27 @@ export const IDL: Degenerator = {
         "kind": "struct",
         "fields": [
           {
+            "name": "basePrice",
+            "type": "u64"
+          },
+          {
+            "name": "reserveRatio",
+            "type": "f64"
+          },
+          {
+            "name": "totalSupply",
+            "type": "u64"
+          },
+          {
+            "name": "vaultBalance",
+            "type": "u64"
+          },
+          {
             "name": "buyPrice",
             "type": "u64"
           },
           {
             "name": "sellPrice",
-            "type": "u64"
-          },
-          {
-            "name": "supply",
-            "type": "u64"
-          },
-          {
-            "name": "lamports",
-            "type": "u64"
-          },
-          {
-            "name": "progress",
             "type": "u64"
           }
         ]

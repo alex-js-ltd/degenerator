@@ -3,7 +3,7 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::states::{calculate_buy_price, set_bonding_curve_state, BondingCurveState};
-use crate::utils::seed::{BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED};
+use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
     token_mint_to, token_ui_amount_to_amount, transfer_sol_to_bonding_curve_vault,
 };
@@ -16,10 +16,10 @@ pub struct BuyToken<'info> {
 
     /// CHECK: pda to control vault_meme_ata & lamports
     #[account(mut,
-        seeds = [BONDING_CURVE_AUTHORITY.as_bytes(), mint.key().as_ref()],
+        seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
         bump,
     )]
-    pub authority: AccountInfo<'info>,
+    pub vault: AccountInfo<'info>,
 
     /// CHECK: pda to store current price
     #[account(
@@ -42,7 +42,7 @@ pub struct BuyToken<'info> {
     /// Mint associated with the token
     #[account(mut,
         mint::token_program = token_program,
-        mint::authority = authority,
+        mint::authority = vault,
     )]
     pub mint: Box<InterfaceAccount<'info, Mint>>,
 
@@ -64,9 +64,7 @@ pub fn buy_token(ctx: Context<BuyToken>, ui_amount: String) -> Result<()> {
     )?;
     msg!("buy amount: {}", amount);
 
-    let supply = ctx.accounts.mint.supply;
-
-    let price = calculate_buy_price(supply, amount);
+    let price = calculate_buy_price(&mut ctx.accounts.bonding_curve_state, amount)?;
     msg!("buy price: {}", price);
     // Check if the payer has enough lamports to cover the price
     let payer_balance = ctx.accounts.payer.lamports();
@@ -75,22 +73,22 @@ pub fn buy_token(ctx: Context<BuyToken>, ui_amount: String) -> Result<()> {
     }
 
     token_mint_to(
-        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.vault.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         amount,
         &[&[
-            BONDING_CURVE_AUTHORITY.as_bytes(),
+            BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.authority],
+            &[ctx.bumps.vault],
         ]],
     )?;
 
     // Transfer SOL to pda
     transfer_sol_to_bonding_curve_vault(
         ctx.accounts.payer.to_account_info(),
-        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.vault.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
         price,
     )?;
@@ -100,10 +98,8 @@ pub fn buy_token(ctx: Context<BuyToken>, ui_amount: String) -> Result<()> {
     set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
         &ctx.accounts.mint.supply,
-        &ctx.accounts.authority.lamports(),
-    );
-
-    msg!("balance before burn: {}", ctx.accounts.authority.lamports());
+        &ctx.accounts.vault.lamports(),
+    )?;
 
     Ok(())
 }

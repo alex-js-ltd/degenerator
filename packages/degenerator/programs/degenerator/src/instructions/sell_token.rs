@@ -4,7 +4,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::error::ErrorCode;
 use crate::states::{calculate_sell_price, set_bonding_curve_state, BondingCurveState};
-use crate::utils::seed::{BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED};
+use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
     token_approve_burn, token_burn, token_ui_amount_to_amount, transfer_sol_to_user,
     update_account_lamports_to_minimum_balance,
@@ -17,10 +17,10 @@ pub struct SellToken<'info> {
 
     /// CHECK: pda to control vault_meme_ata & lamports
     #[account(mut,
-            seeds = [BONDING_CURVE_AUTHORITY.as_bytes(), mint.key().as_ref()],
+            seeds = [BONDING_CURVE_VAULT_SEED.as_bytes(), mint.key().as_ref()],
             bump,
         )]
-    pub authority: AccountInfo<'info>,
+    pub vault: AccountInfo<'info>,
 
     /// CHECK: pda to store current price
     #[account(
@@ -33,7 +33,7 @@ pub struct SellToken<'info> {
     /// Mint associated with the token
     #[account(mut,
         mint::token_program = token_program,
-        mint::authority = authority,
+        mint::authority = vault,
     )]
     pub mint: Box<InterfaceAccount<'info, Mint>>,
 
@@ -64,13 +64,11 @@ pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
     )?;
     msg!("sell amount: {}", amount);
 
-    let supply = ctx.accounts.mint.supply;
-
-    let price = calculate_sell_price(supply, amount);
+    let price = calculate_sell_price(&mut ctx.accounts.bonding_curve_state, amount)?;
     msg!("sell price: {}", price);
     let user_supply = ctx.accounts.payer_ata.amount;
 
-    let pda_balance = ctx.accounts.authority.lamports();
+    let vault_balance = ctx.accounts.vault.lamports();
 
     // Ensure the requested amount does not exceed available supply
     if amount > user_supply {
@@ -83,7 +81,7 @@ pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
     // }
 
     update_account_lamports_to_minimum_balance(
-        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.vault.to_account_info(),
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
     )?;
@@ -91,34 +89,34 @@ pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
     token_approve_burn(
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
-        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.vault.to_account_info(),
         ctx.accounts.signer.to_account_info(),
         amount,
     )?;
 
     // burn tokens
     token_burn(
-        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.vault.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         amount,
         &[&[
-            BONDING_CURVE_AUTHORITY.as_bytes(),
+            BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.authority][..],
+            &[ctx.bumps.vault][..],
         ][..]],
     )?;
 
     transfer_sol_to_user(
-        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.vault.to_account_info(),
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
         price,
         &[&[
-            BONDING_CURVE_AUTHORITY.as_bytes(),
+            BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.authority][..],
+            &[ctx.bumps.vault][..],
         ][..]],
     )?;
 
@@ -127,8 +125,8 @@ pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
     set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
         &ctx.accounts.mint.supply,
-        &ctx.accounts.authority.lamports(),
-    );
+        &ctx.accounts.vault.lamports(),
+    )?;
 
     Ok(())
 }
