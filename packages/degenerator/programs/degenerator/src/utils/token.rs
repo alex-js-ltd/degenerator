@@ -28,6 +28,23 @@ pub fn update_account_lamports_to_minimum_balance<'info>(
     Ok(())
 }
 
+pub fn get_account_balance<'a>(account: AccountInfo<'a>) -> Result<u64> {
+    // Get the total lamports in the account
+    let total_lamports = account.lamports();
+
+    // Retrieve the rent configuration safely
+    let rent = Rent::get()?;
+
+    // Calculate the rent-exempt minimum for the account
+    let rent_exempt_minimum = rent.minimum_balance(account.data_len());
+
+    // Calculate lamports excluding rent
+    let lamports_excluding_rent = total_lamports.saturating_sub(rent_exempt_minimum);
+
+    // Return the result
+    Ok(lamports_excluding_rent)
+}
+
 pub fn transfer_from_user_to_bonding_curve<'a>(
     authority: AccountInfo<'a>,
     from: AccountInfo<'a>,

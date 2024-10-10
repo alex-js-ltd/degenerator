@@ -166,12 +166,20 @@ export async function getInitializeDegeneratorIxs({
 		decimals,
 	})
 
+	const vaultAta = await getAssociatedTokenAddress(
+		mint,
+		vault,
+		true,
+		TOKEN_2022_PROGRAM_ID,
+	)
+
 	const createBondingCurveIx = await program.methods
 		.createBondingCurve()
 		.accountsStrict({
 			payer,
 			mint,
 			vault,
+			vaultAta,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,

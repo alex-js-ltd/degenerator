@@ -6,8 +6,8 @@ use crate::error::ErrorCode;
 use crate::states::{calculate_sell_price, set_bonding_curve_state, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
-    token_approve_burn, token_burn, token_ui_amount_to_amount, transfer_sol_to_user,
-    update_account_lamports_to_minimum_balance,
+    get_account_balance, token_approve_burn, token_burn, token_ui_amount_to_amount,
+    transfer_sol_to_user, update_account_lamports_to_minimum_balance,
 };
 
 #[derive(Accounts)]
@@ -68,7 +68,7 @@ pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
     msg!("sell price: {}", price);
     let user_supply = ctx.accounts.payer_ata.amount;
 
-    let vault_balance = ctx.accounts.vault.lamports();
+    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
     // Ensure the requested amount does not exceed available supply
     if amount > user_supply {
@@ -76,9 +76,9 @@ pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
     }
 
     // Ensure the requested amount does not exceed available supply
-    // if price > pda_balance {
-    //     return Err(ProgramError::InsufficientFunds.into());
-    // }
+    if price > vault_balance {
+        return Err(ProgramError::InsufficientFunds.into());
+    }
 
     update_account_lamports_to_minimum_balance(
         ctx.accounts.vault.to_account_info(),
@@ -122,10 +122,12 @@ pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
+    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
+
     set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
         &ctx.accounts.mint.supply,
-        &ctx.accounts.vault.lamports(),
+        &vault_balance,
     )?;
 
     Ok(())

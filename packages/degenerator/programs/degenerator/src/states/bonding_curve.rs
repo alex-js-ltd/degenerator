@@ -16,13 +16,10 @@ impl BondingCurveState {
     pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8 + 8; // Adjusted length if necessary
 }
 
-const BASE_PRICE: u64 = 1; // 1 lamport
+const BASE_PRICE: u64 = 1_000; // 1 lamport
 
 pub fn calculate_reserve_ratio(total_supply: u64, vault_balance: u64) -> f64 {
-    if total_supply == 0 {
-        return 1.0; // Prevent division by zero
-    }
-    let reserve_ratio = (vault_balance as f64 / total_supply as f64).max(1.0);
+    let reserve_ratio = vault_balance as f64 / total_supply as f64;
     reserve_ratio
 }
 
@@ -39,7 +36,7 @@ pub fn calculate_buy_price(curve: &Account<BondingCurveState>, amount: u64) -> R
         .round()
         .min(u64::MAX as f64) as u64;
 
-    Ok(total_cost)
+    Ok(total_cost / LAMPORTS_PER_SOL)
 }
 
 pub fn calculate_sell_price(curve: &Account<BondingCurveState>, amount: u64) -> Result<u64> {
@@ -55,7 +52,7 @@ pub fn calculate_sell_price(curve: &Account<BondingCurveState>, amount: u64) -> 
         .round()
         .min(u64::MAX as f64) as u64;
 
-    Ok(total_revenue)
+    Ok(total_revenue / LAMPORTS_PER_SOL)
 }
 
 // Function to set bonding curve state
@@ -69,7 +66,7 @@ pub fn set_bonding_curve_state(
     curve.total_supply = total_supply;
     curve.vault_balance = vault_balance;
     curve.buy_price = calculate_buy_price(curve, 1)?;
-    curve.sell_price = calculate_buy_price(curve, 1)?;
+    curve.sell_price = calculate_sell_price(curve, 1)?;
 
     Ok(())
 }

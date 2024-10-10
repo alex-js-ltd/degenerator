@@ -24,6 +24,11 @@ export type Degenerator = {
           "isSigner": false
         },
         {
+          "name": "vaultAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false,
@@ -479,6 +484,11 @@ export const IDL: Degenerator = {
         },
         {
           "name": "vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "vaultAta",
           "isMut": true,
           "isSigner": false
         },

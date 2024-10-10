@@ -24,6 +24,11 @@
           "isSigner": false
         },
         {
+          "name": "vaultAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "bondingCurveState",
           "isMut": true,
           "isSigner": false,
@@ -454,5 +459,8 @@
       "name": "AccountNotRentExempt",
       "msg": "Account is not rent-exempt."
     }
-  ]
+  ],
+  "metadata": {
+    "address": "6tojDUPZojkEAxTeKLUxqzdho1nm84WKcgpz1tRYdZA2"
+  }
 }

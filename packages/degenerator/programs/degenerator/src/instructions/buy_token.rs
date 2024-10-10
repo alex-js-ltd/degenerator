@@ -5,7 +5,8 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::states::{calculate_buy_price, set_bonding_curve_state, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
-    token_mint_to, token_ui_amount_to_amount, transfer_sol_to_bonding_curve_vault,
+    get_account_balance, token_mint_to, token_ui_amount_to_amount,
+    transfer_sol_to_bonding_curve_vault,
 };
 
 #[derive(Accounts)]
@@ -95,10 +96,12 @@ pub fn buy_token(ctx: Context<BuyToken>, ui_amount: String) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
+    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
+
     set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
         &ctx.accounts.mint.supply,
-        &ctx.accounts.vault.lamports(),
+        &vault_balance,
     )?;
 
     Ok(())
