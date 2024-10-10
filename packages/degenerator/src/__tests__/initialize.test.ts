@@ -157,6 +157,34 @@ describe('initialize', () => {
 		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
 
+	it('buy token', async () => {
+		const amountToBuy = '666000.999000001'
+
+		const one = await getBuyTokenIxs({
+			program,
+			payer: payer.publicKey,
+			mint: MEME.mint,
+			uiAmount: amountToBuy,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [one],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+
+		console.log(res)
+		await sendAndConfirm({ connection, tx })
+
+		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+	})
+
 	it('sell token', async () => {
 		const amountToSell = '500.999000001'
 

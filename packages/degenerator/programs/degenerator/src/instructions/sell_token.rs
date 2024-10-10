@@ -7,7 +7,7 @@ use crate::states::{calculate_sell_price, set_bonding_curve_state, BondingCurveS
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
     get_account_balance, token_approve_burn, token_burn, token_ui_amount_to_amount,
-    transfer_sol_to_user, update_account_lamports_to_minimum_balance,
+    transfer_sol_to_user,
 };
 
 #[derive(Accounts)]
@@ -79,12 +79,6 @@ pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
     if price > vault_balance {
         return Err(ProgramError::InsufficientFunds.into());
     }
-
-    update_account_lamports_to_minimum_balance(
-        ctx.accounts.vault.to_account_info(),
-        ctx.accounts.signer.to_account_info(),
-        ctx.accounts.system_program.to_account_info(),
-    )?;
 
     token_approve_burn(
         ctx.accounts.token_program.to_account_info(),
