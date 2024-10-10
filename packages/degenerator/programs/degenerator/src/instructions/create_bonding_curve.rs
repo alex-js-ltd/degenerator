@@ -44,12 +44,10 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
-    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
-
     set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
         &ctx.accounts.mint.supply,
-        &vault_balance,
+        &get_account_balance(ctx.accounts.vault.to_account_info())?,
     )?;
 
     Ok(())

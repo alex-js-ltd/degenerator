@@ -20,7 +20,7 @@ impl BondingCurveState {
     pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8 + 8; // Adjusted length if necessary
 }
 
-const BASE_PRICE: f64 = 0.00001;
+const BASE_PRICE: f64 = 0.00001; // 5 decimal places
 
 pub fn calculate_reserve_ratio(total_supply: u64, vault_balance: u64) -> f64 {
     let reserve_ratio = vault_balance as f64 / total_supply as f64;
