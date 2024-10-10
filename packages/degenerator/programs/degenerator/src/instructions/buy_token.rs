@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
@@ -66,7 +67,7 @@ pub fn buy_token(ctx: Context<BuyToken>, ui_amount: String) -> Result<()> {
     msg!("buy amount: {}", amount);
 
     let price = calculate_buy_price(&mut ctx.accounts.bonding_curve_state, amount)?;
-    msg!("buy price: {}", price);
+    msg!("buy price in lamports: {}", price);
     // Check if the payer has enough lamports to cover the price
     let payer_balance = ctx.accounts.payer.lamports();
     if payer_balance < price {
@@ -96,12 +97,10 @@ pub fn buy_token(ctx: Context<BuyToken>, ui_amount: String) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
-    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
-
     set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
         &ctx.accounts.mint.supply,
-        &vault_balance,
+        &get_account_balance(ctx.accounts.vault.to_account_info())?,
     )?;
 
     Ok(())

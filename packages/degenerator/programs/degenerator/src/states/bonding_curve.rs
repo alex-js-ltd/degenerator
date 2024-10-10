@@ -1,10 +1,14 @@
+use crate::utils::token::{
+    get_account_balance, token_mint_to, token_ui_amount_to_amount,
+    transfer_sol_to_bonding_curve_vault,
+};
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::native_token::LAMPORTS_PER_SOL;
 
 #[account]
 #[derive(InitSpace)]
 pub struct BondingCurveState {
-    pub base_price: u64,    // Initial price per token in lamports
+    pub base_price: f64,    // Initial price per token in lamports
     pub reserve_ratio: f64, // Ratio to determine liquidity (consider using f64)
     pub total_supply: u64,  // Total number of tokens issued
     pub vault_balance: u64, // Balance of reserves (in lamports)
@@ -16,7 +20,7 @@ impl BondingCurveState {
     pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8 + 8; // Adjusted length if necessary
 }
 
-const BASE_PRICE: u64 = 1_000; // 1 lamport
+const BASE_PRICE: f64 = 0.00001;
 
 pub fn calculate_reserve_ratio(total_supply: u64, vault_balance: u64) -> f64 {
     let reserve_ratio = vault_balance as f64 / total_supply as f64;
@@ -28,7 +32,7 @@ pub fn calculate_buy_price(curve: &Account<BondingCurveState>, amount: u64) -> R
     let new_total_supply = curve.total_supply.saturating_add(amount);
 
     // Calculate price per token using the Bancor formula
-    let price_per_token = (curve.base_price as f64)
+    let price_per_token = (curve.base_price)
         * (new_total_supply as f64 / curve.total_supply as f64).powf(curve.reserve_ratio);
 
     // Calculate total cost in lamports, ensuring it remains within u64 bounds
@@ -36,7 +40,7 @@ pub fn calculate_buy_price(curve: &Account<BondingCurveState>, amount: u64) -> R
         .round()
         .min(u64::MAX as f64) as u64;
 
-    Ok(total_cost / LAMPORTS_PER_SOL)
+    Ok(total_cost)
 }
 
 pub fn calculate_sell_price(curve: &Account<BondingCurveState>, amount: u64) -> Result<u64> {
@@ -44,7 +48,7 @@ pub fn calculate_sell_price(curve: &Account<BondingCurveState>, amount: u64) -> 
     let new_total_supply = curve.total_supply.saturating_sub(amount);
 
     // Calculate price per token using the Bancor formula
-    let price_per_token = (curve.base_price as f64)
+    let price_per_token = (curve.base_price)
         * (new_total_supply as f64 / curve.total_supply as f64).powf(curve.reserve_ratio);
 
     // Calculate total revenue in lamports, ensuring it remains within u64 bounds
@@ -52,11 +56,11 @@ pub fn calculate_sell_price(curve: &Account<BondingCurveState>, amount: u64) -> 
         .round()
         .min(u64::MAX as f64) as u64;
 
-    Ok(total_revenue / LAMPORTS_PER_SOL)
+    Ok(total_revenue)
 }
 
 // Function to set bonding curve state
-pub fn set_bonding_curve_state(
+pub fn set_bonding_curve_state<'a>(
     curve: &mut Account<BondingCurveState>,
     &total_supply: &u64,
     &vault_balance: &u64,

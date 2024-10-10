@@ -5,7 +5,8 @@ use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInter
 use crate::states::{set_bonding_curve_state, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
-    get_account_balance, token_mint_to, update_account_lamports_to_minimum_balance,
+    get_account_balance, token_mint_to, transfer_sol_to_bonding_curve_vault,
+    update_account_lamports_to_minimum_balance,
 };
 
 pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
@@ -16,19 +17,29 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ctx.accounts.system_program.to_account_info(),
     )?;
 
-    let liquidity = spl_token_2022::ui_amount_to_amount(10 as f64, ctx.accounts.mint.decimals);
+    let mint_liquidity = spl_token_2022::ui_amount_to_amount(1 as f64, ctx.accounts.mint.decimals);
+
+    let vault_liquidity =
+        spl_token_2022::ui_amount_to_amount(0.000000001 as f64, ctx.accounts.mint.decimals);
 
     token_mint_to(
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.vault_ata.to_account_info(),
-        liquidity,
+        mint_liquidity,
         &[&[
             BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
             &[ctx.bumps.vault],
         ]],
+    )?;
+
+    transfer_sol_to_bonding_curve_vault(
+        ctx.accounts.payer.to_account_info(),
+        ctx.accounts.vault.to_account_info(),
+        ctx.accounts.system_program.to_account_info(),
+        vault_liquidity,
     )?;
 
     ctx.accounts.mint.reload()?;

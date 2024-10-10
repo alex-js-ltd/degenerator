@@ -422,7 +422,7 @@
         "fields": [
           {
             "name": "basePrice",
-            "type": "u64"
+            "type": "f64"
           },
           {
             "name": "reserveRatio",
@@ -461,6 +461,6 @@
     }
   ],
   "metadata": {
-    "address": "13CB6YDCZseht89LRmRRjBQA1o9pWUrY68RkZUYa6YcE"
+    "address": "4HFHyQGLiGkDjTtcB2Bb4vM2ZY7u6vqN7fLJVUNvXwNw"
   }
 }

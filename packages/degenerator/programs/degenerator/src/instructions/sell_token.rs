@@ -1,7 +1,3 @@
-use anchor_lang::prelude::*;
-use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
-
 use crate::error::ErrorCode;
 use crate::states::{calculate_sell_price, set_bonding_curve_state, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
@@ -9,6 +5,9 @@ use crate::utils::token::{
     get_account_balance, token_approve_burn, token_burn, token_ui_amount_to_amount,
     transfer_sol_to_user,
 };
+use anchor_lang::prelude::*;
+use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 #[derive(Accounts)]
 pub struct SellToken<'info> {
@@ -65,18 +64,14 @@ pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
     msg!("sell amount: {}", amount);
 
     let price = calculate_sell_price(&mut ctx.accounts.bonding_curve_state, amount)?;
-    msg!("sell price: {}", price);
+    msg!("sell price in lamports: {}", price);
     let user_supply = ctx.accounts.payer_ata.amount;
 
-    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
-
-    // Ensure the requested amount does not exceed available supply
     if amount > user_supply {
         return Err(ErrorCode::InsufficientUserSupply.into());
     }
 
-    // Ensure the requested amount does not exceed available supply
-    if price > vault_balance {
+    if price > ctx.accounts.bonding_curve_state.vault_balance {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -116,12 +111,10 @@ pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
-    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
-
     set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
         &ctx.accounts.mint.supply,
-        &vault_balance,
+        &get_account_balance(ctx.accounts.vault.to_account_info())?,
     )?;
 
     Ok(())

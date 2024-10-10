@@ -422,7 +422,7 @@ export type Degenerator = {
         "fields": [
           {
             "name": "basePrice",
-            "type": "u64"
+            "type": "f64"
           },
           {
             "name": "reserveRatio",
@@ -886,7 +886,7 @@ export const IDL: Degenerator = {
         "fields": [
           {
             "name": "basePrice",
-            "type": "u64"
+            "type": "f64"
           },
           {
             "name": "reserveRatio",
