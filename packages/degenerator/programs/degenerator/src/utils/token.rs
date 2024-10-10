@@ -16,7 +16,9 @@ pub fn update_account_lamports_to_minimum_balance<'info>(
     payer: AccountInfo<'info>,
     system_program: AccountInfo<'info>,
 ) -> Result<()> {
-    let extra_lamports = Rent::get()?.minimum_balance(account.data_len()) - account.get_lamports();
+    let extra_lamports = Rent::get()?
+        .minimum_balance(account.data_len())
+        .saturating_sub(account.get_lamports());
     if extra_lamports > 0 {
         invoke(
             &transfer(payer.key, account.key, extra_lamports),
@@ -48,7 +50,7 @@ pub fn transfer_from_user_to_bonding_curve<'a>(
                 mint,
             },
         ),
-        amount * 10u64.pow(mint_decimals as u32),
+        amount,
         mint_decimals,
     )
 }
@@ -77,7 +79,7 @@ pub fn transfer_from_bonding_curve_vault_to_user<'a>(
             },
             signer_seeds,
         ),
-        amount * 10u64.pow(mint_decimals as u32),
+        amount,
         mint_decimals,
     )
 }
@@ -121,7 +123,6 @@ pub fn token_mint_to<'a>(
     mint: AccountInfo<'a>,
     destination: AccountInfo<'a>,
     amount: u64,
-    mint_decimals: u8,
     signer_seeds: &[&[&[u8]]],
 ) -> Result<()> {
     token_2022::mint_to(
@@ -134,7 +135,7 @@ pub fn token_mint_to<'a>(
             },
             signer_seeds,
         ),
-        amount * 10u64.pow(mint_decimals as u32),
+        amount,
     )
 }
 
@@ -144,7 +145,6 @@ pub fn token_burn<'a>(
     mint: AccountInfo<'a>,
     from: AccountInfo<'a>,
     amount: u64,
-    mint_decimals: u8,
     signer_seeds: &[&[&[u8]]],
 ) -> Result<()> {
     token_2022::burn(
@@ -157,21 +157,21 @@ pub fn token_burn<'a>(
             },
             signer_seeds,
         ),
-        amount * 10u64.pow(mint_decimals as u32),
+        amount,
     )
 }
 
 pub fn token_ui_amount_to_amount<'a>(
     token_program: AccountInfo<'a>,
     mint: AccountInfo<'a>,
-    amount: &str,
+    ui_amount: &str,
 ) -> Result<u64> {
     token_2022::ui_amount_to_amount(
         CpiContext::new(
             token_program,
             token_2022::UiAmountToAmount { account: mint },
         ),
-        amount,
+        ui_amount,
     )
 }
 
@@ -181,7 +181,6 @@ pub fn token_approve_burn<'a>(
     delegate: AccountInfo<'a>,
     authority: AccountInfo<'a>,
     amount: u64,
-    mint_decimals: u8,
 ) -> Result<()> {
     token_2022::approve(
         CpiContext::new(
@@ -192,19 +191,6 @@ pub fn token_approve_burn<'a>(
                 authority,
             },
         ),
-        amount * 10u64.pow(mint_decimals as u32),
+        amount,
     )
-}
-
-pub fn check_account_rent_exempt<'info>(account: &AccountInfo<'info>) -> Result<()> {
-    let rent = Rent::get()?;
-    let required_lamports = rent.minimum_balance(account.data_len());
-
-    // Check if the account's lamports are below the required amount for rent exemption
-    require!(
-        account.lamports() >= required_lamports,
-        ErrorCode::AccountNotRentExempt
-    );
-
-    Ok(())
 }

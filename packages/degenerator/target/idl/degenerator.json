@@ -130,8 +130,8 @@
       ],
       "args": [
         {
-          "name": "amount",
-          "type": "u64"
+          "name": "uiAmount",
+          "type": "string"
         }
       ]
     },
@@ -196,8 +196,8 @@
       ],
       "args": [
         {
-          "name": "amount",
-          "type": "u64"
+          "name": "uiAmount",
+          "type": "string"
         }
       ]
     },
@@ -452,6 +452,6 @@
     }
   ],
   "metadata": {
-    "address": "4gnLn2zoBMQx8o8zeHVsQKSa3uH8j7DP7KNryQgq49yA"
+    "address": "3WiQbeN6isL9Lgyn3tf4d42Rgggt5GEawHVf1xcqjUfY"
   }
 }

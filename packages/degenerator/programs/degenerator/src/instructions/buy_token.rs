@@ -4,7 +4,9 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::states::{calculate_buy_price, set_bonding_curve_state, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED};
-use crate::utils::token::{token_mint_to, transfer_sol_to_bonding_curve_vault};
+use crate::utils::token::{
+    token_mint_to, token_ui_amount_to_amount, transfer_sol_to_bonding_curve_vault,
+};
 
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
@@ -54,7 +56,14 @@ pub struct BuyToken<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
+pub fn buy_token(ctx: Context<BuyToken>, ui_amount: String) -> Result<()> {
+    let amount = token_ui_amount_to_amount(
+        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.mint.to_account_info(),
+        &ui_amount,
+    )?;
+    msg!("buy amount: {}", amount);
+
     let supply = ctx.accounts.mint.supply;
 
     let price = calculate_buy_price(supply, amount);
@@ -71,7 +80,6 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         amount,
-        ctx.accounts.mint.decimals,
         &[&[
             BONDING_CURVE_AUTHORITY.as_bytes(),
             ctx.accounts.mint.key().as_ref(),

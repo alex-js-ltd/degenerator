@@ -6,8 +6,8 @@ use crate::error::ErrorCode;
 use crate::states::{calculate_sell_price, set_bonding_curve_state, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_AUTHORITY, BONDING_CURVE_STATE_SEED};
 use crate::utils::token::{
-    check_account_rent_exempt, token_approve_burn, token_burn, transfer_from_user_to_bonding_curve,
-    transfer_sol_to_user, update_account_lamports_to_minimum_balance,
+    token_approve_burn, token_burn, token_ui_amount_to_amount, transfer_sol_to_user,
+    update_account_lamports_to_minimum_balance,
 };
 
 #[derive(Accounts)]
@@ -56,7 +56,14 @@ pub struct SellToken<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
+pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
+    let amount = token_ui_amount_to_amount(
+        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.mint.to_account_info(),
+        &ui_amount,
+    )?;
+    msg!("sell amount: {}", amount);
+
     let supply = ctx.accounts.mint.supply;
 
     let price = calculate_sell_price(supply, amount);
@@ -71,11 +78,15 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     }
 
     // Ensure the requested amount does not exceed available supply
-    if price > pda_balance {
-        return Err(ProgramError::InsufficientFunds.into());
-    }
+    // if price > pda_balance {
+    //     return Err(ProgramError::InsufficientFunds.into());
+    // }
 
-    msg!("balance before burn: {}", ctx.accounts.authority.lamports());
+    update_account_lamports_to_minimum_balance(
+        ctx.accounts.authority.to_account_info(),
+        ctx.accounts.signer.to_account_info(),
+        ctx.accounts.system_program.to_account_info(),
+    )?;
 
     token_approve_burn(
         ctx.accounts.token_program.to_account_info(),
@@ -83,7 +94,6 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.authority.to_account_info(),
         ctx.accounts.signer.to_account_info(),
         amount,
-        ctx.accounts.mint.decimals,
     )?;
 
     // burn tokens
@@ -93,7 +103,6 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
         amount,
-        ctx.accounts.mint.decimals,
         &[&[
             BONDING_CURVE_AUTHORITY.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
@@ -111,12 +120,6 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
             ctx.accounts.mint.key().as_ref(),
             &[ctx.bumps.authority][..],
         ][..]],
-    )?;
-
-    update_account_lamports_to_minimum_balance(
-        ctx.accounts.authority.to_account_info(),
-        ctx.accounts.signer.to_account_info(),
-        ctx.accounts.system_program.to_account_info(),
     )?;
 
     ctx.accounts.mint.reload()?;

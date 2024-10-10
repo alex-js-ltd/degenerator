@@ -130,8 +130,8 @@ export type Degenerator = {
       ],
       "args": [
         {
-          "name": "amount",
-          "type": "u64"
+          "name": "uiAmount",
+          "type": "string"
         }
       ]
     },
@@ -196,8 +196,8 @@ export type Degenerator = {
       ],
       "args": [
         {
-          "name": "amount",
-          "type": "u64"
+          "name": "uiAmount",
+          "type": "string"
         }
       ]
     },
@@ -585,8 +585,8 @@ export const IDL: Degenerator = {
       ],
       "args": [
         {
-          "name": "amount",
-          "type": "u64"
+          "name": "uiAmount",
+          "type": "string"
         }
       ]
     },
@@ -651,8 +651,8 @@ export const IDL: Degenerator = {
       ],
       "args": [
         {
-          "name": "amount",
-          "type": "u64"
+          "name": "uiAmount",
+          "type": "string"
         }
       ]
     },

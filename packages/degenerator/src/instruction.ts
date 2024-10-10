@@ -197,14 +197,14 @@ interface SwapTokenIxsParams {
 	program: Program<Degenerator>
 	payer: PublicKey
 	mint: PublicKey
-	amount: number
+	uiAmount: string
 }
 
 export async function getBuyTokenIxs({
 	program,
 	payer,
 	mint,
-	amount,
+	uiAmount,
 }: SwapTokenIxsParams) {
 	const payerAta = await getAssociatedTokenAddress(
 		mint,
@@ -217,9 +217,9 @@ export async function getBuyTokenIxs({
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
-	const amountBN = new BN(amount)
+	// const amountBN = new BN(amount)
 	const buy = await program.methods
-		.buyToken(amountBN)
+		.buyToken(uiAmount)
 		.accountsStrict({
 			payer,
 			mint,
@@ -239,7 +239,7 @@ export async function getSellTokenIxs({
 	program,
 	payer,
 	mint,
-	amount,
+	uiAmount,
 }: SwapTokenIxsParams) {
 	const payerAta = await getAssociatedTokenAddress(
 		mint,
@@ -252,9 +252,9 @@ export async function getSellTokenIxs({
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
-	const amountBN = new BN(amount)
+	// const amountBN = new BN(amount)
 	const sell = await program.methods
-		.sellToken(amountBN)
+		.sellToken(uiAmount)
 		.accountsStrict({
 			signer: payer,
 			mint,
