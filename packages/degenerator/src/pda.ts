@@ -7,7 +7,7 @@ import {
 	NATIVE_MINT,
 } from '@solana/spl-token'
 
-export function getBondingCurveAuth({
+export function getBondingCurveVault({
 	program,
 	mint,
 }: {
@@ -15,7 +15,7 @@ export function getBondingCurveAuth({
 	mint: PublicKey
 }): PublicKey {
 	return PublicKey.findProgramAddressSync(
-		[Buffer.from('bonding_curve_authority'), mint.toBuffer()],
+		[Buffer.from('bonding_curve_vault'), mint.toBuffer()],
 		program.programId,
 	)[0]
 }

@@ -13,7 +13,7 @@ import {
 	getInitializeDegeneratorIxs,
 	buildTransaction,
 	sendAndConfirm,
-	getBondingCurveAuth,
+	getBondingCurveVault,
 	getBondingCurveState,
 	getBuyTokenIxs,
 	getSellTokenIxs,
@@ -38,7 +38,7 @@ describe('initialize', () => {
 
 	const payer = Keypair.generate()
 
-	const mintAuthority = getBondingCurveAuth({
+	const vault = getBondingCurveVault({
 		program,
 		mint: MEME.mint,
 	})
@@ -84,16 +84,16 @@ describe('initialize', () => {
 	it('check bonding curve mint authority is rent exempt', async () => {
 		const rentExempt = await isRentExempt({
 			connection: connection,
-			address: mintAuthority,
+			address: vault,
 		})
 		expect(rentExempt).toBe(true)
 	})
 
-	it('check mint authority', async () => {
-		await checkMintAuthority({
+	it('check vault is mint authority', async () => {
+		await checkMintAuth({
 			connection,
 			mint: MEME.mint,
-			mintAuthority,
+			vault,
 		})
 	})
 
@@ -158,7 +158,7 @@ describe('initialize', () => {
 	it('check bonding curve mint authority is rent exempt', async () => {
 		const rentExempt = await isRentExempt({
 			connection: connection,
-			address: mintAuthority,
+			address: vault,
 		})
 		expect(rentExempt).toBe(true)
 	})
@@ -186,14 +186,14 @@ describe('initialize', () => {
 	})
 })
 
-async function checkMintAuthority({
+async function checkMintAuth({
 	connection,
 	mint,
-	mintAuthority,
+	vault,
 }: {
 	connection: Connection
 	mint: PublicKey
-	mintAuthority: PublicKey
+	vault: PublicKey
 }) {
 	const account = await getMint(
 		connection,
@@ -202,7 +202,7 @@ async function checkMintAuthority({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	expect(account.mintAuthority?.toBase58()).toBe(mintAuthority?.toBase58())
+	expect(account.mintAuthority?.toBase58()).toBe(vault?.toBase58())
 }
 
 // Function using object as the parameter
@@ -227,18 +227,17 @@ async function checkSupplyMatchesMint({
 	)
 
 	// Logging for debugging purposes
+	console.log('base price:', state.basePrice.toString())
 	console.log('buy price:', state.buyPrice.toString())
 	console.log('sell price:', state.sellPrice.toString())
-	console.log('current supply:', state.supply.toString())
-	console.log('progress:', state.progress.toString())
-	console.log('lamports:', state.lamports.toString())
+	console.log('total supply:', state.totalSupply.toString())
+	console.log('vault balance:', state.vaultBalance.toString())
 	console.log('account supply:', account.supply.toString())
-	console.log('state supply:', state.supply.toString())
+	console.log('reserve ration:', state.reserveRatio.toString())
 
 	// Convert the supplies to BN and compare
-	const stateSupply = new BN(state.supply.toString())
+	const stateSupply = new BN(state.totalSupply.toString())
 	const accountSupply = new BN(account.supply.toString())
 
-	// Assert that the supplies match
 	expect(stateSupply).toEqual(accountSupply)
 }

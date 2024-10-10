@@ -30,7 +30,7 @@ import {
 	TokenMetadata,
 } from '@solana/spl-token-metadata'
 import {
-	getBondingCurveAuth,
+	getBondingCurveVault,
 	getBondingCurveState,
 	getAuthAddress,
 	getPoolAddress,
@@ -152,7 +152,7 @@ export async function getInitializeDegeneratorIxs({
 }: GetInitializeDegeneratorIxsParams) {
 	const { mint } = metadata
 
-	const authority = getBondingCurveAuth({ program, mint })
+	const vault = getBondingCurveVault({ program, mint })
 
 	const bondingCurveState = getBondingCurveState({
 		program,
@@ -171,8 +171,7 @@ export async function getInitializeDegeneratorIxs({
 		.accountsStrict({
 			payer,
 			mint,
-			authority,
-
+			vault,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -185,7 +184,7 @@ export async function getInitializeDegeneratorIxs({
 		mint,
 		payer,
 		AuthorityType.MintTokens,
-		authority,
+		vault,
 		[],
 		TOKEN_2022_PROGRAM_ID,
 	)
@@ -213,7 +212,7 @@ export async function getBuyTokenIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const authority = getBondingCurveAuth({ program, mint })
+	const vault = getBondingCurveVault({ program, mint })
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
@@ -223,7 +222,7 @@ export async function getBuyTokenIxs({
 		.accountsStrict({
 			payer,
 			mint,
-			authority,
+			vault,
 			payerAta,
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
@@ -248,7 +247,7 @@ export async function getSellTokenIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
-	const authority = getBondingCurveAuth({ program, mint })
+	const vault = getBondingCurveVault({ program, mint })
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
@@ -258,9 +257,8 @@ export async function getSellTokenIxs({
 		.accountsStrict({
 			signer: payer,
 			mint,
-			authority,
+			vault,
 			payerAta,
-
 			bondingCurveState,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
