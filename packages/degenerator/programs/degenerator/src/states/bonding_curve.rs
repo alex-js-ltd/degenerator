@@ -37,17 +37,47 @@ pub fn calculate_price(collateral: u64, supply: u64, cw: f64) -> u64 {
     (collateral as f64 / (supply as f64 * cw)) as u64
 }
 
+pub fn calculate_buy_price(curve: &mut Account<BondingCurveState>, amount: u64) -> u64 {
+    if curve.collateral == 0 || curve.cw == 0.0 {
+        return 0; // Prevent division by zero
+    }
+
+    // Calculate the buy amount using the formula
+    let fraction = amount as f64 / curve.collateral as f64;
+    let power_term = (1.0 + fraction).powf(curve.cw);
+    let total_price = curve.supply as f64 * (power_term - 1.0);
+
+    total_price as u64
+}
+
+pub fn calculate_sell_price(curve: &mut Account<BondingCurveState>, amount: u64) -> u64 {
+    if curve.supply == 0 || curve.cw == 0.0 {
+        return 0; // Prevent division by zero
+    }
+
+    // Calculate the fraction of tokens sold relative to the total supply
+    let fraction = amount as f64 / curve.supply as f64;
+
+    // Apply the bonding curve formula with the inverse of the connector weight (1/CW)
+    let power_term = (1.0 + fraction).powf(1.0 / curve.cw);
+
+    // Calculate the sell amount in terms of the decrease in collateral
+    let total_price = curve.collateral as f64 * (power_term - 1.0);
+
+    // Return the calculated sell amount as u64
+    total_price as u64
+}
+
 // Function to set bonding curve state
 pub fn set_bonding_curve_state<'a>(
     curve: &mut Account<BondingCurveState>,
     &collateral: &u64,
-    &price: &u64,
-    &market_cap: &u64,
     &supply: &u64,
+    &market_cap: &u64,
 ) -> Result<()> {
+    curve.collateral = collateral;
+    curve.supply = supply;
     curve.cw = calculate_cw(collateral, market_cap);
-    curve.market_cap = calculate_market_cap(price, supply);
-    curve.price = calculate_price(collateral, supply, curve.cw);
 
     Ok(())
 }
