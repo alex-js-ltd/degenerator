@@ -59,17 +59,17 @@ pub struct BuyToken<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn buy_token(ctx: Context<BuyToken>, sol: u64) -> Result<()> {
-    msg!("sol amount: {}", sol);
+pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
+    msg!("sol amount: {}", sol_amount);
 
     let curve = &mut ctx.accounts.bonding_curve_state;
 
-    let amount = purchase_target_amount(curve.total_supply, curve.reserve_balance, sol)?;
+    let amount = purchase_target_amount(curve.total_supply, curve.reserve_balance, sol_amount)?;
 
     msg!("purchase_target_amount: {}", amount);
     // Check if the payer has enough lamports to cover the price
     let payer_balance = ctx.accounts.payer.lamports();
-    if payer_balance < sol {
+    if payer_balance < sol_amount {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -91,7 +91,7 @@ pub fn buy_token(ctx: Context<BuyToken>, sol: u64) -> Result<()> {
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        sol,
+        sol_amount,
     )?;
 
     ctx.accounts.mint.reload()?;

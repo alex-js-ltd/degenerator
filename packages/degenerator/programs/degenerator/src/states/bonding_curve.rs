@@ -18,13 +18,14 @@ impl BondingCurveState {
 }
 
 pub const RESERVE_WEIGHT: f64 = 0.5;
+pub const MAX_WEIGHT: u64 = 1000000;
 
 pub fn purchase_target_amount(supply: u64, reserve_balance: u64, amount: u64) -> Result<u64> {
     // Calculate the ratio of the amount to the reserve balance
     let ratio = amount as f64 / reserve_balance as f64;
 
     // Calculate the exponent using the reserve weight in ppm
-    let exponent = RESERVE_WEIGHT as f64 / 1_000_000.0;
+    let exponent = RESERVE_WEIGHT as f64 / 1.0;
 
     // Calculate the target amount using the formula
     let target = (supply as f64) * ((1.0 + ratio).powf(exponent) - 1.0);
@@ -38,8 +39,8 @@ pub fn sale_target_amount(supply: u64, reserve_balance: u64, amount: u64) -> Res
     let fraction = amount as f64 / supply as f64;
 
     // Calculate the target amount using the formula
-    let target = reserve_balance as f64
-        * (1.0 - (1.0 - fraction).powf(1_000_000.0 / (RESERVE_WEIGHT as f64)));
+    let target =
+        reserve_balance as f64 * (1.0 - (1.0 - fraction).powf(1.0 / (RESERVE_WEIGHT as f64)));
 
     // Convert the target back to u64 and return it
     Ok(target.round() as u64)
