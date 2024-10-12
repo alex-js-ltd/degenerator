@@ -1,5 +1,5 @@
 use crate::error::ErrorCode;
-use crate::states::{calculate_sell_price, set_bonding_curve_state, BondingCurveState};
+use crate::states::{set_bonding_curve_state, BondingCurveState, RESERVE_WEIGHT};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
     get_account_balance, token_approve_burn, token_burn, token_ui_amount_to_amount,
@@ -66,7 +66,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         return Err(ErrorCode::InsufficientUserSupply.into());
     }
 
-    if price > ctx.accounts.bonding_curve_state.vault_balance {
+    if price > ctx.accounts.bonding_curve_state.reserve_balance {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -106,11 +106,15 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
-    set_bonding_curve_state(
-        &mut ctx.accounts.bonding_curve_state,
-        &ctx.accounts.mint.supply,
-        &get_account_balance(ctx.accounts.vault.to_account_info())?,
-    )?;
+    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
+
+    let update_state = BondingCurveState {
+        total_supply: ctx.accounts.mint.supply,
+        reserve_balance: vault_balance,
+        reserve_weight: RESERVE_WEIGHT,
+    };
+
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, update_state)?;
 
     Ok(())
 }

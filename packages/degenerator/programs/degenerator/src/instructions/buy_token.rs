@@ -3,9 +3,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
-use crate::states::{
-    calculate_buy_price, set_bonding_curve_state, BondingCurveState, CONNECTOR_WEIGHT,
-};
+use crate::states::{set_bonding_curve_state, BondingCurveState, RESERVE_WEIGHT};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
     get_account_balance, token_mint_to, transfer_sol_to_bonding_curve_vault,
@@ -93,11 +91,15 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
-    set_bonding_curve_state(
-        &mut ctx.accounts.bonding_curve_state,
-        &ctx.accounts.mint.supply,
-        &get_account_balance(ctx.accounts.vault.to_account_info())?,
-    )?;
+    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
+
+    let update_state = BondingCurveState {
+        total_supply: ctx.accounts.mint.supply,
+        reserve_balance: vault_balance,
+        reserve_weight: RESERVE_WEIGHT,
+    };
+
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, update_state)?;
 
     Ok(())
 }
