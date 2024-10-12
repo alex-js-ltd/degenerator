@@ -1,9 +1,10 @@
 use crate::error::ErrorCode;
-use crate::states::{set_bonding_curve_state, BondingCurveState, RESERVE_WEIGHT};
+use crate::states::{
+    sale_target_amount, set_bonding_curve_state, BondingCurveState, RESERVE_WEIGHT,
+};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
-    get_account_balance, token_approve_burn, token_burn, token_ui_amount_to_amount,
-    transfer_sol_to_user,
+    get_account_balance, token_approve_burn, token_burn, transfer_sol_to_user,
 };
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
@@ -58,15 +59,18 @@ pub struct SellToken<'info> {
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     msg!("sell amount: {}", amount);
 
-    let price = calculate_sell_price(&mut ctx.accounts.bonding_curve_state, amount)?;
-    msg!("sell price in lamports: {}", price);
+    let curve = &mut ctx.accounts.bonding_curve_state;
+
+    let sol_amount = sale_target_amount(curve.total_supply, curve.reserve_balance, amount)?;
+
+    msg!("sol_amount: {}", sol_amount);
     let user_supply = ctx.accounts.payer_ata.amount;
 
     if amount > user_supply {
         return Err(ErrorCode::InsufficientUserSupply.into());
     }
 
-    if price > ctx.accounts.bonding_curve_state.reserve_balance {
+    if sol_amount > ctx.accounts.bonding_curve_state.reserve_balance {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -96,7 +100,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        price,
+        sol_amount,
         &[&[
             BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),

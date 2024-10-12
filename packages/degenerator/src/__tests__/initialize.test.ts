@@ -63,7 +63,7 @@ describe('initialize', () => {
 			mint: MEME.mint,
 			metadata: MEME.metadata,
 			decimals: MEME.decimals,
-			uiAmount: '1000000000',
+			uiAmount: '1',
 		})
 
 		const tx = await buildTransaction({
@@ -102,61 +102,61 @@ describe('initialize', () => {
 		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
 
-	// it('buy token', async () => {
-	// 	const amountToBuy = '1.0'
+	it('buy token', async () => {
+		const amountToBuy = '1.0'
 
-	// 	const one = await getBuyTokenIxs({
-	// 		program,
-	// 		payer: payer.publicKey,
-	// 		mint: MEME.mint,
-	// 		uiAmount: amountToBuy,
-	// 		decimals: MEME.decimals,
-	// 	})
+		const one = await getBuyTokenIxs({
+			program,
+			payer: payer.publicKey,
+			mint: MEME.mint,
+			uiAmount: amountToBuy,
+			decimals: MEME.decimals,
+		})
 
-	// 	const tx = await buildTransaction({
-	// 		connection: connection,
-	// 		payer: payer.publicKey,
-	// 		instructions: [one],
-	// 		signers: [],
-	// 	})
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [one],
+			signers: [],
+		})
 
-	// 	tx.sign([payer])
+		tx.sign([payer])
 
-	// 	// Simulate the transaction
-	// 	const res = await connection.simulateTransaction(tx)
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
 
-	// 	console.log(res)
-	// 	await sendAndConfirm({ connection, tx })
+		console.log(res)
+		await sendAndConfirm({ connection, tx })
 
-	// 	await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
-	// })
+		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+	})
 
-	// it('sell token', async () => {
-	// 	const amountToSell = '1.0'
+	it('sell token', async () => {
+		const amountToSell = '1.0'
 
-	// 	const ix = await getSellTokenIxs({
-	// 		program,
-	// 		payer: payer.publicKey,
-	// 		mint: MEME.mint,
-	// 		uiAmount: amountToSell,
-	// 		decimals: MEME.decimals,
-	// 	})
+		const ix = await getSellTokenIxs({
+			program,
+			payer: payer.publicKey,
+			mint: MEME.mint,
+			uiAmount: amountToSell,
+			decimals: MEME.decimals,
+		})
 
-	// 	const tx = await buildTransaction({
-	// 		connection: connection,
-	// 		payer: payer.publicKey,
-	// 		instructions: [ix],
-	// 		signers: [],
-	// 	})
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [ix],
+			signers: [],
+		})
 
-	// 	tx.sign([payer])
+		tx.sign([payer])
 
-	// 	// Simulate the transaction
-	// 	const res = await connection.simulateTransaction(tx)
-	// 	console.log(res)
-	// 	await sendAndConfirm({ connection, tx })
-	// 	await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
-	// })
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+		console.log(res)
+		await sendAndConfirm({ connection, tx })
+		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+	})
 })
 
 async function checkMintAuth({
@@ -200,13 +200,10 @@ async function checkSupplyMatchesMint({
 	)
 
 	// Logging for debugging purposes
-	console.log('base price:', state.basePrice.toString())
-	console.log('buy price:', state.buyPrice.toString())
-	console.log('sell price:', state.sellPrice.toString())
+
 	console.log('total supply:', state.totalSupply.toString())
-	console.log('vault balance:', state.vaultBalance.toString())
-	console.log('account supply:', account.supply.toString())
-	console.log('reserve ration:', state.reserveRatio.toString())
+	console.log('vault balance:', state.reserveBalance.toString())
+	console.log('reserve weight:', state.reserveWeight.toString())
 
 	// Convert the supplies to BN and compare
 	const stateSupply = new BN(state.totalSupply.toString())

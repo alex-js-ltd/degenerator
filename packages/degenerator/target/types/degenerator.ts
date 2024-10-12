@@ -426,28 +426,16 @@ export type Degenerator = {
         "kind": "struct",
         "fields": [
           {
-            "name": "basePrice",
-            "type": "f64"
-          },
-          {
-            "name": "reserveRatio",
-            "type": "f64"
-          },
-          {
             "name": "totalSupply",
             "type": "u64"
           },
           {
-            "name": "vaultBalance",
+            "name": "reserveBalance",
             "type": "u64"
           },
           {
-            "name": "buyPrice",
-            "type": "u64"
-          },
-          {
-            "name": "sellPrice",
-            "type": "u64"
+            "name": "reserveWeight",
+            "type": "f64"
           }
         ]
       }
@@ -895,28 +883,16 @@ export const IDL: Degenerator = {
         "kind": "struct",
         "fields": [
           {
-            "name": "basePrice",
-            "type": "f64"
-          },
-          {
-            "name": "reserveRatio",
-            "type": "f64"
-          },
-          {
             "name": "totalSupply",
             "type": "u64"
           },
           {
-            "name": "vaultBalance",
+            "name": "reserveBalance",
             "type": "u64"
           },
           {
-            "name": "buyPrice",
-            "type": "u64"
-          },
-          {
-            "name": "sellPrice",
-            "type": "u64"
+            "name": "reserveWeight",
+            "type": "f64"
           }
         ]
       }

@@ -3,7 +3,9 @@ use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
-use crate::states::{set_bonding_curve_state, BondingCurveState, RESERVE_WEIGHT};
+use crate::states::{
+    purchase_target_amount, set_bonding_curve_state, BondingCurveState, RESERVE_WEIGHT,
+};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
     get_account_balance, token_mint_to, transfer_sol_to_bonding_curve_vault,
@@ -57,14 +59,17 @@ pub struct BuyToken<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
-    msg!("buy amount: {}", amount);
+pub fn buy_token(ctx: Context<BuyToken>, sol: u64) -> Result<()> {
+    msg!("sol amount: {}", sol);
 
-    let price = calculate_buy_price(&mut ctx.accounts.bonding_curve_state, amount)?;
-    msg!("buy price in lamports: {}", price);
+    let curve = &mut ctx.accounts.bonding_curve_state;
+
+    let amount = purchase_target_amount(curve.total_supply, curve.reserve_balance, sol)?;
+
+    msg!("purchase_target_amount: {}", amount);
     // Check if the payer has enough lamports to cover the price
     let payer_balance = ctx.accounts.payer.lamports();
-    if payer_balance < price {
+    if payer_balance < sol {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -86,7 +91,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        price,
+        sol,
     )?;
 
     ctx.accounts.mint.reload()?;
