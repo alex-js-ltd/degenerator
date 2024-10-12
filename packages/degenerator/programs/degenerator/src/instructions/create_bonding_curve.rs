@@ -17,10 +17,12 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ctx.accounts.system_program.to_account_info(),
     )?;
 
-    let mint_liquidity = spl_token_2022::ui_amount_to_amount(1 as f64, ctx.accounts.mint.decimals);
+    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
-    let vault_liquidity =
-        spl_token_2022::ui_amount_to_amount(0.000000001 as f64, ctx.accounts.mint.decimals);
+    assert_eq!(vault_balance, 0);
+
+    let mint_liquidity =
+        spl_token_2022::ui_amount_to_amount(1_000_000_000 as f64, ctx.accounts.mint.decimals);
 
     token_mint_to(
         ctx.accounts.vault.to_account_info(),
@@ -35,19 +37,12 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ]],
     )?;
 
-    transfer_sol_to_bonding_curve_vault(
-        ctx.accounts.payer.to_account_info(),
-        ctx.accounts.vault.to_account_info(),
-        ctx.accounts.system_program.to_account_info(),
-        vault_liquidity,
-    )?;
-
     ctx.accounts.mint.reload()?;
 
     set_bonding_curve_state(
         &mut ctx.accounts.bonding_curve_state,
         &ctx.accounts.mint.supply,
-        &get_account_balance(ctx.accounts.vault.to_account_info())?,
+        &vault_balance,
     )?;
 
     Ok(())

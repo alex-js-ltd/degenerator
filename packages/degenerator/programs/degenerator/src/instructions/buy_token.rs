@@ -6,8 +6,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 use crate::states::{calculate_buy_price, set_bonding_curve_state, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
-    get_account_balance, token_mint_to, token_ui_amount_to_amount,
-    transfer_sol_to_bonding_curve_vault,
+    get_account_balance, token_mint_to, transfer_sol_to_bonding_curve_vault,
 };
 
 #[derive(Accounts)]
