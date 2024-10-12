@@ -132,7 +132,7 @@ describe('initialize', () => {
 	})
 
 	it('sell token', async () => {
-		const amountToSell = '10362'
+		const amountToSell = '31621.0'
 
 		const ix = await getSellTokenIxs({
 			program,

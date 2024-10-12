@@ -57,14 +57,16 @@ pub struct SellToken<'info> {
 }
 
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
-    msg!("sell amount: {}", amount);
-
     let curve = &mut ctx.accounts.bonding_curve_state;
 
     let sol_amount = sale_target_amount(curve.total_supply, curve.reserve_balance, amount)?;
 
     msg!("sol_amount: {}", sol_amount);
+
+    msg!("token amount to sell: {}", amount);
     let user_supply = ctx.accounts.payer_ata.amount;
+
+    msg!("tokens in users wallet: {}", user_supply);
 
     if amount > user_supply {
         return Err(ErrorCode::InsufficientUserSupply.into());
