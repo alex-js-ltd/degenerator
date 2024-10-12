@@ -141,6 +141,7 @@ interface GetInitializeDegeneratorIxsParams {
 	payer: PublicKey
 	mint: PublicKey
 	metadata: TokenMetadata
+	uiAmount: string
 	decimals: number
 }
 
@@ -149,6 +150,7 @@ export async function getInitializeDegeneratorIxs({
 	connection,
 	payer,
 	metadata,
+	uiAmount,
 	decimals,
 }: GetInitializeDegeneratorIxsParams) {
 	const { mint } = metadata
@@ -174,8 +176,10 @@ export async function getInitializeDegeneratorIxs({
 		TOKEN_2022_PROGRAM_ID,
 	)
 
+	const amount = uiAmountToAmount(uiAmount, decimals)
+
 	const createBondingCurveIx = await program.methods
-		.createBondingCurve()
+		.createBondingCurve(amount)
 		.accountsStrict({
 			payer,
 			mint,

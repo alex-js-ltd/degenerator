@@ -6,15 +6,15 @@ pub mod utils;
 use anchor_lang::prelude::*;
 use instructions::*;
 
-declare_id!("EbpaUJuoAqqwptcZLysBjQVvVziB3mqAtsfxR5bs2bhY");
+declare_id!("8HJMr4V1qCRTSSmC4ao7xYsGS52iPXQvhX5b8GVNaHhY");
 
 #[program]
 pub mod degenerator {
 
     use super::*;
 
-    pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
-        instructions::create_bonding_curve(ctx)
+    pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
+        instructions::create_bonding_curve(ctx, amount)
     }
 
     pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {

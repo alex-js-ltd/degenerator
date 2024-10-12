@@ -69,7 +69,12 @@ export type Degenerator = {
           ]
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "buyToken",
@@ -533,7 +538,12 @@ export const IDL: Degenerator = {
           ]
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "buyToken",

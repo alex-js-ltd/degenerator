@@ -5,11 +5,10 @@ use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInter
 use crate::states::{set_bonding_curve_state, BondingCurveState};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
-    get_account_balance, token_mint_to, transfer_sol_to_bonding_curve_vault,
-    update_account_lamports_to_minimum_balance,
+    get_account_balance, token_mint_to, update_account_lamports_to_minimum_balance,
 };
 
-pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
+pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
     // transfer minimum rent to pda
     update_account_lamports_to_minimum_balance(
         ctx.accounts.vault.to_account_info(),
@@ -21,15 +20,12 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
 
     assert_eq!(vault_balance, 0);
 
-    let mint_liquidity =
-        spl_token_2022::ui_amount_to_amount(1_000_000_000 as f64, ctx.accounts.mint.decimals);
-
     token_mint_to(
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.vault_ata.to_account_info(),
-        mint_liquidity,
+        amount,
         &[&[
             BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),

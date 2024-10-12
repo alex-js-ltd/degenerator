@@ -69,7 +69,12 @@
           ]
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "buyToken",
@@ -461,6 +466,6 @@
     }
   ],
   "metadata": {
-    "address": "EbpaUJuoAqqwptcZLysBjQVvVziB3mqAtsfxR5bs2bhY"
+    "address": "8HJMr4V1qCRTSSmC4ao7xYsGS52iPXQvhX5b8GVNaHhY"
   }
 }
