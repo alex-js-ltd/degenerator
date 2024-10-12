@@ -8,19 +8,23 @@ use anchor_lang::solana_program::native_token::LAMPORTS_PER_SOL;
 #[account]
 #[derive(InitSpace)]
 pub struct BondingCurveState {
-    pub base_price: f64,    // Initial price per token in lamports
-    pub reserve_ratio: f64, // Ratio to determine liquidity (consider using f64)
-    pub total_supply: u64,  // Total number of tokens issued
-    pub vault_balance: u64, // Balance of reserves (in lamports)
-    pub buy_price: u64,
-    pub sell_price: u64,
+    pub total_supply: u64,     // Total fixed supply of tokens
+    pub reserve_balance: u64,  // Amount of reserve tokens (e.g., SOL)
+    pub connector_weight: f64, // Fixed connector weight (e.g., 0.5 for 50%)
+    pub price: u64,            // Current price of the token
 }
 
 impl BondingCurveState {
     pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8 + 8; // Adjusted length if necessary
 }
 
-const BASE_PRICE: f64 = 0.00001; // 5 decimal places
+pub const CONNECTOR_WEIGHT: f64 = 0.5;
+
+pub fn calculate_price(reserve_balance: u64, total_supply: u64) -> Result<u64> {
+    let price = CONNECTOR_WEIGHT * (reserve_balance as f64 / total_supply as f64);
+
+    Ok(price as u64)
+}
 
 pub fn calculate_reserve_ratio(total_supply: u64, vault_balance: u64) -> f64 {
     let reserve_ratio = vault_balance as f64 / total_supply as f64;
@@ -62,15 +66,12 @@ pub fn calculate_sell_price(curve: &Account<BondingCurveState>, amount: u64) -> 
 // Function to set bonding curve state
 pub fn set_bonding_curve_state<'a>(
     curve: &mut Account<BondingCurveState>,
-    &total_supply: &u64,
-    &vault_balance: &u64,
+    payload: BondingCurveState,
 ) -> Result<()> {
-    curve.base_price = BASE_PRICE;
-    curve.reserve_ratio = calculate_reserve_ratio(total_supply, vault_balance);
-    curve.total_supply = total_supply;
-    curve.vault_balance = vault_balance;
-    curve.buy_price = calculate_buy_price(curve, 1)?;
-    curve.sell_price = calculate_sell_price(curve, 1)?;
+    curve.total_supply = payload.total_supply;
+    curve.reserve_balance = payload.reserve_balance;
+    curve.connector_weight = payload.connector_weight;
+    curve.price = payload.price;
 
     Ok(())
 }

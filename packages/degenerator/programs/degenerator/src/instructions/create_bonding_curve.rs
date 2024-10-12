@@ -2,10 +2,11 @@ use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInterface};
 
-use crate::states::{set_bonding_curve_state, BondingCurveState};
+use crate::states::{set_bonding_curve_state, BondingCurveState, CONNECTOR_WEIGHT};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
-    get_account_balance, token_mint_to, update_account_lamports_to_minimum_balance,
+    get_account_balance, token_mint_to, transfer_sol_to_bonding_curve_vault,
+    update_account_lamports_to_minimum_balance,
 };
 
 pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
@@ -19,6 +20,17 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
     assert_eq!(vault_balance, 0);
+
+    transfer_sol_to_bonding_curve_vault(
+        ctx.accounts.payer.to_account_info(),
+        ctx.accounts.vault.to_account_info(),
+        ctx.accounts.system_program.to_account_info(),
+        1,
+    )?;
+
+    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
+
+    assert_eq!(vault_balance, 1);
 
     token_mint_to(
         ctx.accounts.vault.to_account_info(),
@@ -35,11 +47,14 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
 
     ctx.accounts.mint.reload()?;
 
-    set_bonding_curve_state(
-        &mut ctx.accounts.bonding_curve_state,
-        &ctx.accounts.mint.supply,
-        &vault_balance,
-    )?;
+    let initial_state = BondingCurveState {
+        total_supply: ctx.accounts.vault_ata.amount,
+        reserve_balance: vault_balance,
+        connector_weight: CONNECTOR_WEIGHT,
+        price: 0,
+    };
+
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, initial_state)?;
 
     Ok(())
 }

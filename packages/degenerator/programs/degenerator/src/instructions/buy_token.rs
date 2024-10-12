@@ -3,7 +3,9 @@ use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
-use crate::states::{calculate_buy_price, set_bonding_curve_state, BondingCurveState};
+use crate::states::{
+    calculate_buy_price, set_bonding_curve_state, BondingCurveState, CONNECTOR_WEIGHT,
+};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
     get_account_balance, token_mint_to, transfer_sol_to_bonding_curve_vault,
