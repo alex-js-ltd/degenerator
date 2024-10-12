@@ -21,11 +21,13 @@ import {
 	isRentExempt,
 	SOL,
 	MEME,
+	amountToUiAmount,
 } from '../index'
 import {
 	TOKEN_2022_PROGRAM_ID,
 	getMint,
 	getAssociatedTokenAddress,
+	getAccount,
 } from '@solana/spl-token'
 
 describe('initialize', () => {
@@ -103,7 +105,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = '1.0'
+		const amountToBuy = '50.0'
 
 		const one = await getBuyTokenIxs({
 			program,
@@ -132,14 +134,28 @@ describe('initialize', () => {
 	})
 
 	it('sell token', async () => {
-		const amountToSell = '31621.0'
+		const payerAta = await getAssociatedTokenAddress(
+			MEME.mint,
+			payer.publicKey,
+			true,
+			TOKEN_2022_PROGRAM_ID,
+		)
 
+		const account = await getAccount(
+			connection,
+			payerAta,
+			'confirmed',
+			TOKEN_2022_PROGRAM_ID,
+		)
+		const amount = new BN(account.amount.toString())
+		const amountToSell = amountToUiAmount(amount, MEME.decimals)
 		const ix = await getSellTokenIxs({
 			program,
 			payer: payer.publicKey,
 			mint: MEME.mint,
 			uiAmount: amountToSell,
 			decimals: MEME.decimals,
+			bnAmount: amount,
 		})
 
 		const tx = await buildTransaction({
@@ -155,6 +171,55 @@ describe('initialize', () => {
 		const res = await connection.simulateTransaction(tx)
 		console.log(res)
 		await sendAndConfirm({ connection, tx })
+		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+	})
+
+	it('check account', async () => {
+		const payerAta = await getAssociatedTokenAddress(
+			MEME.mint,
+			payer.publicKey,
+			true,
+			TOKEN_2022_PROGRAM_ID,
+		)
+
+		const account = await getAccount(
+			connection,
+			payerAta,
+			'confirmed',
+			TOKEN_2022_PROGRAM_ID,
+		)
+		const amount = new BN(account.amount.toString())
+		console.log('user amount', amount.toString())
+
+		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+	})
+
+	it('buy token', async () => {
+		const amountToBuy = '50.0'
+
+		const one = await getBuyTokenIxs({
+			program,
+			payer: payer.publicKey,
+			mint: MEME.mint,
+			uiAmount: amountToBuy,
+			decimals: MEME.decimals,
+		})
+
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [one],
+			signers: [],
+		})
+
+		tx.sign([payer])
+
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+
+		console.log(res)
+		await sendAndConfirm({ connection, tx })
+
 		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
 })

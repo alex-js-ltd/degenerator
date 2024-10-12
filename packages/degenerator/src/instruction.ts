@@ -255,7 +255,8 @@ export async function getSellTokenIxs({
 	mint,
 	uiAmount,
 	decimals,
-}: SwapTokenIxsParams) {
+	bnAmount,
+}: SwapTokenIxsParams & { bnAmount: any }) {
 	const payerAta = await getAssociatedTokenAddress(
 		mint,
 		payer,
@@ -268,8 +269,9 @@ export async function getSellTokenIxs({
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
 	const amount = uiAmountToAmount(uiAmount, decimals)
+
 	const sell = await program.methods
-		.sellToken(amount)
+		.sellToken(bnAmount)
 		.accountsStrict({
 			signer: payer,
 			mint,

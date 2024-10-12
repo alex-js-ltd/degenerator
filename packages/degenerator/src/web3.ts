@@ -20,7 +20,7 @@ export async function airDrop({
 	account: PublicKey
 	connection: Connection
 }) {
-	const amount = 100 * LAMPORTS_PER_SOL
+	const amount = 1000 * LAMPORTS_PER_SOL
 	const blocks = connection.getLatestBlockhash()
 	const airDrop = connection.requestAirdrop(account, amount)
 
@@ -107,9 +107,12 @@ export function uiAmountToAmount(
 	amount: number | string,
 	decimals: number,
 ): BN {
-	// Convert the human-readable token amount to the smallest unit based on its decimals
 	const scale = new Decimal(amount).mul(10 ** decimals).toFixed(0)
-	// Return the scaled amount as a BN (Big Number) object
-
 	return new BN(scale)
+}
+
+export function amountToUiAmount(amount: BN, decimals: number): string {
+	const divisor = new BN(10).pow(new BN(decimals))
+	const uiAmount = amount.div(divisor)
+	return uiAmount.toString()
 }
