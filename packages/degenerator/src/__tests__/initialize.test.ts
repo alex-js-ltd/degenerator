@@ -65,7 +65,7 @@ describe('initialize', () => {
 			mint: MEME.mint,
 			metadata: MEME.metadata,
 			decimals: MEME.decimals,
-			uiAmount: '1',
+			uiAmount: '1.0',
 		})
 
 		const tx = await buildTransaction({

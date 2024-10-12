@@ -8,7 +8,7 @@ use crate::utils::token::{
 };
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
+use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInterface};
 
 #[derive(Accounts)]
 pub struct SellToken<'info> {
@@ -61,12 +61,17 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     let sol_amount = sale_target_amount(curve.total_supply, curve.reserve_balance, amount)?;
 
-    msg!("sol_amount: {}", sol_amount);
-
-    msg!("token amount to sell: {}", amount);
     let user_supply = ctx.accounts.payer_ata.amount;
 
-    msg!("tokens in users wallet: {}", user_supply);
+    msg!(
+        "sell_target_amount: {}",
+        spl_token_2022::amount_to_ui_amount(amount, ctx.accounts.mint.decimals)
+    );
+
+    msg!(
+        "sol_amount: {}",
+        spl_token_2022::amount_to_ui_amount(sol_amount, 9)
+    );
 
     if amount > user_supply {
         return Err(ErrorCode::InsufficientUserSupply.into());

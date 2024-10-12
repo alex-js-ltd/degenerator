@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
+use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInterface};
 
 use crate::states::{
     purchase_target_amount, set_bonding_curve_state, BondingCurveState, RESERVE_WEIGHT,
@@ -60,13 +60,20 @@ pub struct BuyToken<'info> {
 }
 
 pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
-    msg!("sol amount: {}", sol_amount);
-
     let curve = &mut ctx.accounts.bonding_curve_state;
 
     let amount = purchase_target_amount(curve.total_supply, curve.reserve_balance, sol_amount)?;
 
-    msg!("purchase_target_amount: {}", amount);
+    msg!(
+        "purchase_target_amount: {}",
+        spl_token_2022::amount_to_ui_amount(amount, ctx.accounts.mint.decimals)
+    );
+
+    msg!(
+        "sol_amount: {}",
+        spl_token_2022::amount_to_ui_amount(sol_amount, 9)
+    );
+
     // Check if the payer has enough lamports to cover the price
     let payer_balance = ctx.accounts.payer.lamports();
     if payer_balance < sol_amount {
