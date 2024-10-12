@@ -8,7 +8,8 @@ use crate::states::{
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
-    get_account_balance, token_mint_to, transfer_sol_to_bonding_curve_vault,
+    get_account_balance, transfer_from_bonding_curve_vault_to_user,
+    transfer_sol_to_bonding_curve_vault,
 };
 
 #[derive(Accounts)]
@@ -42,6 +43,14 @@ pub struct BuyToken<'info> {
     )]
     pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
+    #[account(
+        mut,
+        associated_token::mint = mint,
+        associated_token::authority = vault,
+        associated_token::token_program = token_program,
+    )]
+    pub vault_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+
     /// Mint associated with the token
     #[account(mut,
         mint::token_program = token_program,
@@ -73,12 +82,14 @@ pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
-    token_mint_to(
+    transfer_from_bonding_curve_vault_to_user(
         ctx.accounts.vault.to_account_info(),
-        ctx.accounts.token_program.to_account_info(),
-        ctx.accounts.mint.to_account_info(),
+        ctx.accounts.vault_ata.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
+        ctx.accounts.mint.to_account_info(),
+        ctx.accounts.token_program.to_account_info(),
         amount,
+        ctx.accounts.mint.decimals,
         &[&[
             BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
@@ -99,7 +110,7 @@ pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
     let update_state = BondingCurveState {
-        total_supply: ctx.accounts.mint.supply,
+        total_supply: ctx.accounts.vault_ata.amount,
         reserve_balance: vault_balance,
         reserve_weight: RESERVE_WEIGHT,
     };

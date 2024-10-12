@@ -48,7 +48,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
     ctx.accounts.mint.reload()?;
 
     let initial_state = BondingCurveState {
-        total_supply: ctx.accounts.mint.supply,
+        total_supply: ctx.accounts.vault_ata.amount,
         reserve_balance: vault_balance,
         reserve_weight: RESERVE_WEIGHT,
     };

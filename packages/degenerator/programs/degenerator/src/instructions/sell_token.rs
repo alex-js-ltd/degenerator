@@ -4,7 +4,7 @@ use crate::states::{
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
-    get_account_balance, token_approve_burn, token_burn, transfer_sol_to_user,
+    get_account_balance, transfer_from_user_to_bonding_curve, transfer_sol_to_user,
 };
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
@@ -46,6 +46,14 @@ pub struct SellToken<'info> {
     )]
     pub payer_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
+    #[account(
+        mut,
+        associated_token::mint = mint,
+        associated_token::authority = vault,
+        associated_token::token_program = token_program,
+    )]
+    pub vault_ata: Box<InterfaceAccount<'info, TokenAccount>>,
+
     /// Token program
     pub token_program: Interface<'info, TokenInterface>,
 
@@ -59,11 +67,15 @@ pub struct SellToken<'info> {
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     let curve = &mut ctx.accounts.bonding_curve_state;
 
-    let sol_amount = sale_target_amount(curve.total_supply, curve.reserve_balance, amount)?;
+    let sol_amount = sale_target_amount(
+        curve.total_supply,
+        curve.reserve_balance,
+        ctx.accounts.payer_ata.amount,
+    )?;
 
     msg!("sol_amount: {}", sol_amount);
 
-    msg!("token amount to sell: {}", amount);
+    msg!("token amount to sell: {}", ctx.accounts.payer_ata.amount);
     let user_supply = ctx.accounts.payer_ata.amount;
 
     msg!("tokens in users wallet: {}", user_supply);
@@ -76,26 +88,14 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
-    token_approve_burn(
-        ctx.accounts.token_program.to_account_info(),
-        ctx.accounts.payer_ata.to_account_info(),
-        ctx.accounts.vault.to_account_info(),
+    transfer_from_user_to_bonding_curve(
         ctx.accounts.signer.to_account_info(),
-        amount,
-    )?;
-
-    // burn tokens
-    token_burn(
-        ctx.accounts.vault.to_account_info(),
-        ctx.accounts.token_program.to_account_info(),
-        ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
+        ctx.accounts.vault_ata.to_account_info(),
+        ctx.accounts.mint.to_account_info(),
+        ctx.accounts.token_program.to_account_info(),
         amount,
-        &[&[
-            BONDING_CURVE_VAULT_SEED.as_bytes(),
-            ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.vault][..],
-        ][..]],
+        ctx.accounts.mint.decimals,
     )?;
 
     transfer_sol_to_user(
@@ -115,7 +115,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
     let update_state = BondingCurveState {
-        total_supply: ctx.accounts.mint.supply,
+        total_supply: ctx.accounts.vault_ata.amount,
         reserve_balance: vault_balance,
         reserve_weight: RESERVE_WEIGHT,
     };

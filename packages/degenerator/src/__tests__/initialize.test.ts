@@ -105,30 +105,34 @@ describe('initialize', () => {
 	it('buy token', async () => {
 		const amountToBuy = '1.0'
 
-		const one = await getBuyTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			uiAmount: amountToBuy,
-			decimals: MEME.decimals,
-		})
+		const array: number[] = [1, 2, 3, 4, 5]
 
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [one],
-			signers: [],
-		})
+		for (const el of array) {
+			const one = await getBuyTokenIxs({
+				program,
+				payer: payer.publicKey,
+				mint: MEME.mint,
+				uiAmount: amountToBuy,
+				decimals: MEME.decimals,
+			})
 
-		tx.sign([payer])
+			const tx = await buildTransaction({
+				connection: connection,
+				payer: payer.publicKey,
+				instructions: [one],
+				signers: [],
+			})
 
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
+			tx.sign([payer])
 
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
+			// Simulate the transaction
+			const res = await connection.simulateTransaction(tx)
 
-		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+			console.log(res)
+			await sendAndConfirm({ connection, tx })
+
+			await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+		}
 	})
 
 	it('sell token', async () => {
