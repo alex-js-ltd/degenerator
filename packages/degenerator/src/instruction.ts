@@ -37,6 +37,7 @@ import {
 	getPoolLpMintAddress,
 	getPoolVaultAddress,
 	getOracleAccountAddress,
+	uiAmountToAmount,
 } from './index'
 
 import { cpSwapProgram, configAddress, createPoolFeeReceive } from './config'
@@ -205,6 +206,7 @@ interface SwapTokenIxsParams {
 	payer: PublicKey
 	mint: PublicKey
 	uiAmount: string
+	decimals: number
 }
 
 export async function getBuyTokenIxs({
@@ -212,6 +214,7 @@ export async function getBuyTokenIxs({
 	payer,
 	mint,
 	uiAmount,
+	decimals,
 }: SwapTokenIxsParams) {
 	const payerAta = await getAssociatedTokenAddress(
 		mint,
@@ -224,9 +227,9 @@ export async function getBuyTokenIxs({
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
-	// const amountBN = new BN(amount)
+	const amount = uiAmountToAmount(uiAmount, decimals)
 	const buy = await program.methods
-		.buyToken(uiAmount)
+		.buyToken(amount)
 		.accountsStrict({
 			payer,
 			mint,
@@ -247,6 +250,7 @@ export async function getSellTokenIxs({
 	payer,
 	mint,
 	uiAmount,
+	decimals,
 }: SwapTokenIxsParams) {
 	const payerAta = await getAssociatedTokenAddress(
 		mint,
@@ -259,9 +263,9 @@ export async function getSellTokenIxs({
 
 	const bondingCurveState = getBondingCurveState({ program, mint })
 
-	// const amountBN = new BN(amount)
+	const amount = uiAmountToAmount(uiAmount, decimals)
 	const sell = await program.methods
-		.sellToken(uiAmount)
+		.sellToken(amount)
 		.accountsStrict({
 			signer: payer,
 			mint,

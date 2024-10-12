@@ -10,6 +10,8 @@ import {
 	VersionedTransaction,
 	LAMPORTS_PER_SOL,
 } from '@solana/web3.js'
+import { BN } from '@coral-xyz/anchor'
+import Decimal from 'decimal.js'
 
 export async function airDrop({
 	account,
@@ -99,4 +101,15 @@ export async function isRentExempt({
 		accountInfo.data.length,
 	)
 	return accountInfo.lamports >= minRent
+}
+
+export function uiAmountToAmount(
+	amount: number | string,
+	decimals: number,
+): BN {
+	// Convert the human-readable token amount to the smallest unit based on its decimals
+	const scale = new Decimal(amount).mul(10 ** decimals).toFixed(0)
+	// Return the scaled amount as a BN (Big Number) object
+
+	return new BN(scale)
 }

@@ -6,7 +6,7 @@ pub mod utils;
 use anchor_lang::prelude::*;
 use instructions::*;
 
-declare_id!("EcHS2BfHfqBoEoL4tYuZxSeKwzDmgqca11ocy4TLtdMB");
+declare_id!("23qkYP8WXLqBQ4qgp2mEXspD9SMim8o8oC66b8foEFVN");
 
 #[program]
 pub mod degenerator {
@@ -17,12 +17,12 @@ pub mod degenerator {
         instructions::create_bonding_curve(ctx)
     }
 
-    pub fn buy_token(ctx: Context<BuyToken>, ui_amount: String) -> Result<()> {
-        instructions::buy_token(ctx, ui_amount)
+    pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
+        instructions::buy_token(ctx, amount)
     }
 
-    pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
-        instructions::sell_token(ctx, ui_amount)
+    pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
+        instructions::sell_token(ctx, amount)
     }
 
     pub fn wrap_sol(ctx: Context<WrapSol>, amount: u64) -> Result<()> {

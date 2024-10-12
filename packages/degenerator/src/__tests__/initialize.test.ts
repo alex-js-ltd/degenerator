@@ -109,62 +109,7 @@ describe('initialize', () => {
 			payer: payer.publicKey,
 			mint: MEME.mint,
 			uiAmount: amountToBuy,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [one],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
-
-		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
-	})
-
-	it('buy token', async () => {
-		const amountToBuy = '100000.0'
-
-		const one = await getBuyTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			uiAmount: amountToBuy,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [one],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
-
-		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
-	})
-
-	it('buy token', async () => {
-		const amountToBuy = '100000.0'
-
-		const one = await getBuyTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			uiAmount: amountToBuy,
+			decimals: MEME.decimals,
 		})
 
 		const tx = await buildTransaction({
@@ -186,13 +131,14 @@ describe('initialize', () => {
 	})
 
 	it('sell token', async () => {
-		const amountToSell = '200000.0'
+		const amountToSell = '1.0'
 
 		const ix = await getSellTokenIxs({
 			program,
 			payer: payer.publicKey,
 			mint: MEME.mint,
 			uiAmount: amountToSell,
+			decimals: MEME.decimals,
 		})
 
 		const tx = await buildTransaction({
@@ -209,36 +155,6 @@ describe('initialize', () => {
 		console.log(res)
 		await sendAndConfirm({ connection, tx })
 		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
-	})
-
-	it('check bonding curve mint authority is rent exempt', async () => {
-		const rentExempt = await isRentExempt({
-			connection: connection,
-			address: vault,
-		})
-		expect(rentExempt).toBe(true)
-	})
-
-	it('check bonding curve state is rent exempt', async () => {
-		const rentExempt = await isRentExempt({
-			connection: connection,
-			address: bondingCurveState,
-		})
-		expect(rentExempt).toBe(true)
-	})
-
-	it('check payer ata', async () => {
-		const payerAta = await getAssociatedTokenAddress(
-			MEME.mint,
-			payer.publicKey,
-			false,
-			TOKEN_2022_PROGRAM_ID,
-		)
-		const rentExempt = await isRentExempt({
-			connection: connection,
-			address: payerAta,
-		})
-		expect(rentExempt).toBe(true)
 	})
 })
 

@@ -58,12 +58,7 @@ pub struct BuyToken<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn buy_token(ctx: Context<BuyToken>, ui_amount: String) -> Result<()> {
-    let amount = token_ui_amount_to_amount(
-        ctx.accounts.token_program.to_account_info(),
-        ctx.accounts.mint.to_account_info(),
-        &ui_amount,
-    )?;
+pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     msg!("buy amount: {}", amount);
 
     let price = calculate_buy_price(&mut ctx.accounts.bonding_curve_state, amount)?;

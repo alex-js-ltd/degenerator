@@ -55,12 +55,7 @@ pub struct SellToken<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn sell_token(ctx: Context<SellToken>, ui_amount: String) -> Result<()> {
-    let amount = token_ui_amount_to_amount(
-        ctx.accounts.token_program.to_account_info(),
-        ctx.accounts.mint.to_account_info(),
-        &ui_amount,
-    )?;
+pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     msg!("sell amount: {}", amount);
 
     let price = calculate_sell_price(&mut ctx.accounts.bonding_curve_state, amount)?;
