@@ -78,9 +78,7 @@ pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
         spl_token_2022::amount_to_ui_amount(sol_amount, 9)
     );
 
-    // Check if the payer has enough lamports to cover the price
-    let payer_balance = ctx.accounts.payer.lamports();
-    if payer_balance < sol_amount {
+    if ctx.accounts.payer.lamports() < sol_amount {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
