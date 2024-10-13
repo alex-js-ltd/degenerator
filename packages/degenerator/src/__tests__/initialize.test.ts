@@ -105,32 +105,35 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = '50.0'
+		const amountToBuy = '10.012345678'
+		const items = [1, 2, 3, 4, 5]
 
-		const one = await getBuyTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			uiAmount: amountToBuy,
-			decimals: MEME.decimals,
-		})
+		for (const _item of items) {
+			const one = await getBuyTokenIxs({
+				program,
+				payer: payer.publicKey,
+				mint: MEME.mint,
+				uiAmount: amountToBuy,
+				decimals: MEME.decimals,
+			})
 
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [one],
-			signers: [],
-		})
+			const tx = await buildTransaction({
+				connection: connection,
+				payer: payer.publicKey,
+				instructions: [one],
+				signers: [],
+			})
 
-		tx.sign([payer])
+			tx.sign([payer])
 
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
+			// Simulate the transaction
+			const res = await connection.simulateTransaction(tx)
 
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
+			console.log(res)
+			await sendAndConfirm({ connection, tx })
 
-		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+			await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+		}
 	})
 
 	it('sell token', async () => {
@@ -190,35 +193,6 @@ describe('initialize', () => {
 		)
 		const amount = new BN(account.amount.toString())
 		console.log('user amount', amount.toString())
-
-		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
-	})
-
-	it('buy token', async () => {
-		const amountToBuy = '50.0'
-
-		const one = await getBuyTokenIxs({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			uiAmount: amountToBuy,
-			decimals: MEME.decimals,
-		})
-
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [one],
-			signers: [],
-		})
-
-		tx.sign([payer])
-
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
-
-		console.log(res)
-		await sendAndConfirm({ connection, tx })
 
 		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
