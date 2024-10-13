@@ -25,12 +25,10 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        1,
+        amount,
     )?;
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
-
-    assert_eq!(vault_balance, 1);
 
     token_mint_to(
         ctx.accounts.vault.to_account_info(),

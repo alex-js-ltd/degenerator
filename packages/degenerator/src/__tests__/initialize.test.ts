@@ -65,7 +65,7 @@ describe('initialize', () => {
 			mint: MEME.mint,
 			metadata: MEME.metadata,
 			decimals: MEME.decimals,
-			uiAmount: '1.0',
+			uiAmount: '0.1',
 		})
 
 		const tx = await buildTransaction({
@@ -105,7 +105,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = '50.0'
+		const amountToBuy = '0.1'
 
 		const one = await getBuyTokenIxs({
 			program,

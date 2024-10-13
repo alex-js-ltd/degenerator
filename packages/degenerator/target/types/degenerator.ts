@@ -435,7 +435,7 @@ export type Degenerator = {
           },
           {
             "name": "reserveWeight",
-            "type": "f64"
+            "type": "u64"
           }
         ]
       }
@@ -892,7 +892,7 @@ export const IDL: Degenerator = {
           },
           {
             "name": "reserveWeight",
-            "type": "f64"
+            "type": "u64"
           }
         ]
       }

@@ -435,7 +435,7 @@
           },
           {
             "name": "reserveWeight",
-            "type": "f64"
+            "type": "u64"
           }
         ]
       }
@@ -454,6 +454,6 @@
     }
   ],
   "metadata": {
-    "address": "EsKHsBi2VrQnZHLX57yWmwp3RecmRPzh6fJQ9TLRFV19"
+    "address": "DGoWaU3s7jss8FmkiLLF1AGs46jSzshs6JZAPsHGazjP"
   }
 }
