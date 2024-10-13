@@ -62,7 +62,11 @@ pub struct BuyToken<'info> {
 pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
     let curve = &mut ctx.accounts.bonding_curve_state;
 
-    let amount = purchase_target_amount(curve.total_supply, curve.reserve_balance, sol_amount)?;
+    let amount = purchase_target_amount(
+        u128::from(curve.total_supply),
+        u128::from(curve.reserve_balance),
+        u128::from(sol_amount),
+    )?;
 
     msg!(
         "purchase_target_amount: {}",

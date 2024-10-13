@@ -15,7 +15,7 @@ impl BondingCurveState {
 
 pub const RESERVE_WEIGHT: f64 = 500_000.0; // Reserve weight in parts per million
 
-pub fn purchase_target_amount(supply: u64, reserve_balance: u64, amount: u64) -> Result<u64> {
+pub fn purchase_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
     // Step 1: Calculate the ratio of the amount to the reserve balance
     let ratio = amount as f64 / reserve_balance as f64;
 
@@ -26,7 +26,7 @@ pub fn purchase_target_amount(supply: u64, reserve_balance: u64, amount: u64) ->
     Ok(target.round() as u64)
 }
 
-pub fn sale_target_amount(supply: u64, reserve_balance: u64, amount: u64) -> Result<u64> {
+pub fn sale_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
     // Calculate the ratio of the amount to the supply
     let ratio = amount as f64 / supply as f64;
 
