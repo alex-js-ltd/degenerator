@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { PublicKey as PK } from '@solana/web3.js'
+import { Decimal as _Decimal } from 'decimal.js'
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 4.5 // 10MB
 
@@ -20,11 +21,6 @@ export const MintSchema = z.object({
 		})
 		.max(9, { message: 'Decimal is too high' })
 		.min(0, { message: 'Decimal is too low' }),
-	supply: z
-		.number({
-			invalid_type_error: 'Expected Number',
-		})
-		.min(1, { message: 'Supply is too low' }),
 	description: z.string(),
 	image: z.instanceof(File).refine(file => {
 		return !file || file.size <= MAX_UPLOAD_SIZE
@@ -42,11 +38,8 @@ export const DeleteSchema = z.object({
 export const SwapSchema = z.object({
 	payer: PublicKey,
 	mint: PublicKey,
-	amount: z
-		.number({
-			invalid_type_error: 'Expected Number',
-		})
-		.min(0, { message: 'Amount is too low' }),
+	amount: z.string(),
+
 	buy: z.boolean().optional(),
 	decimals: z
 		.number({

@@ -39,7 +39,7 @@ import {
 interface GetInitializeDegeneratorIxsParams {
 	program: Program<Degenerator>
 	payer: PublicKey
-	mint: PublicKey
+
 	metadata: Omit<TokenMetadata, 'additionalMetadata'>
 	uiAmount: string
 	decimals: number

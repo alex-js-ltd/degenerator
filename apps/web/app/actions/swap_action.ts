@@ -33,14 +33,14 @@ export async function swapAction(_prevState: State, formData: FormData) {
 				program,
 				payer,
 				mint,
-				uiAmount: amount.toString(),
+				uiAmount: amount,
 				decimals,
 			})
 		: await getSellTokenIx({
 				program,
 				payer,
 				mint,
-				uiAmount: amount.toString(),
+				uiAmount: amount,
 				decimals,
 			})
 

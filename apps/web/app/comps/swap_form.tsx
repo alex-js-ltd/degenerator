@@ -20,7 +20,15 @@ const initialState: State = {
 	data: undefined,
 }
 
-export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
+export function SwapForm({
+	mint,
+	decimals,
+	token,
+}: {
+	mint: string
+	decimals: number
+	token: ReactNode
+}) {
 	const [state, formAction] = useActionState(swapAction, initialState)
 
 	const { lastResult, data } = state
@@ -66,6 +74,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 					<span className="absolute top-3 right-3 z-50 text-teal-300 text-xs"></span>
 					<input name="payer" defaultValue={payer} type="hidden" />
 					<input name="mint" defaultValue={mint} type="hidden" />
+					<input name="decimals" defaultValue={decimals} type="hidden" />
 					<div className="relative z-10 grid rounded-xl bg-white">
 						<label className="sr-only" htmlFor="swap-input">
 							Swap input

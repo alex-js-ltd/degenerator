@@ -11,7 +11,6 @@ import {
 	getInitializeDegeneratorIxs,
 	buildTransaction,
 } from '@repo/degenerator'
-import { isError, catchError } from '@/app/utils/misc'
 import { Keypair, PublicKey } from '@solana/web3.js'
 
 interface UploadMetadataParams {
@@ -91,8 +90,7 @@ export async function initializeAction(_prevState: State, formData: FormData) {
 		}
 	}
 
-	const { image, name, symbol, description, decimals, supply, payer } =
-		submission.value
+	const { image, name, symbol, description, decimals, payer } = submission.value
 
 	const blob = await put(image.name, image, { access: 'public' })
 
@@ -112,10 +110,9 @@ export async function initializeAction(_prevState: State, formData: FormData) {
 	const ixs = await getInitializeDegeneratorIxs({
 		program,
 		payer: payer,
-		mint: mint.publicKey,
 		metadata: metadata,
 		decimals: decimals,
-		uiAmount: supply.toString(),
+		uiAmount: '1.0',
 	})
 
 	const transaction = await buildTransaction({

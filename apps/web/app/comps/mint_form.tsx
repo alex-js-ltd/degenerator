@@ -70,7 +70,7 @@ export function MintForm() {
 					}}
 				>
 					<fieldset className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
-						<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
+						<div className="relative grid grid-cols-1 sm:grid-cols-2 w-full">
 							<Field
 								inputProps={{
 									...getInputProps(fields.name, { type: 'text' }),
@@ -92,13 +92,7 @@ export function MintForm() {
 								}}
 								errors={fields.decimals.errors}
 							/>
-							<Field
-								inputProps={{
-									...getInputProps(fields.supply, { type: 'text' }),
-									placeholder: 'Supply',
-								}}
-								errors={fields.supply.errors}
-							/>
+
 							<Field
 								inputProps={{
 									...getInputProps(fields.description, { type: 'text' }),

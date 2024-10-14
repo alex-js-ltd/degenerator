@@ -24,6 +24,7 @@ export default function Page({ params }: { params: { id: string } }) {
 		<div className="w-full sm:max-w-xl flex flex-col gap-6">
 			<SwapForm
 				mint={mint}
+				decimals={9}
 				token={
 					<Pill variant="swap">
 						<TokenLogo src={res.data.image} alt={res.data.name} />
