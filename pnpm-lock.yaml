@@ -192,11 +192,8 @@ importers:
   packages/degenerator:
     dependencies:
       '@coral-xyz/anchor':
-        specifier: ^0.29.0
-        version: 0.29.0
-      '@raydium-io/raydium-sdk-v2':
-        specifier: ^0.1.13-alpha
-        version: 0.1.13-alpha(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
+        specifier: ^0.30.0
+        version: 0.30.1
       '@solana-developers/helpers':
         specifier: ^1.3.0
         version: 1.3.0
@@ -1797,30 +1794,6 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /@coral-xyz/anchor@0.29.0:
-    resolution: {integrity: sha512-eny6QNG0WOwqV0zQ7cs/b1tIuzZGmP7U7EcH+ogt4Gdbl8HDmIYVMh/9aTmYZPaFWjtUaI8qSn73uYEXWfATdA==}
-    engines: {node: '>=11'}
-    dependencies:
-      '@coral-xyz/borsh': 0.29.0(@solana/web3.js@1.95.3)
-      '@noble/hashes': 1.4.0
-      '@solana/web3.js': 1.95.3
-      bn.js: 5.2.1
-      bs58: 4.0.1
-      buffer-layout: 1.2.2
-      camelcase: 6.3.0
-      cross-fetch: 3.1.8
-      crypto-hash: 1.3.0
-      eventemitter3: 4.0.7
-      pako: 2.1.0
-      snake-case: 3.0.4
-      superstruct: 0.15.5
-      toml: 3.0.0
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - utf-8-validate
-    dev: false
-
   /@coral-xyz/anchor@0.30.1:
     resolution: {integrity: sha512-gDXFoF5oHgpriXAaLpxyWBHdCs8Awgf/gLHIo6crv7Aqm937CNdY+x+6hoj7QR5vaJV7MxWSQ0NGFzL3kPbWEQ==}
     engines: {node: '>=11'}
@@ -1844,17 +1817,6 @@ packages:
       - bufferutil
       - encoding
       - utf-8-validate
-    dev: false
-
-  /@coral-xyz/borsh@0.29.0(@solana/web3.js@1.95.3):
-    resolution: {integrity: sha512-s7VFVa3a0oqpkuRloWVPdCK7hMbAMY270geZOGfCnaqexrP5dTIpbEHL33req6IYPPJ0hYa71cdvJ1h6V55/oQ==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      '@solana/web3.js': ^1.68.0
-    dependencies:
-      '@solana/web3.js': 1.95.3
-      bn.js: 5.2.1
-      buffer-layout: 1.2.2
     dev: false
 
   /@coral-xyz/borsh@0.30.1(@solana/web3.js@1.95.3):
@@ -3829,30 +3791,6 @@ packages:
 
   /@radix-ui/rect@1.1.0:
     resolution: {integrity: sha512-A9+lCBZoaMJlVKcRBz2YByCG+Cp2t6nAnMnNba+XiWxnj6r4JUFqfsgwocMBZU9LPtdxC6wB56ySYpc7LQIoJg==}
-    dev: false
-
-  /@raydium-io/raydium-sdk-v2@0.1.13-alpha(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4):
-    resolution: {integrity: sha512-2TSihny6ho4MeDICP35gT9yT/yeUTlru/I+xfkBQwCc5tH0py8GPijjiXWiJQYJ2eKgltN66r/oLNwMFI73SWg==}
-    dependencies:
-      '@project-serum/serum': 0.13.65
-      '@solana/buffer-layout': 4.0.1
-      '@solana/spl-token': 0.4.8(@solana/web3.js@1.95.3)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
-      '@solana/web3.js': 1.95.3
-      axios: 1.7.5
-      big.js: 6.2.1
-      bn.js: 5.2.1
-      buffer: 6.0.3
-      dayjs: 1.11.13
-      decimal.js-light: 2.5.1
-      lodash: 4.17.21
-      toformat: 2.0.0
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - encoding
-      - fastestsmallesttextencoderdecoder
-      - typescript
-      - utf-8-validate
     dev: false
 
   /@raydium-io/raydium-sdk-v2@0.1.45-alpha(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.2):

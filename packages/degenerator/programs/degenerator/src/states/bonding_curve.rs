@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-use spl_math::precise_number::PreciseNumber;
 
 #[account]
 #[derive(InitSpace)]

@@ -60,7 +60,6 @@ describe('initialize', () => {
 	it('init bonding curve', async () => {
 		const ixs = await getInitializeDegeneratorIxs({
 			program,
-			connection,
 			payer: payer.publicKey,
 			mint: MEME.mint,
 			metadata: MEME.metadata,

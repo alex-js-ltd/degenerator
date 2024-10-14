@@ -1,141 +1,197 @@
+/**
+ * Program IDL in camelCase format in order to be used in JS/TS.
+ *
+ * Note that this is only a type helper and is not the actual IDL. The original
+ * IDL can be found at `target/idl/degenerator.json`.
+ */
 export type Degenerator = {
-  "version": "0.1.0",
-  "name": "degenerator",
+  "address": "31DzEEP9cPnymPm8RBrEqFAWXoMUmRzr1kUZ9tUiwR3n",
+  "metadata": {
+    "name": "degenerator",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
   "instructions": [
     {
-      "name": "createBondingCurve",
-      "accounts": [
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true,
-          "docs": [
-            "The payer for the transaction"
-          ]
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "vault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondingCurveState",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "pda to store bonding curve state"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Spl token program or token program 2022"
-          ]
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Associated Token Program"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "System Program"
-          ]
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Sysvar for program account"
-          ]
-        }
-      ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
-    },
-    {
       "name": "buyToken",
+      "discriminator": [
+        138,
+        127,
+        14,
+        91,
+        38,
+        87,
+        115,
+        105
+      ],
       "accounts": [
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true,
           "docs": [
             "The payer of the transaction and the signer"
-          ]
+          ],
+          "writable": true,
+          "signer": true
         },
         {
           "name": "vault",
-          "isMut": true,
-          "isSigner": false
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  110,
+                  100,
+                  105,
+                  110,
+                  103,
+                  95,
+                  99,
+                  117,
+                  114,
+                  118,
+                  101,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
           "name": "bondingCurveState",
-          "isMut": true,
-          "isSigner": false
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  110,
+                  100,
+                  105,
+                  110,
+                  103,
+                  95,
+                  99,
+                  117,
+                  114,
+                  118,
+                  101,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
           "name": "payerAta",
-          "isMut": true,
-          "isSigner": false,
           "docs": [
             "Token account to which the tokens will be transferred (created if needed)"
-          ]
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
           "name": "mint",
-          "isMut": true,
-          "isSigner": false,
           "docs": [
             "Mint associated with the token"
-          ]
+          ],
+          "writable": true
         },
         {
           "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
           "docs": [
             "SPL token program or token program 2022"
           ]
         },
         {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false,
           "docs": [
             "System program"
-          ]
+          ],
+          "address": "11111111111111111111111111111111"
         },
         {
           "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false,
           "docs": [
             "Associated token program"
-          ]
+          ],
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
       "args": [
@@ -146,62 +202,524 @@ export type Degenerator = {
       ]
     },
     {
-      "name": "sellToken",
+      "name": "createBondingCurve",
+      "discriminator": [
+        94,
+        139,
+        158,
+        50,
+        69,
+        95,
+        8,
+        45
+      ],
       "accounts": [
         {
-          "name": "signer",
-          "isMut": true,
-          "isSigner": true
+          "name": "payer",
+          "docs": [
+            "The payer for the transaction"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint"
         },
         {
           "name": "vault",
-          "isMut": true,
-          "isSigner": false
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  110,
+                  100,
+                  105,
+                  110,
+                  103,
+                  95,
+                  99,
+                  117,
+                  114,
+                  118,
+                  101,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vaultAta",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "vault"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
           "name": "bondingCurveState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
           "docs": [
-            "Mint associated with the token"
-          ]
-        },
-        {
-          "name": "payerAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "Token account the tokens will be transferred from"
-          ]
+            "pda to store bonding curve state"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  110,
+                  100,
+                  105,
+                  110,
+                  103,
+                  95,
+                  99,
+                  117,
+                  114,
+                  118,
+                  101,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
           "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
+          "docs": [
+            "Spl token program or token program 2022"
+          ]
+        },
+        {
+          "name": "associatedTokenProgram",
+          "docs": [
+            "Associated Token Program"
+          ],
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "systemProgram",
+          "docs": [
+            "System Program"
+          ],
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "docs": [
+            "Sysvar for program account"
+          ],
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "createMintAccount",
+      "discriminator": [
+        76,
+        184,
+        50,
+        62,
+        162,
+        141,
+        47,
+        103
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "receiver"
+        },
+        {
+          "name": "mint",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mintTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "receiver"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "extraMetasAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  120,
+                  116,
+                  114,
+                  97,
+                  45,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  45,
+                  109,
+                  101,
+                  116,
+                  97,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "args": [
+        {
+          "name": "tokenDecimals",
+          "type": "u8"
+        },
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "createMintAccountArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "sellToken",
+      "discriminator": [
+        109,
+        61,
+        40,
+        187,
+        230,
+        176,
+        135,
+        174
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  110,
+                  100,
+                  105,
+                  110,
+                  103,
+                  95,
+                  99,
+                  117,
+                  114,
+                  118,
+                  101,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "bondingCurveState",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  110,
+                  100,
+                  105,
+                  110,
+                  103,
+                  95,
+                  99,
+                  117,
+                  114,
+                  118,
+                  101,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "docs": [
+            "Mint associated with the token"
+          ],
+          "writable": true
+        },
+        {
+          "name": "payerAta",
+          "docs": [
+            "Token account the tokens will be transferred from"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "tokenProgram",
           "docs": [
             "Token program"
           ]
         },
         {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false,
           "docs": [
             "System program"
-          ]
+          ],
+          "address": "11111111111111111111111111111111"
         },
         {
           "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false,
           "docs": [
             "Associated token program"
-          ]
+          ],
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
       "args": [
@@ -213,39 +731,128 @@ export type Degenerator = {
     },
     {
       "name": "wrapSol",
+      "discriminator": [
+        47,
+        62,
+        155,
+        172,
+        131,
+        205,
+        37,
+        201
+      ],
       "accounts": [
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
           "name": "payerAta",
-          "isMut": true,
-          "isSigner": false
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "nativeMint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
-          "name": "nativeMint",
-          "isMut": false,
-          "isSigner": false
+          "name": "nativeMint"
         },
         {
           "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false,
           "docs": [
             "Associated token program"
-          ]
+          ],
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "address": "11111111111111111111111111111111"
         },
         {
           "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
           "docs": [
             "Token program"
           ]
@@ -257,169 +864,36 @@ export type Degenerator = {
           "type": "u64"
         }
       ]
-    },
-    {
-      "name": "proxyInitialize",
-      "accounts": [
-        {
-          "name": "cpSwapProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "creator",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ammConfig",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Which config the pool belongs to."
-          ]
-        },
-        {
-          "name": "authority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "poolState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "token0Mint",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Token_0 mint, the key must smaller then token_1 mint."
-          ]
-        },
-        {
-          "name": "token1Mint",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Token_1 mint, the key must grater then token_0 mint."
-          ]
-        },
-        {
-          "name": "lpMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "creatorToken0",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "payer token0 account"
-          ]
-        },
-        {
-          "name": "creatorToken1",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "creator token1 account"
-          ]
-        },
-        {
-          "name": "creatorLpToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "token0Vault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "token1Vault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "createPoolFee",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "create pool fee account"
-          ]
-        },
-        {
-          "name": "observationState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Program to create mint account and mint tokens"
-          ]
-        },
-        {
-          "name": "token0Program",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Spl token program or token program 2022"
-          ]
-        },
-        {
-          "name": "token1Program",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Spl token program or token program 2022"
-          ]
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Program to create an ATA for receiving position NFT"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "To create a new program account"
-          ]
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Sysvar for program account"
-          ]
-        }
-      ],
-      "args": [
-        {
-          "name": "initAmount0",
-          "type": "u64"
-        },
-        {
-          "name": "initAmount1",
-          "type": "u64"
-        },
-        {
-          "name": "openTime",
-          "type": "u64"
-        }
-      ]
     }
   ],
   "accounts": [
+    {
+      "name": "bondingCurveState",
+      "discriminator": [
+        182,
+        185,
+        75,
+        193,
+        72,
+        40,
+        132,
+        153
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "insufficientUserSupply",
+      "msg": "Insufficient tokens in user's wallet"
+    },
+    {
+      "code": 6001,
+      "name": "accountNotRentExempt",
+      "msg": "Account is not rent-exempt."
+    }
+  ],
+  "types": [
     {
       "name": "bondingCurveState",
       "type": {
@@ -439,475 +913,26 @@ export type Degenerator = {
           }
         ]
       }
-    }
-  ],
-  "errors": [
-    {
-      "code": 6000,
-      "name": "InsufficientUserSupply",
-      "msg": "Insufficient tokens in user's wallet"
     },
     {
-      "code": 6001,
-      "name": "AccountNotRentExempt",
-      "msg": "Account is not rent-exempt."
-    }
-  ]
-};
-
-export const IDL: Degenerator = {
-  "version": "0.1.0",
-  "name": "degenerator",
-  "instructions": [
-    {
-      "name": "createBondingCurve",
-      "accounts": [
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true,
-          "docs": [
-            "The payer for the transaction"
-          ]
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "vault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondingCurveState",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "pda to store bonding curve state"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Spl token program or token program 2022"
-          ]
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Associated Token Program"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "System Program"
-          ]
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Sysvar for program account"
-          ]
-        }
-      ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "buyToken",
-      "accounts": [
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true,
-          "docs": [
-            "The payer of the transaction and the signer"
-          ]
-        },
-        {
-          "name": "vault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondingCurveState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payerAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "Token account to which the tokens will be transferred (created if needed)"
-          ]
-        },
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "Mint associated with the token"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "SPL token program or token program 2022"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "System program"
-          ]
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Associated token program"
-          ]
-        }
-      ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "sellToken",
-      "accounts": [
-        {
-          "name": "signer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "vault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondingCurveState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "Mint associated with the token"
-          ]
-        },
-        {
-          "name": "payerAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "Token account the tokens will be transferred from"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Token program"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "System program"
-          ]
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Associated token program"
-          ]
-        }
-      ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "wrapSol",
-      "accounts": [
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "payerAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nativeMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Associated token program"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Token program"
-          ]
-        }
-      ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "proxyInitialize",
-      "accounts": [
-        {
-          "name": "cpSwapProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "creator",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ammConfig",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Which config the pool belongs to."
-          ]
-        },
-        {
-          "name": "authority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "poolState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "token0Mint",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Token_0 mint, the key must smaller then token_1 mint."
-          ]
-        },
-        {
-          "name": "token1Mint",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Token_1 mint, the key must grater then token_0 mint."
-          ]
-        },
-        {
-          "name": "lpMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "creatorToken0",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "payer token0 account"
-          ]
-        },
-        {
-          "name": "creatorToken1",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "creator token1 account"
-          ]
-        },
-        {
-          "name": "creatorLpToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "token0Vault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "token1Vault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "createPoolFee",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "create pool fee account"
-          ]
-        },
-        {
-          "name": "observationState",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Program to create mint account and mint tokens"
-          ]
-        },
-        {
-          "name": "token0Program",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Spl token program or token program 2022"
-          ]
-        },
-        {
-          "name": "token1Program",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Spl token program or token program 2022"
-          ]
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Program to create an ATA for receiving position NFT"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "To create a new program account"
-          ]
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "Sysvar for program account"
-          ]
-        }
-      ],
-      "args": [
-        {
-          "name": "initAmount0",
-          "type": "u64"
-        },
-        {
-          "name": "initAmount1",
-          "type": "u64"
-        },
-        {
-          "name": "openTime",
-          "type": "u64"
-        }
-      ]
-    }
-  ],
-  "accounts": [
-    {
-      "name": "bondingCurveState",
+      "name": "createMintAccountArgs",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "totalSupply",
-            "type": "u64"
+            "name": "name",
+            "type": "string"
           },
           {
-            "name": "reserveBalance",
-            "type": "u64"
+            "name": "symbol",
+            "type": "string"
           },
           {
-            "name": "reserveWeight",
-            "type": "f64"
+            "name": "uri",
+            "type": "string"
           }
         ]
       }
-    }
-  ],
-  "errors": [
-    {
-      "code": 6000,
-      "name": "InsufficientUserSupply",
-      "msg": "Insufficient tokens in user's wallet"
-    },
-    {
-      "code": 6001,
-      "name": "AccountNotRentExempt",
-      "msg": "Account is not rent-exempt."
     }
   ]
 };

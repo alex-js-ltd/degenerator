@@ -6,12 +6,20 @@ pub mod utils;
 use anchor_lang::prelude::*;
 use instructions::*;
 
-declare_id!("FdkY7dHG5GEkEE6GLuLD2ZDBAKmAspzabKNpo2vSBjsd");
+declare_id!("31DzEEP9cPnymPm8RBrEqFAWXoMUmRzr1kUZ9tUiwR3n");
 
 #[program]
 pub mod degenerator {
 
     use super::*;
+
+    pub fn create_mint_account(
+        ctx: Context<CreateMintAccount>,
+        token_decimals: u8,
+        args: CreateMintAccountArgs,
+    ) -> Result<()> {
+        instructions::create_mint_account(ctx, token_decimals, args)
+    }
 
     pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
         instructions::create_bonding_curve(ctx, amount)
@@ -27,14 +35,5 @@ pub mod degenerator {
 
     pub fn wrap_sol(ctx: Context<WrapSol>, amount: u64) -> Result<()> {
         instructions::wrap_sol(ctx, amount)
-    }
-
-    pub fn proxy_initialize(
-        ctx: Context<ProxyInitialize>,
-        init_amount_0: u64,
-        init_amount_1: u64,
-        open_time: u64,
-    ) -> Result<()> {
-        instructions::proxy_initialize(ctx, init_amount_0, init_amount_1, open_time)
     }
 }
