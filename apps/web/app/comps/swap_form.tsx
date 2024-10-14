@@ -63,6 +63,10 @@ export function SwapForm({
 
 	const { totalSupply, reserveBalance, reserveWeight } = curveState || {}
 
+	function getPlaceholder(decimals: number) {
+		return { placeholder: '0.' + '0'.repeat(decimals) }
+	}
+
 	return (
 		<FormProvider context={form.context}>
 			<div className="rounded-b-xl w-full">
@@ -81,10 +85,9 @@ export function SwapForm({
 						</label>
 						<input
 							type="number"
-							max={1000000000}
-							placeholder="Amount…"
 							className="h-[42px] resize-none overflow-auto w-full flex-1 bg-transparent p-3 pb-1.5 text-sm outline-none ring-0"
 							{...getControlProps(control)}
+							{...getPlaceholder(decimals)}
 						/>
 						<div className="flex items-center gap-2 p-3">
 							{token}
