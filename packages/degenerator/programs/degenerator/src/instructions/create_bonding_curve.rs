@@ -19,6 +19,14 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
         ctx.accounts.system_program.to_account_info(),
     )?;
 
+    set_authority(
+        ctx.accounts.token_program.to_account_info(),
+        ctx.accounts.payer.to_account_info(),
+        ctx.accounts.mint.to_account_info(),
+        AuthorityType::MintTokens,
+        Some(ctx.accounts.vault.to_account_info().key()), // Wrap the Pubkey in Some
+    )?;
+
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
     assert_eq!(vault_balance, 0);
@@ -33,16 +41,6 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
     assert_eq!(vault_balance, 1);
-
-    set_authority(
-        ctx.accounts.token_program.to_account_info(),
-        ctx.accounts.payer.to_account_info(),
-        ctx.accounts.mint.to_account_info(),
-        AuthorityType::MintTokens,
-        Some(ctx.accounts.vault.to_account_info().key()),
-    )?;
-
-    ctx.accounts.mint.reload()?;
 
     token_mint_to(
         ctx.accounts.vault.to_account_info(),
@@ -78,7 +76,7 @@ pub struct CreateBondingCurve<'info> {
 
     #[account(
         mint::token_program = token_program,
-        mint::authority = vault,
+   
     )]
     pub mint: Box<InterfaceAccount<'info, Mint>>,
 

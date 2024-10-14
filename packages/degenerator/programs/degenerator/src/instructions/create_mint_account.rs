@@ -1,20 +1,21 @@
-use anchor_lang::{prelude::*, solana_program::entrypoint::ProgramResult};
+use anchor_lang::prelude::*;
 
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token_2022::spl_token_2022::extension::
-     metadata_pointer::MetadataPointer,
+    token_2022::spl_token_2022::extension::metadata_pointer::MetadataPointer,
     token_interface::{
         get_mint_extension_data, spl_token_metadata_interface::state::TokenMetadata,
-        token_metadata_initialize, Mint, Token2022, TokenAccount, TokenMetadataInitialize,
+        token_metadata_initialize, Mint, Token2022, TokenMetadataInitialize,
     },
 };
 use spl_pod::optional_keys::OptionalNonZeroPubkey;
 
-use crate::utils::{
+use crate::utils::token::{
     get_meta_list_size, get_mint_extensible_extension_data,
-    update_account_lamports_to_minimum_balance, META_LIST_ACCOUNT_SEED,
+    update_account_lamports_to_minimum_balance,
 };
+
+use crate::utils::seed::META_LIST_ACCOUNT_SEED;
 
 #[derive(AnchorDeserialize, AnchorSerialize)]
 pub struct CreateMintAccountArgs {
@@ -28,33 +29,20 @@ pub struct CreateMintAccountArgs {
 pub struct CreateMintAccount<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
-    #[account(mut)]
-    /// CHECK: can be any account
-    pub authority: Signer<'info>,
-    #[account()]
-    /// CHECK: can be any account
-    pub receiver: UncheckedAccount<'info>,
+
     #[account(
         init,
         signer,
         payer = payer,
         mint::token_program = token_program,
         mint::decimals = token_decimals,
-        mint::authority = authority,
-        mint::freeze_authority = authority,
-        extensions::metadata_pointer::authority = authority,
+        mint::authority = payer,
+        extensions::metadata_pointer::authority = payer,
         extensions::metadata_pointer::metadata_address = mint,
-   
+
     )]
     pub mint: Box<InterfaceAccount<'info, Mint>>,
-    #[account(
-        init,
-        payer = payer,
-        associated_token::token_program = token_program,
-        associated_token::mint = mint,
-        associated_token::authority = receiver,
-    )]
-    pub mint_token_account: Box<InterfaceAccount<'info, TokenAccount>>,
+
     /// CHECK: This account's data is a buffer of TLV data
     #[account(
         init,
@@ -69,36 +57,27 @@ pub struct CreateMintAccount<'info> {
     pub token_program: Program<'info, Token2022>,
 }
 
-impl<'info> CreateMintAccount<'info> {
-    fn initialize_token_metadata(
-        &self,
-        name: String,
-        symbol: String,
-        uri: String,
-    ) -> ProgramResult {
-        let cpi_accounts = TokenMetadataInitialize {
-            token_program_id: self.token_program.to_account_info(),
-            mint: self.mint.to_account_info(),
-            metadata: self.mint.to_account_info(), // metadata account is the mint, since data is stored in mint
-            mint_authority: self.authority.to_account_info(),
-            update_authority: self.authority.to_account_info(),
-        };
-        let cpi_ctx = CpiContext::new(self.token_program.to_account_info(), cpi_accounts);
-        token_metadata_initialize(cpi_ctx, name, symbol, uri)?;
-        Ok(())
-    }
-}
-
 pub fn create_mint_account(
     ctx: Context<CreateMintAccount>,
     token_decimals: u8,
     args: CreateMintAccountArgs,
 ) -> Result<()> {
-    ctx.accounts.initialize_token_metadata(
+    token_metadata_initialize(
+        CpiContext::new(
+            ctx.accounts.token_program.to_account_info(),
+            TokenMetadataInitialize {
+                token_program_id: ctx.accounts.token_program.to_account_info(),
+                metadata: ctx.accounts.mint.to_account_info(),
+                update_authority: ctx.accounts.payer.to_account_info(),
+                mint_authority: ctx.accounts.payer.to_account_info(),
+                mint: ctx.accounts.mint.to_account_info(),
+            },
+        ),
         args.name.clone(),
         args.symbol.clone(),
         args.uri.clone(),
     )?;
+
     ctx.accounts.mint.reload()?;
     let mint_data = &mut ctx.accounts.mint.to_account_info();
     let metadata = get_mint_extensible_extension_data::<TokenMetadata>(mint_data)?;
@@ -107,9 +86,10 @@ pub fn create_mint_account(
     assert_eq!(metadata.symbol, args.symbol);
     assert_eq!(metadata.uri, args.uri);
     assert_eq!(ctx.accounts.mint.decimals, token_decimals);
+
     let metadata_pointer = get_mint_extension_data::<MetadataPointer>(mint_data)?;
     let mint_key: Option<Pubkey> = Some(ctx.accounts.mint.key());
-    let authority_key: Option<Pubkey> = Some(ctx.accounts.authority.key());
+    let authority_key: Option<Pubkey> = Some(ctx.accounts.payer.key());
     assert_eq!(
         metadata_pointer.metadata_address,
         OptionalNonZeroPubkey::try_from(mint_key)?
@@ -118,7 +98,7 @@ pub fn create_mint_account(
         metadata_pointer.authority,
         OptionalNonZeroPubkey::try_from(authority_key)?
     );
-  
+
     // transfer minimum rent to mint account
     update_account_lamports_to_minimum_balance(
         ctx.accounts.mint.to_account_info(),
@@ -127,18 +107,4 @@ pub fn create_mint_account(
     )?;
 
     Ok(())
-}
-
-#[derive(Accounts)]
-#[instruction()]
-pub struct CheckMintExtensionConstraints<'info> {
-    #[account(mut)]
-    /// CHECK: can be any account
-    pub authority: Signer<'info>,
-    #[account(
-        extensions::metadata_pointer::authority = authority,
-        extensions::metadata_pointer::metadata_address = mint,
- 
-    )]
-    pub mint: Box<InterfaceAccount<'info, Mint>>,
 }

@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "31DzEEP9cPnymPm8RBrEqFAWXoMUmRzr1kUZ9tUiwR3n",
+  "address": "6giLSwgumzMf6VdQwbBFKb9Fp9DPWAvm2n6MjcaZFaQB",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -411,74 +411,9 @@ export type Degenerator = {
           "signer": true
         },
         {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "receiver"
-        },
-        {
           "name": "mint",
           "writable": true,
           "signer": true
-        },
-        {
-          "name": "mintTokenAccount",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "receiver"
-              },
-              {
-                "kind": "account",
-                "path": "tokenProgram"
-              },
-              {
-                "kind": "account",
-                "path": "mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
-              ]
-            }
-          }
         },
         {
           "name": "extraMetasAccount",

@@ -67,13 +67,6 @@ export async function getInitializeDegeneratorIxs({
 		mint,
 	})
 
-	const payerAta = await getAssociatedTokenAddress(
-		mint,
-		payer,
-		true,
-		TOKEN_2022_PROGRAM_ID,
-	)
-
 	const vaultAta = await getAssociatedTokenAddress(
 		mint,
 		vault,
@@ -88,10 +81,7 @@ export async function getInitializeDegeneratorIxs({
 		.createMintAccount(decimals, metadata)
 		.accountsStrict({
 			payer: payer,
-			authority: payer,
-			receiver: payer,
 			mint: mint,
-			mintTokenAccount: payerAta,
 			extraMetasAccount: extraMetasAccount,
 			systemProgram: web3.SystemProgram.programId,
 			associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
