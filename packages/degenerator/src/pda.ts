@@ -46,13 +46,6 @@ export function getBondingCurveState({
 	)[0]
 }
 
-export interface BondingCurveState {
-	buyPrice: BN
-	sellPrice: BN
-	currentSupply: BN
-	progress: BN
-}
-
 export async function fetchBondingCurveState({
 	program,
 	mint,
