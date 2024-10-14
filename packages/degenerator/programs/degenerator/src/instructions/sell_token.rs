@@ -9,6 +9,7 @@ use crate::utils::token::{
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInterface};
+use spl_token_2022::ui_amount_to_amount;
 
 #[derive(Accounts)]
 pub struct SellToken<'info> {
@@ -126,6 +127,11 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     let sell_price = sol_amount as f64 / amount as f64;
 
     msg!("sell_price_per_token: {}", sell_price);
+
+    msg!(
+        "in lamports: {}",
+        ui_amount_to_amount(sell_price, ctx.accounts.mint.decimals)
+    );
 
     let update_state = BondingCurveState {
         total_supply: ctx.accounts.mint.supply,

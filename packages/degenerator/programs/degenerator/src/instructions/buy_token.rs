@@ -11,6 +11,8 @@ use crate::utils::token::{
     get_account_balance, token_mint_to, transfer_sol_to_bonding_curve_vault,
 };
 
+use spl_token_2022::ui_amount_to_amount;
+
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
     /// The payer of the transaction and the signer
@@ -110,6 +112,11 @@ pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
     let buy_price = sol_amount as f64 / amount as f64;
 
     msg!("buy_price_per_token: {}", buy_price);
+
+    msg!(
+        "in lamports: {}",
+        ui_amount_to_amount(buy_price, ctx.accounts.mint.decimals)
+    );
 
     let update_state = BondingCurveState {
         total_supply: ctx.accounts.mint.supply,
