@@ -22,6 +22,7 @@ import {
 	SOL,
 	MEME,
 	amountToUiAmount,
+	bigintToUiAmount,
 } from '../index'
 import {
 	TOKEN_2022_PROGRAM_ID,
@@ -135,7 +136,7 @@ describe('initialize', () => {
 		}
 	})
 
-	it('sell token', async () => {
+	it('sell all tokens', async () => {
 		const payerAta = await getAssociatedTokenAddress(
 			MEME.mint,
 			payer.publicKey,
@@ -149,13 +150,14 @@ describe('initialize', () => {
 			'confirmed',
 			TOKEN_2022_PROGRAM_ID,
 		)
-		const amount = new BN(account.amount.toString())
-		const amountToSell = amountToUiAmount(amount, MEME.decimals)
+
+		const uiAmount = bigintToUiAmount(account.amount, MEME.decimals)
+
 		const ix = await getSellTokenIx({
 			program,
 			payer: payer.publicKey,
 			mint: MEME.mint,
-			uiAmount: amountToSell,
+			uiAmount: uiAmount,
 			decimals: MEME.decimals,
 		})
 

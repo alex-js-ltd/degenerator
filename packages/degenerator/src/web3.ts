@@ -116,3 +116,17 @@ export function amountToUiAmount(amount: BN, decimals: number): string {
 	const uiAmount = amount.div(divisor)
 	return uiAmount.toString()
 }
+
+export function bigintToUiAmount(amount: bigint, decimals: number): string {
+	const divisor = BigInt(10 ** decimals)
+	const integerPart = amount / divisor
+	const fractionalPart = amount % divisor
+
+	// Convert the fractional part to a string, padded with leading zeros if necessary
+	const fractionalStr = fractionalPart.toString().padStart(decimals, '0')
+
+	// Combine the integer part and fractional part
+	const uiAmount = `${integerPart.toString()}.${fractionalStr}`
+
+	return uiAmount
+}
