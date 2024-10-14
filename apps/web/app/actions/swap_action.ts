@@ -5,8 +5,8 @@ import { parseWithZod } from '@conform-to/zod'
 import { SwapSchema } from '@/app/utils/schemas'
 import { program, connection } from '@/app/utils/setup'
 import {
-	getBuyTokenInstruction,
-	getSellTokenInstruction,
+	getBuyTokenIx,
+	getSellTokenIx,
 	buildTransaction,
 } from '@repo/degenerator'
 
@@ -26,11 +26,23 @@ export async function swapAction(_prevState: State, formData: FormData) {
 		}
 	}
 
-	const { buy, payer, mint, amount } = submission.value
+	const { buy, payer, mint, amount, decimals } = submission.value
 
 	const ix = buy
-		? await getBuyTokenInstruction({ program, payer, mint, amount })
-		: await getSellTokenInstruction({ program, payer, mint, amount })
+		? await getBuyTokenIx({
+				program,
+				payer,
+				mint,
+				uiAmount: amount.toString(),
+				decimals,
+			})
+		: await getSellTokenIx({
+				program,
+				payer,
+				mint,
+				uiAmount: amount.toString(),
+				decimals,
+			})
 
 	const transaction = await buildTransaction({
 		connection,

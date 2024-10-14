@@ -53,9 +53,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 
 	const { data: poolState } = usePoolState(mint)
 
-	const { buyPrice, sellPrice } = poolState || {}
-
-	let price = buy.value === 'on' ? buyPrice : sellPrice
+	const { totalSupply, reserveBalance, reserveWeight } = poolState || {}
 
 	return (
 		<FormProvider context={form.context}>
@@ -65,9 +63,7 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 					action={formAction}
 					{...getFormProps(form)}
 				>
-					<span className="absolute top-3 right-3 z-50 text-teal-300 text-xs">
-						{`${calculateSolPrice(price, control.value)} SOL`}
-					</span>
+					<span className="absolute top-3 right-3 z-50 text-teal-300 text-xs"></span>
 					<input name="payer" defaultValue={payer} type="hidden" />
 					<input name="mint" defaultValue={mint} type="hidden" />
 					<div className="relative z-10 grid rounded-xl bg-white">

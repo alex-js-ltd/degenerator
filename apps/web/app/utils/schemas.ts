@@ -48,4 +48,10 @@ export const SwapSchema = z.object({
 		})
 		.min(0, { message: 'Amount is too low' }),
 	buy: z.boolean().optional(),
+	decimals: z
+		.number({
+			invalid_type_error: 'Expected Number',
+		})
+		.max(9, { message: 'Decimal is too high' })
+		.min(0, { message: 'Decimal is too low' }),
 })

@@ -18,7 +18,7 @@ export default function Page({ params }: { params: { id: string } }) {
 	const poolPromise = getPoolState(mint)
 	const pool = use(poolPromise)
 
-	const { progress } = pool
+	const { reserveBalance, reserveWeight } = pool
 
 	return (
 		<div className="w-full sm:max-w-xl flex flex-col gap-6">
@@ -31,8 +31,6 @@ export default function Page({ params }: { params: { id: string } }) {
 					</Pill>
 				}
 			/>
-
-			<Progress progress={progress.toNumber()} />
 		</div>
 	)
 }

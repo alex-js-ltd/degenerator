@@ -11,7 +11,7 @@ import {
 import { parseWithZod } from '@conform-to/zod'
 
 import { MintSchema } from '@/app/utils/schemas'
-import { type State, mintAction } from '@/app/actions/mint_action'
+import { type State, initializeAction } from '@/app/actions/initialize_action'
 
 import { usePayer } from '@/app/hooks/use_payer'
 import { useMintTx } from '@/app/context/tx_context'
@@ -31,7 +31,7 @@ const initialState: State = {
 }
 
 export function MintForm() {
-	const [state, formAction] = useActionState(mintAction, initialState)
+	const [state, formAction] = useActionState(initializeAction, initialState)
 
 	const { lastResult, data } = state
 

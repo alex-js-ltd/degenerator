@@ -7,7 +7,10 @@ import { type PutBlobResult, put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
 import { web3 } from '@coral-xyz/anchor'
 import { program, connection } from '@/app/utils/setup'
-import { getMintInstructions, buildTransaction } from '@repo/degenerator'
+import {
+	getInitializeDegeneratorIxs,
+	buildTransaction,
+} from '@repo/degenerator'
 import { isError, catchError } from '@/app/utils/misc'
 import { Keypair, PublicKey } from '@solana/web3.js'
 
@@ -77,7 +80,7 @@ export type State = {
 	}
 }
 
-export async function mintAction(_prevState: State, formData: FormData) {
+export async function initializeAction(_prevState: State, formData: FormData) {
 	const submission = parseWithZod(formData, {
 		schema: MintSchema,
 	})
@@ -103,21 +106,22 @@ export async function mintAction(_prevState: State, formData: FormData) {
 		name,
 		symbol,
 		uri: `https://degenerator-tawny.vercel.app/api/metadata/${upload.id}`,
+		mint: mint.publicKey,
 	}
+
+	const ixs = await getInitializeDegeneratorIxs({
+		program,
+		payer: payer,
+		mint: mint.publicKey,
+		metadata: metadata,
+		decimals: decimals,
+		uiAmount: supply.toString(),
+	})
 
 	const transaction = await buildTransaction({
 		connection,
 		payer,
-		instructions: [
-			...(await getMintInstructions({
-				program,
-				payer,
-				mint: mint.publicKey,
-				metadata,
-				decimals,
-				supply,
-			})),
-		],
+		instructions: [...ixs],
 		signers: [mint],
 	})
 

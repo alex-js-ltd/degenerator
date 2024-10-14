@@ -36,16 +36,11 @@ import {
 	uiAmountToAmount,
 } from './index'
 
-import { cpSwapProgram, configAddress, createPoolFeeReceive } from './config'
-
-import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token'
-
 interface GetInitializeDegeneratorIxsParams {
 	program: Program<Degenerator>
-
 	payer: PublicKey
 	mint: PublicKey
-	metadata: TokenMetadata
+	metadata: Omit<TokenMetadata, 'additionalMetadata'>
 	uiAmount: string
 	decimals: number
 }
@@ -117,7 +112,7 @@ interface SwapTokenIxsParams {
 	decimals: number
 }
 
-export async function getBuyTokenIxs({
+export async function getBuyTokenIx({
 	program,
 	payer,
 	mint,
@@ -153,14 +148,13 @@ export async function getBuyTokenIxs({
 	return buy
 }
 
-export async function getSellTokenIxs({
+export async function getSellTokenIx({
 	program,
 	payer,
 	mint,
 	uiAmount,
 	decimals,
-	bnAmount,
-}: SwapTokenIxsParams & { bnAmount: any }) {
+}: SwapTokenIxsParams) {
 	const payerAta = await getAssociatedTokenAddress(
 		mint,
 		payer,
@@ -175,7 +169,7 @@ export async function getSellTokenIxs({
 	const amount = uiAmountToAmount(uiAmount, decimals)
 
 	const sell = await program.methods
-		.sellToken(bnAmount)
+		.sellToken(amount)
 		.accountsStrict({
 			signer: payer,
 			mint,
