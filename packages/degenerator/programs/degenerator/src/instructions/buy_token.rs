@@ -107,6 +107,10 @@ pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
+    let buy_price = sol_amount as f64 / amount as f64;
+
+    msg!("buy_price_per_token: {}", buy_price);
+
     let update_state = BondingCurveState {
         total_supply: ctx.accounts.mint.supply,
         reserve_balance: vault_balance,
