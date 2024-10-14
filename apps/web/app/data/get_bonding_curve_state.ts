@@ -6,10 +6,10 @@ import { program } from '@/app/utils/setup'
 import { PublicKey } from '@solana/web3.js'
 
 export const preload = (mint: string) => {
-	void getPoolState(mint)
+	void getBondingCurveState(mint)
 }
 
-export const getPoolState = cache(async (mint: string) => {
+export const getBondingCurveState = cache(async (mint: string) => {
 	const data = await fetchBondingCurveState({
 		program,
 		mint: new PublicKey(mint),

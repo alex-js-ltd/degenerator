@@ -5,7 +5,7 @@ import { SwapForm } from '@/app/comps/swap_form'
 import { Pill } from '@/app/comps/pill'
 import { TokenLogo } from '@/app/comps/token_logo'
 import { Progress } from '@/app/comps/progress'
-import { getPoolState } from '@/app/data/get_pool_state'
+import { getBondingCurveState } from '@/app/data/get_bonding_curve_state'
 
 export const revalidate = 10
 export const dynamic = 'force-dynamic'
@@ -15,10 +15,10 @@ export default function Page({ params }: { params: { id: string } }) {
 	const res = use(tokenPromise)
 	const mint = res.data.id
 
-	const poolPromise = getPoolState(mint)
-	const pool = use(poolPromise)
+	const curvePromise = getBondingCurveState(mint)
+	const curve = use(curvePromise)
 
-	const { reserveBalance, reserveWeight } = pool
+	const { totalSupply, reserveBalance, reserveWeight } = curve
 
 	return (
 		<div className="w-full sm:max-w-xl flex flex-col gap-6">
