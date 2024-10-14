@@ -12,7 +12,8 @@ use crate::utils::token::{
 };
 
 pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
-    // transfer minimum rent to pda
+    
+     // transfer minimum rent to vault pda
     update_account_lamports_to_minimum_balance(
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.payer.to_account_info(),
