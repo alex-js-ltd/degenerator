@@ -62,7 +62,6 @@ describe('initialize', () => {
 		const ixs = await getInitializeDegeneratorIxs({
 			program,
 			payer: payer.publicKey,
-			mint: MEME.mint,
 			metadata: MEME.metadata,
 			decimals: MEME.decimals,
 			uiAmount: '1.0',
@@ -172,12 +171,12 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
-		console.log(res)
+
 		await sendAndConfirm({ connection, tx })
 		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
 
-	it('check account', async () => {
+	it('user should have 0 tokens', async () => {
 		const payerAta = await getAssociatedTokenAddress(
 			MEME.mint,
 			payer.publicKey,
@@ -191,10 +190,8 @@ describe('initialize', () => {
 			'confirmed',
 			TOKEN_2022_PROGRAM_ID,
 		)
-		const amount = new BN(account.amount.toString())
-		console.log('user amount', amount.toString())
 
-		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
+		expect(account.amount).toEqual(BigInt('0'))
 	})
 })
 
