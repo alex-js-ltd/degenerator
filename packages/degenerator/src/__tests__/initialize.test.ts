@@ -15,8 +15,8 @@ import {
 	sendAndConfirm,
 	getBondingCurveVault,
 	getBondingCurveState,
-	getBuyTokenIxs,
-	getSellTokenIxs,
+	getBuyTokenIx,
+	getSellTokenIx,
 	fetchBondingCurveState,
 	isRentExempt,
 	SOL,
@@ -108,7 +108,7 @@ describe('initialize', () => {
 		const items = [1, 2, 3, 4, 5]
 
 		for (const _item of items) {
-			const one = await getBuyTokenIxs({
+			const one = await getBuyTokenIx({
 				program,
 				payer: payer.publicKey,
 				mint: MEME.mint,
@@ -151,13 +151,12 @@ describe('initialize', () => {
 		)
 		const amount = new BN(account.amount.toString())
 		const amountToSell = amountToUiAmount(amount, MEME.decimals)
-		const ix = await getSellTokenIxs({
+		const ix = await getSellTokenIx({
 			program,
 			payer: payer.publicKey,
 			mint: MEME.mint,
 			uiAmount: amountToSell,
 			decimals: MEME.decimals,
-			bnAmount: amount,
 		})
 
 		const tx = await buildTransaction({
