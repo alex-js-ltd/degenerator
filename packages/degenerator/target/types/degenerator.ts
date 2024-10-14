@@ -845,6 +845,10 @@ export type Degenerator = {
           {
             "name": "reserveWeight",
             "type": "f64"
+          },
+          {
+            "name": "decimals",
+            "type": "u8"
           }
         ]
       }

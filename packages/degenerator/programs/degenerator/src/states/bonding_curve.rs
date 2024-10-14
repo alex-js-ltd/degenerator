@@ -6,6 +6,7 @@ pub struct BondingCurveState {
     pub total_supply: u64,    // Total fixed supply of tokens
     pub reserve_balance: u64, // Amount of reserve tokens (e.g., SOL)
     pub reserve_weight: f64,  // Fixed connector weight (e.g., 0.5 for 50%)
+    pub decimals: u8,
 }
 
 impl BondingCurveState {
@@ -36,7 +37,7 @@ pub fn sale_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> 
     Ok(target.round() as u64)
 }
 
-// Function to set bonding curve state
+// Function to update bonding curve state
 pub fn set_bonding_curve_state<'a>(
     curve: &mut Account<BondingCurveState>,
     payload: BondingCurveState,
@@ -44,6 +45,7 @@ pub fn set_bonding_curve_state<'a>(
     curve.total_supply = payload.total_supply;
     curve.reserve_balance = payload.reserve_balance;
     curve.reserve_weight = payload.reserve_weight;
+    curve.decimals = payload.decimals;
 
     Ok(())
 }

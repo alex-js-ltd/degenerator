@@ -12,7 +12,7 @@ import { SwapButton } from '@/app/comps/swap_button'
 import { useInputControl } from '@conform-to/react'
 import { getControlProps } from '@/app/utils/misc'
 import { SwapSwitch } from '@/app/comps/swap_switch'
-import { usePoolState } from '@/app/hooks/use_pool_state'
+import { useBondingCurveState } from '@/app/hooks/use_bonding_curve_state'
 import { calculateSolPrice } from '@/app/utils/misc'
 
 const initialState: State = {
@@ -59,9 +59,9 @@ export function SwapForm({
 
 	const control = useInputControl(amount)
 
-	const { data: poolState } = usePoolState(mint)
+	const { data: curveState } = useBondingCurveState(mint)
 
-	const { totalSupply, reserveBalance, reserveWeight } = poolState || {}
+	const { totalSupply, reserveBalance, reserveWeight } = curveState || {}
 
 	return (
 		<FormProvider context={form.context}>

@@ -839,6 +839,10 @@
           {
             "name": "reserve_weight",
             "type": "f64"
+          },
+          {
+            "name": "decimals",
+            "type": "u8"
           }
         ]
       }

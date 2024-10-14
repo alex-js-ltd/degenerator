@@ -6,7 +6,7 @@ import { PublicKey } from '@solana/web3.js'
 
 type CurveState = Awaited<ReturnType<typeof fetchBondingCurveState>>
 
-export function useBondingCureState(mint: string) {
+export function useBondingCurveState(mint: string) {
 	const { run, ...rest } = useAsync<CurveState>()
 
 	const _mint = useMemo(() => mint, [mint])

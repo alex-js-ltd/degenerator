@@ -65,6 +65,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
         total_supply: ctx.accounts.mint.supply,
         reserve_balance: vault_balance,
         reserve_weight: RESERVE_WEIGHT,
+        decimals: ctx.accounts.mint.decimals
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, initial_state)?;

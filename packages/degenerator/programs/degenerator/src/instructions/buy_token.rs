@@ -111,6 +111,7 @@ pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
         total_supply: ctx.accounts.mint.supply,
         reserve_balance: vault_balance,
         reserve_weight: RESERVE_WEIGHT,
+        decimals: ctx.accounts.mint.decimals,
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, update_state)?;
