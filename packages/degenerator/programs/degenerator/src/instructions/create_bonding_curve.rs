@@ -19,6 +19,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
         ctx.accounts.system_program.to_account_info(),
     )?;
 
+    // set vault to mint authority
     set_authority(
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.payer.to_account_info(),
@@ -31,6 +32,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
 
     assert_eq!(vault_balance, 0);
 
+    // add liquidity to reserve balance
     transfer_sol_to_bonding_curve_vault(
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.vault.to_account_info(),
@@ -42,6 +44,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
 
     assert_eq!(vault_balance, 1);
 
+    // add liquidity to token supply
     token_mint_to(
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
