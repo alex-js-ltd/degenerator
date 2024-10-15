@@ -1,6 +1,7 @@
 use crate::error::ErrorCode;
 use crate::states::{
-    sale_target_amount, set_bonding_curve_state, BondingCurveState, RESERVE_WEIGHT,
+    calculate_buy_price, calculate_sell_price, set_bonding_curve_state, BondingCurveState,
+    RESERVE_WEIGHT,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
@@ -60,11 +61,7 @@ pub struct SellToken<'info> {
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     let curve = &mut ctx.accounts.bonding_curve_state;
 
-    let sol_amount = sale_target_amount(
-        u128::from(curve.total_supply),
-        u128::from(curve.reserve_balance),
-        u128::from(amount),
-    )?;
+    let sol_amount = calculate_buy_price(u128::from(curve.total_supply), u128::from(amount))?;
 
     let user_supply = ctx.accounts.payer_ata.amount;
 

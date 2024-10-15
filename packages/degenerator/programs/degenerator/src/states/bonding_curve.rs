@@ -14,28 +14,33 @@ impl BondingCurveState {
 }
 
 pub const RESERVE_WEIGHT: f64 = 500_000.0; // Reserve weight in parts per million
-pub const MAX_WEIGHT: f64 = 1_000_000.0; // Max weight in parts per million
+pub const MAX_WEIGHT: f64 = 800_000.0; // Max weight in parts per million
 
-pub fn purchase_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
-    // Step 1: Calculate the ratio of the amount to the reserve balance
-    let ratio = amount as f64 / reserve_balance as f64;
+pub fn calculate_buy_price(supply: u128, amount: u128) -> Result<u64> {
+    let base_price = 1_000_000; // Set your base price
+    let slope = 1_000; // Set your slope for the price increase
 
-    // Step 2: Calculate the target amount using the formula
-    let target = supply as f64 * ((1.0 + ratio).powf(RESERVE_WEIGHT / MAX_WEIGHT) - 1.0);
+    let new_supply = supply + amount;
+    let price = base_price + (slope * (new_supply));
 
     // Step 3: Convert the target back to u64 and return it
-    Ok(target.round() as u64)
+
+    let scale = price.checked_div(1_000_000_000).unwrap();
+
+    Ok(scale as u64)
 }
 
-pub fn sale_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
-    // Calculate the ratio of the amount to the supply
-    let ratio = amount as f64 / supply as f64;
+pub fn calculate_sell_price(supply: u128, amount: u128) -> Result<u64> {
+    let base_price = 1_000_000; // Set your base price
+    let slope = 1_000; // Set your slope for the price decrease
 
-    // Calculate the target amount using the formula
-    let target = reserve_balance as f64 * (1.0 - (1.0 - ratio).powf(MAX_WEIGHT / RESERVE_WEIGHT));
+    // Calculate the new supply after selling the amount
+    let new_supply = supply - amount;
+    let price = base_price + (slope * new_supply);
 
-    // Convert the target back to u64 and return it
-    Ok(target.round() as u64)
+    let scale = price.checked_div(1_000_000_000).unwrap();
+
+    Ok(scale as u64)
 }
 
 // Function to update bonding curve state

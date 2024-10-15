@@ -64,7 +64,7 @@ describe('initialize', () => {
 			payer: payer.publicKey,
 			metadata: MEME.metadata,
 			decimals: MEME.decimals,
-			uiAmount: '1.0',
+			uiAmount: '0.000000001',
 		})
 
 		const tx = await buildTransaction({
@@ -104,8 +104,8 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = '1.0'
-		const purchases = Array.from({ length: 100 }, (_, index) => index)
+		const amountToBuy = '1000.0'
+		const purchases = Array.from({ length: 10 }, (_, index) => index)
 
 		for (const _purchase of purchases) {
 			const one = await getBuyTokenIx({
@@ -168,7 +168,7 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
-
+		console.log(res.value.logs)
 		await sendAndConfirm({ connection, tx })
 	})
 
