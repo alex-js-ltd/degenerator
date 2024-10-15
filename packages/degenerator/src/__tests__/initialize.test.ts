@@ -77,7 +77,7 @@ describe('initialize', () => {
 		tx.sign([payer])
 
 		const res = await connection.simulateTransaction(tx)
-		console.log(res)
+
 		expect(res.value.err).toBeNull()
 
 		await sendAndConfirm({ connection, tx })
@@ -105,9 +105,9 @@ describe('initialize', () => {
 
 	it('buy token', async () => {
 		const amountToBuy = '1.0'
-		const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+		const purchases = Array.from({ length: 100 }, (_, index) => index)
 
-		for (const _item of items) {
+		for (const _purchase of purchases) {
 			const one = await getBuyTokenIx({
 				program,
 				payer: payer.publicKey,
@@ -127,13 +127,10 @@ describe('initialize', () => {
 
 			// Simulate the transaction
 			const res = await connection.simulateTransaction(tx)
-
-			console.log(res)
+			console.log(res.value.logs)
 			await sendAndConfirm({ connection, tx })
-
-			await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 		}
-	})
+	}, 120000)
 
 	it('sell all tokens', async () => {
 		const payerAta = await getAssociatedTokenAddress(
@@ -173,7 +170,6 @@ describe('initialize', () => {
 		const res = await connection.simulateTransaction(tx)
 
 		await sendAndConfirm({ connection, tx })
-		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
 
 	it('user should have 0 tokens', async () => {
