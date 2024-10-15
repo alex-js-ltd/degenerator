@@ -64,7 +64,7 @@ describe('initialize', () => {
 			payer: payer.publicKey,
 			metadata: MEME.metadata,
 			decimals: MEME.decimals,
-			uiAmount: '0.000000001',
+			uiAmount: '1.0',
 		})
 
 		const tx = await buildTransaction({
@@ -104,7 +104,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = '1000.0'
+		const amountToBuy = '1000000.0'
 		const purchases = Array.from({ length: 10 }, (_, index) => index)
 
 		for (const _purchase of purchases) {
@@ -129,6 +129,12 @@ describe('initialize', () => {
 			const res = await connection.simulateTransaction(tx)
 			console.log(res.value.logs)
 			await sendAndConfirm({ connection, tx })
+
+			const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+
+			console.log('total supply:', state.totalSupply.toString())
+			console.log('vault balance:', state.reserveBalance.toString())
+			console.log('reserve weight:', state.reserveWeight.toString())
 		}
 	}, 120000)
 

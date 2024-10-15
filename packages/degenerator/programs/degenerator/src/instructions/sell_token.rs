@@ -119,6 +119,11 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
+    msg!(
+        "current supply: {}",
+        spl_token_2022::amount_to_ui_amount(ctx.accounts.mint.supply, ctx.accounts.mint.decimals)
+    );
+
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
     let update_state = BondingCurveState {

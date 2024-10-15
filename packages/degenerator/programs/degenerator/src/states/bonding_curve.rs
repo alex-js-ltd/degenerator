@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use anchor_spl::token_interface::spl_token_2022;
 
 #[account]
 #[derive(InitSpace)]
@@ -17,30 +18,36 @@ pub const RESERVE_WEIGHT: f64 = 500_000.0; // Reserve weight in parts per millio
 pub const MAX_WEIGHT: f64 = 800_000.0; // Max weight in parts per million
 
 pub fn calculate_buy_price(supply: u128, amount: u128) -> Result<u64> {
-    let base_price = 1_000_000; // Set your base price
-    let slope = 1_000; // Set your slope for the price increase
+    let base_price = 1_000_000_000.0; // Set your base price
+
+    let supply = spl_token_2022::amount_to_ui_amount(supply as u64, 9);
+    let amount = spl_token_2022::amount_to_ui_amount(amount as u64, 9);
 
     let new_supply = supply + amount;
-    let price = base_price + (slope * (new_supply));
+    // let price = base_price + (slope * (new_supply));
 
-    // Step 3: Convert the target back to u64 and return it
+    let price = base_price * new_supply.powf(2.0);
 
-    let scale = price.checked_div(1_000_000_000).unwrap();
+    let scale = spl_token_2022::ui_amount_to_amount(price, 9);
 
-    Ok(scale as u64)
+    Ok(scale / 1_000_000_000)
 }
 
 pub fn calculate_sell_price(supply: u128, amount: u128) -> Result<u64> {
-    let base_price = 1_000_000; // Set your base price
-    let slope = 1_000; // Set your slope for the price decrease
+    let base_price = 1_000_000_000.0; // Set your base price
+
+    let supply = spl_token_2022::amount_to_ui_amount(supply as u64, 9);
+    let amount = spl_token_2022::amount_to_ui_amount(amount as u64, 9);
 
     // Calculate the new supply after selling the amount
     let new_supply = supply - amount;
-    let price = base_price + (slope * new_supply);
+    // let price = base_price + (slope * new_supply);
 
-    let scale = price.checked_div(1_000_000_000).unwrap();
+    let price = base_price * new_supply.powf(2.0);
 
-    Ok(scale as u64)
+    let scale = spl_token_2022::ui_amount_to_amount(price, 9);
+
+    Ok(scale / 1_000_000_000)
 }
 
 // Function to update bonding curve state
