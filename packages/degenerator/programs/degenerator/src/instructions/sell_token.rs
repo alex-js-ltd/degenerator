@@ -124,15 +124,6 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
-    let sell_price = sol_amount as f64 / amount as f64;
-
-    msg!("sell_price_per_token: {}", sell_price);
-
-    msg!(
-        "in lamports: {}",
-        ui_amount_to_amount(sell_price, ctx.accounts.mint.decimals)
-    );
-
     let update_state = BondingCurveState {
         total_supply: ctx.accounts.mint.supply,
         reserve_balance: vault_balance,
