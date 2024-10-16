@@ -29,9 +29,6 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
         Some(ctx.accounts.vault.to_account_info().key()), // Wrap the Pubkey in Some
     )?;
 
-    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
-
-    assert_eq!(vault_balance, 0);
 
     // add liquidity to reserve balance
     transfer_sol_to_bonding_curve_vault(
@@ -43,7 +40,6 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
-    assert_eq!(vault_balance, 1);
 
     // add liquidity to token supply
     token_mint_to(

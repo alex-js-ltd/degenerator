@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use anchor_spl::token_interface::spl_token_2022;
 
 #[account]
 #[derive(InitSpace)]
@@ -16,26 +17,36 @@ impl BondingCurveState {
 pub const RESERVE_WEIGHT: f64 = 500_000.0; // Reserve weight in parts per million
 pub const MAX_WEIGHT: f64 = 1_000_000.0; // Max weight in parts per million
 
-pub fn purchase_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
+pub fn purchase_target_amount(supply: u64, reserve_balance: u64, amount: u64) -> Result<u64> {
+    let supply = spl_token_2022::amount_to_ui_amount(supply, 9);
+    let reserve = spl_token_2022::amount_to_ui_amount(reserve_balance, 9);
+    let amount = spl_token_2022::amount_to_ui_amount(amount, 9);
     // Step 1: Calculate the ratio of the amount to the reserve balance
-    let ratio = amount as f64 / reserve_balance as f64;
+    let ratio = amount / reserve;
 
     // Step 2: Calculate the target amount using the formula
-    let target = supply as f64 * ((1.0 + ratio).powf(RESERVE_WEIGHT / MAX_WEIGHT) - 1.0);
+    let target = supply * ((1.0 + ratio).powf(RESERVE_WEIGHT / MAX_WEIGHT) - 1.0);
+
+    let tokens = spl_token_2022::ui_amount_to_amount(target, 9);
 
     // Step 3: Convert the target back to u64 and return it
-    Ok(target.round() as u64)
+    Ok(tokens)
 }
 
-pub fn sale_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
+pub fn sale_target_amount(supply: u64, reserve_balance: u64, amount: u64) -> Result<u64> {
+    let supply = spl_token_2022::amount_to_ui_amount(supply, 9);
+    let reserve = spl_token_2022::amount_to_ui_amount(reserve_balance, 9);
+    let amount = spl_token_2022::amount_to_ui_amount(amount, 9);
     // Calculate the ratio of the amount to the supply
-    let ratio = amount as f64 / supply as f64;
+    let ratio = amount / supply;
 
     // Calculate the target amount using the formula
-    let target = reserve_balance as f64 * (1.0 - (1.0 - ratio).powf(MAX_WEIGHT / RESERVE_WEIGHT));
+    let target = reserve * (1.0 - (1.0 - ratio).powf(MAX_WEIGHT / RESERVE_WEIGHT));
+
+    let sol = spl_token_2022::ui_amount_to_amount(target, 9);
 
     // Convert the target back to u64 and return it
-    Ok(target.round() as u64)
+    Ok(sol)
 }
 
 // Function to update bonding curve state

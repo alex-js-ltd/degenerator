@@ -64,7 +64,7 @@ describe('initialize', () => {
 			payer: payer.publicKey,
 			metadata: MEME.metadata,
 			decimals: MEME.decimals,
-			uiAmount: '1.0',
+			uiAmount: '0.00000001',
 		})
 
 		const tx = await buildTransaction({
