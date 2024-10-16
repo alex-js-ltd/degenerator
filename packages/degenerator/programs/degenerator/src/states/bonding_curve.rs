@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::spl_token_2022;
+use {spl_math::precise_number::PreciseNumber, std::fmt::Debug};
 
 #[account]
 #[derive(InitSpace)]
@@ -19,11 +20,12 @@ pub const MAX_WEIGHT: f64 = 1_000_000.0; // Max weight in parts per million
 pub const ONE: f64 = 1_000_000.0;
 
 pub fn purchase_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
-    let supply = spl_token_2022::amount_to_ui_amount(supply, 9);
-    let reserve = spl_token_2022::amount_to_ui_amount(reserve_balance, 9);
-    let amount = spl_token_2022::amount_to_ui_amount(amount, 9);
+    let supply = PreciseNumber::new(supply).unwrap();
+    let reserve_balance = PreciseNumber::new(reserve_balance).unwrap();
+    let amount = PreciseNumber::new(amount).unwrap();
+
     // Step 1: Calculate the ratio of the amount to the reserve balance
-    let ratio = amount / reserve;
+    let ratio = PreciseNumber::checked_div(&amount, &reserve_balance).unwrap();
 
     // Step 2: Calculate the target amount using the formula
     let target = supply * ((1.0 + ratio).powf(RESERVE_WEIGHT / MAX_WEIGHT) - 1.0);
@@ -35,11 +37,11 @@ pub fn purchase_target_amount(supply: u128, reserve_balance: u128, amount: u128)
 }
 
 pub fn sale_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
-    let supply = spl_token_2022::amount_to_ui_amount(supply, 9);
-    let reserve = spl_token_2022::amount_to_ui_amount(reserve_balance, 9);
-    let amount = spl_token_2022::amount_to_ui_amount(amount, 9);
-    // Calculate the ratio of the amount to the supply
-    let ratio = amount / supply;
+    let supply = PreciseNumber::new(supply).unwrap();
+    let reserve_balance = PreciseNumber::new(reserve_balance).unwrap();
+    let amount = PreciseNumber::new(amount).unwrap();
+
+    let ratio = PreciseNumber::checked_div(&amount, &supply).unwrap();
 
     // Calculate the target amount using the formula
     let target = reserve * (1.0 - (1.0 - ratio).powf(MAX_WEIGHT / RESERVE_WEIGHT));
