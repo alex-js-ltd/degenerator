@@ -1,6 +1,6 @@
+use crate::utils::{precise_number, PreciseNumber};
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::spl_token_2022;
-use {spl_math::precise_number::PreciseNumber, std::fmt::Debug};
 
 #[account]
 #[derive(InitSpace)]
@@ -45,20 +45,24 @@ pub fn purchase_target_amount(supply: u128, reserve_balance: u128, amount: u128)
     msg!("ratio: {}", ratio.to_imprecise().unwrap());
 
     let base = PreciseNumber::checked_add(&one, &ratio).unwrap();
+    msg!("ratio: {}", base.to_imprecise().unwrap());
 
-    let exponent = RESERVE_WEIGHT / MAX_WEIGHT;
+    let exponent = 500_000;
 
     let power = PreciseNumber::checked_pow(&base, exponent).unwrap();
+    msg!("power: {}", base.to_imprecise().unwrap());
 
-    let target = PreciseNumber::checked_mul(&supply, &power).unwrap();
+    // Adjusted power: power - 1
+    let adjusted_power = PreciseNumber::checked_sub(&power, &one).unwrap();
 
-    let end = PreciseNumber::checked_sub(&target, &one).unwrap();
+    let target = PreciseNumber::checked_mul(&supply, &adjusted_power).unwrap();
+
     // Step 2: Calculate the target amount using the formula
     //let target = supply * ((1.0 + ratio).powf(RESERVE_WEIGHT / MAX_WEIGHT) - 1.0);
 
     // Step 3: Convert the target back to u64 and return it
-    msg!("purcahse_target_result: {}", end.to_imprecise().unwrap());
-    Ok(end.to_imprecise().unwrap() as u64)
+    msg!("purcahse_target_result: {}", target.to_imprecise().unwrap());
+    Ok(target.to_imprecise().unwrap() as u64)
 }
 
 pub fn sale_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
