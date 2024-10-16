@@ -17,7 +17,7 @@ impl BondingCurveState {
 
 pub const RESERVE_WEIGHT: u128 = 500_000; // Reserve weight in parts per million
 pub const MAX_WEIGHT: u128 = 1_000_000; // Max weight in parts per million
-pub const ONE: u128 = 1_000_000;
+pub const ONE: u128 = 1;
 
 pub fn get_precise_numbers(
     supply: u128,
@@ -32,11 +32,13 @@ pub fn get_precise_numbers(
 }
 
 pub fn purchase_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
-    let (supply, reserve_balance, amount) = get_precise_numbers(supply, reserve_balance, amount);
-
+    let supply = PreciseNumber::new(supply).unwrap();
+    let reserve_balance = PreciseNumber::new(reserve_balance).unwrap();
+    let amount = PreciseNumber::new(amount).unwrap();
     let one = PreciseNumber::new(ONE).unwrap();
+    let max_weight = PreciseNumber::new(MAX_WEIGHT).unwrap();
 
-    let ratio = PreciseNumber::checked_mul(&amount, &one)
+    let ratio = PreciseNumber::checked_mul(&amount, &max_weight)
         .and_then(|scaled_amount| PreciseNumber::checked_div(&scaled_amount, &reserve_balance))
         .unwrap();
 

@@ -35,7 +35,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Re
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        1,
+        amount.saturating_div(2),
     )?;
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
