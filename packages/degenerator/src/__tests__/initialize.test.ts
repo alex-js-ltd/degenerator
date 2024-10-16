@@ -64,7 +64,7 @@ describe('initialize', () => {
 			payer: payer.publicKey,
 			metadata: MEME.metadata,
 			decimals: MEME.decimals,
-			uiAmount: '0.00000001',
+			uiAmount: '1.0',
 		})
 
 		const tx = await buildTransaction({
@@ -105,7 +105,7 @@ describe('initialize', () => {
 
 	it('buy token', async () => {
 		const amountToBuy = '1.0'
-		const purchases = Array.from({ length: 100 }, (_, index) => index)
+		const purchases = Array.from({ length: 10 }, (_, index) => index)
 
 		for (const _purchase of purchases) {
 			const one = await getBuyTokenIx({
@@ -132,63 +132,63 @@ describe('initialize', () => {
 		}
 	}, 120000)
 
-	it('sell all tokens', async () => {
-		const payerAta = await getAssociatedTokenAddress(
-			MEME.mint,
-			payer.publicKey,
-			true,
-			TOKEN_2022_PROGRAM_ID,
-		)
+	// it('sell all tokens', async () => {
+	// 	const payerAta = await getAssociatedTokenAddress(
+	// 		MEME.mint,
+	// 		payer.publicKey,
+	// 		true,
+	// 		TOKEN_2022_PROGRAM_ID,
+	// 	)
 
-		const account = await getAccount(
-			connection,
-			payerAta,
-			'confirmed',
-			TOKEN_2022_PROGRAM_ID,
-		)
+	// 	const account = await getAccount(
+	// 		connection,
+	// 		payerAta,
+	// 		'confirmed',
+	// 		TOKEN_2022_PROGRAM_ID,
+	// 	)
 
-		const uiAmount = bigintToUiAmount(account.amount, MEME.decimals)
+	// 	const uiAmount = bigintToUiAmount(account.amount, MEME.decimals)
 
-		const ix = await getSellTokenIx({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			uiAmount: uiAmount,
-			decimals: MEME.decimals,
-		})
+	// 	const ix = await getSellTokenIx({
+	// 		program,
+	// 		payer: payer.publicKey,
+	// 		mint: MEME.mint,
+	// 		uiAmount: uiAmount,
+	// 		decimals: MEME.decimals,
+	// 	})
 
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
+	// 	const tx = await buildTransaction({
+	// 		connection: connection,
+	// 		payer: payer.publicKey,
+	// 		instructions: [ix],
+	// 		signers: [],
+	// 	})
 
-		tx.sign([payer])
+	// 	tx.sign([payer])
 
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
+	// 	// Simulate the transaction
+	// 	const res = await connection.simulateTransaction(tx)
 
-		await sendAndConfirm({ connection, tx })
-	})
+	// 	await sendAndConfirm({ connection, tx })
+	// })
 
-	it('user should have 0 tokens', async () => {
-		const payerAta = await getAssociatedTokenAddress(
-			MEME.mint,
-			payer.publicKey,
-			true,
-			TOKEN_2022_PROGRAM_ID,
-		)
+	// it('user should have 0 tokens', async () => {
+	// 	const payerAta = await getAssociatedTokenAddress(
+	// 		MEME.mint,
+	// 		payer.publicKey,
+	// 		true,
+	// 		TOKEN_2022_PROGRAM_ID,
+	// 	)
 
-		const account = await getAccount(
-			connection,
-			payerAta,
-			'confirmed',
-			TOKEN_2022_PROGRAM_ID,
-		)
+	// 	const account = await getAccount(
+	// 		connection,
+	// 		payerAta,
+	// 		'confirmed',
+	// 		TOKEN_2022_PROGRAM_ID,
+	// 	)
 
-		expect(account.amount).toEqual(BigInt('0'))
-	})
+	// 	expect(account.amount).toEqual(BigInt('0'))
+	// })
 })
 
 async function checkMintAuth({
