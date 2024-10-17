@@ -4,8 +4,7 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInterface};
 
 use crate::states::{
-    purchase_target_amount, sale_target_amount, set_bonding_curve_state, BondingCurveState,
-    RESERVE_WEIGHT,
+    calculate_buy_price, set_bonding_curve_state, BondingCurveState, RESERVE_WEIGHT,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
@@ -62,10 +61,10 @@ pub struct BuyToken<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
+pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     let curve = &mut ctx.accounts.bonding_curve_state;
 
-    let amount = purchase_target_amount(curve.total_supply, curve.reserve_balance, sol_amount)?;
+    let sol_amount = calculate_buy_price(curve.total_supply, curve.reserve_balance, amount)?;
 
     msg!(
         "purchase_target_amount: {}",
@@ -116,7 +115,7 @@ pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
         .unwrap();
 
     let price_per_token =
-        sale_target_amount(ctx.accounts.mint.supply, vault_balance, smallest_unit)?;
+        calculate_buy_price(ctx.accounts.mint.supply, vault_balance, smallest_unit)?;
 
     msg!(
         "price_per_token: {}",

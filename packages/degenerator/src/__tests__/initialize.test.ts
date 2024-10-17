@@ -64,7 +64,7 @@ describe('initialize', () => {
 			payer: payer.publicKey,
 			metadata: MEME.metadata,
 			decimals: MEME.decimals,
-			uiAmount: '0.00000001',
+			uiAmount: '1.0',
 		})
 
 		const tx = await buildTransaction({
@@ -104,22 +104,37 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const amountToBuy = '1.0'
-		const purchases = Array.from({ length: 100 }, (_, index) => index)
+		const supplyValues = [
+			'1000.0', // 0-1,000 tokens
+			'2000.0', // 1,001-2,000 tokens
+			'3000.0', // 2,001-3,000 tokens
+			'5000.0', // 3,001-5,000 tokens
+			'10000.0', // 5,001-10,000 tokens
+			'20000.0', // 10,001-20,000 tokens
+			'40000.0', // 20,001-40,000 tokens
+			'80000.0', // 40,001-80,000 tokens
+			'160000.0', // 80,001-160,000 tokens
+			'320000.0', // 160,001-320,000 tokens
+			'640000.0', // 320,001-640,000 tokens
+			'1250000.0', // 640,001-1,250,000 tokens
+			'2500000.0', // 1,250,001-2,500,000 tokens
+			'500000000.0', // 2,500,001-500,000,000 tokens
+			'1000000000.0', // 500,000,001-1,000,000,000 tokens
+		]
 
-		for (const _purchase of purchases) {
+		for (const s of supplyValues) {
 			const one = await getBuyTokenIx({
 				program,
 				payer: payer.publicKey,
 				mint: MEME.mint,
-				uiAmount: amountToBuy,
+				uiAmount: s,
 				decimals: MEME.decimals,
 			})
 
 			const tx = await buildTransaction({
 				connection: connection,
 				payer: payer.publicKey,
-				instructions: [one],
+				instructions: [...one],
 				signers: [],
 			})
 
@@ -129,6 +144,45 @@ describe('initialize', () => {
 			const res = await connection.simulateTransaction(tx)
 			console.log(res.value.logs)
 			await sendAndConfirm({ connection, tx })
+
+			const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+			console.log('total supply:', state.totalSupply.toString())
+			console.log('vault balance:', state.reserveBalance.toString())
+			console.log('reserve weight:', state.reserveWeight.toString())
+		}
+	}, 120000)
+
+	it('sell token', async () => {
+		const amountToSell = '100.0'
+		const purchases = Array.from({ length: 1 }, (_, index) => index)
+
+		for (const _purchase of purchases) {
+			const ix = await getSellTokenIx({
+				program,
+				payer: payer.publicKey,
+				mint: MEME.mint,
+				uiAmount: amountToSell,
+				decimals: MEME.decimals,
+			})
+
+			const tx = await buildTransaction({
+				connection: connection,
+				payer: payer.publicKey,
+				instructions: [ix],
+				signers: [],
+			})
+
+			tx.sign([payer])
+
+			// Simulate the transaction
+			const res = await connection.simulateTransaction(tx)
+			console.log(res.value.logs)
+			await sendAndConfirm({ connection, tx })
+
+			const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+			console.log('total supply:', state.totalSupply.toString())
+			console.log('vault balance:', state.reserveBalance.toString())
+			console.log('reserve weight:', state.reserveWeight.toString())
 		}
 	}, 120000)
 
@@ -186,6 +240,12 @@ describe('initialize', () => {
 			'confirmed',
 			TOKEN_2022_PROGRAM_ID,
 		)
+
+		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+
+		console.log('total supply:', state.totalSupply.toString())
+		console.log('vault balance:', state.reserveBalance.toString())
+		console.log('reserve weight:', state.reserveWeight.toString())
 
 		expect(account.amount).toEqual(BigInt('0'))
 	})

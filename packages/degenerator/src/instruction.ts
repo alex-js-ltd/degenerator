@@ -145,7 +145,11 @@ export async function getBuyTokenIx({
 		})
 		.instruction()
 
-	return buy
+	const computeUnitLimitInstruction = ComputeBudgetProgram.setComputeUnitLimit({
+		units: 900000,
+	})
+
+	return [computeUnitLimitInstruction, buy]
 }
 
 export async function getSellTokenIx({
