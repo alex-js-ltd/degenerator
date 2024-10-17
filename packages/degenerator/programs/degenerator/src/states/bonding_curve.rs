@@ -16,7 +16,7 @@ impl BondingCurveState {
 
 pub const RESERVE_WEIGHT: f64 = 500_000.0; // Reserve weight in parts per million
 pub const MAX_WEIGHT: f64 = 1_000_000.0; // Max weight in parts per million
-pub const ONE: f64 = 1_000_000.0;
+pub const ONE: f64 = 1.0;
 
 pub fn purchase_target_amount(supply: u64, reserve_balance: u64, amount: u64) -> Result<u64> {
     let supply = spl_token_2022::amount_to_ui_amount(supply, 9);
@@ -26,7 +26,7 @@ pub fn purchase_target_amount(supply: u64, reserve_balance: u64, amount: u64) ->
     let ratio = amount / reserve;
 
     // Step 2: Calculate the target amount using the formula
-    let target = supply * ((1.0 + ratio).powf(RESERVE_WEIGHT / MAX_WEIGHT) - 1.0);
+    let target = supply * ((ONE + ratio).powf(RESERVE_WEIGHT / MAX_WEIGHT) - ONE);
 
     let tokens = spl_token_2022::ui_amount_to_amount(target, 9);
 
@@ -42,7 +42,7 @@ pub fn sale_target_amount(supply: u64, reserve_balance: u64, amount: u64) -> Res
     let ratio = amount / supply;
 
     // Calculate the target amount using the formula
-    let target = reserve * (1.0 - (1.0 - ratio).powf(MAX_WEIGHT / RESERVE_WEIGHT));
+    let target = reserve * (ONE - (ONE - ratio).powf(MAX_WEIGHT / RESERVE_WEIGHT));
 
     let sol = spl_token_2022::ui_amount_to_amount(target, 9);
 
