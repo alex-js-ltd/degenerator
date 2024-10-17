@@ -18,7 +18,7 @@ pub const RESERVE_WEIGHT: f64 = 500_000.0; // Reserve weight in parts per millio
 pub const MAX_WEIGHT: f64 = 1_000_000.0; // Max weight in parts per million
 pub const ONE: f64 = 1_000_000.0;
 
-pub fn purchase_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
+pub fn purchase_target_amount(supply: u64, reserve_balance: u64, amount: u64) -> Result<u64> {
     let supply = spl_token_2022::amount_to_ui_amount(supply, 9);
     let reserve = spl_token_2022::amount_to_ui_amount(reserve_balance, 9);
     let amount = spl_token_2022::amount_to_ui_amount(amount, 9);
@@ -34,7 +34,7 @@ pub fn purchase_target_amount(supply: u128, reserve_balance: u128, amount: u128)
     Ok(tokens)
 }
 
-pub fn sale_target_amount(supply: u128, reserve_balance: u128, amount: u128) -> Result<u64> {
+pub fn sale_target_amount(supply: u64, reserve_balance: u64, amount: u64) -> Result<u64> {
     let supply = spl_token_2022::amount_to_ui_amount(supply, 9);
     let reserve = spl_token_2022::amount_to_ui_amount(reserve_balance, 9);
     let amount = spl_token_2022::amount_to_ui_amount(amount, 9);
