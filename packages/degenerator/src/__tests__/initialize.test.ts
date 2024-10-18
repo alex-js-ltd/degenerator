@@ -137,49 +137,83 @@ describe('initialize', () => {
 		}
 	}, 120000)
 
-	it('sell all tokens', async () => {
-		const payerAta = await getAssociatedTokenAddress(
-			MEME.mint,
-			payer.publicKey,
-			true,
-			TOKEN_2022_PROGRAM_ID,
-		)
+	it('sell token', async () => {
+		const buyAmount = '100000.0'
 
-		const account = await getAccount(
-			connection,
-			payerAta,
-			'confirmed',
-			TOKEN_2022_PROGRAM_ID,
-		)
+		const arr = Array.from({ length: 10 }, (_, index) => index + 1)
 
-		const uiAmount = bigintToUiAmount(account.amount, MEME.decimals)
+		for (const s of arr) {
+			const one = await getSellTokenIx({
+				program,
+				payer: payer.publicKey,
+				mint: MEME.mint,
+				uiAmount: buyAmount,
+				decimals: MEME.decimals,
+			})
 
-		const ix = await getSellTokenIx({
-			program,
-			payer: payer.publicKey,
-			mint: MEME.mint,
-			uiAmount: uiAmount,
-			decimals: MEME.decimals,
-		})
+			const tx = await buildTransaction({
+				connection: connection,
+				payer: payer.publicKey,
+				instructions: [one],
+				signers: [],
+			})
 
-		const tx = await buildTransaction({
-			connection: connection,
-			payer: payer.publicKey,
-			instructions: [ix],
-			signers: [],
-		})
+			tx.sign([payer])
 
-		tx.sign([payer])
+			// Simulate the transaction
+			const res = await connection.simulateTransaction(tx)
+			console.log(res.value.logs)
+			await sendAndConfirm({ connection, tx })
 
-		// Simulate the transaction
-		const res = await connection.simulateTransaction(tx)
+			const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+			console.log('current supply:', state.currentSupply.toString())
+			console.log('vault balance:', state.reserveBalance.toString())
+		}
+	}, 120000)
 
-		await sendAndConfirm({ connection, tx })
+	// it('sell all tokens', async () => {
+	// 	const payerAta = await getAssociatedTokenAddress(
+	// 		MEME.mint,
+	// 		payer.publicKey,
+	// 		true,
+	// 		TOKEN_2022_PROGRAM_ID,
+	// 	)
 
-		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
-		console.log('current supply:', state.currentSupply.toString())
-		console.log('vault balance:', state.reserveBalance.toString())
-	})
+	// 	const account = await getAccount(
+	// 		connection,
+	// 		payerAta,
+	// 		'confirmed',
+	// 		TOKEN_2022_PROGRAM_ID,
+	// 	)
+
+	// 	const uiAmount = bigintToUiAmount(account.amount, MEME.decimals)
+
+	// 	const ix = await getSellTokenIx({
+	// 		program,
+	// 		payer: payer.publicKey,
+	// 		mint: MEME.mint,
+	// 		uiAmount: uiAmount,
+	// 		decimals: MEME.decimals,
+	// 	})
+
+	// 	const tx = await buildTransaction({
+	// 		connection: connection,
+	// 		payer: payer.publicKey,
+	// 		instructions: [ix],
+	// 		signers: [],
+	// 	})
+
+	// 	tx.sign([payer])
+
+	// 	// Simulate the transaction
+	// 	const res = await connection.simulateTransaction(tx)
+
+	// 	await sendAndConfirm({ connection, tx })
+
+	// 	const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+	// 	console.log('current supply:', state.currentSupply.toString())
+	// 	console.log('vault balance:', state.reserveBalance.toString())
+	// })
 
 	it('user should have 0 tokens', async () => {
 		const payerAta = await getAssociatedTokenAddress(
