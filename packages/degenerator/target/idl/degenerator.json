@@ -829,7 +829,15 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "total_supply",
+            "name": "base_price",
+            "type": "f64"
+          },
+          {
+            "name": "slope",
+            "type": "f64"
+          },
+          {
+            "name": "current_supply",
             "type": "u64"
           },
           {
@@ -837,11 +845,7 @@
             "type": "u64"
           },
           {
-            "name": "reserve_weight",
-            "type": "f64"
-          },
-          {
-            "name": "decimals",
+            "name": "mint_decimals",
             "type": "u8"
           }
         ]

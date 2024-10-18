@@ -4,14 +4,12 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInterface};
 
 use crate::states::{
-    calculate_buy_price, set_bonding_curve_state, BondingCurveState, RESERVE_WEIGHT,
+    calculate_buy_price, set_bonding_curve_state, BondingCurveState, BASE_PRICE, SLOPE,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
     get_account_balance, token_mint_to, transfer_sol_to_bonding_curve_vault,
 };
-
-use spl_token_2022::amount_to_ui_amount;
 
 #[derive(Accounts)]
 pub struct BuyToken<'info> {
@@ -64,7 +62,7 @@ pub struct BuyToken<'info> {
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     let curve = &mut ctx.accounts.bonding_curve_state;
 
-    let sol_amount = calculate_buy_price(curve.total_supply, curve.reserve_balance, amount)?;
+    let sol_amount = calculate_buy_price(curve.current_supply, curve.mint_decimals, amount)?;
 
     msg!(
         "purchase_target_amount: {}",
@@ -110,26 +108,15 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
-    let smallest_unit = 10u64
-        .checked_pow(ctx.accounts.mint.decimals as u32)
-        .unwrap();
-
-    let price_per_token =
-        calculate_buy_price(ctx.accounts.mint.supply, vault_balance, smallest_unit)?;
-
-    msg!(
-        "price_per_token: {}",
-        amount_to_ui_amount(price_per_token, 9)
-    );
-
-    let update_state = BondingCurveState {
-        total_supply: ctx.accounts.mint.supply,
+    let payload = BondingCurveState {
+        slope: SLOPE,
+        base_price: BASE_PRICE,
+        current_supply: ctx.accounts.mint.supply,
         reserve_balance: vault_balance,
-        reserve_weight: RESERVE_WEIGHT,
-        decimals: ctx.accounts.mint.decimals,
+        mint_decimals: ctx.accounts.mint.decimals,
     };
 
-    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, update_state)?;
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, payload)?;
 
     Ok(())
 }

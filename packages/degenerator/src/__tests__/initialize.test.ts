@@ -132,9 +132,8 @@ describe('initialize', () => {
 			await sendAndConfirm({ connection, tx })
 
 			const state = await fetchBondingCurveState({ program, mint: MEME.mint })
-			console.log('total supply:', state.totalSupply.toString())
+			console.log('current supply:', state.currentSupply.toString())
 			console.log('vault balance:', state.reserveBalance.toString())
-			console.log('reserve weight:', state.reserveWeight.toString())
 		}
 	}, 120000)
 
@@ -178,9 +177,8 @@ describe('initialize', () => {
 		await sendAndConfirm({ connection, tx })
 
 		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
-		console.log('total supply:', state.totalSupply.toString())
+		console.log('current supply:', state.currentSupply.toString())
 		console.log('vault balance:', state.reserveBalance.toString())
-		console.log('reserve weight:', state.reserveWeight.toString())
 	})
 
 	it('user should have 0 tokens', async () => {
@@ -200,9 +198,8 @@ describe('initialize', () => {
 
 		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
 
-		console.log('total supply:', state.totalSupply.toString())
+		console.log('current supply:', state.currentSupply.toString())
 		console.log('vault balance:', state.reserveBalance.toString())
-		console.log('reserve weight:', state.reserveWeight.toString())
 
 		expect(account.amount).toEqual(BigInt('0'))
 	})
@@ -250,12 +247,11 @@ async function checkSupplyMatchesMint({
 
 	// Logging for debugging purposes
 
-	console.log('total supply:', state.totalSupply.toString())
+	console.log('current supply:', state.currentSupply.toString())
 	console.log('vault balance:', state.reserveBalance.toString())
-	console.log('reserve weight:', state.reserveWeight.toString())
 
 	// Convert the supplies to BN and compare
-	const stateSupply = new BN(state.totalSupply.toString())
+	const stateSupply = new BN(state.currentSupply.toString())
 	const accountSupply = new BN(account.supply.toString())
 
 	expect(stateSupply).toEqual(accountSupply)

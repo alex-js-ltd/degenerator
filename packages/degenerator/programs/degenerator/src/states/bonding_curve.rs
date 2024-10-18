@@ -1,37 +1,34 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::spl_token_2022;
+use anchor_spl::token_interface::spl_token_2022::amount_to_ui_amount;
 
-use spl_token_2022::amount_to_ui_amount;
+pub const BASE_PRICE: f64 = 0.000000200;
+pub const SLOPE: f64 = 1.2;
 
 #[account]
 #[derive(InitSpace)]
 pub struct BondingCurveState {
-    pub total_supply: u64,    // Total fixed supply of tokens
+    pub base_price: f64,
+    pub slope: f64,
+    pub current_supply: u64,  // Total fixed supply of tokens
     pub reserve_balance: u64, // Amount of reserve tokens (e.g., SOL)
-    pub reserve_weight: f64,  // Fixed connector weight (e.g., 0.5 for 50%)
-    pub decimals: u8,
+    pub mint_decimals: u8,
 }
 
 impl BondingCurveState {
-    pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8 + 8; // Adjusted length if necessary
+    pub const LEN: usize = 40 + 8; // Adjusted length if necessary
 }
-
-pub const BASE_PRICE: f64 = 0.000000200;
-pub const SLOPE: f64 = 1.2;
 
 pub fn price(supply: f64) -> f64 {
     SLOPE * supply + BASE_PRICE
 }
 
 pub fn reserve(supply: f64) -> f64 {
-    // This mirrors the Ethereum formula for calculating the pool balance
     (SLOPE / 2.0) * supply.powi(2) + BASE_PRICE * supply
 }
 
-pub fn calculate_buy_price(current_supply: u64, _reserve_balance: u64, amount: u64) -> Result<u64> {
-    let current_supply = spl_token_2022::amount_to_ui_amount(current_supply, 9);
-    let amount = spl_token_2022::amount_to_ui_amount(amount, 9);
-    // Step 3: Convert the target back to u64 and return it
+pub fn calculate_buy_price(current_supply: u64, decimals: u8, amount: u64) -> Result<u64> {
+    let current_supply = amount_to_ui_amount(current_supply, decimals);
+    let amount = amount_to_ui_amount(amount, decimals);
 
     let new_supply = current_supply + amount;
 
@@ -45,13 +42,9 @@ pub fn calculate_buy_price(current_supply: u64, _reserve_balance: u64, amount: u
     Ok(total_cost.round() as u64)
 }
 
-pub fn calculate_sell_price(
-    current_supply: u64,
-    _reserve_balance: u64,
-    amount: u64,
-) -> Result<u64> {
-    let current_supply = spl_token_2022::amount_to_ui_amount(current_supply, 9);
-    let amount = spl_token_2022::amount_to_ui_amount(amount, 9);
+pub fn calculate_sell_price(current_supply: u64, decimals: u8, amount: u64) -> Result<u64> {
+    let current_supply = amount_to_ui_amount(current_supply, decimals);
+    let amount = amount_to_ui_amount(amount, decimals);
     // Step 3: Convert the target back to u64 and return it
 
     let new_supply = current_supply - amount;
@@ -71,12 +64,11 @@ pub fn set_bonding_curve_state<'a>(
     curve: &mut Account<BondingCurveState>,
     payload: BondingCurveState,
 ) -> Result<()> {
-    curve.total_supply = payload.total_supply;
+    curve.base_price = payload.base_price;
+    curve.slope = payload.slope;
+    curve.current_supply = payload.current_supply;
     curve.reserve_balance = payload.reserve_balance;
-    curve.reserve_weight = payload.reserve_weight;
-    curve.decimals = payload.decimals;
+    curve.mint_decimals = payload.mint_decimals;
 
     Ok(())
 }
-
-pub const RESERVE_WEIGHT: f64 = 0.5;

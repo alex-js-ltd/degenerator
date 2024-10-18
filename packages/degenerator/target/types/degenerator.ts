@@ -835,7 +835,15 @@ export type Degenerator = {
         "kind": "struct",
         "fields": [
           {
-            "name": "totalSupply",
+            "name": "basePrice",
+            "type": "f64"
+          },
+          {
+            "name": "slope",
+            "type": "f64"
+          },
+          {
+            "name": "currentSupply",
             "type": "u64"
           },
           {
@@ -843,11 +851,7 @@ export type Degenerator = {
             "type": "u64"
           },
           {
-            "name": "reserveWeight",
-            "type": "f64"
-          },
-          {
-            "name": "decimals",
+            "name": "mintDecimals",
             "type": "u8"
           }
         ]

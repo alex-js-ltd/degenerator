@@ -1,6 +1,6 @@
 use crate::error::ErrorCode;
 use crate::states::{
-    calculate_sell_price, set_bonding_curve_state, BondingCurveState, RESERVE_WEIGHT,
+    calculate_sell_price, set_bonding_curve_state, BondingCurveState, BASE_PRICE, SLOPE,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
@@ -9,7 +9,6 @@ use crate::utils::token::{
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInterface};
-use spl_token_2022::ui_amount_to_amount;
 
 #[derive(Accounts)]
 pub struct SellToken<'info> {
@@ -60,7 +59,7 @@ pub struct SellToken<'info> {
 pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     let curve = &mut ctx.accounts.bonding_curve_state;
 
-    let sol_amount = calculate_sell_price(curve.total_supply, curve.reserve_balance, amount)?;
+    let sol_amount = calculate_sell_price(curve.current_supply, curve.mint_decimals, amount)?;
 
     let user_supply = ctx.accounts.payer_ata.amount;
 
@@ -120,14 +119,15 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
-    let update_state = BondingCurveState {
-        total_supply: ctx.accounts.mint.supply,
+    let payload = BondingCurveState {
+        slope: SLOPE,
+        base_price: BASE_PRICE,
+        current_supply: ctx.accounts.mint.supply,
         reserve_balance: vault_balance,
-        reserve_weight: RESERVE_WEIGHT,
-        decimals: ctx.accounts.mint.decimals,
+        mint_decimals: ctx.accounts.mint.decimals,
     };
 
-    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, update_state)?;
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, payload)?;
 
     Ok(())
 }
