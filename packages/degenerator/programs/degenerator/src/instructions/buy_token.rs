@@ -66,18 +66,9 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     let sol_amount = calculate_buy_price(curve.current_supply, curve.mint_decimals, amount)?;
 
     msg!(
-        "purchase_target_amount: {}",
-        spl_token_2022::amount_to_ui_amount(amount, ctx.accounts.mint.decimals)
-    );
-
-    msg!(
-        "sol_amount: {}",
+        "Buy {} tokens for {} SOL",
+        spl_token_2022::amount_to_ui_amount(amount, ctx.accounts.mint.decimals),
         spl_token_2022::amount_to_ui_amount(sol_amount, 9)
-    );
-
-    msg!(
-        "current_supply: {}",
-        spl_token_2022::amount_to_ui_amount(ctx.accounts.mint.supply, ctx.accounts.mint.decimals)
     );
 
     if ctx.accounts.payer.lamports() < sol_amount {

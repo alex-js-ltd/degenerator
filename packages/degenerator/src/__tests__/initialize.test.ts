@@ -174,7 +174,7 @@ describe('initialize', () => {
 
 		// Simulate the transaction
 		const res = await connection.simulateTransaction(tx)
-
+		console.log(res.value.logs)
 		await sendAndConfirm({ connection, tx })
 
 		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
