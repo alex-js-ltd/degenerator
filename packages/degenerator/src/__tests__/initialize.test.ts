@@ -104,24 +104,16 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const supplyValues = [
-			'1000.0', // 0-1,000 tokens
-			'2000.0', // 1,001-2,000 tokens
-			'3000.0', // 2,001-3,000 tokens
-			'5000.0', // 3,001-5,000 tokens
-			'10000.0', // 5,001-10,000 tokens
-			'20000.0', // 10,001-20,000 tokens
-			'40000.0', // 20,001-40,000 tokens
-			'80000.0', // 40,001-80,000 tokens
-			'160000.0', // 80,001-160,000 tokens
-		]
+		const buyAmount = '100.0'
 
-		for (const s of supplyValues) {
+		const arr = Array.from({ length: 20 }, (_, index) => index + 1)
+
+		for (const s of arr) {
 			const one = await getBuyTokenIx({
 				program,
 				payer: payer.publicKey,
 				mint: MEME.mint,
-				uiAmount: s,
+				uiAmount: buyAmount,
 				decimals: MEME.decimals,
 			})
 
