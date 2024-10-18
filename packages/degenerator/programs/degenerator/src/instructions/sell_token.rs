@@ -64,8 +64,6 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         amount,
     )?;
 
-    let user_supply = ctx.accounts.payer_ata.amount;
-
     msg!(
         "Price Per Token {} SOL",
         spl_token_2022::amount_to_ui_amount(ctx.accounts.bonding_curve_state.sell_price, 9)
@@ -81,7 +79,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         spl_token_2022::amount_to_ui_amount(sol_amount, 9)
     );
 
-    if amount > user_supply {
+    if amount > ctx.accounts.payer_ata.amount {
         return Err(ErrorCode::InsufficientUserSupply.into());
     }
 
