@@ -4,11 +4,11 @@ use anchor_spl::token_interface::{
     spl_token_2022::instruction::AuthorityType, Mint, TokenAccount, TokenInterface,
 };
 
-use crate::states::{set_bonding_curve_state, BondingCurveState, SLOPE, BASE_PRICE};
+use crate::states::{ set_bonding_curve_state, BondingCurveState, BASE_PRICE, SLOPE, calculate_price_per_token};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
-    get_account_balance, set_authority, token_mint_to, 
-    update_account_lamports_to_minimum_balance,
+    get_account_balance, set_authority, 
+    update_account_lamports_to_minimum_balance, token_mint_to
 };
 
 pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
@@ -26,25 +26,18 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         AuthorityType::MintTokens,
-        Some(ctx.accounts.vault.to_account_info().key()), // Wrap the Pubkey in Some
+        Some(ctx.accounts.vault.to_account_info().key()), 
     )?;
 
+    // initialise liquidity for bonding curve 
+    let liquidity = 10u64.checked_pow(ctx.accounts.mint.decimals as u32).unwrap();
 
-
-    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
-
-
-    let smallest_unit = 10u64
-        .checked_pow(ctx.accounts.mint.decimals as u32)
-        .unwrap();
-
-    // add liquidity to token supply
     token_mint_to(
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.vault_ata.to_account_info(),
-      smallest_unit,
+        liquidity,
         &[&[
             BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
@@ -52,14 +45,21 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ]],
     )?;
 
+
+    let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
+
     ctx.accounts.mint.reload()?;
+
+    let (buy_price, sell_price)  = calculate_price_per_token(ctx.accounts.mint.supply, ctx.accounts.mint.decimals)?;
 
     let initial_state = BondingCurveState {
         slope: SLOPE,
         base_price: BASE_PRICE,
         current_supply: ctx.accounts.mint.supply,
         reserve_balance: vault_balance,
-        mint_decimals: ctx.accounts.mint.decimals
+        mint_decimals: ctx.accounts.mint.decimals,
+        buy_price,
+        sell_price,
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, initial_state)?;

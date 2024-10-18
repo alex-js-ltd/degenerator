@@ -1,5 +1,7 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::spl_token_2022::amount_to_ui_amount;
+use anchor_spl::{
+    token::spl_token::ui_amount_to_amount, token_interface::spl_token_2022::amount_to_ui_amount,
+};
 
 pub const BASE_PRICE: f64 = 0.000000200;
 pub const SLOPE: f64 = 1.0;
@@ -12,10 +14,12 @@ pub struct BondingCurveState {
     pub current_supply: u64,  // Total fixed supply of tokens
     pub reserve_balance: u64, // Amount of reserve tokens (e.g., SOL)
     pub mint_decimals: u8,
+    pub buy_price: u64,
+    pub sell_price: u64,
 }
 
 impl BondingCurveState {
-    pub const LEN: usize = 40 + 8; // Adjusted length if necessary
+    pub const LEN: usize = 56 + 8; // Adjusted length if necessary
 }
 
 pub fn price(supply: f64) -> f64 {
@@ -59,6 +63,14 @@ pub fn calculate_sell_price(current_supply: u64, decimals: u8, amount: u64) -> R
     Ok(sell_revenue.round() as u64)
 }
 
+pub fn calculate_price_per_token(current_supply: u64, decimals: u8) -> Result<(u64, u64)> {
+    let smallest_unit = 10u64.checked_pow(decimals as u32).unwrap();
+    let buy_price = calculate_buy_price(current_supply, decimals, smallest_unit)?;
+    let sell_price = calculate_sell_price(current_supply, decimals, smallest_unit)?;
+
+    Ok((buy_price, sell_price))
+}
+
 // Function to update bonding curve state
 pub fn set_bonding_curve_state<'a>(
     curve: &mut Account<BondingCurveState>,
@@ -69,6 +81,8 @@ pub fn set_bonding_curve_state<'a>(
     curve.current_supply = payload.current_supply;
     curve.reserve_balance = payload.reserve_balance;
     curve.mint_decimals = payload.mint_decimals;
+    curve.buy_price = payload.buy_price;
+    curve.sell_price = payload.sell_price;
 
     Ok(())
 }
