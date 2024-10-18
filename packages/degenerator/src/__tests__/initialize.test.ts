@@ -103,7 +103,7 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const buyAmount = '100000.0'
+		const buyAmount = '100000.123456789'
 
 		const arr = Array.from({ length: 10 }, (_, index) => index + 1)
 

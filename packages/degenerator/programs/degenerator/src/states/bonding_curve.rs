@@ -1,25 +1,23 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{
-    token::spl_token::ui_amount_to_amount, token_interface::spl_token_2022::amount_to_ui_amount,
-};
+use anchor_spl::token_interface::spl_token_2022::amount_to_ui_amount;
 
 pub const BASE_PRICE: f64 = 0.000000200;
-pub const SLOPE: f64 = 1.0;
+pub const SLOPE: f64 = 1.2;
 
 #[account]
 #[derive(InitSpace)]
 pub struct BondingCurveState {
     pub base_price: f64,
     pub slope: f64,
-    pub current_supply: u64,  // Total fixed supply of tokens
-    pub reserve_balance: u64, // Amount of reserve tokens (e.g., SOL)
+    pub current_supply: u64,
+    pub reserve_balance: u64,
     pub mint_decimals: u8,
     pub buy_price: u64,
     pub sell_price: u64,
 }
 
 impl BondingCurveState {
-    pub const LEN: usize = 56 + 8; // Adjusted length if necessary
+    pub const LEN: usize = 56 + 8;
 }
 
 pub fn price(supply: f64) -> f64 {
@@ -49,7 +47,6 @@ pub fn calculate_buy_price(current_supply: u64, decimals: u8, amount: u64) -> Re
 pub fn calculate_sell_price(current_supply: u64, decimals: u8, amount: u64) -> Result<u64> {
     let current_supply = amount_to_ui_amount(current_supply, decimals);
     let amount = amount_to_ui_amount(amount, decimals);
-    // Step 3: Convert the target back to u64 and return it
 
     let new_supply = current_supply - amount;
 
