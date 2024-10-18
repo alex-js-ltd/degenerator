@@ -65,7 +65,11 @@ pub struct BuyToken<'info> {
 pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
     let curve = &mut ctx.accounts.bonding_curve_state;
 
-    let amount = purchase_target_amount(curve.total_supply, curve.reserve_balance, sol_amount)?;
+    let amount = purchase_target_amount(
+        u128::from(curve.total_supply),
+        u128::from(curve.reserve_balance),
+        u128::from(sol_amount),
+    )?;
 
     msg!(
         "purchase_target_amount: {}",
@@ -110,18 +114,6 @@ pub fn buy_token(ctx: Context<BuyToken>, sol_amount: u64) -> Result<()> {
     ctx.accounts.mint.reload()?;
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
-
-    let smallest_unit = 10u64
-        .checked_pow(ctx.accounts.mint.decimals as u32)
-        .unwrap();
-
-    let price_per_token =
-        sale_target_amount(ctx.accounts.mint.supply, vault_balance, smallest_unit)?;
-
-    msg!(
-        "price_per_token: {}",
-        amount_to_ui_amount(price_per_token, 9)
-    );
 
     let update_state = BondingCurveState {
         total_supply: ctx.accounts.mint.supply,

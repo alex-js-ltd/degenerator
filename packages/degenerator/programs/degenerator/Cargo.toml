@@ -22,5 +22,6 @@ spl-tlv-account-resolution = "0.6.3"
 spl-transfer-hook-interface = "0.6.3"
 spl-type-length-value = "0.4.3"
 spl-pod = "0.2.2"
+uint = "0.10.0"
 
 

@@ -1,5 +1,5 @@
 {
-  "address": "CZAp2pNk5dsR5WCAEPA9KHwNvXVpSywh28UvrosMWCJA",
+  "address": "C2J67kzJ6ftSXLhcB4DHeVjacENr8McAMNTsVFDQHwnA",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -838,7 +838,7 @@
           },
           {
             "name": "reserve_weight",
-            "type": "f64"
+            "type": "u128"
           },
           {
             "name": "decimals",
