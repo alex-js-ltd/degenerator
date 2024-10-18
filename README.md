@@ -5,3 +5,5 @@ solana-test-validator --reset \
 --clone DNXgeM9EiiaAbaWvwjHj9fQQLAX5ZsfHyvmYUNRAdNC8 \
 --clone D4FPEruKEHrG5TenZ2mpDGEfu1iUvTiqBxvpU8HLBvC2 \
 --url https://api.mainnet-beta.solana.com
+
+solana program deploy --buffer recover.json target/deploy/degenerator.so

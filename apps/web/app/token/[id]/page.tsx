@@ -18,13 +18,12 @@ export default function Page({ params }: { params: { id: string } }) {
 	const curvePromise = getBondingCurveState(mint)
 	const curve = use(curvePromise)
 
-	const { totalSupply, reserveBalance, reserveWeight } = curve
+	const { currentSupply, reserveBalance, mintDecimals } = curve
 
 	return (
 		<div className="w-full sm:max-w-xl flex flex-col gap-6">
 			<SwapForm
 				mint={mint}
-				decimals={9}
 				token={
 					<Pill variant="swap">
 						<TokenLogo src={res.data.image} alt={res.data.name} />

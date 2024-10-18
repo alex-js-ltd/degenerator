@@ -112,7 +112,6 @@ export async function initializeAction(_prevState: State, formData: FormData) {
 		payer: payer,
 		metadata: metadata,
 		decimals: decimals,
-		uiAmount: '1.0',
 	})
 
 	const transaction = await buildTransaction({
