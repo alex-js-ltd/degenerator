@@ -104,9 +104,9 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const buyAmount = '100.0'
+		const buyAmount = '100000.0'
 
-		const arr = Array.from({ length: 20 }, (_, index) => index + 1)
+		const arr = Array.from({ length: 10 }, (_, index) => index + 1)
 
 		for (const s of arr) {
 			const one = await getBuyTokenIx({

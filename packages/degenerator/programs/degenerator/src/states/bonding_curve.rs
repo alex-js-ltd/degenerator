@@ -16,11 +16,11 @@ impl BondingCurveState {
     pub const LEN: usize = 8 + 8 + 8 + 8 + 8 + 8 + 8 + 8; // Adjusted length if necessary
 }
 
-pub const BASE_PRICE: f64 = 0.0001;
-pub const SLOPE: f64 = 2.0;
+pub const BASE_PRICE: f64 = 0.000000200;
+pub const SLOPE: f64 = 1.2;
 
 pub fn price(supply: f64) -> f64 {
-    supply
+    SLOPE * supply + BASE_PRICE
 }
 
 pub fn reserve(supply: f64) -> f64 {
