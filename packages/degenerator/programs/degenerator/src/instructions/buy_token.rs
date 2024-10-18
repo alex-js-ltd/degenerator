@@ -61,9 +61,11 @@ pub struct BuyToken<'info> {
 }
 
 pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
-    let curve = &mut ctx.accounts.bonding_curve_state;
-
-    let sol_amount = calculate_buy_price(curve.current_supply, curve.mint_decimals, amount)?;
+    let sol_amount = calculate_buy_price(
+        ctx.accounts.bonding_curve_state.current_supply,
+        ctx.accounts.bonding_curve_state.mint_decimals,
+        amount,
+    )?;
 
     msg!(
         "Price Per Token {} SOL",
