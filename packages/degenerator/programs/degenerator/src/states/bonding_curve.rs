@@ -24,7 +24,7 @@ pub fn price(supply: f64) -> f64 {
     SLOPE * supply + BASE_PRICE
 }
 
-pub fn reserve(supply: f64) -> f64 {
+pub fn get_reserve_balance(supply: f64) -> f64 {
     (SLOPE / 2.0) * supply.powi(2) + BASE_PRICE * supply
 }
 
@@ -35,8 +35,8 @@ pub fn calculate_buy_price(current_supply: u64, decimals: u8, amount: u64) -> Re
     let new_supply = current_supply + amount;
 
     // Calculate the reserves before and after the purchase
-    let reserve_before = reserve(current_supply);
-    let reserve_after = reserve(new_supply);
+    let reserve_before = get_reserve_balance(current_supply);
+    let reserve_after = get_reserve_balance(new_supply);
 
     // Total cost for buying the tokens is the difference in reserves
     let total_cost = reserve_after - reserve_before;
@@ -51,8 +51,8 @@ pub fn calculate_sell_price(current_supply: u64, decimals: u8, amount: u64) -> R
     let new_supply = current_supply - amount;
 
     // Calculate the reserves before and after the sale
-    let reserve_before = reserve(current_supply);
-    let reserve_after = reserve(new_supply);
+    let reserve_before = get_reserve_balance(current_supply);
+    let reserve_after = get_reserve_balance(new_supply);
 
     // Revenue from selling is the difference in reserves
     let sell_revenue = reserve_before - reserve_after;
