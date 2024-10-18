@@ -66,8 +66,17 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     let sol_amount = calculate_buy_price(curve.current_supply, curve.mint_decimals, amount)?;
 
     msg!(
-        "Buy {} tokens for {} SOL",
+        "Price Per Token {} SOL",
+        spl_token_2022::amount_to_ui_amount(ctx.accounts.bonding_curve_state.buy_price, 9)
+    );
+
+    msg!(
+        "Buy Amount {}",
         spl_token_2022::amount_to_ui_amount(amount, ctx.accounts.mint.decimals),
+    );
+
+    msg!(
+        "Total Price {} SOL",
         spl_token_2022::amount_to_ui_amount(sol_amount, 9)
     );
 

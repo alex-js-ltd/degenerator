@@ -65,8 +65,17 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     let user_supply = ctx.accounts.payer_ata.amount;
 
     msg!(
-        "Sell {} tokens for {} SOL",
+        "Price Per Token {} SOL",
+        spl_token_2022::amount_to_ui_amount(ctx.accounts.bonding_curve_state.sell_price, 9)
+    );
+
+    msg!(
+        "Sell Amount {}",
         spl_token_2022::amount_to_ui_amount(amount, ctx.accounts.mint.decimals),
+    );
+
+    msg!(
+        "Total Revenue {} SOL",
         spl_token_2022::amount_to_ui_amount(sol_amount, 9)
     );
 
