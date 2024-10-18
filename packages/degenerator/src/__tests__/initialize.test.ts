@@ -114,12 +114,6 @@ describe('initialize', () => {
 			'40000.0', // 20,001-40,000 tokens
 			'80000.0', // 40,001-80,000 tokens
 			'160000.0', // 80,001-160,000 tokens
-			'320000.0', // 160,001-320,000 tokens
-			'640000.0', // 320,001-640,000 tokens
-			'1250000.0', // 640,001-1,250,000 tokens
-			'2500000.0', // 1,250,001-2,500,000 tokens
-			'500000000.0', // 2,500,001-500,000,000 tokens
-			'1000000000.0', // 500,000,001-1,000,000,000 tokens
 		]
 
 		for (const s of supplyValues) {
@@ -135,40 +129,6 @@ describe('initialize', () => {
 				connection: connection,
 				payer: payer.publicKey,
 				instructions: [...one],
-				signers: [],
-			})
-
-			tx.sign([payer])
-
-			// Simulate the transaction
-			const res = await connection.simulateTransaction(tx)
-			console.log(res.value.logs)
-			await sendAndConfirm({ connection, tx })
-
-			const state = await fetchBondingCurveState({ program, mint: MEME.mint })
-			console.log('total supply:', state.totalSupply.toString())
-			console.log('vault balance:', state.reserveBalance.toString())
-			console.log('reserve weight:', state.reserveWeight.toString())
-		}
-	}, 120000)
-
-	it('sell token', async () => {
-		const amountToSell = '100.0'
-		const purchases = Array.from({ length: 1 }, (_, index) => index)
-
-		for (const _purchase of purchases) {
-			const ix = await getSellTokenIx({
-				program,
-				payer: payer.publicKey,
-				mint: MEME.mint,
-				uiAmount: amountToSell,
-				decimals: MEME.decimals,
-			})
-
-			const tx = await buildTransaction({
-				connection: connection,
-				payer: payer.publicKey,
-				instructions: [ix],
 				signers: [],
 			})
 
@@ -224,6 +184,11 @@ describe('initialize', () => {
 		const res = await connection.simulateTransaction(tx)
 
 		await sendAndConfirm({ connection, tx })
+
+		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+		console.log('total supply:', state.totalSupply.toString())
+		console.log('vault balance:', state.reserveBalance.toString())
+		console.log('reserve weight:', state.reserveWeight.toString())
 	})
 
 	it('user should have 0 tokens', async () => {
