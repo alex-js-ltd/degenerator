@@ -11,7 +11,7 @@ degenerator = "DBvQVQUys7wG7aFp8JyAK2HNY1zF51ECgQNhjYz1QyJJ"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "Devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
