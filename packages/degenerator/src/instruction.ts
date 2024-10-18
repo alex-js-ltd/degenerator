@@ -39,18 +39,14 @@ import {
 interface GetInitializeDegeneratorIxsParams {
 	program: Program<Degenerator>
 	payer: PublicKey
-
 	metadata: Omit<TokenMetadata, 'additionalMetadata'>
-	uiAmount: string
 	decimals: number
 }
 
 export async function getInitializeDegeneratorIxs({
 	program,
-
 	payer,
 	metadata,
-	uiAmount,
 	decimals,
 }: GetInitializeDegeneratorIxsParams) {
 	const { mint } = metadata
@@ -84,10 +80,8 @@ export async function getInitializeDegeneratorIxs({
 		})
 		.instruction()
 
-	const amount = uiAmountToAmount(uiAmount, decimals)
-
 	const createBondingCurveIx = await program.methods
-		.createBondingCurve(amount)
+		.createBondingCurve()
 		.accountsStrict({
 			payer,
 			mint,
@@ -145,11 +139,7 @@ export async function getBuyTokenIx({
 		})
 		.instruction()
 
-	const computeUnitLimitInstruction = ComputeBudgetProgram.setComputeUnitLimit({
-		units: 900000,
-	})
-
-	return [computeUnitLimitInstruction, buy]
+	return buy
 }
 
 export async function getSellTokenIx({

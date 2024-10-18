@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::token_interface::spl_token_2022::amount_to_ui_amount;
 
 pub const BASE_PRICE: f64 = 0.000000200;
-pub const SLOPE: f64 = 1.2;
+pub const SLOPE: f64 = 1.0;
 
 #[account]
 #[derive(InitSpace)]
@@ -56,7 +56,7 @@ pub fn calculate_sell_price(current_supply: u64, decimals: u8, amount: u64) -> R
     // Revenue from selling is the difference in reserves
     let sell_revenue = reserve_before - reserve_after;
 
-    Ok(sell_revenue.floor() as u64)
+    Ok(sell_revenue.round() as u64)
 }
 
 // Function to update bonding curve state

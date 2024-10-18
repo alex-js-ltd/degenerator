@@ -6,7 +6,7 @@ pub mod utils;
 use anchor_lang::prelude::*;
 use instructions::*;
 
-declare_id!("Ci3Yfz1mXRKyebG9BDKjv85gp53kU1yQFH1QZritAcJz");
+declare_id!("xGQFYMRmsCxcheHhkYem7iFhEVY7BaVggkdUGzHS1mD");
 
 #[program]
 pub mod degenerator {
@@ -21,8 +21,8 @@ pub mod degenerator {
         instructions::create_mint_account(ctx, token_decimals, args)
     }
 
-    pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>, amount: u64) -> Result<()> {
-        instructions::create_bonding_curve(ctx, amount)
+    pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
+        instructions::create_bonding_curve(ctx)
     }
 
     pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {

@@ -1,5 +1,5 @@
 {
-  "address": "Ci3Yfz1mXRKyebG9BDKjv85gp53kU1yQFH1QZritAcJz",
+  "address": "xGQFYMRmsCxcheHhkYem7iFhEVY7BaVggkdUGzHS1mD",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -379,12 +379,7 @@
           "address": "SysvarRent111111111111111111111111111111111"
         }
       ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
+      "args": []
     },
     {
       "name": "create_mint_account",
