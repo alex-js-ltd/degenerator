@@ -18,12 +18,21 @@ export default function Page({ params }: { params: { id: string } }) {
 	const curvePromise = getBondingCurveState(mint)
 	const curve = use(curvePromise)
 
-	const { currentSupply, reserveBalance, mintDecimals } = curve
+	function getCurveProps() {
+		return {
+			curve: {
+				...curve,
+				currentSupply: curve.currentSupply.toString(),
+				reserveBalance: curve.reserveBalance.toString(),
+			},
+		}
+	}
 
 	return (
 		<div className="w-full sm:max-w-xl flex flex-col gap-6">
 			<SwapForm
 				mint={mint}
+				{...getCurveProps()}
 				token={
 					<Pill variant="swap">
 						<TokenLogo src={res.data.image} alt={res.data.name} />
@@ -31,6 +40,7 @@ export default function Page({ params }: { params: { id: string } }) {
 					</Pill>
 				}
 			/>
+			<Progress progress={curve.progress} />
 		</div>
 	)
 }

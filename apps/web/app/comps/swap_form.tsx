@@ -13,14 +13,30 @@ import { useInputControl } from '@conform-to/react'
 import { getControlProps } from '@/app/utils/misc'
 import { SwapSwitch } from '@/app/comps/swap_switch'
 import { useBondingCurveState } from '@/app/hooks/use_bonding_curve_state'
+import { fetchBondingCurveState } from '@repo/degenerator'
 import { calculateSolPrice } from '@/app/utils/misc'
+import invariant from 'tiny-invariant'
 
 const initialState: State = {
 	lastResult: undefined,
 	data: undefined,
 }
 
-export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
+type CurveState = Omit<
+	Awaited<ReturnType<typeof fetchBondingCurveState>>,
+	'currentSupply' | 'reserveBalance'
+> & {
+	currentSupply: string
+	reserveBalance: string
+}
+
+interface SwapFormProps {
+	mint: string
+	token: ReactNode
+	curve: CurveState
+}
+
+export function SwapForm({ mint, token, curve }: SwapFormProps) {
 	const [state, formAction] = useActionState(swapAction, initialState)
 
 	const { lastResult, data } = state
@@ -51,14 +67,13 @@ export function SwapForm({ mint, token }: { mint: string; token: ReactNode }) {
 
 	const control = useInputControl(amount)
 
-	const { data: curveState } = useBondingCurveState(mint)
+	const { currentSupply, reserveBalance, mintDecimals, basePrice, slope } =
+		curve || {}
 
-	const { currentSupply, reserveBalance, mintDecimals } = curveState || {}
-
-	function getPlaceholder(decimals?: number) {
-		return decimals
-			? { placeholder: '0.' + '0'.repeat(decimals) }
-			: { placeholder: '' }
+	function getPlaceholder(decimals: number) {
+		return {
+			placeholder: '0.' + '0'.repeat(decimals),
+		}
 	}
 
 	return (
