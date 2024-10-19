@@ -133,8 +133,6 @@ describe('initialize', () => {
 			const state = await fetchBondingCurveState({ program, mint: MEME.mint })
 			console.log('current supply:', state.currentSupply.toString())
 			console.log('vault balance:', state.reserveBalance.toString())
-			console.log('buy price:', state.buyPrice.toString())
-			console.log('sell price:', state.sellPrice.toString())
 		}
 	}, 120000)
 

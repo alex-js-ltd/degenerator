@@ -1,5 +1,5 @@
 {
-  "address": "GxHEBZ1K2QZmmQqTeFtG9GWBtzUcgPW1vs9ZUm66ipQy",
+  "address": "Ct4UpwoXAQudMoPQT2BJF5WWsXqcFu5n1rrQY36yxx8G",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -842,14 +842,6 @@
           {
             "name": "mint_decimals",
             "type": "u8"
-          },
-          {
-            "name": "buy_price",
-            "type": "u64"
-          },
-          {
-            "name": "sell_price",
-            "type": "u64"
           }
         ]
       }

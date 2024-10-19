@@ -1,7 +1,6 @@
 use crate::error::ErrorCode;
 use crate::states::{
-    calculate_price_per_token, calculate_sell_price, set_bonding_curve_state, BondingCurveState,
-    BASE_PRICE, SLOPE,
+    calculate_sell_price, set_bonding_curve_state, BondingCurveState, BASE_PRICE, SLOPE,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
@@ -65,11 +64,6 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     )?;
 
     msg!(
-        "Price Per Token {} SOL",
-        spl_token_2022::amount_to_ui_amount(ctx.accounts.bonding_curve_state.sell_price, 9)
-    );
-
-    msg!(
         "Sell Amount {}",
         spl_token_2022::amount_to_ui_amount(amount, ctx.accounts.mint.decimals),
     );
@@ -125,17 +119,12 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
-    let (buy_price, sell_price) =
-        calculate_price_per_token(ctx.accounts.mint.supply, ctx.accounts.mint.decimals)?;
-
     let payload = BondingCurveState {
         slope: SLOPE,
         base_price: BASE_PRICE,
         current_supply: ctx.accounts.mint.supply,
         reserve_balance: vault_balance,
         mint_decimals: ctx.accounts.mint.decimals,
-        buy_price,
-        sell_price,
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, payload)?;

@@ -4,7 +4,7 @@ use anchor_spl::token_interface::{
     spl_token_2022::instruction::AuthorityType, Mint, TokenAccount, TokenInterface,
 };
 
-use crate::states::{ set_bonding_curve_state, BondingCurveState, BASE_PRICE, SLOPE, calculate_price_per_token};
+use crate::states::{ set_bonding_curve_state, BondingCurveState, BASE_PRICE, SLOPE};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
     get_account_balance, set_authority, 
@@ -50,7 +50,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
 
     ctx.accounts.mint.reload()?;
 
-    let (buy_price, sell_price)  = calculate_price_per_token(ctx.accounts.mint.supply, ctx.accounts.mint.decimals)?;
+
 
     let initial_state = BondingCurveState {
         slope: SLOPE,
@@ -58,8 +58,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         current_supply: ctx.accounts.mint.supply,
         reserve_balance: vault_balance,
         mint_decimals: ctx.accounts.mint.decimals,
-        buy_price,
-        sell_price,
+     
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, initial_state)?;

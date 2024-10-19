@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "GxHEBZ1K2QZmmQqTeFtG9GWBtzUcgPW1vs9ZUm66ipQy",
+  "address": "Ct4UpwoXAQudMoPQT2BJF5WWsXqcFu5n1rrQY36yxx8G",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -848,14 +848,6 @@ export type Degenerator = {
           {
             "name": "mintDecimals",
             "type": "u8"
-          },
-          {
-            "name": "buyPrice",
-            "type": "u64"
-          },
-          {
-            "name": "sellPrice",
-            "type": "u64"
           }
         ]
       }
