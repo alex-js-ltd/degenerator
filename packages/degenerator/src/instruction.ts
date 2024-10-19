@@ -1,34 +1,13 @@
 import { Degenerator } from '../target/types/degenerator'
 import { Program, BN, web3 } from '@coral-xyz/anchor'
+import { type Connection, type Signer, PublicKey } from '@solana/web3.js'
 import {
-	type Connection,
-	type Signer,
-	PublicKey,
-	ComputeBudgetProgram,
-	SystemProgram,
-} from '@solana/web3.js'
-import {
-	NATIVE_MINT,
-	TOKEN_PROGRAM_ID,
 	TOKEN_2022_PROGRAM_ID,
 	ASSOCIATED_TOKEN_PROGRAM_ID,
-	getAssociatedTokenAddressSync,
-	ExtensionType,
-	createInitializeMintInstruction,
-	getMintLen,
-	createInitializeMetadataPointerInstruction,
-	TYPE_SIZE,
-	LENGTH_SIZE,
-	AuthorityType,
-	createSetAuthorityInstruction,
 	getAssociatedTokenAddress,
 } from '@solana/spl-token'
-
-import {
-	createInitializeInstruction,
-	pack,
-	TokenMetadata,
-} from '@solana/spl-token-metadata'
+import { CoinGeckoClient } from 'coingecko-api-v3'
+import { TokenMetadata } from '@solana/spl-token-metadata'
 import {
 	getExtraMetas,
 	getBondingCurveVault,
@@ -113,6 +92,7 @@ export async function getBuyTokenIx({
 	uiAmount,
 	decimals,
 }: SwapTokenIxsParams) {
+	await fetchSolPrice()
 	const payerAta = await getAssociatedTokenAddress(
 		mint,
 		payer,
@@ -177,4 +157,18 @@ export async function getSellTokenIx({
 		.instruction()
 
 	return sell
+}
+
+export async function fetchSolPrice() {
+	const client = new CoinGeckoClient({
+		timeout: 10000,
+		autoRetry: true,
+	})
+
+	const res = await client.simplePrice({
+		ids: 'solana',
+		vs_currencies: 'usd',
+	})
+
+	return res
 }
