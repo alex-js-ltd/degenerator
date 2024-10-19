@@ -6,6 +6,12 @@
       <path d="M5 12L12 5l7 7"></path>
       <path d="M12 19V5"></path>
     </symbol>
+
+    <!-- Close -->
+    <symbol id="close" fill="currentColor" viewBox="0 0 256 256">
+      <path d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128 50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z"></path>
+    </symbol>
+
     <!-- Upload -->
     <symbol id="upload" fill="none" viewBox="0 0 16 16">
       <g clip-path="url(#a)">
@@ -37,3 +43,8 @@
     </symbol>
   </defs>
 </svg>
+
+
+
+
+
