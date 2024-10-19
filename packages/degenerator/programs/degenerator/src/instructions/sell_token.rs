@@ -123,6 +123,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
     let progress = calculate_progress(vault_balance)?;
 
     let payload = BondingCurveState {
+        mint: ctx.accounts.mint.key(),
         slope: SLOPE,
         base_price: BASE_PRICE,
         current_supply: ctx.accounts.mint.supply,

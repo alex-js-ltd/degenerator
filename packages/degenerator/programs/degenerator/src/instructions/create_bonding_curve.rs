@@ -4,7 +4,7 @@ use anchor_spl::token_interface::{
     spl_token_2022::instruction::AuthorityType, Mint, TokenAccount, TokenInterface,
 };
 
-use crate::states::{ set_bonding_curve_state, BondingCurveState, BASE_PRICE, SLOPE, calculate_progress};
+use crate::states::{ set_bonding_curve_state, BondingCurveState, BASE_PRICE, SLOPE};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
     get_account_balance, set_authority, 
@@ -50,17 +50,15 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
     ctx.accounts.mint.reload()?;
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
-    
-    let progress = calculate_progress(vault_balance)?;
-
 
     let initial_state = BondingCurveState {
+        mint: ctx.accounts.mint.key(),
         slope: SLOPE,
         base_price: BASE_PRICE,
         current_supply: ctx.accounts.mint.supply,
         reserve_balance: vault_balance,
         mint_decimals: ctx.accounts.mint.decimals,
-        progress,
+        progress: 0.0
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, initial_state)?;
@@ -101,7 +99,7 @@ pub struct CreateBondingCurve<'info> {
         seeds = [BONDING_CURVE_STATE_SEED.as_bytes(),  mint.key().as_ref()],
         bump,
         payer = payer,
-        space = BondingCurveState::LEN
+        space = 8 + BondingCurveState::INIT_SPACE
     )]
     pub bonding_curve_state: Account<'info, BondingCurveState>,
 

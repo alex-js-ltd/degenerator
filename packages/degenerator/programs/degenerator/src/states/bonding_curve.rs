@@ -8,16 +8,13 @@ pub const TARGET: f64 = 50.0;
 #[account]
 #[derive(InitSpace)]
 pub struct BondingCurveState {
+    pub mint: Pubkey,
     pub base_price: f64,
     pub slope: f64,
     pub current_supply: u64,
     pub reserve_balance: u64,
     pub mint_decimals: u8,
     pub progress: f64,
-}
-
-impl BondingCurveState {
-    pub const LEN: usize = 56 + 8;
 }
 
 pub fn price(supply: f64) -> f64 {
@@ -76,6 +73,7 @@ pub fn set_bonding_curve_state<'a>(
     curve: &mut Account<BondingCurveState>,
     payload: BondingCurveState,
 ) -> Result<()> {
+    curve.mint = payload.mint;
     curve.base_price = payload.base_price;
     curve.slope = payload.slope;
     curve.current_supply = payload.current_supply;

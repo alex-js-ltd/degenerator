@@ -77,8 +77,6 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         spl_token_2022::amount_to_ui_amount(sol_amount, 9)
     );
 
-    msg!("Progress {}", ctx.accounts.bonding_curve_state.progress);
-
     if ctx.accounts.payer.lamports() < sol_amount {
         return Err(ProgramError::InsufficientFunds.into());
     }
@@ -111,6 +109,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     let progress = calculate_progress(vault_balance)?;
 
     let payload = BondingCurveState {
+        mint: ctx.accounts.mint.key(),
         slope: SLOPE,
         base_price: BASE_PRICE,
         current_supply: ctx.accounts.mint.supply,
@@ -120,6 +119,8 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, payload)?;
+
+    msg!("Progress {}", ctx.accounts.bonding_curve_state.progress);
 
     Ok(())
 }

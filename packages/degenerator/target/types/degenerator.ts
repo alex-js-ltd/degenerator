@@ -835,6 +835,10 @@ export type Degenerator = {
         "kind": "struct",
         "fields": [
           {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
             "name": "basePrice",
             "type": "f64"
           },

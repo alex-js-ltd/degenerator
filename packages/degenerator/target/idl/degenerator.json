@@ -829,6 +829,10 @@
         "kind": "struct",
         "fields": [
           {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
             "name": "base_price",
             "type": "f64"
           },
