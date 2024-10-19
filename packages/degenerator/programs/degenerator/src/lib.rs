@@ -6,7 +6,7 @@ pub mod utils;
 use anchor_lang::prelude::*;
 use instructions::*;
 
-declare_id!("FsdjHJJ9A3SsGfVVGxK1J1h1b2KgTAhFTSPUq9gGqwi7");
+declare_id!("D3dwzVEkAoo1W6fiTmafwqNe78D8KPCw5kMGFAL38fyt");
 
 #[program]
 pub mod degenerator {

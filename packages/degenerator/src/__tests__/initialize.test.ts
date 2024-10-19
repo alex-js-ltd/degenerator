@@ -133,6 +133,7 @@ describe('initialize', () => {
 			const state = await fetchBondingCurveState({ program, mint: MEME.mint })
 			console.log('current supply:', state.currentSupply.toString())
 			console.log('vault balance:', state.reserveBalance.toString())
+			console.log('progress:', state.progress.toString())
 		}
 	}, 120000)
 
@@ -178,6 +179,7 @@ describe('initialize', () => {
 		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
 		console.log('current supply:', state.currentSupply.toString())
 		console.log('vault balance:', state.reserveBalance.toString())
+		console.log('progress:', state.progress.toString())
 	})
 
 	it('user should have 0 tokens', async () => {

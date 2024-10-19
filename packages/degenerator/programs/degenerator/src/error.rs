@@ -8,4 +8,7 @@ pub enum ErrorCode {
 
     #[msg("Account is not rent-exempt.")]
     AccountNotRentExempt,
+
+    #[msg("Bonding curve complete")]
+    BondingCurveComplete,
 }

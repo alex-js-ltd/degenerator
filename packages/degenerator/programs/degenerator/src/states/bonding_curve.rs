@@ -3,6 +3,7 @@ use anchor_spl::token_interface::spl_token_2022::amount_to_ui_amount;
 
 pub const BASE_PRICE: f64 = 0.000000200;
 pub const SLOPE: f64 = 1.2;
+pub const TARGET: f64 = 100.0;
 
 #[account]
 #[derive(InitSpace)]
@@ -12,6 +13,7 @@ pub struct BondingCurveState {
     pub current_supply: u64,
     pub reserve_balance: u64,
     pub mint_decimals: u8,
+    pub progress: f64,
 }
 
 impl BondingCurveState {
@@ -62,6 +64,13 @@ pub fn calculate_sell_price(current_supply: u64, decimals: u8, amount: u64) -> R
     Ok(sell_revenue.round() as u64)
 }
 
+pub fn calculate_progress(reserve_balance: u64) -> Result<f64> {
+    let reserve_balance = amount_to_ui_amount(reserve_balance, 9);
+    let progress = (reserve_balance / 100.0) * 100.0;
+
+    Ok(progress.clamp(0.0, 100.0))
+}
+
 // Function to update bonding curve state
 pub fn set_bonding_curve_state<'a>(
     curve: &mut Account<BondingCurveState>,
@@ -72,6 +81,7 @@ pub fn set_bonding_curve_state<'a>(
     curve.current_supply = payload.current_supply;
     curve.reserve_balance = payload.reserve_balance;
     curve.mint_decimals = payload.mint_decimals;
+    curve.progress = payload.progress;
 
     Ok(())
 }

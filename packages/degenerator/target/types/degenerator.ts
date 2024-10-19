@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "FsdjHJJ9A3SsGfVVGxK1J1h1b2KgTAhFTSPUq9gGqwi7",
+  "address": "D3dwzVEkAoo1W6fiTmafwqNe78D8KPCw5kMGFAL38fyt",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -821,6 +821,11 @@ export type Degenerator = {
       "code": 6001,
       "name": "accountNotRentExempt",
       "msg": "Account is not rent-exempt."
+    },
+    {
+      "code": 6002,
+      "name": "bondingCurveComplete",
+      "msg": "Bonding curve complete"
     }
   ],
   "types": [
@@ -848,6 +853,10 @@ export type Degenerator = {
           {
             "name": "mintDecimals",
             "type": "u8"
+          },
+          {
+            "name": "progress",
+            "type": "f64"
           }
         ]
       }
