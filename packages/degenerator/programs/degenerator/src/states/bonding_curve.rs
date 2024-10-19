@@ -26,6 +26,10 @@ pub fn get_reserve_balance(supply: f64) -> f64 {
     (SLOPE / 2.0) * supply.powi(2) + BASE_PRICE * supply
 }
 
+pub fn get_token_supply(reserve_balance: f64) -> f64 {
+    (f64::sqrt(BASE_PRICE.powi(2) + 2.0 * SLOPE * reserve_balance) - BASE_PRICE) / SLOPE
+}
+
 pub fn calculate_buy_price(current_supply: u64, decimals: u8, amount: u64) -> Result<u64> {
     let current_supply = amount_to_ui_amount(current_supply, decimals);
     let amount = amount_to_ui_amount(amount, decimals);
