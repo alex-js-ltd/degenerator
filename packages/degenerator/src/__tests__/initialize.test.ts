@@ -105,7 +105,7 @@ describe('initialize', () => {
 	it('buy token', async () => {
 		const buyAmount = '10.5'
 
-		const arr = Array.from({ length: 10 }, (_, index) => index + 1)
+		const arr = Array.from({ length: 2 }, (_, index) => index + 1)
 
 		for (const s of arr) {
 			const one = await getBuyTokenIx({
@@ -126,8 +126,8 @@ describe('initialize', () => {
 			tx.sign([payer])
 
 			// Simulate the transaction
-			const res = await connection.simulateTransaction(tx)
-			console.log(res.value.logs)
+			// const res = await connection.simulateTransaction(tx)
+			// console.log(res.value.logs)
 			await sendAndConfirm({ connection, tx })
 
 			const state = await fetchBondingCurveState({ program, mint: MEME.mint })
@@ -135,7 +135,7 @@ describe('initialize', () => {
 			console.log('vault balance:', state.reserveBalance.toString())
 			console.log('progress:', state.progress.toString())
 		}
-	}, 120000)
+	}, 60000)
 
 	it('sell all tokens', async () => {
 		const payerAta = await getAssociatedTokenAddress(

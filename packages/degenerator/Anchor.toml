@@ -4,7 +4,7 @@
 resolution = true
 skip-lint = false
 
-[programs.devnet]
+[programs.localnet]
 degenerator = "F9dzYMgbwrjdRS2ogb5aSfz22FzwUJ8ZMGX5F6D2vBwB"
 
 [registry]

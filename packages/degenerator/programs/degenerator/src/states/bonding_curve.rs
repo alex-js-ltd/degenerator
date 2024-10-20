@@ -50,9 +50,6 @@ pub fn calculate_buy_amount(
     decimals: u8,
     reserve_amount: u64,
 ) -> Result<u64> {
-    // let reserve_balance = amount_to_ui_amount(reserve_balance, decimals);
-    // let reserve_amount = amount_to_ui_amount(reserve_amount, decimals);
-
     let new_reserve = reserve_balance + reserve_amount;
 
     // Calculate the reserves before and after the purchase
