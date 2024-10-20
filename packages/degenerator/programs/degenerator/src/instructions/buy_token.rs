@@ -4,8 +4,8 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInterface};
 
 use crate::states::{
-    calculate_buy_price, calculate_progress, set_bonding_curve_state, BondingCurveState,
-    BASE_PRICE, SLOPE,
+    calculate_buy_amount, calculate_buy_price, calculate_progress, set_bonding_curve_state,
+    BondingCurveState, BASE_PRICE, SLOPE,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
@@ -75,6 +75,17 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
     msg!(
         "Total Price {} SOL",
         spl_token_2022::amount_to_ui_amount(sol_amount, 9)
+    );
+
+    let buy_amount_2 = calculate_buy_amount(
+        ctx.accounts.bonding_curve_state.reserve_balance,
+        ctx.accounts.mint.decimals,
+        sol_amount,
+    )?;
+
+    msg!(
+        "Buy Amount 2 {}",
+        spl_token_2022::amount_to_ui_amount(buy_amount_2, ctx.accounts.mint.decimals),
     );
 
     if ctx.accounts.payer.lamports() < sol_amount {
