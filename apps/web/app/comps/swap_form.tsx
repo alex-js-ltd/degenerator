@@ -43,7 +43,7 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 
 	const { lastResult, data } = state
 
-	const [form, { amount, buy }] = useForm({
+	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
 		onValidate: ({ formData }) =>
 			parseWithZod(formData, { schema: SwapSchema }),
@@ -67,7 +67,8 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 
 	const payer = usePayer()
 
-	const control = useInputControl(amount)
+	const amount = useInputControl(fields.amount)
+	const buy = useInputControl(fields.buy)
 
 	const {
 		mint,
@@ -84,7 +85,9 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 		}
 	}
 
-	let decimals = buy ? 9 : mintDecimals
+	let decimals = buy.value === 'on' ? 9 : mintDecimals
+
+	console.log(buy.value)
 
 	return (
 		<FormProvider context={form.context}>
@@ -105,7 +108,7 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 						<input
 							type="number"
 							className="h-[42px] resize-none overflow-auto w-full flex-1 bg-transparent p-3 pb-1.5 text-sm outline-none ring-0"
-							{...getControlProps(control)}
+							{...getControlProps(amount)}
 							{...getPlaceholder(decimals)}
 						/>
 						<div className="flex items-center gap-2 p-3">
@@ -118,7 +121,7 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 							</Pill>
 							{pill}
 
-							<SwapSwitch meta={buy} />
+							<SwapSwitch meta={fields.buy} control={buy} />
 							<div className="ml-auto flex items-center gap-2">
 								<SwapButton />
 							</div>

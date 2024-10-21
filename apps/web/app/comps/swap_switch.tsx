@@ -2,9 +2,14 @@ import * as RadixSwitch from '@radix-ui/react-switch'
 import { type FieldMetadata, useInputControl } from '@conform-to/react'
 import { type ElementRef, useRef } from 'react'
 
-export function SwapSwitch({ meta }: { meta: FieldMetadata<boolean> }) {
+export function SwapSwitch({
+	meta,
+	control,
+}: {
+	meta: FieldMetadata<boolean>
+	control: ReturnType<typeof useInputControl<string>>
+}) {
 	const switchRef = useRef<ElementRef<typeof RadixSwitch.Root>>(null)
-	const control = useInputControl(meta)
 
 	return (
 		<>
