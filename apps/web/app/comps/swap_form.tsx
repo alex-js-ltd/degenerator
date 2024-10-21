@@ -16,6 +16,8 @@ import { useBondingCurveState } from '@/app/hooks/use_bonding_curve_state'
 import { fetchBondingCurveState } from '@repo/degenerator'
 import { calculateSolPrice } from '@/app/utils/misc'
 import invariant from 'tiny-invariant'
+import { Pill } from './pill'
+import { TokenLogo } from './token_logo'
 
 const initialState: State = {
 	lastResult: undefined,
@@ -105,6 +107,13 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 							{...getPlaceholder(mintDecimals)}
 						/>
 						<div className="flex items-center gap-2 p-3">
+							<Pill variant="swap">
+								<TokenLogo
+									src="https://img-v1.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+									alt="sol"
+								/>
+								<div className="w-fit">SOL</div>
+							</Pill>
 							{pill}
 
 							<SwapSwitch meta={buy} />
