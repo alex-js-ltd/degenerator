@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useActionState } from 'react'
+import { ReactNode, useActionState, useState } from 'react'
 
 import { useForm, FormProvider, getFormProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
@@ -9,13 +9,9 @@ import { type State, swapAction } from '@/app/actions/swap_action'
 import { usePayer } from '@/app/hooks/use_payer'
 import { useSwapTx } from '@/app/context/tx_context'
 import { SwapButton } from '@/app/comps/swap_button'
-import { useInputControl } from '@conform-to/react'
-import { getControlProps } from '@/app/utils/misc'
 import { SwapSwitch } from '@/app/comps/swap_switch'
 import { useBondingCurveState } from '@/app/hooks/use_bonding_curve_state'
 import { fetchBondingCurveState } from '@repo/degenerator'
-import { calculateSolPrice } from '@/app/utils/misc'
-import invariant from 'tiny-invariant'
 import { Pill } from './pill'
 import { TokenLogo } from './token_logo'
 
@@ -57,7 +53,6 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 
 		defaultValue: {
 			amount: '',
-			buy: true,
 		},
 	})
 
@@ -67,17 +62,11 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 
 	const payer = usePayer()
 
-	const amount = useInputControl(fields.amount)
-	const buy = useInputControl(fields.buy)
+	const [buy, setBuy] = useState(true)
 
-	const {
-		mint,
-		currentSupply,
-		reserveBalance,
-		mintDecimals,
-		basePrice,
-		slope,
-	} = curve || {}
+	function onCheckedChange(checked: boolean) {
+		setBuy(checked)
+	}
 
 	function getPlaceholder(decimals: number) {
 		return {
@@ -85,9 +74,7 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 		}
 	}
 
-	let decimals = buy.value === 'on' ? 9 : mintDecimals
-
-	console.log(buy.value)
+	let decimals = buy ? 9 : curve.mintDecimals
 
 	return (
 		<FormProvider context={form.context}>
@@ -99,7 +86,7 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 				>
 					<span className="absolute top-3 right-3 z-50 text-teal-300 text-xs"></span>
 					<input name="payer" defaultValue={payer} type="hidden" />
-					<input name="mint" defaultValue={mint} type="hidden" />
+					<input name="mint" defaultValue={curve.mint} type="hidden" />
 					<input name="decimals" defaultValue={decimals} type="hidden" />
 					<div className="relative z-10 grid rounded-xl bg-white">
 						<label className="sr-only" htmlFor="swap-input">
@@ -107,8 +94,8 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 						</label>
 						<input
 							type="number"
+							name="amount"
 							className="h-[42px] resize-none overflow-auto w-full flex-1 bg-transparent p-3 pb-1.5 text-sm outline-none ring-0"
-							{...getControlProps(amount)}
 							{...getPlaceholder(decimals)}
 						/>
 						<div className="flex items-center gap-2 p-3">
@@ -121,7 +108,11 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 							</Pill>
 							{pill}
 
-							<SwapSwitch meta={fields.buy} control={buy} />
+							<SwapSwitch
+								name="buy"
+								checked={buy}
+								onCheckedChange={onCheckedChange}
+							/>
 							<div className="ml-auto flex items-center gap-2">
 								<SwapButton />
 							</div>
