@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::spl_token_2022::amount_to_ui_amount;
 use anchor_spl::token_interface::spl_token_2022::ui_amount_to_amount;
+
 pub const BASE_PRICE: f64 = 0.000000200;
 pub const SLOPE: f64 = 0.08;
 pub const TARGET: f64 = 50.0;
@@ -45,18 +46,14 @@ pub fn calculate_buy_price(current_supply: u64, decimals: u8, amount: u64) -> Re
     Ok(total_cost.round() as u64)
 }
 
-pub fn calculate_buy_amount(
-    reserve_balance: u64,
-    decimals: u8,
-    reserve_amount: u64,
-) -> Result<u64> {
-    let new_reserve = reserve_balance + reserve_amount;
+pub fn calculate_buy_amount(reserve_balance: u64, decimals: u8, lamports: u64) -> Result<u64> {
+    let new_reserve = reserve_balance + lamports;
 
     // Calculate the reserves before and after the purchase
     let tokens_before = get_token_supply(reserve_balance as f64);
     let tokens_after = get_token_supply(new_reserve as f64);
 
-    // Total cost for buying the tokens is the difference in reserves
+    // Total cost for buying the tokens is the difference in target supplies
     let total_tokens = tokens_after - tokens_before;
 
     let output = ui_amount_to_amount(total_tokens, decimals);

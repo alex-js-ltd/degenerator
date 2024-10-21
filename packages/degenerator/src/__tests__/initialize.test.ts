@@ -103,9 +103,9 @@ describe('initialize', () => {
 	})
 
 	it('buy token', async () => {
-		const buyAmount = '100000.5'
+		const buyAmount = '100.5'
 
-		const arr = Array.from({ length: 10 }, (_, index) => index + 1)
+		const arr = Array.from({ length: 5 }, (_, index) => index + 1)
 
 		for (const s of arr) {
 			const one = await getBuyTokenIx({
@@ -135,7 +135,7 @@ describe('initialize', () => {
 			console.log('vault balance:', state.reserveBalance.toString())
 			console.log('progress:', state.progress.toString())
 		}
-	}, 60000)
+	}, 30000)
 
 	it('sell all tokens', async () => {
 		const payerAta = await getAssociatedTokenAddress(

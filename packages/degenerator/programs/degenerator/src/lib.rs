@@ -25,8 +25,8 @@ pub mod degenerator {
         instructions::create_bonding_curve(ctx)
     }
 
-    pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
-        instructions::buy_token(ctx, amount)
+    pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
+        instructions::buy_token(ctx, lamports)
     }
 
     pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {

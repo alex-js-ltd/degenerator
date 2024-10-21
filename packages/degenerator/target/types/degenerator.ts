@@ -196,7 +196,7 @@ export type Degenerator = {
       ],
       "args": [
         {
-          "name": "amount",
+          "name": "lamports",
           "type": "u64"
         }
       ]

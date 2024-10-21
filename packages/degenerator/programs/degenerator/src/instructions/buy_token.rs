@@ -4,8 +4,8 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInterface};
 
 use crate::states::{
-    calculate_buy_amount, calculate_buy_price, calculate_progress, set_bonding_curve_state,
-    BondingCurveState, BASE_PRICE, SLOPE,
+    calculate_buy_amount, calculate_progress, set_bonding_curve_state, BondingCurveState,
+    BASE_PRICE, SLOPE,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
@@ -60,35 +60,24 @@ pub struct BuyToken<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
-    let sol_amount = calculate_buy_price(
-        ctx.accounts.bonding_curve_state.current_supply,
-        ctx.accounts.bonding_curve_state.mint_decimals,
-        amount,
-    )?;
-
+pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
     let buy_amount = calculate_buy_amount(
         ctx.accounts.bonding_curve_state.reserve_balance,
         ctx.accounts.mint.decimals,
-        sol_amount,
+        lamports,
     )?;
 
     msg!(
         "Buy Amount {}",
-        spl_token_2022::amount_to_ui_amount(amount, ctx.accounts.mint.decimals),
+        spl_token_2022::amount_to_ui_amount(buy_amount, ctx.accounts.mint.decimals),
     );
 
     msg!(
         "Total Price {} SOL",
-        spl_token_2022::amount_to_ui_amount(sol_amount, 9)
+        spl_token_2022::amount_to_ui_amount(lamports, 9)
     );
 
-    msg!(
-        "Buy Amount 2 {}",
-        spl_token_2022::amount_to_ui_amount(buy_amount, ctx.accounts.mint.decimals),
-    );
-
-    if ctx.accounts.payer.lamports() < sol_amount {
+    if ctx.accounts.payer.lamports() < lamports {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -97,7 +86,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
-        amount,
+        buy_amount,
         &[&[
             BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
@@ -110,7 +99,7 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         ctx.accounts.payer.to_account_info(),
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        sol_amount,
+        lamports,
     )?;
 
     ctx.accounts.mint.reload()?;
