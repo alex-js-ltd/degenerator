@@ -6,4 +6,8 @@ solana-test-validator --reset \
 --clone D4FPEruKEHrG5TenZ2mpDGEfu1iUvTiqBxvpU8HLBvC2 \
 --url https://api.mainnet-beta.solana.com
 
+solana config set --url https://api.devnet.solana.com
+
+solana-keygen recover -o recover.json
+
 solana program deploy --buffer recover.json target/deploy/degenerator.so
