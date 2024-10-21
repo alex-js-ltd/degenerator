@@ -67,6 +67,12 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         amount,
     )?;
 
+    let buy_amount = calculate_buy_amount(
+        ctx.accounts.bonding_curve_state.reserve_balance,
+        ctx.accounts.mint.decimals,
+        sol_amount,
+    )?;
+
     msg!(
         "Buy Amount {}",
         spl_token_2022::amount_to_ui_amount(amount, ctx.accounts.mint.decimals),
@@ -77,15 +83,9 @@ pub fn buy_token(ctx: Context<BuyToken>, amount: u64) -> Result<()> {
         spl_token_2022::amount_to_ui_amount(sol_amount, 9)
     );
 
-    let buy_amount_2 = calculate_buy_amount(
-        ctx.accounts.bonding_curve_state.reserve_balance,
-        ctx.accounts.mint.decimals,
-        sol_amount,
-    )?;
-
     msg!(
         "Buy Amount 2 {}",
-        spl_token_2022::amount_to_ui_amount(buy_amount_2, ctx.accounts.mint.decimals),
+        spl_token_2022::amount_to_ui_amount(buy_amount, ctx.accounts.mint.decimals),
     );
 
     if ctx.accounts.payer.lamports() < sol_amount {
