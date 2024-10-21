@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInter
 
 use crate::states::{
     calculate_buy_amount, calculate_progress, set_bonding_curve_state, BondingCurveState,
-    BASE_PRICE, SLOPE,
+    SwapEvent, BASE_PRICE, SLOPE,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
@@ -121,6 +121,11 @@ pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, payload)?;
 
     msg!("Progress {}", ctx.accounts.bonding_curve_state.progress);
+
+    emit!(SwapEvent {
+        mint: ctx.accounts.mint.key(),
+        current_supply: ctx.accounts.mint.supply
+    });
 
     Ok(())
 }

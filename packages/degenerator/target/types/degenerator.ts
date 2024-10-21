@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "CHZxo5UVcLctNrdRqXy44GjSzE2yAZvwYokfYGBaG8xg",
+  "address": "J7Ty9kUTZPLcYkSGpehq2YJsjDzCf5v8KgB4x2etajwt",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -811,6 +811,21 @@ export type Degenerator = {
       ]
     }
   ],
+  "events": [
+    {
+      "name": "swapEvent",
+      "discriminator": [
+        64,
+        198,
+        205,
+        232,
+        38,
+        8,
+        113,
+        226
+      ]
+    }
+  ],
   "errors": [
     {
       "code": 6000,
@@ -881,6 +896,28 @@ export type Degenerator = {
           {
             "name": "uri",
             "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "swapEvent",
+      "docs": [
+        "Emitted when swap"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "currentSupply",
+            "docs": [
+              "pool vault sub trade fees"
+            ],
+            "type": "u64"
           }
         ]
       }

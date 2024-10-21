@@ -62,7 +62,10 @@ pub fn calculate_buy_amount(reserve_balance: u64, decimals: u8, lamports: u64) -
 }
 
 pub fn calculate_sell_price(current_supply: u64, decimals: u8, amount: u64) -> Result<u64> {
-    let current_supply = amount_to_ui_amount(current_supply, decimals);
+    // initialise liquidity for bonding curve
+    let initial_liquidity = 10u64.checked_pow(decimals as u32).unwrap();
+
+    let current_supply = amount_to_ui_amount(current_supply - initial_liquidity, decimals);
     let amount = amount_to_ui_amount(amount, decimals);
 
     let new_supply = current_supply - amount;

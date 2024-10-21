@@ -1,5 +1,5 @@
 {
-  "address": "CHZxo5UVcLctNrdRqXy44GjSzE2yAZvwYokfYGBaG8xg",
+  "address": "J7Ty9kUTZPLcYkSGpehq2YJsjDzCf5v8KgB4x2etajwt",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -805,6 +805,21 @@
       ]
     }
   ],
+  "events": [
+    {
+      "name": "SwapEvent",
+      "discriminator": [
+        64,
+        198,
+        205,
+        232,
+        38,
+        8,
+        113,
+        226
+      ]
+    }
+  ],
   "errors": [
     {
       "code": 6000,
@@ -875,6 +890,28 @@
           {
             "name": "uri",
             "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SwapEvent",
+      "docs": [
+        "Emitted when swap"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "current_supply",
+            "docs": [
+              "pool vault sub trade fees"
+            ],
+            "type": "u64"
           }
         ]
       }

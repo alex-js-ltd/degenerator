@@ -102,40 +102,71 @@ describe('initialize', () => {
 		await checkSupplyMatchesMint({ program, connection, mint: MEME.mint })
 	})
 
+	// it('buy token', async () => {
+	// 	const buyAmount = '10.5'
+
+	// 	const arr = Array.from({ length: 5 }, (_, index) => index + 1)
+
+	// 	for (const s of arr) {
+	// 		const one = await getBuyTokenIx({
+	// 			program,
+	// 			payer: payer.publicKey,
+	// 			mint: MEME.mint,
+	// 			uiAmount: buyAmount,
+	// 			decimals: MEME.decimals,
+	// 		})
+
+	// 		const tx = await buildTransaction({
+	// 			connection: connection,
+	// 			payer: payer.publicKey,
+	// 			instructions: [one],
+	// 			signers: [],
+	// 		})
+
+	// 		tx.sign([payer])
+
+	// 		// Simulate the transaction
+	// 		const res = await connection.simulateTransaction(tx)
+	// 		console.log(res.value.logs)
+	// 		await sendAndConfirm({ connection, tx })
+
+	// 		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+	// 		console.log('current supply:', state.currentSupply.toString())
+	// 		console.log('vault balance:', state.reserveBalance.toString())
+	// 		console.log('progress:', state.progress.toString())
+	// 	}
+	// }, 30000)
+
 	it('buy token', async () => {
-		const buyAmount = '100.5'
+		const buyAmount = '10.5'
 
-		const arr = Array.from({ length: 5 }, (_, index) => index + 1)
+		const one = await getBuyTokenIx({
+			program,
+			payer: payer.publicKey,
+			mint: MEME.mint,
+			uiAmount: buyAmount,
+			decimals: MEME.decimals,
+		})
 
-		for (const s of arr) {
-			const one = await getBuyTokenIx({
-				program,
-				payer: payer.publicKey,
-				mint: MEME.mint,
-				uiAmount: buyAmount,
-				decimals: MEME.decimals,
-			})
+		const tx = await buildTransaction({
+			connection: connection,
+			payer: payer.publicKey,
+			instructions: [one],
+			signers: [],
+		})
 
-			const tx = await buildTransaction({
-				connection: connection,
-				payer: payer.publicKey,
-				instructions: [one],
-				signers: [],
-			})
+		tx.sign([payer])
 
-			tx.sign([payer])
+		// Simulate the transaction
+		const res = await connection.simulateTransaction(tx)
+		console.log(res.value.logs)
+		await sendAndConfirm({ connection, tx })
 
-			// Simulate the transaction
-			const res = await connection.simulateTransaction(tx)
-			console.log(res.value.logs)
-			await sendAndConfirm({ connection, tx })
-
-			const state = await fetchBondingCurveState({ program, mint: MEME.mint })
-			console.log('current supply:', state.currentSupply.toString())
-			console.log('vault balance:', state.reserveBalance.toString())
-			console.log('progress:', state.progress.toString())
-		}
-	}, 30000)
+		const state = await fetchBondingCurveState({ program, mint: MEME.mint })
+		console.log('current supply:', state.currentSupply.toString())
+		console.log('vault balance:', state.reserveBalance.toString())
+		console.log('progress:', state.progress.toString())
+	})
 
 	it('sell all tokens', async () => {
 		const payerAta = await getAssociatedTokenAddress(

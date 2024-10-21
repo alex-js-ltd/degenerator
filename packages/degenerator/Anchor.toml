@@ -4,14 +4,14 @@
 resolution = true
 skip-lint = false
 
-[programs.devnet]
-degenerator = "CHZxo5UVcLctNrdRqXy44GjSzE2yAZvwYokfYGBaG8xg"
+[programs.localnet]
+degenerator = "J7Ty9kUTZPLcYkSGpehq2YJsjDzCf5v8KgB4x2etajwt"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Devnet"
+cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
