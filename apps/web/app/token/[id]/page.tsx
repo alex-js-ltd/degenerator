@@ -1,7 +1,6 @@
 import { getToken } from '@/app/data/get_token'
 import { ReactNode, use } from 'react'
-import { SwapForm } from '@/app/comps/swap_form'
-
+import { type SwapFormProps, SwapForm } from '@/app/comps/swap_form'
 import { Pill } from '@/app/comps/pill'
 import { TokenLogo } from '@/app/comps/token_logo'
 import { Progress } from '@/app/comps/progress'
@@ -37,7 +36,7 @@ export default function Page({ params }: { params: { id: string } }) {
 	}: {
 		curve: CurveState
 		pill: ReactNode
-	}) {
+	}): SwapFormProps {
 		return {
 			curve: {
 				...curve,

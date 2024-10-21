@@ -26,14 +26,14 @@ const initialState: State = {
 
 type CurveState = Omit<
 	Awaited<ReturnType<typeof fetchBondingCurveState>>,
-	'currentSupply' | 'reserveBalance'
+	'currentSupply' | 'reserveBalance' | 'mint'
 > & {
 	currentSupply: string
 	reserveBalance: string
 	mint: string
 }
 
-interface SwapFormProps {
+export interface SwapFormProps {
 	pill: ReactNode
 	curve: CurveState
 }
@@ -83,7 +83,7 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 			placeholder: '0.' + '0'.repeat(decimals),
 		}
 	}
-
+	console.log(curve)
 	return (
 		<FormProvider context={form.context}>
 			<div className="rounded-b-xl w-full">
