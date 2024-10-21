@@ -30,7 +30,7 @@ const initialState: State = {
 	data: undefined,
 }
 
-export function MintForm() {
+export function InitializeForm() {
 	const [state, formAction] = useActionState(initializeAction, initialState)
 
 	const { lastResult, data } = state
