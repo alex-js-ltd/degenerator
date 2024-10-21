@@ -11,8 +11,6 @@ async function fetchTransactions(pk: PublicKey) {
 
 	let signatureList = transactionList.map(transaction => transaction.signature)
 
-	console.log(signatureList)
-
 	for await (const sig of signatureList) {
 		console.log(
 			await connection.getParsedTransaction(sig, {
