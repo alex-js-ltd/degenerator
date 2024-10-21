@@ -57,24 +57,14 @@ pub struct SellToken<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
+pub fn sell_token(ctx: Context<SellToken>, burn_amount: u64) -> Result<()> {
     let sol_amount = calculate_sell_price(
         ctx.accounts.bonding_curve_state.current_supply,
         ctx.accounts.bonding_curve_state.mint_decimals,
-        amount,
+        burn_amount,
     )?;
 
-    msg!(
-        "Sell Amount {}",
-        spl_token_2022::amount_to_ui_amount(amount, ctx.accounts.mint.decimals),
-    );
-
-    msg!(
-        "Total Revenue {} SOL",
-        spl_token_2022::amount_to_ui_amount(sol_amount, 9)
-    );
-
-    if amount > ctx.accounts.payer_ata.amount {
+    if burn_amount > ctx.accounts.payer_ata.amount {
         return Err(ErrorCode::InsufficientUserSupply.into());
     }
 
@@ -87,7 +77,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.payer_ata.to_account_info(),
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.signer.to_account_info(),
-        amount,
+        burn_amount,
     )?;
 
     // burn tokens
@@ -96,7 +86,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
-        amount,
+        burn_amount,
         &[&[
             BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
@@ -115,6 +105,16 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
             &[ctx.bumps.vault][..],
         ][..]],
     )?;
+
+    msg!(
+        "Burn_Amount {}",
+        spl_token_2022::amount_to_ui_amount(burn_amount, ctx.accounts.mint.decimals),
+    );
+
+    msg!(
+        "Burn_Price {}",
+        spl_token_2022::amount_to_ui_amount(sol_amount, 9)
+    );
 
     ctx.accounts.mint.reload()?;
 
@@ -136,7 +136,7 @@ pub fn sell_token(ctx: Context<SellToken>, amount: u64) -> Result<()> {
 
     emit!(SwapEvent {
         mint: ctx.accounts.mint.key(),
-        current_supply: ctx.accounts.mint.supply
+        progress
     });
 
     Ok(())

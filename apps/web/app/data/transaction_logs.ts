@@ -9,18 +9,17 @@ async function fetchTransactions(pk: PublicKey) {
 		limit: 1000,
 	})
 
-	const signatureList = transactionList.map(
-		transaction => transaction.signature,
-	)
-	const transactionDetails = await connection.getParsedTransactions(
-		signatureList,
-		{ maxSupportedTransactionVersion: 0 },
-	)
+	let signatureList = transactionList.map(transaction => transaction.signature)
 
-	transactionDetails.forEach((transaction, i) => {
-		console.log(transaction?.meta?.logMessages)
-		console.log('-'.repeat(20))
-	})
+	console.log(signatureList)
+
+	for await (const sig of signatureList) {
+		console.log(
+			await connection.getParsedTransaction(sig, {
+				maxSupportedTransactionVersion: 0,
+			}),
+		)
+	}
 
 	return transactionList
 }

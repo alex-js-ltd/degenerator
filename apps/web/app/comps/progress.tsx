@@ -1,9 +1,13 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import * as RadixProgress from '@radix-ui/react-progress'
+import { fetchEvents } from '@repo/degenerator'
+import { useProgress } from '../hooks/use_progress'
 
-export function Progress({ progress }: { progress: number }) {
+export function Progress({ mint }: { mint: string }) {
+	const { progress } = useProgress(mint)
+
 	return (
 		<RadixProgress.Root
 			className="relative overflow-hidden bg-gray-100 rounded-full w-full h-[25px]"

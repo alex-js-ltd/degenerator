@@ -92,7 +92,7 @@ export async function getBuyTokenIx({
 	uiAmount,
 	decimals,
 }: SwapTokenIxsParams) {
-	await fetchSolPrice()
+	await fetchEvents({ program })
 	const payerAta = await getAssociatedTokenAddress(
 		mint,
 		payer,
@@ -129,6 +129,8 @@ export async function getSellTokenIx({
 	uiAmount,
 	decimals,
 }: SwapTokenIxsParams) {
+	await fetchEvents({ program })
+
 	const payerAta = await getAssociatedTokenAddress(
 		mint,
 		payer,
@@ -171,4 +173,20 @@ export async function fetchSolPrice() {
 	})
 
 	return res
+}
+
+export async function fetchEvents({
+	program,
+}: {
+	program: Program<Degenerator>
+}) {
+	// Listen for the swapEvent
+	const eventListenerId = program.addEventListener('swapEvent', event => {
+		console.log('Swap Event:', event)
+		// Handle the event data as needed
+	})
+
+	program.removeEventListener(eventListenerId)
+
+	return eventListenerId
 }

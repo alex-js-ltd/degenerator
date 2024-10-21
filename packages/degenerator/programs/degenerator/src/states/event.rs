@@ -6,6 +6,6 @@ use anchor_lang::prelude::*;
 pub struct SwapEvent {
     #[index]
     pub mint: Pubkey,
-    /// pool vault sub trade fees
-    pub current_supply: u64,
+
+    pub progress: f64,
 }

@@ -61,21 +61,11 @@ pub struct BuyToken<'info> {
 }
 
 pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
-    let buy_amount = calculate_buy_amount(
+    let mint_amount = calculate_buy_amount(
         ctx.accounts.bonding_curve_state.reserve_balance,
         ctx.accounts.mint.decimals,
         lamports,
     )?;
-
-    msg!(
-        "Buy Amount {}",
-        spl_token_2022::amount_to_ui_amount(buy_amount, ctx.accounts.mint.decimals),
-    );
-
-    msg!(
-        "Total Price {} SOL",
-        spl_token_2022::amount_to_ui_amount(lamports, 9)
-    );
 
     if ctx.accounts.payer.lamports() < lamports {
         return Err(ProgramError::InsufficientFunds.into());
@@ -86,7 +76,7 @@ pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
         ctx.accounts.token_program.to_account_info(),
         ctx.accounts.mint.to_account_info(),
         ctx.accounts.payer_ata.to_account_info(),
-        buy_amount,
+        mint_amount,
         &[&[
             BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
@@ -101,6 +91,16 @@ pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
         ctx.accounts.system_program.to_account_info(),
         lamports,
     )?;
+
+    msg!(
+        "Mint_Amount {}",
+        spl_token_2022::amount_to_ui_amount(mint_amount, ctx.accounts.mint.decimals),
+    );
+
+    msg!(
+        "Mint_Price {}",
+        spl_token_2022::amount_to_ui_amount(lamports, 9)
+    );
 
     ctx.accounts.mint.reload()?;
 
@@ -118,13 +118,11 @@ pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
         progress,
     };
 
-    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, payload)?;
-
-    msg!("Progress {}", ctx.accounts.bonding_curve_state.progress);
+    set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, payload.clone())?;
 
     emit!(SwapEvent {
         mint: ctx.accounts.mint.key(),
-        current_supply: ctx.accounts.mint.supply
+        progress
     });
 
     Ok(())

@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "J7Ty9kUTZPLcYkSGpehq2YJsjDzCf5v8KgB4x2etajwt",
+  "address": "BYEXrHX6BfQevMaHXNANbQ23PFearDQyv6K3Vhk3Wc2L",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -913,11 +913,8 @@ export type Degenerator = {
             "type": "pubkey"
           },
           {
-            "name": "currentSupply",
-            "docs": [
-              "pool vault sub trade fees"
-            ],
-            "type": "u64"
+            "name": "progress",
+            "type": "f64"
           }
         ]
       }
