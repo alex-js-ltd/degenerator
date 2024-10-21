@@ -28,15 +28,15 @@ type CurveState = Omit<
 > & {
 	currentSupply: string
 	reserveBalance: string
+	mint: string
 }
 
 interface SwapFormProps {
-	mint: string
-	token: ReactNode
+	pill: ReactNode
 	curve: CurveState
 }
 
-export function SwapForm({ mint, token, curve }: SwapFormProps) {
+export function SwapForm({ pill, curve }: SwapFormProps) {
 	const [state, formAction] = useActionState(swapAction, initialState)
 
 	const { lastResult, data } = state
@@ -67,8 +67,14 @@ export function SwapForm({ mint, token, curve }: SwapFormProps) {
 
 	const control = useInputControl(amount)
 
-	const { currentSupply, reserveBalance, mintDecimals, basePrice, slope } =
-		curve || {}
+	const {
+		mint,
+		currentSupply,
+		reserveBalance,
+		mintDecimals,
+		basePrice,
+		slope,
+	} = curve || {}
 
 	function getPlaceholder(decimals: number) {
 		return {
@@ -99,7 +105,7 @@ export function SwapForm({ mint, token, curve }: SwapFormProps) {
 							{...getPlaceholder(mintDecimals)}
 						/>
 						<div className="flex items-center gap-2 p-3">
-							{token}
+							{pill}
 
 							<SwapSwitch meta={buy} />
 							<div className="ml-auto flex items-center gap-2">
