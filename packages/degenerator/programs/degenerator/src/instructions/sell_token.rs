@@ -1,7 +1,7 @@
 use crate::error::ErrorCode;
 use crate::states::{
     calculate_progress, calculate_sell_price, set_bonding_curve_state, BondingCurveState,
-    SwapEvent, BASE_PRICE, SLOPE,
+    MintEvent, BASE_PRICE, SLOPE,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
@@ -134,7 +134,7 @@ pub fn sell_token(ctx: Context<SellToken>, burn_amount: u64) -> Result<()> {
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, payload)?;
 
-    emit!(SwapEvent {
+    emit!(MintEvent {
         mint: ctx.accounts.mint.key(),
         progress
     });
