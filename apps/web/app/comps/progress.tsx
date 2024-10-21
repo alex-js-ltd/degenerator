@@ -5,8 +5,14 @@ import * as RadixProgress from '@radix-ui/react-progress'
 import { fetchEvents } from '@repo/degenerator'
 import { useProgress } from '../hooks/use_progress'
 
-export function Progress({ mint }: { mint: string }) {
-	const { progress } = useProgress(mint)
+export function Progress({
+	mint,
+	initialState,
+}: {
+	mint: string
+	initialState: number
+}) {
+	const { progress } = useProgress(mint, initialState)
 
 	return (
 		<RadixProgress.Root

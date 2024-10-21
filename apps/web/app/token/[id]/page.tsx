@@ -57,7 +57,7 @@ export default function Page({ params }: { params: { id: string } }) {
 	return (
 		<div className="w-full sm:max-w-xl flex flex-col gap-6">
 			<SwapForm {...getSwapFormProps({ curve, pill: <TokenPill /> })} />
-			<Progress mint={mint} />
+			<Progress mint={mint} initialState={curve.progress} />
 		</div>
 	)
 }

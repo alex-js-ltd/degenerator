@@ -83,7 +83,9 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 			placeholder: '0.' + '0'.repeat(decimals),
 		}
 	}
-	console.log(curve)
+
+	let decimals = buy ? 9 : mintDecimals
+
 	return (
 		<FormProvider context={form.context}>
 			<div className="rounded-b-xl w-full">
@@ -95,7 +97,7 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 					<span className="absolute top-3 right-3 z-50 text-teal-300 text-xs"></span>
 					<input name="payer" defaultValue={payer} type="hidden" />
 					<input name="mint" defaultValue={mint} type="hidden" />
-					<input name="decimals" defaultValue={mintDecimals} type="hidden" />
+					<input name="decimals" defaultValue={decimals} type="hidden" />
 					<div className="relative z-10 grid rounded-xl bg-white">
 						<label className="sr-only" htmlFor="swap-input">
 							Swap input
@@ -104,7 +106,7 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 							type="number"
 							className="h-[42px] resize-none overflow-auto w-full flex-1 bg-transparent p-3 pb-1.5 text-sm outline-none ring-0"
 							{...getControlProps(control)}
-							{...getPlaceholder(mintDecimals)}
+							{...getPlaceholder(decimals)}
 						/>
 						<div className="flex items-center gap-2 p-3">
 							<Pill variant="swap">

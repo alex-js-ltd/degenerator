@@ -62,18 +62,12 @@ function useSwapTx(tx?: Uint8Array) {
 	const { run, ...rest } = swapTx
 
 	const sign = useSignAndSendTx()
-	const router = useRouter()
 
 	useEffect(() => {
 		if (!tx) return
 
-		const swap = sign(tx).then(res => {
-			router.refresh()
-			return res
-		})
-
-		run(swap)
-	}, [run, sign, tx, router])
+		run(sign(tx))
+	}, [run, sign, tx])
 
 	return { ...rest }
 }

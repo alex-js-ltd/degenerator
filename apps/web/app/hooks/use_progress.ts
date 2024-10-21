@@ -1,12 +1,10 @@
-import { fetchEvents } from '@repo/degenerator'
 import { program } from '@/app/utils/setup'
-
 import { useEffect, useMemo, useState } from 'react'
 
-export function useProgress(mint: string) {
+export function useProgress(mint: string, initialProgress: number) {
 	const _mint = useMemo(() => mint, [mint])
 
-	const [progress, setProgress] = useState(0)
+	const [progress, setProgress] = useState(initialProgress)
 
 	useEffect(() => {
 		const eventListenerId = program.addEventListener('swapEvent', event => {
