@@ -6,7 +6,7 @@ import { TokenLogo } from '@/app/comps/token_logo'
 import { Progress } from '@/app/comps/progress'
 import { fetchBondingCurveState } from '@repo/degenerator'
 import { getBondingCurveState } from '@/app/data/get_bonding_curve_state'
-import { getTransactions } from '@/app/data/transaction_logs'
+import { getEvents } from '@/app/data/get_events'
 
 export const revalidate = 10
 export const dynamic = 'force-dynamic'
@@ -22,10 +22,10 @@ export default function Page({ params }: { params: { id: string } }) {
 	const curvePromise = getBondingCurveState(mint)
 	const curve = use(curvePromise)
 
-	const transactionPromise = getTransactions(mint)
-	const transactions = use(transactionPromise)
+	const eventsPromise = getEvents(mint)
+	const events = use(eventsPromise)
 
-	console.log(transactions)
+	console.log(events)
 
 	function TokenPill() {
 		return (
