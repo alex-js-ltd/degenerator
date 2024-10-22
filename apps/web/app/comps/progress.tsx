@@ -22,7 +22,9 @@ export function Progress({ progress }: { progress: number }) {
 			</RadixProgress.Root>
 
 			<span className="z-50 text-teal-300 text-xs ml-auto">
-				bonding curve progress
+				<span className="z-50 text-teal-300 text-xs ml-auto">
+					{`bonding curve progress ${progress.toFixed(2)}%`}
+				</span>
 			</span>
 		</div>
 	)
