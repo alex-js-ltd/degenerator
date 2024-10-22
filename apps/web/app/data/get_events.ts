@@ -17,9 +17,8 @@ async function fetchEvents(pk: PublicKey) {
 	)
 
 	const start: Event<IdlEvent, Record<string, never>>[] = []
-	// Use Promise.all with reduce for async processing
+
 	const allParsedEvents = signatureList.reduce(async (accProm, sig) => {
-		// Wait for the previous accumulator to resolve
 		const acc = await accProm
 
 		const tx = await connection.getParsedTransaction(sig, {
@@ -40,10 +39,10 @@ async function fetchEvents(pk: PublicKey) {
 			}
 		}
 
-		return acc // Return the accumulator if no logs
-	}, Promise.resolve(start)) // Initial value is a resolved promise of an empty array
+		return acc
+	}, Promise.resolve(start))
 
-	return allParsedEvents // Return the array of parsed events
+	return allParsedEvents
 }
 
 export const preload = (pk: string) => {
