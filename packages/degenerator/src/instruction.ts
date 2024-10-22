@@ -1,12 +1,19 @@
 import { Degenerator } from '../target/types/degenerator'
-import { Program, BN, web3 } from '@coral-xyz/anchor'
+import {
+	Program,
+	BN,
+	web3,
+	EventParser,
+	BorshCoder,
+	Event,
+} from '@coral-xyz/anchor'
+import { IdlEvent } from '@coral-xyz/anchor/dist/cjs/idl'
 import { type Connection, type Signer, PublicKey } from '@solana/web3.js'
 import {
 	TOKEN_2022_PROGRAM_ID,
 	ASSOCIATED_TOKEN_PROGRAM_ID,
 	getAssociatedTokenAddress,
 } from '@solana/spl-token'
-import { CoinGeckoClient } from 'coingecko-api-v3'
 import { TokenMetadata } from '@solana/spl-token-metadata'
 import {
 	getExtraMetas,
@@ -92,7 +99,6 @@ export async function getBuyTokenIx({
 	uiAmount,
 	decimals,
 }: SwapTokenIxsParams) {
-	await fetchEvents({ program })
 	const payerAta = await getAssociatedTokenAddress(
 		mint,
 		payer,
@@ -129,8 +135,6 @@ export async function getSellTokenIx({
 	uiAmount,
 	decimals,
 }: SwapTokenIxsParams) {
-	await fetchEvents({ program })
-
 	const payerAta = await getAssociatedTokenAddress(
 		mint,
 		payer,
@@ -161,32 +165,50 @@ export async function getSellTokenIx({
 	return sell
 }
 
-export async function fetchSolPrice() {
-	const client = new CoinGeckoClient({
-		timeout: 10000,
-		autoRetry: true,
-	})
-
-	const res = await client.simplePrice({
-		ids: 'solana',
-		vs_currencies: 'usd',
-	})
-
-	return res
+interface FetchEventsParams {
+	program: Program<Degenerator>
+	connection: Connection
+	mint: PublicKey
 }
 
 export async function fetchEvents({
 	program,
-}: {
-	program: Program<Degenerator>
-}) {
-	// Listen for the swapEvent
-	const eventListenerId = program.addEventListener('swapEvent', event => {
-		console.log('Swap Event:', event)
-		// Handle the event data as needed
+	mint,
+	connection,
+}: FetchEventsParams) {
+	const transactionList = await connection.getSignaturesForAddress(mint, {
+		limit: 1000,
 	})
 
-	program.removeEventListener(eventListenerId)
+	const signatureList = transactionList.map(
+		transaction => transaction.signature,
+	)
 
-	return eventListenerId
+	const start: Event<IdlEvent, Record<string, never>>[] = []
+
+	const allParsedEvents = signatureList.reduce(async (accProm, sig) => {
+		const acc = await accProm
+
+		const tx = await connection.getParsedTransaction(sig, {
+			maxSupportedTransactionVersion: 0,
+		})
+
+		if (tx?.meta?.logMessages) {
+			const eventParser = new EventParser(
+				program.programId,
+				new BorshCoder(program.idl),
+			)
+
+			const events = eventParser.parseLogs(tx.meta.logMessages)
+			const eventArray = Array.from(events)
+
+			for (const event of eventArray) {
+				acc.push(event)
+			}
+		}
+
+		return acc
+	}, Promise.resolve(start))
+
+	return allParsedEvents
 }
