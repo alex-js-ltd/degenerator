@@ -19,6 +19,24 @@ async function fetchTransactions(pk: PublicKey) {
 		)
 	}
 
+	const initialValue: number[] = []
+	const reducedOutput = await signatureList.reduce(async (accP, curr) => {
+		const acc = await accP // Wait for the accumulator promise to resolve
+		const tx = await connection.getParsedTransaction(curr, {
+			maxSupportedTransactionVersion: 0,
+		})
+
+		const fee = tx?.meta?.fee
+
+		if (fee) {
+			acc.push(fee) // Push the fee if it exists
+		}
+
+		return acc // Return the updated accumulator
+	}, Promise.resolve(initialValue)) // Provide an initial promise that resolves to the initial value
+
+	console.log(reducedOutput)
+
 	return transactionList
 }
 
