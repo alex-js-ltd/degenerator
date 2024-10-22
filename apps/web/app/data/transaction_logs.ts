@@ -3,6 +3,8 @@
 import { PublicKey } from '@solana/web3.js'
 import { connection } from '@/app/utils/setup'
 import { cache } from 'react'
+import { Program, BN, web3, EventParser, BorshCoder } from '@coral-xyz/anchor'
+import { program } from '@/app/utils/setup'
 
 async function fetchTransactions(pk: PublicKey) {
 	const transactionList = await connection.getSignaturesForAddress(pk, {
@@ -12,39 +14,27 @@ async function fetchTransactions(pk: PublicKey) {
 	let signatureList = transactionList.map(transaction => transaction.signature)
 
 	for await (const sig of signatureList) {
-		console.log(
-			await connection.getParsedTransaction(sig, {
-				maxSupportedTransactionVersion: 0,
-			}),
-		)
-	}
-
-	const initialValue: number[] = []
-	const reducedOutput = await signatureList.reduce(async (accP, curr) => {
-		const acc = await accP // Wait for the accumulator promise to resolve
-		const tx = await connection.getParsedTransaction(curr, {
+		const tx = await connection.getParsedTransaction(sig, {
 			maxSupportedTransactionVersion: 0,
 		})
 
-		const fee = tx?.meta?.fee
+		if (tx?.meta?.logMessages) {
+			const eventParser = new EventParser(
+				program.programId,
+				new BorshCoder(program.idl),
+			)
 
-		const output = tx?.meta?.logMessages?.reduce<string[]>((a, c) => {
-			if (c.includes('Mint_Amount') || c.includes('Mint_Price')) {
-				a.push(c)
+			// Parse the logs
+			const events = eventParser.parseLogs(tx.meta.logMessages)
+
+			const eventArray = Array.from(events)
+
+			// Iterate through the parsed events
+			for (const event of eventArray) {
+				console.log('Parsed Event:', event)
 			}
-			return a
-		}, [])
-
-		console.log(output)
-
-		if (fee) {
-			acc.push(fee) // Push the fee if it exists
 		}
-
-		return acc // Return the updated accumulator
-	}, Promise.resolve(initialValue)) // Provide an initial promise that resolves to the initial value
-
-	console.log(reducedOutput)
+	}
 
 	return transactionList
 }
