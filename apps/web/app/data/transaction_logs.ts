@@ -28,6 +28,15 @@ async function fetchTransactions(pk: PublicKey) {
 
 		const fee = tx?.meta?.fee
 
+		const output = tx?.meta?.logMessages?.reduce<string[]>((a, c) => {
+			if (c.includes('Mint_Amount') || c.includes('Mint_Price')) {
+				a.push(c)
+			}
+			return a
+		}, [])
+
+		console.log(output)
+
 		if (fee) {
 			acc.push(fee) // Push the fee if it exists
 		}
