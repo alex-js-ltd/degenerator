@@ -69,11 +69,11 @@ function Error({ error, label }: { error: unknown; label: string }) {
 
 function useToastTxs() {
 	const [open, setOpen] = useState(false)
-	const [mintTx, swapTx] = useTx()
+	const [initTx, swapTx] = useTx()
 
 	const toastDescriptions = useMemo(() => {
 		const transactions = [
-			{ label: 'Mint transaction', ...mintTx },
+			{ label: 'Initialize transaction', ...initTx },
 			{ label: 'Swap transaction', ...swapTx },
 		]
 
@@ -94,7 +94,7 @@ function useToastTxs() {
 
 			return acc
 		}, [])
-	}, [mintTx])
+	}, [initTx, swapTx])
 
 	const onOpenChange = useCallback((open: boolean) => setOpen(open), [])
 

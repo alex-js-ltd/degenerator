@@ -14,7 +14,7 @@ import { MintSchema } from '@/app/utils/schemas'
 import { type State, initializeAction } from '@/app/actions/initialize_action'
 
 import { usePayer } from '@/app/hooks/use_payer'
-import { useMintTx } from '@/app/context/tx_context'
+import { useInitializeTx } from '@/app/context/tx_context'
 
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
@@ -48,7 +48,7 @@ export function InitializeForm() {
 
 	const { serializedTransaction, mint } = data || {}
 
-	useMintTx(serializedTransaction)
+	useInitializeTx(serializedTransaction)
 
 	useCleanUp(mint)
 

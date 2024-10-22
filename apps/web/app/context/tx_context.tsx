@@ -20,12 +20,12 @@ const TxContext = createContext<Context | undefined>(undefined)
 TxContext.displayName = 'TxContext'
 
 function TxProvider({ children }: { children: ReactNode }) {
-	const mintTx = useAsync<string | undefined>()
+	const initializeTx = useAsync<string | undefined>()
 	const swapTx = useAsync<string | undefined>()
 
 	const value = useMemo(() => {
-		return [mintTx, swapTx]
-	}, [mintTx])
+		return [initializeTx, swapTx]
+	}, [initializeTx, swapTx])
 
 	return <TxContext.Provider value={value}>{children}</TxContext.Provider>
 }
@@ -36,9 +36,9 @@ function useTx() {
 	return context
 }
 
-function useMintTx(tx?: Uint8Array) {
-	const [mintTx] = useTx()
-	const { run, ...rest } = mintTx
+function useInitializeTx(tx?: Uint8Array) {
+	const [initializeTx] = useTx()
+	const { run, ...rest } = initializeTx
 
 	const sign = useSignAndSendTx()
 	const router = useRouter()
@@ -46,12 +46,12 @@ function useMintTx(tx?: Uint8Array) {
 	useEffect(() => {
 		if (!tx) return
 
-		const mint = sign(tx).then(res => {
+		const initialize = sign(tx).then(res => {
 			router.refresh()
 			return res
 		})
 
-		run(mint)
+		run(initialize)
 	}, [run, sign, tx, router])
 
 	return { ...rest }
@@ -92,4 +92,11 @@ function useResetTx() {
 	}, [txs])
 }
 
-export { TxProvider, useTx, useMintTx, useSwapTx, useTxStatus, useResetTx }
+export {
+	TxProvider,
+	useTx,
+	useInitializeTx,
+	useSwapTx,
+	useTxStatus,
+	useResetTx,
+}

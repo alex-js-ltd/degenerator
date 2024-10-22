@@ -14,6 +14,7 @@ import { useBondingCurveState } from '@/app/hooks/use_bonding_curve_state'
 import { fetchBondingCurveState } from '@repo/degenerator'
 import { Pill } from './pill'
 import { TokenLogo } from './token_logo'
+import { useSwapEvent } from '@/app/hooks/use_swap_event'
 
 const initialState: State = {
 	lastResult: undefined,
@@ -75,6 +76,8 @@ export function SwapForm({ pill, curve }: SwapFormProps) {
 	}
 
 	let decimals = buy ? 9 : curve.mintDecimals
+
+	useSwapEvent(curve.mint)
 
 	return (
 		<FormProvider context={form.context}>
