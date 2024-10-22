@@ -3,16 +3,9 @@
 import { PublicKey } from '@solana/web3.js'
 import { connection } from '@/app/utils/setup'
 import { cache } from 'react'
-import {
-	Program,
-	BN,
-	web3,
-	EventParser,
-	BorshCoder,
-	IdlEvents,
-	IdlTypes,
-} from '@coral-xyz/anchor'
+import { EventParser, BorshCoder, Event } from '@coral-xyz/anchor'
 import { program } from '@/app/utils/setup'
+import { IdlEvent } from '@coral-xyz/anchor/dist/cjs/idl'
 
 async function fetchEvents(pk: PublicKey) {
 	const transactionList = await connection.getSignaturesForAddress(pk, {
@@ -23,7 +16,7 @@ async function fetchEvents(pk: PublicKey) {
 		transaction => transaction.signature,
 	)
 
-	const start: any = []
+	const start: Event<IdlEvent, Record<string, never>>[] = []
 	// Use Promise.all with reduce for async processing
 	const allParsedEvents = signatureList.reduce(async (accProm, sig) => {
 		// Wait for the previous accumulator to resolve
