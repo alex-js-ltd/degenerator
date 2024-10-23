@@ -11,7 +11,12 @@ export const preload = (pk: string) => {
 
 export const getEvents = cache(async (pk: string) => {
 	const mint = new PublicKey(pk)
-	const events = await fetchEvents({ connection, program, mint })
+	const events = await fetchEvents({
+		connection,
+		program,
+		mint,
+		eventName: 'swapEvent',
+	})
 
 	return events
 })

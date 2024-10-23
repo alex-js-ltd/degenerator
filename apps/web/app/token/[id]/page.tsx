@@ -25,8 +25,6 @@ export default function Page({ params }: { params: { id: string } }) {
 	const eventsPromise = getEvents(mint)
 	const events = use(eventsPromise)
 
-	console.log(events)
-
 	function TokenPill() {
 		return (
 			<Pill variant="swap">
@@ -58,6 +56,18 @@ export default function Page({ params }: { params: { id: string } }) {
 		<div className="w-full sm:max-w-xl flex flex-col gap-6">
 			<SwapForm {...getSwapFormProps({ curve, pill: <TokenPill /> })} />
 			<Progress progress={curve.progress} />
+
+			<ul className="w-full h-auto">
+				{events.map(event => (
+					<li
+						className="text-black w-fit"
+						key={event.blockTimestamp.toString()}
+					>
+						<div>{event?.amount}</div>
+						<div>{event?.amount}</div>
+					</li>
+				))}
+			</ul>
 		</div>
 	)
 }
