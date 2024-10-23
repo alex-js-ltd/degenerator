@@ -1,11 +1,11 @@
 use anchor_lang::prelude::*;
 
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInterface};
+use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::states::{
-    calculate_buy_amount, calculate_progress, set_bonding_curve_state, BondingCurveState,
-    SwapEvent, BASE_PRICE, SLOPE,
+    calculate_buy_amount, calculate_progress, get_swap_event, set_bonding_curve_state,
+    BondingCurveState, BASE_PRICE, SLOPE,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
@@ -92,17 +92,20 @@ pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
         lamports,
     )?;
 
-    msg!(
-        "Mint_Amount {}",
-        spl_token_2022::amount_to_ui_amount(mint_amount, ctx.accounts.mint.decimals),
-    );
+    let event = get_swap_event(
+        ctx.accounts.mint.to_account_info(),
+        ctx.accounts.mint.decimals,
+        mint_amount,
+        lamports,
+    )?;
 
-    msg!(
-        "Mint_Price {}",
-        spl_token_2022::amount_to_ui_amount(lamports, 9)
-    );
+    emit!(event);
+
+    msg!("supply before: {}", ctx.accounts.mint.supply);
 
     ctx.accounts.mint.reload()?;
+
+    msg!("supply after: {}", ctx.accounts.mint.supply);
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
@@ -119,11 +122,6 @@ pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, payload)?;
-
-    emit!(SwapEvent {
-        mint: ctx.accounts.mint.key(),
-        progress
-    });
 
     Ok(())
 }

@@ -1,5 +1,5 @@
 {
-  "address": "EJgbZm49aFqyaQBMBMJwymHmGKvECK5ZqijMdpVuWy96",
+  "address": "Dcb4GYjikBgriWNUhWjGr4jtGqaaMgBQqpfCrPBfmF1t",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -907,7 +907,15 @@
             "type": "pubkey"
           },
           {
-            "name": "progress",
+            "name": "block_timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "amount",
+            "type": "f64"
+          },
+          {
+            "name": "price",
             "type": "f64"
           }
         ]

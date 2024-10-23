@@ -1,15 +1,18 @@
+
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{
-    spl_token_2022::instruction::AuthorityType, Mint, TokenAccount, TokenInterface,
+    spl_token_2022::instruction::AuthorityType, Mint, TokenAccount, TokenInterface, 
 };
 
-use crate::states::{ set_bonding_curve_state, BondingCurveState, BASE_PRICE, SLOPE,  SwapEvent};
+use crate::states::{ get_swap_event, set_bonding_curve_state, BondingCurveState, BASE_PRICE, SLOPE};
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
     get_account_balance, set_authority, 
     update_account_lamports_to_minimum_balance, token_mint_to
 };
+
+
 
 pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
     
@@ -45,6 +48,9 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ]],
     )?;
 
+    let event = get_swap_event(ctx.accounts.mint.to_account_info(), ctx.accounts.mint.decimals, liquidity, 0)?;
+
+    emit!(event);
 
    
     ctx.accounts.mint.reload()?;
@@ -62,11 +68,6 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, initial_state)?;
-
-    emit!(SwapEvent {
-        mint: ctx.accounts.mint.key(),
-        progress: 0.0
-    });
 
 
     Ok(())

@@ -1,7 +1,7 @@
 use crate::error::ErrorCode;
 use crate::states::{
-    calculate_progress, calculate_sell_price, set_bonding_curve_state, BondingCurveState,
-    SwapEvent, BASE_PRICE, SLOPE,
+    calculate_progress, calculate_sell_price, get_swap_event, set_bonding_curve_state,
+    BondingCurveState, BASE_PRICE, SLOPE,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
 use crate::utils::token::{
@@ -9,7 +9,7 @@ use crate::utils::token::{
 };
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{spl_token_2022, Mint, TokenAccount, TokenInterface};
+use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 #[derive(Accounts)]
 pub struct SellToken<'info> {
@@ -58,7 +58,7 @@ pub struct SellToken<'info> {
 }
 
 pub fn sell_token(ctx: Context<SellToken>, burn_amount: u64) -> Result<()> {
-    let sol_amount = calculate_sell_price(
+    let lamports = calculate_sell_price(
         ctx.accounts.bonding_curve_state.current_supply,
         ctx.accounts.bonding_curve_state.mint_decimals,
         burn_amount,
@@ -68,7 +68,7 @@ pub fn sell_token(ctx: Context<SellToken>, burn_amount: u64) -> Result<()> {
         return Err(ErrorCode::InsufficientUserSupply.into());
     }
 
-    if sol_amount > ctx.accounts.bonding_curve_state.reserve_balance {
+    if lamports > ctx.accounts.bonding_curve_state.reserve_balance {
         return Err(ProgramError::InsufficientFunds.into());
     }
 
@@ -98,7 +98,7 @@ pub fn sell_token(ctx: Context<SellToken>, burn_amount: u64) -> Result<()> {
         ctx.accounts.vault.to_account_info(),
         ctx.accounts.signer.to_account_info(),
         ctx.accounts.system_program.to_account_info(),
-        sol_amount,
+        lamports,
         &[&[
             BONDING_CURVE_VAULT_SEED.as_bytes(),
             ctx.accounts.mint.key().as_ref(),
@@ -106,17 +106,20 @@ pub fn sell_token(ctx: Context<SellToken>, burn_amount: u64) -> Result<()> {
         ][..]],
     )?;
 
-    msg!(
-        "Burn_Amount {}",
-        spl_token_2022::amount_to_ui_amount(burn_amount, ctx.accounts.mint.decimals),
-    );
+    let event = get_swap_event(
+        ctx.accounts.mint.to_account_info(),
+        ctx.accounts.mint.decimals,
+        burn_amount,
+        lamports,
+    )?;
 
-    msg!(
-        "Burn_Price {}",
-        spl_token_2022::amount_to_ui_amount(sol_amount, 9)
-    );
+    emit!(event);
+
+    msg!("supply before: {}", ctx.accounts.mint.supply);
 
     ctx.accounts.mint.reload()?;
+
+    msg!("supply after: {}", ctx.accounts.mint.supply);
 
     let vault_balance = get_account_balance(ctx.accounts.vault.to_account_info())?;
 
@@ -133,11 +136,6 @@ pub fn sell_token(ctx: Context<SellToken>, burn_amount: u64) -> Result<()> {
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, payload)?;
-
-    emit!(SwapEvent {
-        mint: ctx.accounts.mint.key(),
-        progress
-    });
 
     Ok(())
 }
