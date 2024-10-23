@@ -92,15 +92,6 @@ pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
         lamports,
     )?;
 
-    let event = get_swap_event(
-        ctx.accounts.mint.to_account_info(),
-        ctx.accounts.mint.decimals,
-        mint_amount,
-        lamports,
-    )?;
-
-    emit!(event);
-
     msg!("supply before: {}", ctx.accounts.mint.supply);
 
     ctx.accounts.mint.reload()?;
@@ -122,6 +113,15 @@ pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, payload)?;
+
+    let event = get_swap_event(
+        ctx.accounts.mint.to_account_info(),
+        ctx.accounts.mint.decimals,
+        mint_amount,
+        lamports,
+    )?;
+
+    emit!(event);
 
     Ok(())
 }

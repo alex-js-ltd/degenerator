@@ -48,9 +48,7 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
         ]],
     )?;
 
-    let event = get_swap_event(ctx.accounts.mint.to_account_info(), ctx.accounts.mint.decimals, liquidity, 0)?;
-
-    emit!(event);
+ 
 
    
     ctx.accounts.mint.reload()?;
@@ -68,6 +66,10 @@ pub fn create_bonding_curve(ctx: Context<CreateBondingCurve>) -> Result<()> {
     };
 
     set_bonding_curve_state(&mut ctx.accounts.bonding_curve_state, initial_state)?;
+
+    let event = get_swap_event(ctx.accounts.mint.to_account_info(), ctx.accounts.mint.decimals, liquidity, 0)?;
+
+    emit!(event);
 
 
     Ok(())
