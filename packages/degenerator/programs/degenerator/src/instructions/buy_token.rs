@@ -4,7 +4,7 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 use crate::states::{
-    calculate_buy_amount, calculate_progress, get_swap_event, set_bonding_curve_state,
+    calculate_buy_amount, calculate_progress, get_swap_event, set_bonding_curve_state, ActionType,
     BondingCurveState, BASE_PRICE, SLOPE,
 };
 use crate::utils::seed::{BONDING_CURVE_STATE_SEED, BONDING_CURVE_VAULT_SEED};
@@ -119,6 +119,7 @@ pub fn buy_token(ctx: Context<BuyToken>, lamports: u64) -> Result<()> {
         ctx.accounts.mint.decimals,
         mint_amount,
         lamports,
+        ActionType::Buy,
     )?;
 
     emit!(event);

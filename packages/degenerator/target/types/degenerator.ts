@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "Heu9T8Hwme2A6VjEZWJUoGZiDCztnXN6o9c1GoBB7Ng7",
+  "address": "8y2aWAUuX8H3cFu2KGu5jxrZcPP4gAsNzipLGY1pD9hM",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -845,6 +845,20 @@ export type Degenerator = {
   ],
   "types": [
     {
+      "name": "actionType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "buy"
+          },
+          {
+            "name": "sell"
+          }
+        ]
+      }
+    },
+    {
       "name": "bondingCurveState",
       "type": {
         "kind": "struct",
@@ -923,6 +937,14 @@ export type Degenerator = {
           {
             "name": "price",
             "type": "f64"
+          },
+          {
+            "name": "action",
+            "type": {
+              "defined": {
+                "name": "actionType"
+              }
+            }
           }
         ]
       }
