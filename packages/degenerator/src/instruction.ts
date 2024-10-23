@@ -6,6 +6,7 @@ import {
 	EventParser,
 	BorshCoder,
 	IdlEvents,
+	Event,
 } from '@coral-xyz/anchor'
 import { IdlEvent } from '@coral-xyz/anchor/dist/cjs/idl'
 import { type Connection, type Signer, PublicKey } from '@solana/web3.js'
@@ -165,21 +166,17 @@ export async function getSellTokenIx({
 	return sell
 }
 
-interface FetchEventsParams<E> {
+interface FetchEventsParams {
 	program: Program<Degenerator>
 	connection: Connection
 	mint: PublicKey
-	eventName: E
 }
 
-interface Event extends IdlEvents<Degenerator> {}
-
-export async function fetchEvents<E extends keyof Event>({
+export async function fetchEvents({
 	program,
 	mint,
 	connection,
-	eventName,
-}: FetchEventsParams<E>) {
+}: FetchEventsParams) {
 	const transactionList = await connection.getSignaturesForAddress(mint, {
 		limit: 1000,
 	})
@@ -188,7 +185,7 @@ export async function fetchEvents<E extends keyof Event>({
 		transaction => transaction.signature,
 	)
 
-	const start: Event[] = []
+	const start: Event<IdlEvent, Record<string, never>>[] = []
 
 	const allParsedEvents = signatureList.reduce(async (accProm, sig) => {
 		const acc = await accProm
@@ -207,8 +204,7 @@ export async function fetchEvents<E extends keyof Event>({
 			const eventArray = Array.from(events)
 
 			for (const event of eventArray) {
-				const data: Event = event.data
-				if (event.name === eventName) acc.push(data)
+				acc.push(event)
 			}
 		}
 

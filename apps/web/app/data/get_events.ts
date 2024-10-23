@@ -15,7 +15,6 @@ export const getEvents = cache(async (pk: string) => {
 		connection,
 		program,
 		mint,
-		eventName: 'swapEvent',
 	})
 
 	return events

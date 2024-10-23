@@ -58,13 +58,13 @@ export default function Page({ params }: { params: { id: string } }) {
 			<Progress progress={curve.progress} />
 
 			<ul className="w-full h-auto">
-				{events.map(event => (
+				{events.map(({ data }) => (
 					<li
-						className="text-black w-fit"
-						key={event.blockTimestamp.toString()}
+						className="text-gray-700 w-fit flex gap-6"
+						key={data.blockTimestamp.toString()}
 					>
-						<div>{event?.amount}</div>
-						<div>{event?.amount}</div>
+						<div>{data?.amount}</div>
+						<div>{data?.price}</div>
 					</li>
 				))}
 			</ul>

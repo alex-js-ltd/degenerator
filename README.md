@@ -8,6 +8,6 @@ solana-test-validator --reset \
 
 solana config set --url https://api.devnet.solana.com
 
-solana-keygen recover -o recover.json
+solana-keygen recover -o recover.json --force
 
 solana program deploy --buffer recover.json target/deploy/degenerator.so

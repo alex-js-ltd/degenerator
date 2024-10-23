@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/degenerator.json`.
  */
 export type Degenerator = {
-  "address": "8y2aWAUuX8H3cFu2KGu5jxrZcPP4gAsNzipLGY1pD9hM",
+  "address": "HBmJsDsVHdwDb8gMrQBdTrcS2fhhVKGKu48pUh1f1oAP",
   "metadata": {
     "name": "degenerator",
     "version": "0.1.0",
@@ -916,9 +916,6 @@ export type Degenerator = {
     },
     {
       "name": "swapEvent",
-      "docs": [
-        "Emitted when swap"
-      ],
       "type": {
         "kind": "struct",
         "fields": [

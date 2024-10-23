@@ -1,13 +1,13 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::spl_token_2022;
 
-#[derive(Debug, AnchorSerialize, AnchorDeserialize)]
+// Need to do this so the enum shows up in the IDL
+#[derive(AnchorSerialize, AnchorDeserialize, Debug, PartialEq, Eq)]
 pub enum ActionType {
     Buy,
     Sell,
 }
 
-/// Emitted when swap
 #[event]
 #[cfg_attr(feature = "client", derive(Debug))]
 pub struct SwapEvent {
