@@ -25,6 +25,8 @@ export default function Page({ params }: { params: { id: string } }) {
 	const eventsPromise = getEvents(mint)
 	const events = use(eventsPromise)
 
+	console.log(events.map(e => e.data.action))
+
 	function TokenPill() {
 		return (
 			<Pill variant="swap">
