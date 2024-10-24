@@ -8,6 +8,8 @@ import {
 	TickMarkType,
 	LineData,
 	Time,
+	UTCTimestamp,
+	SolidColor,
 } from 'lightweight-charts'
 import React, { useEffect, useRef } from 'react'
 import dayjs from 'dayjs'
@@ -15,25 +17,17 @@ import utc from 'dayjs/plugin/utc'
 
 dayjs.extend(utc)
 
-interface ChartComponentProps {
-	colors?: {
-		backgroundColor?: string
-		lineColor?: string
-		textColor?: string
-		areaTopColor?: string
-		areaBottomColor?: string
-	}
+interface ChartComponentProps {}
+
+const colors = {
+	backgroundColor: 'white',
+	lineColor: '#2962FF',
+	textColor: '#2962FF',
+	areaTopColor: '#2962FF',
+	areaBottomColor: 'rgba(41, 98, 255, 0.28)',
 }
 
-export const ChartComponent: React.FC<ChartComponentProps> = ({
-	colors: {
-		backgroundColor = 'white',
-		lineColor = '#2962FF',
-		textColor = 'black',
-		areaTopColor = '#2962FF',
-		areaBottomColor = 'rgba(41, 98, 255, 0.28)',
-	} = {},
-}) => {
+export function ChartComponent({}: ChartComponentProps) {
 	const chartContainerRef = useRef<HTMLDivElement | null>(null)
 	const chartRef = useRef<IChartApi | null>(null)
 	const seriesRef = useRef<ISeriesApi<'Line'> | null>(null)
@@ -51,8 +45,7 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
 
 		const chart = createChart(chartContainerRef.current, {
 			layout: {
-				background: { type: ColorType.Solid, color: backgroundColor },
-				textColor,
+				background: { type: ColorType.Solid, color: colors.backgroundColor },
 			},
 			width: chartContainerRef.current.clientWidth,
 			height: 300,
@@ -81,7 +74,7 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
 				chartRef.current.remove()
 			}
 		}
-	}, [backgroundColor, lineColor, textColor, areaTopColor, areaBottomColor])
+	}, [])
 
 	return <div ref={chartContainerRef} />
 }
@@ -99,6 +92,6 @@ const data = [
 	{ value: 46, time: 1643202922 },
 ].map(el => ({
 	value: el.value,
-	time: dayjs.unix(el.time).utc().format('YYYY-MM-DD'), // Correct format
+	time: el.time as UTCTimestamp,
 }))
 console.log(data)
