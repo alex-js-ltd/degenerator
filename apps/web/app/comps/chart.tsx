@@ -11,7 +11,7 @@ import {
 	UTCTimestamp,
 	SolidColor,
 } from 'lightweight-charts'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useMemo } from 'react'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
@@ -33,6 +33,8 @@ export function ChartComponent({ data }: ChartComponentProps) {
 	const chartContainerRef = useRef<HTMLDivElement | null>(null)
 	const chartRef = useRef<IChartApi | null>(null)
 	const seriesRef = useRef<ISeriesApi<'Line'> | null>(null)
+
+	const _data = useMemo(() => data, [data])
 
 	useEffect(() => {
 		if (!chartContainerRef.current) return
@@ -71,7 +73,7 @@ export function ChartComponent({ data }: ChartComponentProps) {
 			color: '#4FD1C5',
 		})
 		seriesRef.current = newSeries
-		newSeries.setData(data)
+		newSeries.setData(_data)
 
 		window.addEventListener('resize', handleResize)
 
@@ -81,7 +83,7 @@ export function ChartComponent({ data }: ChartComponentProps) {
 				chartRef.current.remove()
 			}
 		}
-	}, [])
+	}, [_data])
 
 	return <div className="rounded-xl overflow-hidden" ref={chartContainerRef} />
 }
