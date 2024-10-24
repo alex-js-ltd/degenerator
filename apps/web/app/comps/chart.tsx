@@ -17,7 +17,9 @@ import utc from 'dayjs/plugin/utc'
 
 dayjs.extend(utc)
 
-interface ChartComponentProps {}
+interface ChartComponentProps {
+	data: { value: number; time: UTCTimestamp }[]
+}
 
 const colors = {
 	backgroundColor: 'white',
@@ -27,7 +29,7 @@ const colors = {
 	areaBottomColor: 'rgba(41, 98, 255, 0.28)',
 }
 
-export function ChartComponent({}: ChartComponentProps) {
+export function ChartComponent({ data }: ChartComponentProps) {
 	const chartContainerRef = useRef<HTMLDivElement | null>(null)
 	const chartRef = useRef<IChartApi | null>(null)
 	const seriesRef = useRef<ISeriesApi<'Line'> | null>(null)
@@ -78,20 +80,3 @@ export function ChartComponent({}: ChartComponentProps) {
 
 	return <div ref={chartContainerRef} />
 }
-
-const data = [
-	{ value: 0, time: 1642425322 },
-	{ value: 8, time: 1642511722 },
-	{ value: 10, time: 1642598122 },
-	{ value: 20, time: 1642684522 },
-	{ value: 3, time: 1642770922 },
-	{ value: 43, time: 1642857322 },
-	{ value: 41, time: 1642943722 },
-	{ value: 43, time: 1643030122 },
-	{ value: 56, time: 1643116522 },
-	{ value: 46, time: 1643202922 },
-].map(el => ({
-	value: el.value,
-	time: el.time as UTCTimestamp,
-}))
-console.log(data)

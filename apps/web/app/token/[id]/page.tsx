@@ -27,10 +27,14 @@ export default function Page({ params }: { params: { id: string } }) {
 	const eventsPromise = getEvents(mint)
 	const events = use(eventsPromise)
 
-	const chartData = events.map(el => ({
-		time: el.data.blockTimestamp.toNumber() as UTCTimestamp,
-		value: el.data.amount,
-	}))
+	const chartData = events
+		.map(el => ({
+			time: el.data.blockTimestamp.toNumber() as UTCTimestamp,
+			value: el.data.price / el.data.amount,
+		}))
+		.toSorted((a, b) => a.time - b.time)
+
+	console.log(chartData)
 
 	console.log(chartData)
 	function TokenPill() {
@@ -77,7 +81,7 @@ export default function Page({ params }: { params: { id: string } }) {
 				))}
 			</ul>
 
-			<ChartComponent />
+			<ChartComponent data={chartData} />
 		</div>
 	)
 }
