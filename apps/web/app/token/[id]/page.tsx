@@ -83,7 +83,7 @@ export default function Page({ params }: { params: { id: string } }) {
 				))}
 			</ul>
 
-			<ChartComponent data={chartData} />
+			<ChartComponent />
 		</div>
 	)
 }

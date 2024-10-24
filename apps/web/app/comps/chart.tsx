@@ -6,6 +6,8 @@ import {
 	ISeriesApi,
 	IChartApi,
 	TickMarkType,
+	LineData,
+	Time,
 } from 'lightweight-charts'
 import React, { useEffect, useRef } from 'react'
 import dayjs from 'dayjs'
@@ -14,7 +16,6 @@ import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 
 interface ChartComponentProps {
-	data?: { time: string; value: number }[]
 	colors?: {
 		backgroundColor?: string
 		lineColor?: string
@@ -25,7 +26,6 @@ interface ChartComponentProps {
 }
 
 export const ChartComponent: React.FC<ChartComponentProps> = ({
-	data = initialData,
 	colors: {
 		backgroundColor = 'white',
 		lineColor = '#2962FF',
@@ -36,7 +36,7 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
 }) => {
 	const chartContainerRef = useRef<HTMLDivElement | null>(null)
 	const chartRef = useRef<IChartApi | null>(null)
-	const seriesRef = useRef<ISeriesApi<'Area'> | null>(null)
+	const seriesRef = useRef<ISeriesApi<'Line'> | null>(null)
 
 	useEffect(() => {
 		if (!chartContainerRef.current) return
@@ -67,10 +67,8 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
 		chartRef.current = chart
 		chart.timeScale().fitContent()
 
-		const newSeries = chart.addAreaSeries({
-			lineColor,
-			topColor: areaTopColor,
-			bottomColor: areaBottomColor,
+		const newSeries = chart.addLineSeries({
+			color: '#2962FF',
 		})
 		seriesRef.current = newSeries
 		newSeries.setData(data)
@@ -83,27 +81,24 @@ export const ChartComponent: React.FC<ChartComponentProps> = ({
 				chartRef.current.remove()
 			}
 		}
-	}, [
-		data,
-		backgroundColor,
-		lineColor,
-		textColor,
-		areaTopColor,
-		areaBottomColor,
-	])
+	}, [backgroundColor, lineColor, textColor, areaTopColor, areaBottomColor])
 
 	return <div ref={chartContainerRef} />
 }
 
-const initialData = [
-	{ time: '2018-12-22', value: 32.51 },
-	{ time: '2018-12-23', value: 31.11 },
-	{ time: '2018-12-24', value: 27.02 },
-	{ time: '2018-12-25', value: 27.32 },
-	{ time: '2018-12-26', value: 25.17 },
-	{ time: '2018-12-27', value: 28.89 },
-	{ time: '2018-12-28', value: 25.46 },
-	{ time: '2018-12-29', value: 23.92 },
-	{ time: '2018-12-30', value: 22.68 },
-	{ time: '2018-12-31', value: 22.67 },
-]
+const data = [
+	{ value: 0, time: 1642425322 },
+	{ value: 8, time: 1642511722 },
+	{ value: 10, time: 1642598122 },
+	{ value: 20, time: 1642684522 },
+	{ value: 3, time: 1642770922 },
+	{ value: 43, time: 1642857322 },
+	{ value: 41, time: 1642943722 },
+	{ value: 43, time: 1643030122 },
+	{ value: 56, time: 1643116522 },
+	{ value: 46, time: 1643202922 },
+].map(el => ({
+	value: el.value,
+	time: dayjs.unix(el.time).utc().format('YYYY-MM-DD'), // Correct format
+}))
+console.log(data)
