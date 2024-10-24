@@ -47,7 +47,12 @@ export function ChartComponent({ data }: ChartComponentProps) {
 
 		const chart = createChart(chartContainerRef.current, {
 			layout: {
-				background: { type: ColorType.Solid, color: colors.backgroundColor },
+				background: { color: '#1F2937' },
+				textColor: '#DDD',
+			},
+			grid: {
+				vertLines: { color: '#444' },
+				horzLines: { color: '#444' },
 			},
 			width: chartContainerRef.current.clientWidth,
 			height: 300,
@@ -63,7 +68,7 @@ export function ChartComponent({ data }: ChartComponentProps) {
 		chart.timeScale().fitContent()
 
 		const newSeries = chart.addLineSeries({
-			color: '#2962FF',
+			color: '#4FD1C5',
 		})
 		seriesRef.current = newSeries
 		newSeries.setData(data)
@@ -78,5 +83,5 @@ export function ChartComponent({ data }: ChartComponentProps) {
 		}
 	}, [])
 
-	return <div ref={chartContainerRef} />
+	return <div className="rounded-md overflow-hidden" ref={chartContainerRef} />
 }

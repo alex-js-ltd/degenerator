@@ -69,18 +69,6 @@ export default function Page({ params }: { params: { id: string } }) {
 			<SwapForm {...getSwapFormProps({ curve, pill: <TokenPill /> })} />
 			<Progress progress={curve.progress} />
 
-			<ul className="w-full h-auto">
-				{events.map(({ data }) => (
-					<li
-						className="text-gray-700 w-fit flex gap-6"
-						key={data.blockTimestamp.toString()}
-					>
-						<div>{data?.amount}</div>
-						<div>{data?.price}</div>
-					</li>
-				))}
-			</ul>
-
 			<ChartComponent data={chartData} />
 		</div>
 	)
