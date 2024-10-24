@@ -7,6 +7,11 @@ import { Progress } from '@/app/comps/progress'
 import { fetchBondingCurveState } from '@repo/degenerator'
 import { getBondingCurveState } from '@/app/data/get_bonding_curve_state'
 import { getEvents } from '@/app/data/get_events'
+import { ChartComponent } from '@/app/comps/chart'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
 
 export const revalidate = 10
 export const dynamic = 'force-dynamic'
@@ -25,8 +30,15 @@ export default function Page({ params }: { params: { id: string } }) {
 	const eventsPromise = getEvents(mint)
 	const events = use(eventsPromise)
 
-	console.log(events.map(e => e.data.action))
-
+	const chartData = events
+		.map(el => ({
+			time: dayjs(el.data.blockTimestamp * 1000)
+				.utc()
+				.format('H:mm'), // Assuming blockTimestamp is in seconds and converting to milliseconds
+			value: el.data.amount,
+		}))
+		.sort((a, b) => a.time - b.time) // Sort by time in ascending order
+	console.log(chartData)
 	function TokenPill() {
 		return (
 			<Pill variant="swap">
@@ -70,6 +82,8 @@ export default function Page({ params }: { params: { id: string } }) {
 					</li>
 				))}
 			</ul>
+
+			<ChartComponent data={chartData} />
 		</div>
 	)
 }
