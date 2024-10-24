@@ -66,10 +66,9 @@ export default function Page({ params }: { params: { id: string } }) {
 
 	return (
 		<div className="w-full sm:max-w-xl flex flex-col gap-6">
+			<ChartComponent data={chartData} />
 			<SwapForm {...getSwapFormProps({ curve, pill: <TokenPill /> })} />
 			<Progress progress={curve.progress} />
-
-			<ChartComponent data={chartData} />
 		</div>
 	)
 }

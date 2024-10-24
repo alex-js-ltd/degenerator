@@ -55,7 +55,7 @@ export function ChartComponent({ data }: ChartComponentProps) {
 				horzLines: { color: '#444' },
 			},
 			width: chartContainerRef.current.clientWidth,
-			height: 300,
+			height: 200,
 
 			timeScale: {
 				tickMarkFormatter: (time: number, tickMarkType: TickMarkType) => {
@@ -83,5 +83,5 @@ export function ChartComponent({ data }: ChartComponentProps) {
 		}
 	}, [])
 
-	return <div className="rounded-md overflow-hidden" ref={chartContainerRef} />
+	return <div className="rounded-xl overflow-hidden" ref={chartContainerRef} />
 }
